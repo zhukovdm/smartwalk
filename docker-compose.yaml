@@ -7,6 +7,13 @@ services:
       - 3002:27017
     volumes:
       - ./data/assets/dataset:/data/db
+  indexer:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
+    container_name: smartwalk-indexer
+    ports:
+      - 3003:9200
+    volumes:
+      - ./data/assets/indexer:/usr/share/elasticsearch/data
   routing:
     image: osrm/osrm-backend:v5.24.0
     container_name: smartwalk-routing
