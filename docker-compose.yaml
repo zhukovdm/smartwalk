@@ -1,24 +1,17 @@
 version: '3.8'
 services:
-  dataset:
-    image: mongo:4.4.18
-    container_name: smartwalk-dataset
+  database:
+    image: mongo:4.4.23
+    container_name: smartwalk-database
     ports:
       - 3002:27017
     volumes:
-      - ./data/assets/dataset:/data/db
-  indexer:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.9.0
-    container_name: smartwalk-indexer
-    ports:
-      - 3003:9200
-    volumes:
-      - ./data/assets/indexer:/usr/share/elasticsearch/data
-  routing:
+      - ./data/assets/database:/data/db
+  routing-engine:
     image: osrm/osrm-backend:v5.24.0
-    container_name: smartwalk-routing
+    container_name: smartwalk-routing-engine
     ports:
-      - 3004:5000
+      - 3003:5000
     volumes:
-      - ./data/assets/routing:/data
-    entrypoint: osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${ROUTING_COUNTRY}-latest.osrm
+      - ./data/assets/routing-engine:/data
+    entrypoint: osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${COUNTRY_FILE}.osrm

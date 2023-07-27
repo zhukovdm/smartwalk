@@ -1,34 +1,25 @@
+COUNTRY_FILE=czech-republic-latest
+
 ASSETS_DIR=${PWD}/assets
-EXTRA_DIRS=dataset indexer routing
+EXTRA_DIRS=database routing-engine taginfo
 
-# indexer
+ROUTING_CMD=docker run --rm -t -v $(ASSETS_DIR)/routing-engine:/data osrm/osrm-backend:v5.24.0
 
-# routing
+# recipes
 
-ROUTING_COUNTRY=czech-republic
-ROUTING_CMD=docker run --rm -t -v
-ROUTING_DIR=$(ASSETS_DIR)/routing
-ROUTING_VOL=$(ROUTING_DIR):/data
-ROUTING_IMG=osrm/osrm-backend:v5.24.0
-ROUTING_FIL=$(ROUTING_COUNTRY)-latest
-ROUTING_DAT=/data/$(ROUTING_FIL)
-
-init-dirs:
-	for dir in $(EXTRA_DIRS) ; do \
-		mkdir -p $(ASSETS_DIR)/$$dir ; \
+init:
+	@for dir in $(EXTRA_DIRS); do \
+		mkdir -p $(ASSETS_DIR)/$$dir; \
 	done
+	@[ -f $(ASSETS_DIR)/osm-maps/$(COUNTRY_FILE).osm.pbf ] \
+		|| { echo "File $(COUNTRY_FILE).osm.pbf has not been found..."; exit 1; }
 
-dataset: init-dirs
-	echo "dataset"
-
-indexer: init-dirs
-	docker run --rm -t -v $(ASSETS_DIR)/indexer:/usr/share/elasticsearch/data -p 3003:9200 -e "discovery.type=single-node" docker.elastic.co/elasticsearch/elasticsearch:8.9.0
-
-routing: init-dirs
-	cp /maps/$(ROUTING_FIL).osm.pbf $(ROUTING_DIR)
-	$(ROUTING_CMD) $(ROUTING_VOL) $(ROUTING_IMG) osrm-extract -p /opt/foot.lua $(ROUTING_DAT).osm.pbf
-	$(ROUTING_CMD) $(ROUTING_VOL) $(ROUTING_IMG) osrm-partition $(ROUTING_DAT).osrm
-	$(ROUTING_CMD) $(ROUTING_VOL) $(ROUTING_IMG) osrm-customize $(ROUTING_DAT).osrm
+routing-engine: init
+	cp $(ASSETS_DIR)/osm-maps/$(COUNTRY_FILE).osm.pbf $(ASSETS_DIR)/routing-engine
+	$(ROUTING_CMD) osrm-extract -p /opt/foot.lua /data/$(COUNTRY_FILE).osm.pbf
+	$(ROUTING_CMD) osrm-partition /data/$(COUNTRY_FILE).osrm
+	$(ROUTING_CMD) osrm-customize /data/$(COUNTRY_FILE).osrm
+	rm $(ASSETS_DIR)/routing-engine/$(COUNTRY_FILE).osm.pbf
 
 clean:
 	for dir in $(EXTRA_DIRS) ; do \
