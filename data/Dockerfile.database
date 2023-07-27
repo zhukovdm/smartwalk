@@ -1,0 +1,2 @@
+FROM mongo:4.4.23
+COPY ./assets/database/ /data/db/

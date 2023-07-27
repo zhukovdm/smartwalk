@@ -2,16 +2,14 @@ version: '3.8'
 services:
   database:
     image: mongo:4.4.23
-    container_name: smartwalk-database
     ports:
       - 3002:27017
     volumes:
       - ./data/assets/database:/data/db
   routing-engine:
     image: osrm/osrm-backend:v5.24.0
-    container_name: smartwalk-routing-engine
     ports:
       - 3003:5000
     volumes:
       - ./data/assets/routing-engine:/data
-    entrypoint: osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${COUNTRY_FILE}.osrm
+    entrypoint: osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${REGION_FILE}.osrm
