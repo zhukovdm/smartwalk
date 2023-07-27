@@ -1,8 +1,6 @@
 #!/bin/bash
 
-mkdir -p ../assets/tags
-
-node tags.js \
+node taginfo.js \
   aerialway \
   aeroway \
   amenity \

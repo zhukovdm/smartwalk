@@ -2,7 +2,7 @@ import fs from "fs";
 import consola from "consola";
 import fetch from "node-fetch";
 import {
-  ASSETS_BASE_ADDR,
+  ASSETS_DIR,
   convertSnakeToKeyword,
   isValidKeyword
 } from "./shared.cjs";
@@ -20,7 +20,7 @@ const COUNT_PAGES = 5;
 /**
  * Form valid query.
  */
-const query = (key, page) => {
+function queryBuilder(key, page) {
   return `https://taginfo.openstreetmap.org/api/4/key/values?key=${key}&page=${page}&rp=100&filter=all&lang=en&sortname=count&sortorder=desc&qtype=value&format=json`;
 };
 
@@ -137,23 +137,26 @@ const FORBIDDEN_VALUES = new Set([
  * 
  * https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
  */
-async function extract(args) {
+async function extract(keys) {
 
   const logger = consola.create();
 
   try {
-    logger.info(`Started processing OSM tags ${args.join(", ")}.`);
+    logger.info(`Started processing OSM keys ${keys.join(", ")}.`);
 
-    for (const key of args) {
+    for (const key of keys) {
 
       logger.info(`> Processing key ${key}.`);
       const dict = new Map();
 
       for (let page = 1; page <= COUNT_PAGES; ++page) {
         logger.info(`>  Processing page ${page}.`);
-        const res = await fetch(query(key, page));
+
+        const res = await fetch(queryBuilder(key, page));
         const jsn = await res.json();
+
         jsn.data.forEach((item) => {
+
           // extract only valid values
           item.value
             .split(/[\s;,]+/)
@@ -166,10 +169,10 @@ async function extract(args) {
         });
       }
 
-      const file = `${ASSETS_BASE_ADDR}/tags/${key}.json`;
+      const file = `${ASSETS_DIR}/taginfo/${key}.json`;
 
       // Map does not maintain lexicographic order!
-      let obj = [...dict.keys()]
+      const obj = [...dict.keys()]
         .map(key => { return { value: key, count: dict.get(key) }; })
         .sort((l, r) => r.count - l.count)
         .filter(pair => pair.count >= COUNT_LIMIT);
@@ -179,7 +182,7 @@ async function extract(args) {
 
       logger.info(`> Finished processing file ${file}, extracted ${obj.length} objects.`);
     }
-    logger.info("Finished processing OSM tags.");
+    logger.info("Finished processing OSM keys.");
   }
   catch (ex) { logger.error(ex); }
 }

@@ -1,20 +1,19 @@
 const consola = require("consola");
 
-const ASSETS_BASE_ADDR = "../assets";
+const ASSETS_DIR = "../assets";
 
-const MONGO_DATABASE = "grainpath";
-const MONGO_GRAIN_COLLECTION = "grain";
-const MONGO_INDEX_COLLECTION = "index";
-const MONGO_CONNECTION_STRING = process.env.GRAINPATH_DBM_CONN;
+const MONGO_CONN_STR = "mongodb://localhost:27017";
+const MONGO_DATABASE = "smartwalk";
+const MONGO_PLACE_COLLECTION = "place";
 
 async function getPayload(client) {
-  const tar = "linked.wikidata";
+  const target = "linked.wikidata";
 
   const payload = await client
     .db(MONGO_DATABASE)
-    .collection(MONGO_GRAIN_COLLECTION)
-    .find({ [tar]: { $exists: true } })
-    .project({ [tar]: 1 })
+    .collection(MONGO_PLACE_COLLECTION)
+    .find({ [target]: { $exists: true } })
+    .project({ [target]: 1 })
     .toArray();
 
   return payload.map((item) => "wd:" + item.linked.wikidata);
@@ -24,16 +23,12 @@ function getMongoCollection(client, collection) {
   return client.db(MONGO_DATABASE).collection(collection);
 }
 
-function getGrainCollection(client) {
-  return getMongoCollection(client, MONGO_GRAIN_COLLECTION);
-}
-
-function getIndexCollection(client) {
-  return getMongoCollection(client, MONGO_INDEX_COLLECTION);
+function getPlaceCollection(client) {
+  return getMongoCollection(client, MONGO_PLACE_COLLECTION);
 }
 
 async function writeCreateToDatabase(client, ins) {
-  await getGrainCollection(client)
+  await getPlaceCollection(client)
     .insertOne(ins, { ignoreUndefined: true });
 }
 
@@ -42,7 +37,7 @@ async function writeUpdateToDatabase(client, lst, upd) {
   for (const obj of lst) {
     const filter = { "linked.wikidata": { $eq: obj.wikidata } };
 
-    await getGrainCollection(client)
+    await getPlaceCollection(client)
       .updateMany(filter, upd(obj), { ignoreUndefined: true });
   }
 }
@@ -89,34 +84,32 @@ const KEYWORD_LENGTH_LIMIT_MAX = 30;
 
 /**
  * All extracted keywords should comply with the snake_case-without-underscores
- * pattern.
+ * pattern (e.g. "medieval_art" ~> "medieval art")
  */
 const KEYWORD_PATTERN = /^[a-z]+(?:[ ][a-z]+)*$/;
 
 function isValidKeyword(keyword) {
-  return (new RegExp(KEYWORD_PATTERN)).test(keyword)
+  return KEYWORD_PATTERN.test(keyword)
     && keyword.length >= KEYWORD_LENGTH_LIMIT_MIN
     && keyword.length <= KEYWORD_LENGTH_LIMIT_MAX
 };
 
 module.exports = {
-  ASSETS_BASE_ADDR: ASSETS_BASE_ADDR,
-  MONGO_DATABASE: MONGO_DATABASE,
-  MONGO_GRAIN_COLLECTION: MONGO_GRAIN_COLLECTION,
-  MONGO_INDEX_COLLECTION: MONGO_INDEX_COLLECTION,
-  MONGO_CONNECTION_STRING: MONGO_CONNECTION_STRING,
-  getPayload: getPayload,
-  getGrainCollection: getGrainCollection,
-  getIndexCollection: getIndexCollection,
-  writeUpdateToDatabase: writeUpdateToDatabase,
-  writeCreateToDatabase: writeCreateToDatabase,
-  reportError: reportError,
-  reportPayload: reportPayload,
-  reportCategory: reportCategory,
-  reportFetchedItems: reportFetchedItems,
-  reportCreatedItems: reportCreatedItems,
-  reportFinished: reportFinished,
-  convertKeywordToName: convertKeywordToName,
-  convertSnakeToKeyword: convertSnakeToKeyword,
-  isValidKeyword: isValidKeyword
+  ASSETS_DIR,
+  MONGO_CONN_STR,
+  MONGO_DATABASE,
+  MONGO_PLACE_COLLECTION,
+  getPayload,
+  getPlaceCollection,
+  writeUpdateToDatabase,
+  writeCreateToDatabase,
+  reportError,
+  reportPayload,
+  reportCategory,
+  reportFetchedItems,
+  reportCreatedItems,
+  reportFinished,
+  convertKeywordToName,
+  convertSnakeToKeyword,
+  isValidKeyword
 };
