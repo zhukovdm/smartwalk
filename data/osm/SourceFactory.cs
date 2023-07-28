@@ -11,15 +11,14 @@ internal static class SourceFactory
 {
     private static OsmStreamSource ToStream(string file)
     {
-        var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.RESOURCES_BASE_ADDR, "maps", file });
-
         FileStream fStream;
+        var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "osm-maps", file });
 
         try
         {
             fStream = File.OpenRead(path);
         }
-        catch (Exception) { throw new Exception($"Cannot create file stream at ${path}."); }
+        catch (Exception) { throw new Exception($"Cannot create file stream at ${file}."); }
 
         Func<OsmStreamSource> func = null;
 

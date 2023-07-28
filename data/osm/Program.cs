@@ -13,6 +13,9 @@ internal class Program
         [Option("file", Required = true)]
         public string File { get; set; }
 
+        [Option("conn", Required = true)]
+        public string Conn { get; set; }
+
         [Option("bbox", Required = false)]
         public IEnumerable<string> Bbox { get; set; }
     }
@@ -30,11 +33,11 @@ internal class Program
         try
         {
             var source = SourceFactory.GetInstance(log, opt.File, opt.Bbox.ToList());
-            var target = TargetFactory.GetInstance(log);
+            var target = TargetFactory.GetInstance(log, opt.Conn);
 
-            foreach (var grain in source)
+            foreach (var place in source)
             {
-                target.Consume(grain);
+                target.Consume(place);
             }
             target.Complete();
         }

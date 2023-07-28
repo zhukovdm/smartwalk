@@ -33,19 +33,18 @@ internal static class Inspector
 
             // extract keywords and tags
 
-            var grain = new Place();
-            KeywordExtractor.Extract(node.Tags, grain.keywords);
+            var place = new Place();
+            KeywordExtractor.Extract(node.Tags, place.keywords);
 
-            if (grain.keywords.Count > 0)
+            if (place.keywords.Count > 0)
             {
-                AttributeExtractor.Extract(node.Tags, grain);
-                NameExtractor.Extract(node.Tags, grain);
-                LinkedExtractor.Extract(node, grain.linked);
+                AttributeExtractor.Extract(node.Tags, place);
+                NameExtractor.Extract(node.Tags, place);
+                LinkedExtractor.Extract(node, place.linked);
 
-                grain.location = new() { lon = lon, lat = lat };
-                grain.position = new(lon, lat);
+                place.location = new(lon, lat);
 
-                return grain;
+                return place;
             }
         }
 
@@ -77,17 +76,17 @@ internal static class Inspector
 
             if (way.Nodes.Length < 4 || way.Nodes[0] != way.Nodes[^1] || way.Tags is null || way.Tags.Count == 0) { return null; }
 
-            var grain = new Place();
+            var place = new Place();
 
             if (!TryGetSequence(way, out var seq)) { return null; }
 
-            KeywordExtractor.Extract(way.Tags, grain.keywords);
+            KeywordExtractor.Extract(way.Tags, place.keywords);
 
-            if (grain.keywords.Count > 0)
+            if (place.keywords.Count > 0)
             {
-                AttributeExtractor.Extract(way.Tags, grain);
-                NameExtractor.Extract(way.Tags, grain);
-                LinkedExtractor.Extract(way, grain.linked);
+                AttributeExtractor.Extract(way.Tags, place);
+                NameExtractor.Extract(way.Tags, place);
+                LinkedExtractor.Extract(way, place.linked);
 
                 /* Note that both IsCounterClockwise and Centroid
                  * use closedness of the shape verified above. */
@@ -98,12 +97,11 @@ internal static class Inspector
                 if (!Cartesian.IsCounterClockwise(seq)) { seq.Reverse(); }
                 var cen = Cartesian.Centroid(seq);
 
-                grain.attributes.polygon = seq;
+                place.attributes.polygon = seq;
 
-                grain.location = new() { lon = cen.lon, lat = cen.lat };
-                grain.position = new(cen.lon, cen.lat);
+                place.location = new(cen.lon, cen.lat);
 
-                return grain;
+                return place;
             }
         }
 

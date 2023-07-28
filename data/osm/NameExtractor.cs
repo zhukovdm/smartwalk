@@ -6,21 +6,22 @@ namespace osm;
 
 internal class NameExtractor
 {
-    public static void Extract(TagsCollectionBase tags, Place grain)
+    public static void Extract(TagsCollectionBase tags, Place place)
     {
-        string name = null;
         var ks = new string[] { "name:en", "name", "alt_name", "brand", "operator" };
 
         foreach (var k in ks)
         {
-            if (name is null && tags.TryGetValue(k, out var v) && Verifier.IsNonTrivialString(v))
+            if (place.name is null && tags.TryGetValue(k, out var v) && Verifier.IsNonTrivialString(v))
             {
-                name = v;
+                place.name = v;
             }
         }
-        name ??= "Noname";
 
-        grain.name = name;
-        grain.attributes.name = name;
+        if (place.name is null)
+        {
+            var keyword = place.keywords.ToList()[new Random().Next(place.keywords.Count)];
+            place.name = string.Concat(char.ToUpper(keyword[0]).ToString(), keyword.AsSpan(1));
+        }
     }
 }

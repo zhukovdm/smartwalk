@@ -12,7 +12,7 @@ internal static class Cartesian
     /// <item>http://paulbourke.net/geometry/polygonmesh/</item>
     /// </list>
     /// </summary>
-    /// <param name="polygon">Closed polygon (first and last points are identical!).</param>
+    /// <param name="polygon">Closed polygon (the first and last points must be identical).</param>
     private static double SignedArea(List<Point> polygon)
     {
         double ar = 0.0;

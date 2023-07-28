@@ -1,4 +1,8 @@
 REGION_FILE=czech-republic-latest
+REGION_N=50.20
+REGION_E=14.80
+REGION_S=49.90
+REGION_W=14.18
 
 A_DIR=${PWD}/assets
 S_DIR=${PWD}/scripts
@@ -15,20 +19,29 @@ init:
 		|| { echo "File $(REGION_FILE).osm.pbf has not been found..."; exit 1; }
 
 routing-engine: init
-	cp $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf $(A_DIR)/routing-engine && \
+	@cp $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf $(A_DIR)/routing-engine && \
 	$(R_CMD) osrm-extract -p /opt/foot.lua /data/$(REGION_FILE).osm.pbf && \
 	$(R_CMD) osrm-partition /data/$(REGION_FILE).osrm && \
 	$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm && \
 	rm $(A_DIR)/routing-engine/$(REGION_FILE).osm.pbf
 
 database-deps:
-	cd $(S_DIR) && npm ci
+	@cd $(S_DIR) && npm ci
 
 database-init:
-	cd $(S_DIR) && ./init.sh
+	@cd $(S_DIR) && ./init.sh
 
-database-taginfo:
-	cd $(S_DIR) && ./taginfo.sh
+database-taginfo: init
+	@cd $(S_DIR) && ./taginfo.sh
+
+database-osm-nodway: init
+	@cd ./osm/ && dotnet run \
+		--file $(REGION_FILE).osm.pbf \
+		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
+		--conn mongodb://localhost:27017
+
+database-osm-rel:
+	echo "!"
 
 clean:
 	@for dir in $(EXTRA_DIRS) ; do \

@@ -40,37 +40,10 @@ internal sealed class Address
     public string postalCode { get; set; }
 }
 
-internal sealed class Payment
-{
-    [BsonIgnoreIfNull]
-    public bool? cash { get; set; }
-
-    [BsonIgnoreIfNull]
-    public bool? card { get; set; }
-
-    [BsonIgnoreIfNull]
-    public bool? amex { get; set; }
-
-    [BsonIgnoreIfNull]
-    public bool? jcb { get; set; }
-
-    [BsonIgnoreIfNull]
-    public bool? mastercard { get; set; }
-
-    [BsonIgnoreIfNull]
-    public bool? visa { get; set; }
-
-    [BsonIgnoreIfNull]
-    public bool? crypto { get; set; }
-}
-
 internal sealed class Attributes
 {
     [BsonIgnoreIfNull]
     public List<Point> polygon { get; set; }
-
-    [BsonIgnoreIfNull]
-    public string name { get; set; }
 
     [BsonIgnoreIfNull]
     public string image { get; set; }
@@ -80,9 +53,6 @@ internal sealed class Attributes
 
     [BsonIgnoreIfNull]
     public Address address { get; set; }
-
-    [BsonIgnoreIfNull]
-    public Payment payment { get; set; }
 
     [BsonIgnoreIfNull]
     public string email { get; set; }
@@ -146,6 +116,9 @@ internal sealed class Attributes
 
     [BsonIgnoreIfNull]
     public SortedSet<string> cuisine { get; set; }
+
+    [BsonIgnoreIfNull]
+    public SortedSet<string> payment { get; set; }
 }
 
 internal sealed class Linked
@@ -161,9 +134,7 @@ internal sealed class Place
 {
     public string name { get; set; }
 
-    public Point location { get; set; }
-
-    public GeoJsonPoint position { get; set; }
+    public GeoJsonPoint location { get; set; }
 
     public SortedSet<string> keywords { get; set; } = new();
 

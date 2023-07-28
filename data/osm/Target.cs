@@ -15,15 +15,15 @@ internal abstract class Target
 
         if (step % 1000 == 0)
         {
-            _logger.LogInformation("Still working... {0} objects already consumed.", step);
+            _logger.LogInformation("Still working... {0} places already found.", step);
         }
     }
 
-    protected void Total() { _logger.LogInformation("Finished, consumed {0} objects total.", step); }
+    protected void Total() { _logger.LogInformation("Finished, found a total of {0} places.", step); }
 
     public Target(ILogger logger) { _logger = logger; }
 
-    public abstract void Consume(Place grain);
+    public abstract void Consume(Place place);
 
     public abstract void Complete();
 }
@@ -32,7 +32,7 @@ internal class MockTarget : Target
 {
     public MockTarget(ILogger logger, IMongoDatabase database) : base(logger) { }
 
-    public override void Consume(Place grain) { Increment(); }
+    public override void Consume(Place place) { Increment(); }
 
     public override void Complete() { Total(); }
 }
@@ -40,16 +40,16 @@ internal class MockTarget : Target
 internal class MongoTarget : Target
 {
     private readonly IMongoDatabase _database;
-    private readonly List<Place> _grains = new();
+    private readonly List<Place> _places = new();
 
     private void Write()
     {
         var bulk = new List<WriteModel<Place>>();
-        var coll = _database.GetCollection<Place>(Constants.MONGO_GRAIN_COLLECTION);
+        var coll = _database.GetCollection<Place>(Constants.MONGO_PLACE_COLLECTION);
 
         // upsert strategy!
 
-        foreach (var g in _grains)
+        foreach (var g in _places)
         {
             var upsert = new ReplaceOneModel<Place>(
                 Builders<Place>.Filter.Where(d => d.linked.osm == g.linked.osm), g
@@ -60,7 +60,7 @@ internal class MongoTarget : Target
         }
         _ = coll.BulkWrite(bulk);
 
-        _grains.Clear();
+        _places.Clear();
     }
 
     public MongoTarget(ILogger logger, IMongoDatabase database) : base(logger)
@@ -68,16 +68,16 @@ internal class MongoTarget : Target
         _database = database;
     }
 
-    public override void Consume(Place grain)
+    public override void Consume(Place place)
     {
-        _grains.Add(grain);
-        if (_grains.Count >= 1000) { Write(); }
+        _places.Add(place);
+        if (_places.Count >= 1000) { Write(); }
         Increment();
     }
 
     public override void Complete()
     {
-        if (_grains.Count > 0) { Write(); }
+        if (_places.Count > 0) { Write(); }
         Total();
     }
 }

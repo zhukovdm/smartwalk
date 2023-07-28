@@ -17,27 +17,27 @@ internal static class AttributeExtractor
         public string value { get; set; }
     }
 
-    private static readonly SortedSet<string> _rental;
     private static readonly SortedSet<string> _clothes;
     private static readonly SortedSet<string> _cuisine;
+    private static readonly SortedSet<string> _rental;
 
     private static SortedSet<string> GetCollection(string file)
     {
-        var json = File.ReadAllText(string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "tags", file + ".json" }));
+        var json = File.ReadAllText(string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "taginfo", file + ".json" }));
         return new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value));
     }
 
     static AttributeExtractor()
     {
-        _rental = GetCollection("rental");
         _clothes = GetCollection("clothes");
         _cuisine = GetCollection("cuisine");
+        _rental = GetCollection("rental");
     }
 
     // supporting functions
 
     private static string Http(string str)
-        => Regex.IsMatch(str, @"^https?://") ? str : "http://" + str;
+        => Regex.IsMatch(str, @"^https?://") ? str : "https://" + str;
 
     private static List<string> Divide(string s)
         => s.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
@@ -91,21 +91,6 @@ internal static class AttributeExtractor
             {
                 attributes.address = attributes.address ?? new();
                 act.Invoke(v);
-                return;
-            }
-        }
-    }
-
-    private static void Pay(TagsCollectionBase tags, Attributes attributes, string[] lst, Action<bool> act)
-    {
-        var vs = new SortedSet<string> { "yes", "only" };
-
-        foreach (var item in lst)
-        {
-            if (tags.TryGetValue(item, out var v))
-            {
-                attributes.payment = attributes.payment ?? new();
-                act.Invoke(vs.Contains(v));
                 return;
             }
         }
@@ -214,25 +199,6 @@ internal static class AttributeExtractor
         Accommodate(tags, attributes, _po, (string po) => { attributes.address.postalCode = po; });
     }
 
-    private static void Payment(TagsCollectionBase tags, Attributes attributes)
-    {
-        var _h = new[] { "payment:cash", "payment:coins" };
-        var _d = new[] { "payment:credit_cards", "payment:debit_cards", "payment:cards" };
-        var _a = new[] { "payment:american_express" };
-        var _j = new[] { "payment:jcb" };
-        var _m = new[] { "payment:mastercard", "payment:maestro" };
-        var _v = new[] { "payment:visa", "payment:visa_electron" };
-        var _c = new[] { "payment:cryptocurrencies", "payment:bitcoin" };
-
-        Pay(tags, attributes, _h, (bool h) => { attributes.payment.cash = h; });
-        Pay(tags, attributes, _d, (bool d) => { attributes.payment.card = d; });
-        Pay(tags, attributes, _a, (bool a) => { attributes.payment.amex = a; });
-        Pay(tags, attributes, _j, (bool j) => { attributes.payment.jcb = j; });
-        Pay(tags, attributes, _m, (bool m) => { attributes.payment.mastercard = m; });
-        Pay(tags, attributes, _v, (bool v) => { attributes.payment.visa = v; });
-        Pay(tags, attributes, _c, (bool c) => { attributes.payment.crypto = c; });
-    }
-
     private static void Email(TagsCollectionBase tags, Attributes attributes)
     {
         var ks = new string[] { "contact:email", "email" };
@@ -286,7 +252,7 @@ internal static class AttributeExtractor
         }
     }
 
-    private static void DrinkingWater(TagsCollectionBase tags, Place grain)
+    private static void DrinkingWater(TagsCollectionBase tags, Place place)
     {
         var ks = new string[] { "drinking_water", "drinking_water:legal", "drinking_water:refill" };
         var vs = new SortedSet<string>() { "yes" };
@@ -295,22 +261,22 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(k, out var v))
             {
-                if (vs.Contains(v)) { grain.keywords.Add("drinking water"); }
-                grain.attributes.drinkingWater = vs.Contains(v) ? true : false;
+                if (vs.Contains(v)) { place.keywords.Add("drinking water"); }
+                place.attributes.drinkingWater = vs.Contains(v) ? true : false;
                 return;
             }
         }
     }
 
-    private static void InternetAccess(TagsCollectionBase tags, Place grain)
+    private static void InternetAccess(TagsCollectionBase tags, Place place)
     {
         var k = "internet_access";
         var vs = new SortedSet<string>() { "wlan", "yes", "terminal", "wired", "wifi" };
 
         if (tags.TryGetValue(k, out var v))
         {
-            if (vs.Contains(v)) { grain.keywords.Add("internet access"); }
-            grain.attributes.internetAccess = vs.Contains(v) ? true : false;
+            if (vs.Contains(v)) { place.keywords.Add("internet access"); }
+            place.attributes.internetAccess = vs.Contains(v) ? true : false;
         }
     }
 
@@ -505,36 +471,102 @@ internal static class AttributeExtractor
         }
     }
 
+    /// <summary>
+    /// Payment extraction based on taginfo statistics.
+    /// 
+    /// <list>
+    /// <item>https://taginfo.openstreetmap.org/search?q=payment#keys</item>
+    /// </list>
+    /// </summary>
+    private static void Payment(TagsCollectionBase tags, Attributes attributes)
+    {
+        var res = new SortedSet<string>();
+
+        var ks = tags.Select(i => i.Key).Where(k => k.StartsWith("payment:"));
+        var vs = new SortedSet<string>() { "yes", "only" };
+
+        var ts = new SortedSet<string>()
+        {
+            "cash",
+            "credit cards",
+            "visa",
+            "debit cards",
+            "mastercard",
+            "coins",
+            "notes",
+            "maestro",
+            "contactless",
+            "american express",
+            "cards",
+            "visa electron",
+            "electronic purses",
+            "ep easycard",
+            "ep ipass",
+            "telephone cards",
+            "jcb",
+            "discover card",
+            "diners club",
+            "girocard",
+            "visa debit",
+            "unionpay",
+            "cryptocurrencies",
+            "cheque",
+            "alipay",
+            "wechat",
+            "apple pay",
+            "lightning",
+            "onchain",
+            "ep geldkarte",
+            "membership card",
+            "v pay",
+            "google pay",
+            "paypal",
+            "bitcoin",
+            "sodexo"
+        };
+
+        foreach (var k in ks)
+        {
+            if (tags.TryGetValue(k, out var v) && vs.Contains(v))
+            {
+                var cand = Converter.SnakeToKeyword(k.Substring(8));
+                if (ts.Contains(cand)) { res.Add(cand); }
+            }
+        }
+
+        if (res.Count > 0) { attributes.payment = res; }
+    }
+
     // main routine
 
-    public static void Extract(TagsCollectionBase tags, Place grain)
+    public static void Extract(TagsCollectionBase tags, Place place)
     {
-        //Name(tags, grain.attributes);
-        //Polygon(tags, grain.attributes);
-        Image(tags, grain.attributes);
-        Website(tags, grain.attributes);
-        Address(tags, grain.attributes);
-        Payment(tags, grain.attributes);
-        Email(tags, grain.attributes);
-        Phone(tags, grain.attributes);
-        Delivery(tags, grain.attributes);
-        DrinkingWater(tags, grain);
-        InternetAccess(tags, grain);
-        Shower(tags, grain.attributes);
-        Smoking(tags, grain.attributes);
-        Takeaway(tags, grain.attributes);
-        Toilets(tags, grain.attributes);
-        Wheelchair(tags, grain.attributes);
-        Year(tags, grain.attributes);
-        Rating(tags, grain.attributes);
-        Capacity(tags, grain.attributes);
-        Elevation(tags, grain.attributes);
-        MinimumAge(tags, grain.attributes);
-        Fee(tags, grain.attributes);
-        Charge(tags, grain.attributes);
-        OpeningHours(tags, grain.attributes);
-        Clothes(tags, grain.attributes);
-        Cuisine(tags, grain.attributes);
-        Rental(tags, grain.attributes);
+        //Name(tags, place.attributes);
+        //Polygon(tags, place.attributes);
+        Image(tags, place.attributes);
+        Website(tags, place.attributes);
+        Address(tags, place.attributes);
+        Payment(tags, place.attributes);
+        Email(tags, place.attributes);
+        Phone(tags, place.attributes);
+        Delivery(tags, place.attributes);
+        DrinkingWater(tags, place);
+        InternetAccess(tags, place);
+        Shower(tags, place.attributes);
+        Smoking(tags, place.attributes);
+        Takeaway(tags, place.attributes);
+        Toilets(tags, place.attributes);
+        Wheelchair(tags, place.attributes);
+        Year(tags, place.attributes);
+        Rating(tags, place.attributes);
+        Capacity(tags, place.attributes);
+        Elevation(tags, place.attributes);
+        MinimumAge(tags, place.attributes);
+        Fee(tags, place.attributes);
+        Charge(tags, place.attributes);
+        OpeningHours(tags, place.attributes);
+        Clothes(tags, place.attributes);
+        Cuisine(tags, place.attributes);
+        Rental(tags, place.attributes);
     }
 }

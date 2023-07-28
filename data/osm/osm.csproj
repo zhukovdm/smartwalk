@@ -7,20 +7,6 @@
         <Nullable>disable</Nullable>
     </PropertyGroup>
 
-    <Target Name="CopyBuild" BeforeTargets="Build">
-        <ItemGroup>
-            <Assets Include="Resources\**\*.*" />
-        </ItemGroup>
-        <Copy SourceFiles="@(Assets)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    </Target>
-
-    <Target Name="CopyPublish" BeforeTargets="Publish">
-        <ItemGroup>
-            <Assets Include="Resources\**\*.*" />
-        </ItemGroup>
-        <Copy SourceFiles="@(Assets)" DestinationFolder="publish\%(RecursiveDir)" SkipUnchangedFiles="true" />
-    </Target>
-
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
         <PackageReference Include="GeoJSON.Text" Version="1.0.1" />

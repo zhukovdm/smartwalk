@@ -14,16 +14,8 @@ internal static class KeywordExtractor
         public string value { get; set; }
     }
 
-    private sealed class AssocPair
-    {
-        public SortedSet<string> values { get; set; }
-
-        public SortedSet<string> enrich { get; set; }
-    }
-
     private static readonly SortedSet<string> _wi;
     private static readonly SortedSet<string> _wo;
-    private static readonly Dictionary<string, List<AssocPair>> _as;
     private static readonly Dictionary<string, SortedSet<string>> _ts = new();
 
     static KeywordExtractor()
@@ -32,6 +24,7 @@ internal static class KeywordExtractor
         {
             "aerialway",
             "aeroway",
+            "attraction",
             "club",
             "craft",
             "hazard",
@@ -44,7 +37,6 @@ internal static class KeywordExtractor
         {
             "amenity",
             "artwork_type",
-            "attraction",
             "building",
             "business",
             "emergency",
@@ -62,20 +54,9 @@ internal static class KeywordExtractor
 
         foreach (var key in union)
         {
-            var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "tags", key + ".json" });
+            var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "taginfo", key + ".json" });
             var json = File.ReadAllText(path);
             _ts.Add(key, new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)));
-        }
-
-        {
-            var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.RESOURCES_BASE_ADDR, "enrich", "assoc.json" });
-            var json = File.ReadAllText(path);
-            _as = JsonSerializer.Deserialize<Dictionary<string, List<AssocPair>>>(json);
-
-            foreach (var item in union)
-            {
-                if (!_as.ContainsKey(item)) { _as[item] = new(); } // ensure empty set for all tags!
-            }
         }
     }
 
@@ -88,7 +69,6 @@ internal static class KeywordExtractor
         if (otags.TryGetValue(tag, out var val))
         {
             var allow = _ts[tag];
-            var assoc = _as[tag];
 
             var vs = val.Split(';', StringSplitOptions.RemoveEmptyEntries)
                 .Select(v => v.Trim())
@@ -100,14 +80,6 @@ internal static class KeywordExtractor
                 {
                     keywords.Add(v);
                     if (wk) { keywords.Add(tag); }
-
-                    foreach (var a in assoc)
-                    {
-                        if (a.values.Contains(v))
-                        {
-                            foreach (var e in a.enrich) { keywords.Add(e); }
-                        }
-                    }
                 }
             }
         }
