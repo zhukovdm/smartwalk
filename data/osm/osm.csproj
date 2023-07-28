@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>disable</ImplicitUsings>
+        <Nullable>disable</Nullable>
+    </PropertyGroup>
+
+    <Target Name="CopyBuild" BeforeTargets="Build">
+        <ItemGroup>
+            <Assets Include="Resources\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(Assets)" DestinationFolder="$(OutputPath)\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    </Target>
+
+    <Target Name="CopyPublish" BeforeTargets="Publish">
+        <ItemGroup>
+            <Assets Include="Resources\**\*.*" />
+        </ItemGroup>
+        <Copy SourceFiles="@(Assets)" DestinationFolder="publish\%(RecursiveDir)" SkipUnchangedFiles="true" />
+    </Target>
+
+    <ItemGroup>
+        <PackageReference Include="CommandLineParser" Version="2.9.1" />
+        <PackageReference Include="GeoJSON.Text" Version="1.0.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="7.0.0" />
+        <PackageReference Include="mongocsharpdriver" Version="2.19.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
+        <PackageReference Include="OsmSharp" Version="6.2.0" />
+    </ItemGroup>
+
+</Project>
