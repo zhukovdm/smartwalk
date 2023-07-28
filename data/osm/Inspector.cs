@@ -1,4 +1,5 @@
 using OsmSharp;
+using OsmSharp.Tags;
 using System.Collections.Generic;
 
 namespace osm;
@@ -16,7 +17,7 @@ internal static class Inspector
 
             var d = node.Id is not null && node.Longitude is not null && node.Latitude is not null;
 
-            if (!d) { Reporter.ReportUndefined(node); }
+            if (!d) { Reporter.ReportUndefined(node, "node"); }
 
             // extract and verify position
 
@@ -70,7 +71,7 @@ internal static class Inspector
         {
             // check if the way is properly defined
 
-            if (way.Id is null || way.Nodes is null) { Reporter.ReportUndefined(way); }
+            if (way.Id is null || way.Nodes is null) { Reporter.ReportUndefined(way, "way"); }
 
             // small or open ways are skipped, closed polygons pass
 
@@ -102,6 +103,34 @@ internal static class Inspector
                 place.location = new(cen.lon, cen.lat);
 
                 return place;
+            }
+        }
+
+        return null;
+    }
+
+    public static Place Inspect(Relation relation, Sophox sophox)
+    {
+        if (relation is not null)
+        {
+            if (relation.Id is null) { Reporter.ReportUndefined(relation, "relation"); }
+
+            if (relation.Tags is null || relation.Tags.Count == 0) { return null; }
+
+            if (sophox.TryGetLocation(relation.Id.Value, out var loc))
+            {
+                var place = new Place();
+                KeywordExtractor.Extract(relation.Tags, place.keywords);
+
+                if (place.keywords.Count > 0)
+                {
+                    AttributeExtractor.Extract(relation.Tags, place);
+                    NameExtractor.Extract(relation.Tags, place);
+                    LinkedExtractor.Extract(relation, place.linked);
+
+                    place.location = new(loc.lon, loc.lat);
+                    return place;
+                }
             }
         }
 

@@ -34,14 +34,12 @@ database-init:
 database-taginfo: init
 	@cd $(S_DIR) && ./taginfo.sh
 
-database-osm-nodway: init
+database-osm: init
 	@cd ./osm/ && dotnet run \
+		--link https://sophox.org/sparql \
 		--file $(REGION_FILE).osm.pbf \
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
 		--conn mongodb://localhost:27017
-
-database-osm-rel:
-	echo "!"
 
 clean:
 	@for dir in $(EXTRA_DIRS) ; do \

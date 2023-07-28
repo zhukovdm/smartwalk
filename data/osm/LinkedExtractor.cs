@@ -25,4 +25,10 @@ internal class LinkedExtractor
         link.osm = "way/" + way.Id.Value.ToString();
         Wikidata(way.Tags, link);
     }
+
+    public static void Extract(Relation relation, Linked link)
+    {
+        link.osm = "relation/" + relation.Id.Value.ToString();
+        Wikidata(relation.Tags, link);
+    }
 }

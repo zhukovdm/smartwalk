@@ -1,6 +1,7 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
-using System.Collections.Generic;
 
 namespace osm;
 
@@ -26,15 +27,6 @@ internal abstract class Target
     public abstract void Consume(Place place);
 
     public abstract void Complete();
-}
-
-internal class MockTarget : Target
-{
-    public MockTarget(ILogger logger, IMongoDatabase database) : base(logger) { }
-
-    public override void Consume(Place place) { Increment(); }
-
-    public override void Complete() { Total(); }
 }
 
 internal class MongoTarget : Target
@@ -79,5 +71,18 @@ internal class MongoTarget : Target
     {
         if (_places.Count > 0) { Write(); }
         Total();
+    }
+}
+
+internal static class TargetFactory
+{
+    public static Target GetInstance(ILogger logger, string conn)
+    {
+        try
+        {
+            var client = new MongoClient(new MongoUrl(conn));
+            return new MongoTarget(logger, client.GetDatabase(Constants.MONGO_DATABASE));
+        }
+        catch (Exception) { throw new Exception("Failed to get database instance from the given connection string."); }
     }
 }

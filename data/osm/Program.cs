@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using CommandLine;
 using Microsoft.Extensions.Logging;
 
@@ -10,6 +11,9 @@ internal class Program
 {
     private sealed class Options
     {
+        [Option("link", Required = true)]
+        public string Link { get; set; }
+
         [Option("file", Required = true)]
         public string File { get; set; }
 
@@ -20,7 +24,7 @@ internal class Program
         public IEnumerable<string> Bbox { get; set; }
     }
 
-    private static void Main(string[] args)
+    private static async Task Main(string[] args)
     {
         var log = LoggerFactory
             .Create(b => b.AddConsole().SetMinimumLevel(LogLevel.Information))
@@ -32,7 +36,12 @@ internal class Program
 
         try
         {
-            var source = SourceFactory.GetInstance(log, opt.File, opt.Bbox.ToList());
+            var sophox = await SophoxFactory
+                .GetInstance(log, opt.Link, opt.Bbox.ToList());
+
+            var source = SourceFactory
+                .GetInstance(log, opt.File, opt.Bbox.ToList(), sophox);
+
             var target = TargetFactory.GetInstance(log, opt.Conn);
 
             foreach (var place in source)

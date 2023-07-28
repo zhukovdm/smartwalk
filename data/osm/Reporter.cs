@@ -12,18 +12,13 @@ internal static class Reporter
         return JsonSerializer.Serialize<T>(entity, opts);
     }
 
-    public static void ReportUndefined(Node node)
+    public static void ReportUndefined<T>(T t, string label)
     {
-        throw new ArgumentException($"Undefined node detected." + Environment.NewLine + $"{Serialize(node)}");
+        throw new ArgumentException($"Undefined {label} detected." + Environment.NewLine + $"{Serialize(t)}");
     }
 
     public static void ReportOutbound(Node node)
     {
         throw new ArgumentException($"Outbound node detected." + Environment.NewLine + $"{Serialize(node)}");
-    }
-
-    public static void ReportUndefined(Way way)
-    {
-        throw new ArgumentException($"Undefined way detected." + Environment.NewLine + $"{Serialize(way)}");
     }
 }
