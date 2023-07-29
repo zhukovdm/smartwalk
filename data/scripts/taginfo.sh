@@ -14,6 +14,7 @@ node taginfo.js \
   club \
   craft \
   cuisine \
+  denomination \
   emergency \
   hazard \
   healthcare \

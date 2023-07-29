@@ -17,9 +17,8 @@ internal static class AttributeExtractor
         public string value { get; set; }
     }
 
-    private static readonly SortedSet<string> _clothes;
-    private static readonly SortedSet<string> _cuisine;
-    private static readonly SortedSet<string> _rental;
+    private static readonly SortedSet<string>
+        _clothes, _cuisine, _denomination, _rental;
 
     private static SortedSet<string> GetCollection(string file)
     {
@@ -31,6 +30,7 @@ internal static class AttributeExtractor
     {
         _clothes = GetCollection("clothes");
         _cuisine = GetCollection("cuisine");
+        _denomination = GetCollection("denomination");
         _rental = GetCollection("rental");
     }
 
@@ -460,6 +460,15 @@ internal static class AttributeExtractor
         if (tags.TryGetValue("diet:vegetarian", out v) && vs.Contains(v)) { res.Add("vegetarian"); }
 
         if (res.Count > 0) { attributes.cuisine = res; }
+    }
+
+    private static void Denomination(TagsCollectionBase tags, Attributes attributes)
+    {
+        if (tags.TryGetValue("denomination", out var v))
+        {
+            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => _denomination.Contains(item)));
+            attributes.denomination = (res.Count > 0) ? res : null;
+        }
     }
 
     private static void Rental(TagsCollectionBase tags, Attributes attributes)

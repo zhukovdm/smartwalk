@@ -118,6 +118,9 @@ internal sealed class Attributes
     public SortedSet<string> cuisine { get; set; }
 
     [BsonIgnoreIfNull]
+    public SortedSet<string> denomination { get; set; }
+
+    [BsonIgnoreIfNull]
     public SortedSet<string> payment { get; set; }
 }
 
