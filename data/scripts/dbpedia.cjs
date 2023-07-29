@@ -5,12 +5,13 @@ const rdfParser = require("rdf-parse").default;
 const rdfSerializer = require("rdf-serialize").default;
 const stringifyStream = require("stream-to-string");
 const {
+  getFirst,
   getPayload,
-  MONGO_CONNECTION_STRING,
-  reportPayload,
-  reportFetchedItems,
-  reportFinished,
+  MONGO_CONN_STR,
   reportError,
+  reportFinished,
+  reportPayload,
+  reportUpdatedItems,
   writeUpdateToDatabase
 } = require("./shared.cjs");
 
@@ -52,7 +53,6 @@ const DBPEDIA_JSONLD_CONTEXT = {
 };
 
 const DBPEDIA_ACCEPT_CONTENT = "text/turtle";
-
 const DBPEDIA_SPARQL_ENDPOINT = "https://dbpedia.org/sparql";
 
 const NQUADS_ACCEPT_CONTENT = "application/n-quads";
@@ -134,22 +134,21 @@ function constructFromJson(json) {
 
   return g.map((ent) => {
     const obj = {};
-    const fst = (a) => Array.isArray(a) ? a[0] : a;
 
     // en-containers
-    obj.name = fst(ent.name?.en);
-    obj.description = fst(ent.description?.en);
+    obj.name = getFirst(ent.name?.en);
+    obj.description = getFirst(ent.description?.en);
 
     // lists
-    obj.image = fst(ent.image);
-    obj.website = fst(ent.website);
+    obj.image = getFirst(ent.image);
+    obj.website = getFirst(ent.website);
 
     // dates
-    obj.year = handleDate(fst(ent.date));
+    obj.year = handleDate(getFirst(ent.date));
 
     // linked
-    obj.dbpedia = (fst(ent.dbpedia))?.substring(3);
-    obj.yago = (fst(ent.yago))?.substring(3);
+    obj.dbpedia = (getFirst(ent.dbpedia))?.substring(3);
+    obj.yago = (getFirst(ent.yago))?.substring(3);
 
     // existing
     obj.wikidata = ent.wikidata.substring(3);
@@ -162,27 +161,27 @@ async function dbpedia() {
 
   let cnt = 0;
   const resource = "DbPedia";
-  const client = new MongoClient(MONGO_CONNECTION_STRING);
+  const client = new MongoClient(MONGO_CONN_STR);
 
   try {
     let payload = await getPayload(client);
     reportPayload(payload, resource);
 
+    const WINDOW = 100;
+    const TOT = payload.length;
+
     while (payload.length) {
 
-      const window = 100;
+      const piece = payload.slice(0, WINDOW);
+      cnt += piece.length;
 
-      const lst = await fetchFromDbpedia(payload.slice(0, window).join(' '))
+      const lst = await fetchFromDbpedia(piece.join(' '))
         .then((jsn) => constructFromJson(jsn));
-
-      cnt += lst.length;
-      reportFetchedItems(lst, resource);
 
       const upd = (obj) => {
         return {
           $set: {
             "name": obj.name,
-            "attributes.name": obj.name,
             "attributes.description": obj.description,
             "attributes.image": obj.image,
             "attributes.website": obj.website,
@@ -194,7 +193,9 @@ async function dbpedia() {
       };
 
       await writeUpdateToDatabase(client, lst, upd);
-      payload = payload.slice(window);
+      reportUpdatedItems(cnt, TOT, resource);
+
+      payload = payload.slice(WINDOW);
     }
 
     reportFinished(resource, cnt);
