@@ -16,11 +16,11 @@ internal abstract class Target
 
         if (step % 1000 == 0)
         {
-            _logger.LogInformation("Still working... {0} places already found.", step);
+            _logger.LogInformation("Still working... {0} places already created.", step);
         }
     }
 
-    protected void Total() { _logger.LogInformation("Finished, found a total of {0} places.", step); }
+    protected void Total() { _logger.LogInformation("Finished, created a total of {0} places.", step); }
 
     public Target(ILogger logger) { _logger = logger; }
 

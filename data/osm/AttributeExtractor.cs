@@ -337,7 +337,18 @@ internal static class AttributeExtractor
 
     private static void Year(TagsCollectionBase tags, Attributes attributes)
     {
-        var ks = new string[] { "year_of_construction", "building:year_built", "year", "construction_year", "year_built", "building:year", "year_completed", "build_year" };
+        var ks = new string[]
+        {
+            "year_of_construction",
+            "building:year_built",
+            "year",
+            "construction_year",
+            "year_built",
+            "building:year",
+            "year_completed",
+            "build_year",
+            "start_date"
+        };
 
         foreach (var k in ks)
         {
