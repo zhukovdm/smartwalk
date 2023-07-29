@@ -94,13 +94,14 @@ function isValidKeyword(keyword) {
     && keyword.length <= KEYWORD_LENGTH_LIMIT_MAX
 };
 
-export function getFirst(obj) { return Array.isArray(obj) ? obj[0] : obj; }
+function getFirst(obj) { return Array.isArray(obj) ? obj[0] : obj; }
 
 module.exports = {
   ASSETS_DIR,
   MONGO_CONN_STR,
   MONGO_DATABASE,
   MONGO_PLACE_COLLECTION,
+  getFirst,
   getPayload,
   getPlaceCollection,
   writeUpdateToDatabase,
