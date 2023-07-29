@@ -1,8 +1,8 @@
 import { Command } from "commander";
 import { MongoClient } from "mongodb";
 import {
-  getGrainCollection,
-  MONGO_CONNECTION_STRING,
+  getPlaceCollection,
+  MONGO_CONN_STR,
   reportError,
   reportFetchedItems,
   reportFinished,
@@ -10,31 +10,36 @@ import {
   reportCreatedItems,
   writeCreateToDatabase
 } from "./shared.cjs";
-import {
-  fetchListFromWikidata
-} from "./wikidata.mjs";
+import { fetchListFromWikidata, getFirst } from "./wikidata.mjs";
 
+/*******************************************************************************
+ * 
+ * Do not forget to set up this array based on your preferences.
+ * 
+ ******************************************************************************/
 const cs = [
-  ["Q41176", 10000], // building
-  ["Q43229", 2000], // organization
-  ["Q57821", 1000], // fortification
-  ["Q210272", 4000], // cultural heritage
-  ["Q386724", 10000], // work
-  ["Q811979", 14000], // architectural structure
-  ["Q960648", 1000], // point of interest
-  ["Q10855061", 4000], // archaeological find
-  ["Q17537576", 5000], // creative work
-  ["Q110910970", 5000], // visual work
+  ["Q41176",     10000], // building
+  ["Q43229",     2000 ], // organization
+  ["Q57821",     1000 ], // fortification
+  ["Q210272",    4000 ], // cultural heritage
+  ["Q386724",    10000], // work
+  ["Q811979",    14000], // architectural structure
+  ["Q960648",    1000 ], // point of interest
+  ["Q10855061",  4000 ], // archaeological find
+  ["Q17537576",  5000 ], // creative work
+  ["Q110910970", 5000 ], // visual work
 ];
 
 /**
- * @param {*} cat Wikidata identifier defining category of objects.
- * @param {*} lim Maximum number of requested objects.
- * @param {*} ws West-South coordinate.
- * @param {*} en East-North coordinate.
+ * @param {string} cat Wikidata identifier defining category of objects.
+ * @param {number} lim Maximum number of requested objects.
+ * @param {number} w West coordinate.
+ * @param {number} n North coordinate.
+ * @param {number} e East coordinate.
+ * @param {number} s South coordinate.
  * @returns Query as a string.
  */
-const wikidataQuery = (cat, lim, ws, en) => `PREFIX bd: <http://www.bigdata.com/rdf#>
+const wikidataQuery = (cat, lim, w, n, e, s) => `PREFIX bd: <http://www.bigdata.com/rdf#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX my: <http://example.com/>
 PREFIX wd: <http://www.wikidata.org/entity/>
@@ -47,8 +52,8 @@ WHERE {
   ?wikidataId wdt:P31/wdt:P279* wd:${cat}.
   SERVICE wikibase:box {
     ?wikidataId wdt:P625 ?location.
-    bd:serviceParam wikibase:cornerSouthWest "Point(${ws})"^^geo:wktLiteral.
-    bd:serviceParam wikibase:cornerNorthEast "Point(${en})"^^geo:wktLiteral.
+    bd:serviceParam wikibase:cornerSouthWest "Point(${w} ${s})"^^geo:wktLiteral.
+    bd:serviceParam wikibase:cornerNorthEast "Point(${e} ${n})"^^geo:wktLiteral.
   }
 }
 LIMIT ${lim}`;
@@ -62,22 +67,20 @@ const args = new Command()
   .option("--e [number]")
   .option("--s [number]");
 
-function concat(a, b) { return [a, b].join(' '); }
-
 /**
  * Extract longitude and latitude from WKT literal.
- * @param {*} location WKT point `POINT(lon, lat)`
+ * @param {string} location WKT point `Point(lon, lat)`
  */
 function extractLocation(location) {
 
-  const re = /POINT\((?<lon>-?\d+\.\d+) (?<lat>-?\d+\.\d+)\)/i;
+  const re = /^Point\((?<lon>-?\d+(\.\d+)?) (?<lat>-?\d+(\.\d+)?)\)$/i;
   const { groups: { lon, lat } } = re.exec(location);
   return { lon: Number(lon), lat: Number(lat) };
 }
 
 function constructFromEntity(ent) {
   return {
-    location: extractLocation(ent.location),
+    location: extractLocation(getFirst(ent.location)),
     wikidata: ent.wikidata.substring(3) // cut wd:
   };
 }
@@ -90,7 +93,7 @@ async function wikidataCreate() {
   const resource = "Wikidata";
   const { w, n, e, s } = args.parse().opts();
 
-  const client = new MongoClient(MONGO_CONNECTION_STRING)
+  const client = new MongoClient(MONGO_CONN_STR);
 
   try {
     let tot = 0;
@@ -99,7 +102,7 @@ async function wikidataCreate() {
       let cnt = 0;
       reportCategory(cat);
 
-      const qry = wikidataQuery(cat, lim, concat(w, s), concat(e, n));
+      const qry = wikidataQuery(cat, lim, w, n, e, s);
       const lst = await fetchListFromWikidata(qry)
         .then((lst) => lst.map((e) => constructFromEntity(e)));
 
@@ -107,20 +110,15 @@ async function wikidataCreate() {
 
       for (const obj of lst) {
 
-        if (!await getGrainCollection(client).findOne({ "linked.wikidata": obj.wikidata })) {
+        if (!await getPlaceCollection(client).findOne({ "linked.wikidata": obj.wikidata })) {
           ++cnt;
-          const loc = obj.location;
 
           const ins = {
             name: "Noname",
             keywords: [],
-            location: loc,
-            position: {
+            location: {
               type: "Point",
-              coordinates: [loc.lon, loc.lat]
-            },
-            attributes: {
-              name: "Noname",
+              coordinates: [obj.location.lon, obj.location.lat]
             },
             linked: {
               wikidata: obj.wikidata
