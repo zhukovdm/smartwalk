@@ -40,6 +40,30 @@ internal sealed class Address
     public string postalCode { get; set; }
 }
 
+internal sealed class Socials
+{
+    [BsonIgnoreIfNull]
+    public string facebook { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string instagram { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string linkedin { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string pinterest { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string telegram { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string twitter { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string youtube { get; set; }
+}
+
 internal sealed class Attributes
 {
     [BsonIgnoreIfNull]
@@ -59,6 +83,9 @@ internal sealed class Attributes
 
     [BsonIgnoreIfNull]
     public string phone { get; set; }
+
+    [BsonIgnoreIfNull]
+    public Socials socials { get; set; }
 
     [BsonIgnoreIfNull]
     public List<string> charge { get; set; }
