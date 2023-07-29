@@ -1,21 +1,19 @@
 import consola from "consola";
-import { MongoClient } from "mongodb";
 import {
-  MONGO_CONN_STR,
-  MONGO_DATABASE,
-  MONGO_PLACE_COLLECTION
+  dropDatabase,
+  getClient,
+  getPlaceCollection
 } from "./shared.cjs";
 
 const logger = consola.create();
 
 async function init() {
 
-  const client = new MongoClient(MONGO_CONN_STR);
+  const client = getClient();
 
   try {
-    await client.db(MONGO_DATABASE).dropDatabase();
-
-    const placeColl = client.db(MONGO_DATABASE).collection(MONGO_PLACE_COLLECTION);
+    await dropDatabase(client);
+    const placeColl = getPlaceCollection(client);
 
     await placeColl.createIndex({ "linked.osm": 1 });
     await placeColl.createIndex({ "linked.wikidata": 1 });

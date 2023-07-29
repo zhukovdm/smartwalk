@@ -1,14 +1,13 @@
 import { Command } from "commander";
-import { MongoClient } from "mongodb";
 import {
+  getClient,
   getFirst,
   getPlaceCollection,
-  MONGO_CONN_STR,
+  reportCategory,
+  reportCreatedItems,
   reportError,
   reportFetchedItems,
   reportFinished,
-  reportCategory,
-  reportCreatedItems,
   writeCreateToDatabase
 } from "./shared.cjs";
 import { fetchListFromWikidata } from "./wikidata.mjs";
@@ -94,7 +93,7 @@ async function wikidataCreate() {
   const resource = "Wikidata";
   const { w, n, e, s } = args.parse().opts();
 
-  const client = new MongoClient(MONGO_CONN_STR);
+  const client = getClient();
 
   try {
     let tot = 0;

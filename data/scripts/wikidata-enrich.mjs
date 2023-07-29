@@ -1,13 +1,12 @@
-import { MongoClient } from "mongodb";
 import {
+  getClient,
   getFirst,
   getPayload,
   isValidKeyword,
-  MONGO_CONN_STR,
+  reportEnrichedItems,
   reportError,
   reportFinished,
   reportPayload,
-  reportUpdatedItems,
   writeUpdateToDatabase
 } from "./shared.cjs";
 import { fetchListFromWikidata } from "./wikidata.mjs";
@@ -270,7 +269,7 @@ async function wikidataEnrich() {
 
   let cnt = 0;
   const resource = "Wikidata";
-  const client = new MongoClient(MONGO_CONN_STR);
+  const client = getClient();
 
   try {
     let payload = await getPayload(client);
@@ -322,7 +321,7 @@ async function wikidataEnrich() {
       };
 
       await writeUpdateToDatabase(client, lst, upd);
-      reportUpdatedItems(cnt, TOT, resource);
+      reportEnrichedItems(cnt, TOT, resource);
 
       payload = payload.slice(WINDOW);
     }

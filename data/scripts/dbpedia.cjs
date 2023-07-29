@@ -1,17 +1,16 @@
-const MongoClient = require("mongodb").MongoClient;
 const jsonld = require("jsonld");
 const Streamify = require("streamify-string");
 const rdfParser = require("rdf-parse").default;
 const rdfSerializer = require("rdf-serialize").default;
 const stringifyStream = require("stream-to-string");
 const {
+  getClient,
   getFirst,
   getPayload,
-  MONGO_CONN_STR,
+  reportEnrichedItems,
   reportError,
   reportFinished,
   reportPayload,
-  reportUpdatedItems,
   writeUpdateToDatabase
 } = require("./shared.cjs");
 
@@ -161,7 +160,7 @@ async function dbpedia() {
 
   let cnt = 0;
   const resource = "DbPedia";
-  const client = new MongoClient(MONGO_CONN_STR);
+  const client = getClient();
 
   try {
     let payload = await getPayload(client);
@@ -193,7 +192,7 @@ async function dbpedia() {
       };
 
       await writeUpdateToDatabase(client, lst, upd);
-      reportUpdatedItems(cnt, TOT, resource);
+      reportEnrichedItems(cnt, TOT, resource);
 
       payload = payload.slice(WINDOW);
     }

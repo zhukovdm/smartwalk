@@ -76,7 +76,7 @@ function reportFetchedItems(lst, resource) {
 }
 
 function reportEnrichedItems(cnt, tot, resource) {
-  consola.info(`> Enriched ${cnt} out of ${tot} (${Math.floor(cnt * 100 / tot)}%) items from ${resource}.`);
+  consola.info(`> Enriched ${cnt} out of ${tot} items (${Math.floor(cnt * 100 / tot)}%) from ${resource}.`);
 }
 
 function reportCreatedItems(cat, cnt, tot) {
