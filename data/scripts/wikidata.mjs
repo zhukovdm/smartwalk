@@ -122,5 +122,3 @@ export function fetchListFromWikidata(query) {
   .then((doc) => jsonld.compact(doc, WIKIDATA_JSONLD_CONTEXT))
   .then((jsn) => jsn["@graph"] ?? []);
 }
-
-export function getFirst(obj) { return Array.isArray(obj) ? obj[0] : obj; }

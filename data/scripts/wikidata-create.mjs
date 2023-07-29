@@ -1,6 +1,7 @@
 import { Command } from "commander";
 import { MongoClient } from "mongodb";
 import {
+  getFirst,
   getPlaceCollection,
   MONGO_CONN_STR,
   reportError,
@@ -10,7 +11,7 @@ import {
   reportCreatedItems,
   writeCreateToDatabase
 } from "./shared.cjs";
-import { fetchListFromWikidata, getFirst } from "./wikidata.mjs";
+import { fetchListFromWikidata } from "./wikidata.mjs";
 
 /*******************************************************************************
  * 

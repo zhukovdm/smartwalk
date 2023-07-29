@@ -1,6 +1,7 @@
 import { MongoClient } from "mongodb";
 import { isValidKeyword } from "./shared.cjs";
 import {
+  getFirst,
   getPayload,
   MONGO_CONNECTION_STRING,
   reportError,
@@ -159,10 +160,9 @@ function handleNumber(value) {
 
 function constructFromEntity(ent) {
   const obj = {};
-  const fst = (a) => Array.isArray(a) ? a[0] : a;
 
-  obj.name = fst(ent.name?.en);
-  obj.description = fst(ent.description?.en);
+  obj.name = getFirst(ent.name?.en);
+  obj.description = getFirst(ent.description?.en);
 
   const keywords = []
     .concat(handleKeywordArray(ent.genre))
@@ -175,27 +175,27 @@ function constructFromEntity(ent) {
   obj.keywords = [...new Set(keywords)];
 
   // contacts
-  obj.image = fst(ent.image);
-  obj.email = fst(ent.email)?.substring(7); // mailto:
-  obj.phone = fst(ent.phone);
-  obj.website = fst(ent.website);
+  obj.image = getFirst(ent.image);
+  obj.email = getFirst(ent.email)?.substring(7); // mailto:
+  obj.phone = getFirst(ent.phone);
+  obj.website = getFirst(ent.website);
 
   // date
-  obj.year = handleDate(fst(ent.inception)) ?? handleDate(fst(ent.openingDate));
+  obj.year = handleDate(getFirst(ent.inception)) ?? handleDate(getFirst(ent.openingDate));
 
   // numbers
-  obj.capacity = handleNumber(fst(ent.capacity));
-  obj.elevation = handleNumber(fst(ent.elevation));
-  obj.minimumAge = handleNumber(fst(ent.minimumAge));
+  obj.capacity = handleNumber(getFirst(ent.capacity));
+  obj.elevation = handleNumber(getFirst(ent.elevation));
+  obj.minimumAge = handleNumber(getFirst(ent.minimumAge));
 
-  obj.country = fst(ent.country?.en);
-  obj.street = fst(ent.street?.en);
-  obj.house = fst(ent.house);
-  obj.postalCode = fst(ent.postalCode);
+  obj.country = getFirst(ent.country?.en);
+  obj.street = getFirst(ent.street?.en);
+  obj.house = getFirst(ent.house);
+  obj.postalCode = getFirst(ent.postalCode);
 
   // linked
-  obj.mapycz = fst(ent.mapycz);
-  obj.geonames = fst(ent.geonames);
+  obj.mapycz = getFirst(ent.mapycz);
+  obj.geonames = getFirst(ent.geonames);
   obj.wikidata = ent.wikidata.substring(3); // cut wd:
 
   return obj;
@@ -229,7 +229,6 @@ async function wikidataEnrich() {
         return {
           $set: {
             "name": obj.name,
-            "attributes.name": obj.name,
             "attributes.description": obj.description,
             "attributes.image": obj.image,
             "attributes.email": obj.email,
