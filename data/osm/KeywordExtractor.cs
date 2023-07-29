@@ -38,6 +38,8 @@ internal static class KeywordExtractor
             "amenity",
             "artwork_type",
             "building",
+            "building:architecture",
+            "building_type",
             "business",
             "emergency",
             "leisure",

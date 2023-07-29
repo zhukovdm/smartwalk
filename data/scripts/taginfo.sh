@@ -7,6 +7,8 @@ node taginfo.js \
   artwork_type \
   attraction \
   building \
+  building:architecture \
+  building_type \
   business \
   clothes \
   club \
@@ -23,6 +25,6 @@ node taginfo.js \
   rental \
   shop \
   sport \
-  tourism \
-  theatre:genre
+  theatre:genre \
+  tourism
 # man_made \
