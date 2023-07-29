@@ -61,9 +61,11 @@ SELECT ?oid ?loc WHERE {{
 
     private static async Task<Response> fetch(ILogger logger, string link, List<string> bbox)
     {
+        logger.LogInformation("Trying to contact {0} endpoint.", link);
         var url = $@"{link}?query={Uri.EscapeDataString(queryBuilder(Converter.ToBbox(bbox)))}";
 
         var cli = new HttpClient();
+        cli.Timeout = TimeSpan.FromMinutes(10);
         cli.DefaultRequestHeaders.Add("Accept", "application/sparql-results+json;charset=utf-8");
 
         var res = await cli.GetAsync(url);
