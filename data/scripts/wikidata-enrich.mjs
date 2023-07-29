@@ -5,9 +5,9 @@ import {
   isValidKeyword,
   MONGO_CONN_STR,
   reportError,
-  reportUpdatedItems,
   reportFinished,
   reportPayload,
+  reportUpdatedItems,
   writeUpdateToDatabase
 } from "./shared.cjs";
 import { fetchListFromWikidata } from "./wikidata.mjs";

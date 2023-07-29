@@ -79,6 +79,15 @@ database-wikidata-create:
 		--e $(REGION_E) \
 		--s $(REGION_S)
 
+database-wikidata-enrich:
+	@cd $(S_DIR) && node wikidata-enrich.mjs
+
+database-dbpedia:
+	@cd $(S_DIR) && node dbpedia.cjs
+
+database-stop:
+	@docker compose -f docker-compose.data.yaml down
+
 clean:
 	@for dir in $(EXTRA_DIRS) ; do \
 		sudo rm -rf $(A_DIR)/$$dir ; \
