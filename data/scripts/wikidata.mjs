@@ -59,6 +59,27 @@ const WIKIDATA_JSONLD_CONTEXT = {
     "@id": "my:website",
     "@type": "@id"
   },
+  "facebook": {
+    "@id": "my:facebook"
+  },
+  "instagram": {
+    "@id": "my:instagram"
+  },
+  "linkedin": {
+    "@id": "my:linkedin"
+  },
+  "pinterest": {
+    "@id": "my:pinterest"
+  },
+  "telegram": {
+    "@id": "my:telegram"
+  },
+  "twitter": {
+    "@id": "my:twitter"
+  },
+  "youtube": {
+    "@id": "my:youtube"
+  },
   "inception": {
     "@id": "my:inception",
     "@type": "xsd:dateTime"

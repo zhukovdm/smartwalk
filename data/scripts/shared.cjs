@@ -52,8 +52,8 @@ function reportCategory(category) {
   consola.info(`> Processing category ${category}...`);
 }
 
-function reportFetchedItems(lst, resource) {
-  consola.info(`> Fetched ${lst.length} valid items from ${resource}.`);
+function reportUpdatedItems(cnt, tot, resource) {
+  consola.info(`> Updated ${cnt} out of ${tot} (${Math.floor(cnt * 100 / tot)}%) items from ${resource}.`);
 }
 
 function reportCreatedItems(cat, cnt, tot) {
@@ -109,8 +109,8 @@ module.exports = {
   reportError,
   reportPayload,
   reportCategory,
-  reportFetchedItems,
   reportCreatedItems,
+  reportUpdatedItems,
   reportFinished,
   convertKeywordToName,
   convertSnakeToKeyword,

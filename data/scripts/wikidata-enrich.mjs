@@ -1,18 +1,16 @@
 import { MongoClient } from "mongodb";
-import { isValidKeyword } from "./shared.cjs";
 import {
   getFirst,
   getPayload,
-  MONGO_CONNECTION_STRING,
+  isValidKeyword,
+  MONGO_CONN_STR,
   reportError,
-  reportFetchedItems,
+  reportUpdatedItems,
   reportFinished,
   reportPayload,
   writeUpdateToDatabase
 } from "./shared.cjs";
-import {
-  fetchListFromWikidata
-} from "./wikidata.mjs"
+import { fetchListFromWikidata } from "./wikidata.mjs";
 
 const wikidataQuery = (payload) => `PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -36,6 +34,13 @@ CONSTRUCT {
     my:email ?email;
     my:phone ?phone;
     my:website ?website;
+    my:facebook ?facebookId;
+    my:instagram ?instagramId;
+    my:linkedin ?linkedinId;
+    my:pinterest ?pinterestId;
+    my:telegram ?telegramId;
+    my:twitter ?twitterId;
+    my:youtube ?youtubeId;
     my:inception ?inception;
     my:openingDate ?openingDate;
     my:capacity ?capacity;
@@ -101,6 +106,27 @@ OPTIONAL {
   ?wikidataId wdt:P856 ?website.
 }
 OPTIONAL {
+  ?wikidataId wdt:P2013 ?facebookId.
+}
+OPTIONAL {
+  ?wikidataId wdt:P2003 ?instagramId.
+}
+OPTIONAL {
+  ?wikidataId wdt:P4264 ?linkedinId.
+}
+OPTIONAL {
+  ?wikidataId wdt:3836 ?pinterestId.
+}
+OPTIONAL {
+  ?wikidataId wdt:P3789 ?telegramId.
+}
+OPTIONAL {
+  ?wikidataId wdt:P2002 ?twitterId.
+}
+OPTIONAL {
+  ?wikidataId wdt:P2397 ?youtubeId.
+}
+OPTIONAL {
   ?wikidataId wdt:P571 ?inception.
 }
 OPTIONAL {
@@ -158,11 +184,36 @@ function handleNumber(value) {
   return isNaN(n) ? undefined : n;
 }
 
+function handleFacebook(value) {
+  return value !== undefined ? `https://www.facebook.com/${value}` : undefined;
+}
+
+function handleInstagram(value) {
+  return value !== undefined ? `https://www.instagram.com/${value}/` : undefined;
+}
+
+function handleLinkedin(value) {
+  return value !== undefined ? `https://www.linkedin.com/in/${value}/` : undefined;
+}
+
+function handlePinterest(value) {
+  return value !== undefined ? `https://www.pinterest.com/${value}/` : undefined;
+}
+
+function handleTelegram(value) {
+  return value !== undefined ? `https://t.me/${value}` : undefined;
+}
+
+function handleTwitter(value) {
+  return value !== undefined ? `https://twitter.com/${value}` : undefined;
+}
+
+function handleYoutube(value) {
+  return value !== undefined ? `https://www.youtube.com/channel/${value}` : undefined;
+}
+
 function constructFromEntity(ent) {
   const obj = {};
-
-  obj.name = getFirst(ent.name?.en);
-  obj.description = getFirst(ent.description?.en);
 
   const keywords = []
     .concat(handleKeywordArray(ent.genre))
@@ -172,6 +223,9 @@ function constructFromEntity(ent) {
     .concat(handleKeywordArray(ent.archStyle))
     .concat(handleKeywordArray(ent.fieldWork));
 
+  obj.name = getFirst(ent.name?.en);
+  obj.description = getFirst(ent.description?.en);
+
   obj.keywords = [...new Set(keywords)];
 
   // contacts
@@ -179,6 +233,14 @@ function constructFromEntity(ent) {
   obj.email = getFirst(ent.email)?.substring(7); // mailto:
   obj.phone = getFirst(ent.phone);
   obj.website = getFirst(ent.website);
+
+  obj.facebook = handleFacebook(getFirst(ent.facebook));
+  obj.instagram = handleInstagram(getFirst(ent.instagram));
+  obj.linkedin = handleLinkedin(getFirst(ent.linkedin));
+  obj.pinterest = handlePinterest(getFirst(ent.pinterest));
+  obj.telegram = handleTelegram(getFirst(ent.telegram));
+  obj.twitter = handleTwitter(getFirst(ent.twitter));
+  obj.youtube = handleYoutube(getFirst(ent.youtube));
 
   // date
   obj.year = handleDate(getFirst(ent.inception)) ?? handleDate(getFirst(ent.openingDate));
@@ -208,22 +270,23 @@ async function wikidataEnrich() {
 
   let cnt = 0;
   const resource = "Wikidata";
-  const client = new MongoClient(MONGO_CONNECTION_STRING);
+  const client = new MongoClient(MONGO_CONN_STR);
 
   try {
     let payload = await getPayload(client);
     reportPayload(payload, resource);
 
+    const WINDOW = 100;
+    const TOT = payload.length;
+
     while (payload.length) {
 
-      const window = 100;
+      const piece = payload.slice(0, WINDOW);
+      cnt += piece.length;
 
-      const qry = wikidataQuery(payload.slice(0, window).join(' '));
+      const qry = wikidataQuery(piece.join(' '));
       const lst = await fetchListFromWikidata(qry)
         .then((lst) => lst.map((e) => constructFromEntity(e)));
-
-      cnt += lst.length;
-      reportFetchedItems(lst, resource);
 
       const upd = (obj) => {
         return {
@@ -242,6 +305,13 @@ async function wikidataEnrich() {
             "attributes.address.place": obj.street,
             "attributes.address.house": obj.house,
             "attributes.address.postalCode": obj.postalCode,
+            "attributes.socials.facebook": obj.facebook,
+            "attributes.socials.instagram": obj.instagram,
+            "attributes.socials.linkedin": obj.linkedin,
+            "attributes.socials.pinterest": obj.pinterest,
+            "attributes.socials.telegram": obj.telegram,
+            "attributes.socials.twitter": obj.twitter,
+            "attributes.socials.youtube": obj.youtube,
             "linked.mapycz": obj.mapycz,
             "linked.geonames": obj.geonames
           },
@@ -252,7 +322,9 @@ async function wikidataEnrich() {
       };
 
       await writeUpdateToDatabase(client, lst, upd);
-      payload = payload.slice(window);
+      reportUpdatedItems(cnt, TOT, resource);
+
+      payload = payload.slice(WINDOW);
     }
 
     reportFinished(resource, cnt);
