@@ -1,10 +1,21 @@
 const consola = require("consola");
+const { MongoClient } = require("mongodb");
 
 const ASSETS_DIR = "../assets";
 
 const MONGO_CONN_STR = "mongodb://localhost:27017";
 const MONGO_DATABASE = "smartwalk";
 const MONGO_PLACE_COLLECTION = "place";
+const MONGO_BOUND_COLLECTION = "bound";
+const MONGO_KEYWORD_COLLECTION = "keyword";
+
+function getClient() {
+  return new MongoClient(MONGO_CONN_STR);
+}
+
+function dropDatabase(client) {
+  return client.db(MONGO_DATABASE).dropDatabase();
+}
 
 async function getPayload(client) {
   const target = "linked.wikidata";
@@ -25,6 +36,14 @@ function getMongoCollection(client, collection) {
 
 function getPlaceCollection(client) {
   return getMongoCollection(client, MONGO_PLACE_COLLECTION);
+}
+
+function getBoundCollection(client) {
+  return getMongoCollection(client, MONGO_BOUND_COLLECTION);
+}
+
+function getKeywordCollection(client) {
+  return getMongoCollection(client, MONGO_KEYWORD_COLLECTION);
 }
 
 async function writeCreateToDatabase(client, ins) {
@@ -52,8 +71,12 @@ function reportCategory(category) {
   consola.info(`> Processing category ${category}...`);
 }
 
-function reportUpdatedItems(cnt, tot, resource) {
-  consola.info(`> Updated ${cnt} out of ${tot} (${Math.floor(cnt * 100 / tot)}%) items from ${resource}.`);
+function reportFetchedItems(lst, resource) {
+  console.info(`> Fetched ${lst.length} items from ${resource}.`)
+}
+
+function reportEnrichedItems(cnt, tot, resource) {
+  consola.info(`> Enriched ${cnt} out of ${tot} (${Math.floor(cnt * 100 / tot)}%) items from ${resource}.`);
 }
 
 function reportCreatedItems(cat, cnt, tot) {
@@ -98,21 +121,23 @@ function getFirst(obj) { return Array.isArray(obj) ? obj[0] : obj; }
 
 module.exports = {
   ASSETS_DIR,
-  MONGO_CONN_STR,
-  MONGO_DATABASE,
-  MONGO_PLACE_COLLECTION,
+  convertKeywordToName,
+  convertSnakeToKeyword,
+  dropDatabase,
+  getClient,
   getFirst,
   getPayload,
   getPlaceCollection,
-  writeUpdateToDatabase,
-  writeCreateToDatabase,
-  reportError,
-  reportPayload,
+  getBoundCollection,
+  getKeywordCollection,
+  isValidKeyword,
   reportCategory,
   reportCreatedItems,
-  reportUpdatedItems,
+  reportEnrichedItems,
+  reportError,
+  reportFetchedItems,
   reportFinished,
-  convertKeywordToName,
-  convertSnakeToKeyword,
-  isValidKeyword
+  reportPayload,
+  writeCreateToDatabase,
+  writeUpdateToDatabase
 };
