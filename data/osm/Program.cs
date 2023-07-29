@@ -11,9 +11,6 @@ internal class Program
 {
     private sealed class Options
     {
-        [Option("link", Required = true)]
-        public string Link { get; set; }
-
         [Option("file", Required = true)]
         public string File { get; set; }
 
@@ -36,11 +33,11 @@ internal class Program
 
         try
         {
-            var sophox = await SophoxFactory
-                .GetInstance(log, opt.Link, opt.Bbox.ToList());
+            var locator = await LocatorFactory
+                .GetInstance(log, opt.Bbox.ToList());
 
             var source = SourceFactory
-                .GetInstance(log, opt.File, opt.Bbox.ToList(), sophox);
+                .GetInstance(log, opt.File, opt.Bbox.ToList(), locator);
 
             var target = TargetFactory.GetInstance(log, opt.Conn);
 

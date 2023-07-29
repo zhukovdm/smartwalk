@@ -109,7 +109,7 @@ internal static class Inspector
         return null;
     }
 
-    public static Place Inspect(Relation relation, Sophox sophox)
+    public static Place Inspect(Relation relation, Locator locator)
     {
         if (relation is not null)
         {
@@ -117,7 +117,7 @@ internal static class Inspector
 
             if (relation.Tags is null || relation.Tags.Count == 0) { return null; }
 
-            if (sophox.TryGetLocation(relation.Id.Value, out var loc))
+            if (locator.TryGetLocation(relation.Id.Value, out var loc))
             {
                 var place = new Place();
                 KeywordExtractor.Extract(relation.Tags, place.keywords);

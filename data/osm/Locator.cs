@@ -8,16 +8,63 @@ using Microsoft.Extensions.Logging;
 
 namespace osm;
 
-internal class Sophox
+internal class Locator
 {
-    private readonly Dictionary<long, Point> _rels;
+    private readonly Dictionary<long, Point> _locs;
 
-    public Sophox(Dictionary<long, Point> rels) { _rels = rels; }
+    public Locator(Dictionary<long, Point> locs) { _locs = locs; }
 
-    public bool TryGetLocation(long id, out Point location) => _rels.TryGetValue(id, out location);
+    public bool TryGetLocation(long id, out Point location) => _locs.TryGetValue(id, out location);
 }
 
-internal static class SophoxFactory
+internal static class OverpassLocatorFactory
+{
+    private class Element
+    {
+        public long id { get; set; }
+
+        public Point center { get; set; }
+    }
+
+    private class Response
+    {
+        public List<Element> elements { get; set; }
+    }
+
+    private static async Task<Response> Fetch(ILogger logger, List<string> bbox)
+    {
+        logger.LogInformation("Trying to contact Overpass endpoint.");
+
+        var (w, n, e, s) = Converter.ToBbox(bbox);
+        var url = $"https://overpass-api.de/api/interpreter?data=[out:json];relation({s},{w},{n},{e})[type=multipolygon];out%20center;";
+
+        var res = await new HttpClient().GetAsync(url);
+        var txt = await res.Content.ReadAsStringAsync();
+
+        var jsn = JsonSerializer.Deserialize<Response>(txt);
+        logger.LogInformation("Fetched {0} entities from Overpass.", jsn.elements.Count);
+
+        return jsn;
+    }
+
+    private static Dictionary<long, Point> Extract(ILogger logger, Response obj)
+    {
+        var dic = new Dictionary<long, Point>();
+
+        foreach (var element in obj.elements)
+        {
+            dic[element.id] = element.center;
+        }
+        return dic;
+    }
+
+    public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox)
+    {
+        return new(Extract(logger, await Fetch(logger, bbox)));
+    }
+}
+
+internal static class SophoxLocatorFactory
 {
     private class Value
     {
@@ -41,7 +88,8 @@ internal static class SophoxFactory
         public Results results { get; set; }
     }
 
-    private static string queryBuilder((double, double, double, double) bbox) {
+    private static string QueryBuilder((double, double, double, double) bbox)
+    {
         var (w, n, e, s) = bbox;
         return $@"PREFIX bd: <http://www.bigdata.com/rdf#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
@@ -59,10 +107,10 @@ SELECT ?oid ?loc WHERE {{
 }}";
     }
 
-    private static async Task<Response> fetch(ILogger logger, string link, List<string> bbox)
+    private static async Task<Response> Fetch(ILogger logger, List<string> bbox)
     {
-        logger.LogInformation("Trying to contact {0} endpoint.", link);
-        var url = $@"{link}?query={Uri.EscapeDataString(queryBuilder(Converter.ToBbox(bbox)))}";
+        logger.LogInformation("Trying to contact Sophox endpoint.");
+        var url = $"https://sophox.org/sparql?query={Uri.EscapeDataString(QueryBuilder(Converter.ToBbox(bbox)))}";
 
         var cli = new HttpClient();
         cli.Timeout = TimeSpan.FromMinutes(10);
@@ -77,7 +125,7 @@ SELECT ?oid ?loc WHERE {{
         return jsn;
     }
 
-    private static Dictionary<long, Point> extract(ILogger logger, Response obj)
+    private static Dictionary<long, Point> Extract(ILogger logger, Response obj)
     {
         var dic = new Dictionary<long, Point>();
         var rid = new Regex(@"^https://www.openstreetmap.org/relation/(?<oid>\d+)$", RegexOptions.IgnoreCase);
@@ -104,8 +152,14 @@ SELECT ?oid ?loc WHERE {{
         return dic;
     }
 
-    public static async Task<Sophox> GetInstance(ILogger logger, string link, List<string> bbox)
+    public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox)
     {
-        return new(extract(logger, await fetch(logger, link, bbox)));
+        return new(Extract(logger, await Fetch(logger, bbox)));
     }
+}
+
+internal static class LocatorFactory
+{
+    public static Task<Locator> GetInstance(ILogger logger, List<string> bbox)
+        => OverpassLocatorFactory.GetInstance(logger, bbox);
 }

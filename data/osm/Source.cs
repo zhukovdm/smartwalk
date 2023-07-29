@@ -14,11 +14,11 @@ internal class Source : IEnumerable<Place>
     private readonly double _w, _n, _e, _s;
     private readonly ILogger _logger;
     private readonly OsmStreamSource _stream;
-    private readonly Sophox _sophox;
+    private readonly Locator _locator;
 
-    public Source(ILogger logger, OsmStreamSource stream, (double, double, double, double) bbox, Sophox sophox)
+    public Source(ILogger logger, OsmStreamSource stream, (double, double, double, double) bbox, Locator locator)
     {
-        _logger = logger; _stream = stream; (_w, _n, _e, _s) = bbox; _sophox = sophox;
+        _logger = logger; _stream = stream; (_w, _n, _e, _s) = bbox; _locator = locator;
     }
 
     public IEnumerator<Place> GetEnumerator()
@@ -36,7 +36,7 @@ internal class Source : IEnumerable<Place>
                 _logger.LogInformation("Still working... {0} objects already processed.", step);
             }
 
-            var place = Inspector.Inspect(item as Node) ?? Inspector.Inspect(item as Way) ?? Inspector.Inspect(item as Relation, _sophox);
+            var place = Inspector.Inspect(item as Node) ?? Inspector.Inspect(item as Way) ?? Inspector.Inspect(item as Relation, _locator);
 
             if (place is not null) { yield return place; }
         }
@@ -82,8 +82,8 @@ internal static class SourceFactory
         catch (Exception) { throw new Exception($"Cannot create OSM stream from ${fStream}."); }
     }
 
-    public static Source GetInstance(ILogger logger, string file, List<string> bbox, Sophox sophox)
+    public static Source GetInstance(ILogger logger, string file, List<string> bbox, Locator locator)
     {
-        return new(logger, ToStream(file), Converter.ToBbox(bbox), sophox);
+        return new(logger, ToStream(file), Converter.ToBbox(bbox), locator);
     }
 }
