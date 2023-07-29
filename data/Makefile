@@ -1,8 +1,14 @@
+################################################################################
+
+# Do not forget to set up these vars based on your preferences.
+
 REGION_FILE=czech-republic-latest
 REGION_N=50.20
 REGION_E=14.80
 REGION_S=49.90
 REGION_W=14.18
+
+################################################################################
 
 A_DIR=${PWD}/assets
 S_DIR=${PWD}/scripts
@@ -25,21 +31,53 @@ routing-engine: init
 	$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm && \
 	rm $(A_DIR)/routing-engine/$(REGION_FILE).osm.pbf
 
-database-deps:
-	@cd $(S_DIR) && npm ci
+taginfo: init
+	@cd $(S_DIR) && node taginfo.js \
+		aerialway \
+		aeroway \
+		amenity \
+		artwork_type \
+		attraction \
+		building \
+		building:architecture \
+		building_type \
+		business \
+		clothes \
+		club \
+		craft \
+		cuisine \
+		denomination \
+		emergency \
+		hazard \
+		healthcare \
+		historic \
+		leisure \
+		natural \
+		office \
+		public_transport \
+		rental \
+		shop \
+		sport \
+		theatre:genre \
+		tourism
+# man_made
 
 database-init:
-	@cd $(S_DIR) && ./init.sh
-
-database-taginfo: init
-	@cd $(S_DIR) && ./taginfo.sh
+	@docker compose -f docker-compose.data.yaml up -d && \
+	cd $(S_DIR) && npm ci && node init.mjs
 
 database-osm: init
 	@cd ./osm/ && dotnet run \
-		--link https://sophox.org/sparql \
 		--file $(REGION_FILE).osm.pbf \
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
 		--conn mongodb://localhost:27017
+
+database-wikidata-create:
+	@cd $(S_DIR) && node wikidata-create.mjs \
+		--w $(REGION_W) \
+		--n $(REGION_N) \
+		--e $(REGION_E) \
+		--s $(REGION_S)
 
 clean:
 	@for dir in $(EXTRA_DIRS) ; do \
