@@ -101,8 +101,8 @@ SELECT ?oid ?loc WHERE {{
     osmt:type 'multipolygon'.
   SERVICE wikibase:box {{
     ?oid osmm:loc ?loc.
-    bd:serviceParam wikibase:cornerSouthWest 'POINT({w} {s})'^^geo:wktLiteral.
-    bd:serviceParam wikibase:cornerNorthEast 'POINT({e} {n})'^^geo:wktLiteral.
+    bd:serviceParam wikibase:cornerSouthWest 'Point({w} {s})'^^geo:wktLiteral.
+    bd:serviceParam wikibase:cornerNorthEast 'Point({e} {n})'^^geo:wktLiteral.
   }}
 }}";
     }
@@ -129,7 +129,7 @@ SELECT ?oid ?loc WHERE {{
     {
         var dic = new Dictionary<long, Point>();
         var rid = new Regex(@"^https://www.openstreetmap.org/relation/(?<oid>\d+)$", RegexOptions.IgnoreCase);
-        var rpt = new Regex(@"^POINT\((?<lon>-?\d+(\.\d+)?) (?<lat>-?\d+(\.\d+)?)\)$", RegexOptions.IgnoreCase);
+        var rpt = new Regex(@"^Point\((?<lon>-?\d+(\.\d+)?) (?<lat>-?\d+(\.\d+)?)\)$", RegexOptions.IgnoreCase);
 
         foreach (var itm in obj.results.bindings)
         {

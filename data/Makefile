@@ -1,6 +1,6 @@
 ################################################################################
 
-# Do not forget to set up these vars based on your preferences.
+# Do not forget to set up these vars based on your preferences!
 
 REGION_FILE=czech-republic-latest
 REGION_N=50.20
