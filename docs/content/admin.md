@@ -1,6 +1,6 @@
 # Administration guide
 
-## Data ingestion
+## Data preparation
 
 The goal of the procedure is to prepare data for separate two system components, a database and routing engine.
 
@@ -30,47 +30,60 @@ cd ./smartwalk/data/
 
 ### Data for a routing engine
 
-- Generate data for a routing engine via `make routing-engine`. The command pulls the [docker image](https://hub.docker.com/r/osrm/osrm-backend/) and builds a search structure in several consecutive phases. The results are stored in `./assets/routing-engine/`.
+- Generate data for a routing engine via `make routing-engine`. The command pulls the [docker image](https://hub.docker.com/r/osrm/osrm-backend/) and builds a search structure in several consecutive phases. The results are stored in the `./assets/routing-engine/`.
 
 *Note that an instance of OSRM can use only one `osrm`-file at a time. This limitation can be overcome via merging (see [osmosis](https://gis.stackexchange.com/a/242880)). Furthermore, routing data can be extracted for different countries and kept in the same folder as long as original `pbf`-files have distinct names, a particular region can be decided later.*
 
-### Data for a database
+### Dataset ingestion
 
-- Start up a database instance, create collections and indexes, restore dependencies.
+- Obtain the most popular `OSM` keys and their frequencies of use from [taginfo](https://taginfo.openstreetmap.org/taginfo/apidoc). Results are stored in `./assets/taginfo/`. A list of tags can be extended by altering `Makefile`, although this is not enough to enable their full potential. The [constructor](https://github.com/zhukovdm/smartwalk/blob/fab346ac73f43be063b7e16d4f2c5f060e38ecfc/data/osm/KeywordExtractor.cs#L23-L53) of `KeywordExtractor` shall reflect changes as well. <u>Never remove</u> tags from the list as it may brake things unexpectedly. Modifying tag list is not a typical operation and may require deeper knowledge of the system.
 
 ```bash
-docker compose -f docker-compose.data.yaml up -d
+make taginfo
+```
+
+- Start up a database instance, restore dependencies, create collections and indexes.
+
+```bash
 make database-init
-make database-deps
 ```
 
-- Obtain the most popular `OSM` keys and their frequencies of use from [taginfo](https://taginfo.openstreetmap.org/taginfo/apidoc). Results are stored in `./assets/taginfo/`. A list of tags can be extended by altering `./scripts/taginfo.sh`, but this is not enough to enable their full potential. The [constructor](https://github.com/zhukovdm/smartwalk/blob/fab346ac73f43be063b7e16d4f2c5f060e38ecfc/data/osm/KeywordExtractor.cs#L23-L53) of `KeywordExtractor` shall reflect changes as well. <u>Never remove</u> tags from the list as it may brake things unexpectedly. In general, modifying tag list is not a typical operation and may require deeper knowledge of the system.
-
-```bash
-make database-taginfo
-```
-
-- Extract data from `pbf`-file. As part of the procedure, the routine makes `GET` request to the [Overpass](https://overpass-api.de/api/interpreter) endpoint. The connection is configured to time out after 100s, but the server usually responds within 10s at most.
+- Extract data from a `pbf`-file. As part of the procedure, the routine makes a `GET` request to the [Overpass](https://overpass-api.de/api/interpreter) endpoint. The connection is configured to time out after 100s, but the server usually responds within 10s at most.
 
 ```bash
 make database-osm
 ```
 
-- Some of `OSM` entities have a direct link to the corresponding entity within `Wikidata` knowledge base, see `wikidata` tag, but there might be more entities suitable for our purpose. Create entities by the information from Wikidata.
+- Create entities that exist in the [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) knowledge graph but do not exist in the database. The script attempts to fetch data from the SPARQL endpoint. The file `wikidata-create.mjs` defines a set of categories, which can be safely extended. The numeric constants are specifically chosen for the test setup. Please note that requests may time out after one minute. Large regions or too general categories are more likely to result in failures.
 
 ```bash
-make ...
+make database-wikidata-create
 ```
 
+- Enrich existing entities by information from `Wikidata`. Only those with `wikidata` attribute will be updated. Then, do the same for `DBPedia` knowledge graph.
 
+```bash
+make database-wikidata-enrich
+make database-dbpedia
+```
 
-`wikidata-enrich.sh` ~> `wikidata-create.sh` ~> `dbpedia.sh` ~> `index.sh`.
+*Note that `database-osm`, `database-wikidata-enrich` and `database-dbpedia` are [idempotent](https://en.wikipedia.org/wiki/Idempotence#Idempotent_functions) because of the `upsert` write strategy. Failed attempts may be re-run with no consequences for data integrity. `database-wikidata-create` only creates new objects and does not have any impact on already existing.*
 
-*Note that `database-osm`, `database-wikidata-enrich` and `database-dbpedia` are [idempotent](https://en.wikipedia.org/wiki/Idempotence#Idempotent_functions) because of the `upsert` database strategy. Failed attempts may be re-run with no consequences for data integrity. `database-wikidata-create` only creates new objects and does not have any impact on already existing.*
+- Prepare index data (items for autocomplete functionality, and attribute bounds).
+
+```bash
+make database-index
+```
+
+- Finally, stop the database instance. All relevant data are stored in the `./assets/database`.
+
+```bash
+make database-stop
+```
 
 ### Creating data-rich docker images
 
-Once two previous steps are done, the `./assets/` folder contains all data necessary for running an instance of the application. Create self-contained docker images to optimize and simplify testing.
+Once two previous phases are done, the `./assets/` folder contains all data necessary for running an instance of the application. Create self-contained docker images to optimize and simplify testing.
 
 ```bash
 docker build -f ./Dockerfile.database -t smartwalk-database
