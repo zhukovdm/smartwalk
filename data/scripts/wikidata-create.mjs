@@ -120,6 +120,7 @@ async function wikidataCreate() {
               type: "Point",
               coordinates: [obj.location.lon, obj.location.lat]
             },
+            attributes: {},
             linked: {
               wikidata: obj.wikidata
             }

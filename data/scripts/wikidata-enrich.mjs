@@ -279,6 +279,7 @@ async function wikidataEnrich() {
     const TOT = payload.length;
 
     while (payload.length) {
+      await new Promise((res) => setTimeout(res, 1000));
 
       const piece = payload.slice(0, WINDOW);
       cnt += piece.length;
