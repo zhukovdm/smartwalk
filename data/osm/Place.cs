@@ -121,12 +121,6 @@ internal sealed class Attributes
     public bool? wheelchair { get; set; }
 
     [BsonIgnoreIfNull]
-    public double? year { get; set; }
-
-    [BsonIgnoreIfNull]
-    public double? rating { get; set; }
-
-    [BsonIgnoreIfNull]
     public double? capacity { get; set; }
 
     [BsonIgnoreIfNull]
@@ -136,7 +130,10 @@ internal sealed class Attributes
     public double? minimumAge { get; set; }
 
     [BsonIgnoreIfNull]
-    public SortedSet<string> rental { get; set; }
+    public double? rating { get; set; }
+
+    [BsonIgnoreIfNull]
+    public double? year { get; set; }
 
     [BsonIgnoreIfNull]
     public SortedSet<string> clothes { get; set; }
@@ -149,6 +146,9 @@ internal sealed class Attributes
 
     [BsonIgnoreIfNull]
     public SortedSet<string> payment { get; set; }
+
+    [BsonIgnoreIfNull]
+    public SortedSet<string> rental { get; set; }
 }
 
 internal sealed class Linked
