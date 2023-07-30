@@ -30,18 +30,49 @@ async function getPayload(client) {
   return payload.map((item) => "wd:" + item.linked.wikidata);
 }
 
+/**
+ * Drop a collection defined by a string.
+ * @param {MongoClient} client
+ * @param {string} collection
+ */
+function dropMongoCollection(client, collection) {
+  return client.db(MONGO_DATABASE).dropCollection(collection);
+}
+
+/**
+ * Drops bound and keyword collections.
+ * @param {MongoClient} client
+ */
+async function dropIndexCollections(client) {
+  return await dropMongoCollection(client, MONGO_BOUND_COLLECTION)
+    && await dropMongoCollection(client, MONGO_KEYWORD_COLLECTION);
+}
+
+/**
+ * @param {MongoClient} client
+ * @param {string} collection
+ */
 function getMongoCollection(client, collection) {
   return client.db(MONGO_DATABASE).collection(collection);
 }
 
+/**
+ * @param {MongoClient} client
+ */
 function getPlaceCollection(client) {
   return getMongoCollection(client, MONGO_PLACE_COLLECTION);
 }
 
+/**
+ * @param {MongoClient} client
+ */
 function getBoundCollection(client) {
   return getMongoCollection(client, MONGO_BOUND_COLLECTION);
 }
 
+/**
+ * @param {MongoClient} client
+ */
 function getKeywordCollection(client) {
   return getMongoCollection(client, MONGO_KEYWORD_COLLECTION);
 }
@@ -124,6 +155,7 @@ module.exports = {
   convertKeywordToName,
   convertSnakeToKeyword,
   dropDatabase,
+  dropIndexCollections,
   getClient,
   getFirst,
   getPayload,

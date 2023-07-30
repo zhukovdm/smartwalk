@@ -1,12 +1,10 @@
 import consola from "consola";
-import { MongoClient } from "mongodb";
 import {
-  getGrainCollection,
-  getIndexCollection,
-  MONGO_CONNECTION_STRING,
-  MONGO_DATABASE,
-  MONGO_GRAIN_COLLECTION,
-  MONGO_INDEX_COLLECTION
+  dropIndexCollections,
+  getClient,
+  getPlaceCollection,
+  getBoundCollection,
+  getKeywordCollection
 } from "./shared.cjs";
 
 /**
@@ -16,7 +14,7 @@ import {
  */
 function extractKeywords(doc, keywords) {
 
-  const base = (word) => { return { label: word, count: 0, attributeList: new Set() }; };
+  const base = (word) => ({ label: word, count: 0, attributeList: new Set() });
 
   doc.keywords.forEach(word => {
     if (!keywords.has(word)) { keywords.set(word, base(word)); }
@@ -28,15 +26,14 @@ function extractKeywords(doc, keywords) {
 }
 
 /**
- * Extract values that can appear in `cuisine`, `clothes`, or `rental`
- * collections.
+ * Extract values that can appear in collections, such as `cuisine`.
  * @param {*} doc document that is currently considered.
  * @param {*} collect objects storing values.
  * @param {*} func appender for a possible new value.
  */
 function extractCollects(doc, collect, func) {
 
-  const base = (word) => { return { label: word, count: 0 }; };
+  const base = (word) => ({ label: word, count: 0 });
 
   func(doc)?.forEach(word => {
     if (!collect.has(word)) { collect.set(word, base(word)); }
@@ -45,8 +42,7 @@ function extractCollects(doc, collect, func) {
 }
 
 /**
- * Extract limits of the numeric attributes, such as `rating`, `capacity`,
- * and `minimumAge`.
+ * Extract limits of the numeric attributes, such as `rating`.
  * @param {*} doc document that is currently considered.
  * @param {*} numeric objects storing limits.
  * @param {*} func setter for a possible new value.
@@ -67,45 +63,61 @@ function extractNumerics(doc, numeric, func) {
 async function index() {
 
   const logger = consola.create();
-
-  const client = new MongoClient(MONGO_CONNECTION_STRING);
+  const client = getClient();
 
   try {
-    await client.db(MONGO_DATABASE).dropCollection(MONGO_INDEX_COLLECTION, {  });
+    await dropIndexCollections(client);
   } catch (ex) { logger.error(ex.message); }
 
-  const grain = getGrainCollection(client, MONGO_GRAIN_COLLECTION);
-  const index = getIndexCollection(client, MONGO_INDEX_COLLECTION);
+  const placeColl = getPlaceCollection(client);
+  const boundColl = getBoundCollection(client);
+  const keywdColl = getKeywordCollection(client);
 
   let cnt = 0, tot = 0;
 
   const arr = (n) => Array.apply(null, Array(n));
 
   try {
-    const [keywords, clothes, cuisine, rental] = arr(4).map(() => new Map());
-    const [year, rating, capacity, elevation, minimumAge] = arr(5).map(() => {
-      return { min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER };
-    });
+    const [
+      keywords,
+      clothes,
+      cuisine,
+      denomination,
+      payment,
+      rental
+    ] = arr(6).map(() => new Map());
 
-    let gc = grain.find();
+    const [
+      capacity,
+      elevation,
+      minimumAge,
+      rating,
+      year
+    ] = arr(5).map(() => ({ min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER }));
+
+    let gc = placeColl.find();
 
     while (await gc.hasNext()) {
-
       let doc = await gc.next();
 
       extractKeywords(doc, keywords);
 
-      extractCollects(doc, rental, (doc) => doc.attributes.rental);
-      extractCollects(doc, clothes, (doc) => doc.attributes.clothes);
-      extractCollects(doc, cuisine, (doc) => doc.attributes.cuisine);
-
-      extractNumerics(doc, year, (doc) => doc.attributes.year);
-      extractNumerics(doc, rating, (doc) => doc.attributes.rating);
       extractNumerics(doc, capacity, (doc) => doc.attributes.capacity);
       extractNumerics(doc, elevation, (doc) => doc.attributes.elevation);
       extractNumerics(doc, minimumAge, (doc) => doc.attributes.minimumAge);
+      extractNumerics(doc, rating, (doc) => doc.attributes.rating);
+      extractNumerics(doc, year, (doc) => doc.attributes.year);
 
-      if (++cnt >= 1000) { tot += cnt; cnt = 0; logger.info(`Still working... Processed ${tot} documents.`); }
+      extractCollects(doc, clothes, (doc) => doc.attributes.clothes);
+      extractCollects(doc, cuisine, (doc) => doc.attributes.cuisine);
+      extractCollects(doc, denomination, (doc) => doc.attributes.denomination);
+      extractCollects(doc, payment, (doc) => doc.attributes.payment);
+      extractCollects(doc, rental, (doc) => doc.attributes.rental);
+
+      if (++cnt >= 1000) {
+        tot += cnt; cnt = 0;
+        logger.info(`Still working... Processed ${tot} documents.`);
+      }
     }
 
     logger.info(`Processed ${tot + cnt} documents, constructing index...`);
@@ -114,32 +126,28 @@ async function index() {
 
     // insert keywords
 
-    await index.insertOne({
-      _id: "keywords",
-      keywords: [...keywords.keys()].map(key => {
-        const item = keywords.get(key);
-        return { ...item, attributeList: [...item.attributeList] }; // attribute items as a list!
-      })
-    });
-
-    capacity.max = 1000; // (!)
+    for (const keyword of keywords.values()) {
+      await keywdColl.insertOne({
+        ...keyword,
+        attributeList: [...keyword.attributeList]
+      });
+    };
 
     // insert bounds
 
     const map2arr = (m) => [...m.keys()].map(key => m.get(key));
 
-    await index.insertOne({
-      _id: "bounds",
-      bounds: {
-        rental: map2arr(rental),
-        clothes: map2arr(clothes),
-        cuisine: map2arr(cuisine),
-        year: year,
-        rating: rating,
-        capacity: capacity,
-        elevation: elevation,
-        minimumAge: minimumAge
-      }
+    await boundColl.insertOne({
+      capacity: capacity,
+      elevation: elevation,
+      minimumAge: minimumAge,
+      rating: rating,
+      year: year,
+      clothes: map2arr(clothes),
+      cuisine: map2arr(cuisine),
+      denomination: map2arr(denomination),
+      payment: map2arr(payment),
+      rental: map2arr(rental)
     });
 
     logger.info(`Index has been constructed. Exiting...`);
