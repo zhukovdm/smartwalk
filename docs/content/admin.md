@@ -32,7 +32,7 @@ cd ./smartwalk/data/
 
 - Generate data for a routing engine via `make routing-engine`. The command pulls the [docker image](https://hub.docker.com/r/osrm/osrm-backend/) and builds a search structure in several consecutive phases. The results are stored in the `./assets/routing-engine/`.
 
-*Note that an instance of OSRM can use only one `osrm`-file at a time. This limitation can be overcome via merging (see [osmosis](https://gis.stackexchange.com/a/242880)). Furthermore, routing data can be extracted for different countries and kept in the same folder as long as original `pbf`-files have distinct names, a particular region can be decided later.*
+*An instance of OSRM can use [only one](https://help.openstreetmap.org/questions/64867/osrm-routed-for-multiple-countries) `osrm`-file at a time. This limitation can be overcome via merging (see [osmosis](https://gis.stackexchange.com/a/242880)). Furthermore, routing data can be extracted for different countries and kept in the same folder as long as original `pbf`-files have distinct names, a particular region can be decided later.*
 
 ### Dataset ingestion
 
@@ -45,6 +45,7 @@ make taginfo
 - Start up a database instance, restore dependencies, create collections and indexes.
 
 ```bash
+docker compose -f docker-compose.data.yaml up -d
 make database-init
 ```
 
@@ -54,11 +55,13 @@ make database-init
 make database-osm
 ```
 
-- Create entities that exist in the [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) knowledge graph but do not exist in the database. The script attempts to fetch data from the SPARQL endpoint. The file `wikidata-create.mjs` defines a set of categories, which can be safely extended. The numeric constants are specifically chosen for the test setup. Please note that requests may time out after one minute. Large regions or too general categories are more likely to result in failures.
+- Create entities that exist in the [Wikidata](https://www.wikidata.org/wiki/Wikidata:Main_Page) knowledge graph but do not exist in the database. The script attempts to fetch data from the SPARQL endpoint. The file `wikidata-create.mjs` defines an extendable list of categories with upper bounds on number of objects to be retrieved. The script handles items sequentially in a given order.
 
 ```bash
 make database-wikidata-create
 ```
+
+*Requests may time out after one minute. Large regions or too general categories are more likely to result in failures. Hence, the numeric constants were specifically chosen for the test setup and may not be suitable for other cases.*
 
 - Enrich existing entities by information from `Wikidata`. Only those with `wikidata` attribute will be updated. Then, do the same for `DBPedia` knowledge graph.
 
@@ -67,18 +70,18 @@ make database-wikidata-enrich
 make database-dbpedia
 ```
 
-*Note that `database-osm`, `database-wikidata-enrich` and `database-dbpedia` are [idempotent](https://en.wikipedia.org/wiki/Idempotence#Idempotent_functions) because of the `upsert` write strategy. Failed attempts may be re-run with no consequences for data integrity. `database-wikidata-create` only creates new objects and does not have any impact on already existing.*
+*Please note that `database-osm`, `database-wikidata-enrich` and `database-dbpedia` are [idempotent](https://en.wikipedia.org/wiki/Idempotence#Idempotent_functions). Failed attempts may be re-run with no consequences for data integrity. `database-wikidata-create` only creates new objects and does not have any impact on already existing.*
 
-- Prepare index data (items for autocomplete functionality, and attribute bounds).
+- Collect supporting data to aid autocomplete functionality.
 
 ```bash
-make database-index
+make search-index
 ```
 
 - Finally, stop the database instance. All relevant data are stored in the `./assets/database`.
 
 ```bash
-make database-stop
+docker compose -f docker-compose.data.yaml down
 ```
 
 ### Creating data-rich docker images
@@ -89,3 +92,5 @@ Once two previous phases are done, the `./assets/` folder contains all data nece
 docker build -f ./Dockerfile.database -t smartwalk-database
 docker build -f ./Dockerfile.routing-engine -t smartwalk-routing-engine
 ```
+
+## Test environment

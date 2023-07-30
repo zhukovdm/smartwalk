@@ -57,10 +57,9 @@ function extractNumerics(doc, numeric, func) {
 }
 
 /**
- * Main function performing index construction to improve user interaction
- * with the system. In particular, to ensure responsive autocomplete.
+ * Main function performing index construction.
  */
-async function index() {
+async function searchIndex() {
 
   const logger = consola.create();
   const client = getClient();
@@ -120,7 +119,7 @@ async function index() {
       }
     }
 
-    logger.info(`Processed ${tot + cnt} documents, constructing index...`);
+    logger.info(`Processed ${tot + cnt} documents, completing search index...`);
 
     await gc.close();
 
@@ -150,10 +149,10 @@ async function index() {
       rental: map2arr(rental)
     });
 
-    logger.info(`Index has been constructed. Exiting...`);
+    logger.info(`Search index has been completed.`);
   }
   catch (ex) { logger.error(ex); }
   finally { await client.close(); }
 }
 
-index();
+searchIndex();

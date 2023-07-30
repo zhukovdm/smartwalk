@@ -3,6 +3,7 @@
 # Do not forget to set up these vars based on your preferences!
 
 REGION_FILE=czech-republic-latest
+
 REGION_N=50.20
 REGION_E=14.80
 REGION_S=49.90
@@ -63,8 +64,7 @@ taginfo: init
 # man_made
 
 database-init:
-	@docker compose -f docker-compose.data.yaml up -d && \
-	cd $(S_DIR) && npm ci && node init.mjs
+	@cd $(S_DIR) && npm ci && node init.mjs
 
 database-osm: init
 	@cd ./osm/ && dotnet run \
@@ -85,8 +85,8 @@ database-wikidata-enrich:
 database-dbpedia:
 	@cd $(S_DIR) && node dbpedia.cjs
 
-database-stop:
-	@docker compose -f docker-compose.data.yaml down
+search-index:
+	@cd $(S_DIR) && node search-index.mjs
 
 clean:
 	@for dir in $(EXTRA_DIRS) ; do \
