@@ -1,0 +1,3 @@
+[submodule "app/backend/WolfGarbe.PruningRadixTrie"]
+	path = app/backend/WolfGarbe.PruningRadixTrie
+	url = https://github.com/zhukovdm/PruningRadixTrie.git
