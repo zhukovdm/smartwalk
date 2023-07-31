@@ -70,12 +70,12 @@ make database-wikidata-enrich
 make database-dbpedia
 ```
 
-*Please note that `database-osm`, `database-wikidata-enrich` and `database-dbpedia` are [idempotent](https://en.wikipedia.org/wiki/Idempotence#Idempotent_functions). Failed attempts may be re-run with no consequences for data integrity. `database-wikidata-create` only creates new objects and does not have any impact on already existing.*
+*`database-osm`, `database-wikidata-enrich` and `database-dbpedia` are [idempotent](https://en.wikipedia.org/wiki/Idempotence#Idempotent_functions). Failed attempts may be re-run with no consequences for data integrity. `database-wikidata-create` only creates new objects and does not have any impact on already existing.*
 
 - Collect supporting data to aid autocomplete functionality.
 
 ```bash
-make search-index
+make suggestions
 ```
 
 - Finally, stop the database instance. All relevant data are stored in the `./assets/database`.
