@@ -102,7 +102,7 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(item, out var v) && IsStandardUri(v))
             {
-                attributes.socials = attributes.socials ?? new();
+                attributes.socialNetworks = attributes.socialNetworks ?? new();
                 act.Invoke(v);
                 return;
             }
@@ -212,7 +212,7 @@ internal static class AttributeExtractor
         Accommodate(tags, attributes, _po, (string po) => { attributes.address.postalCode = po; });
     }
 
-    private static void Socials(TagsCollectionBase tags, Attributes attributes)
+    private static void SocialNetworks(TagsCollectionBase tags, Attributes attributes)
     {
         var _fa = new[] { "contact:facebook", "facebook", "brand:facebook" };
         var _it = new[] { "contact:instagram", "instagram", "brand:instagram" };
@@ -222,13 +222,13 @@ internal static class AttributeExtractor
         var _tw = new[] { "contact:twitter", "twitter", "brand:twitter" };
         var _yo = new[] { "contact:youtube", "brand:youtube", "youtube" };
 
-        Socialize(tags, attributes, _fa, (string fa) => { attributes.socials.facebook = fa; });
-        Socialize(tags, attributes, _it, (string it) => { attributes.socials.instagram = it; });
-        Socialize(tags, attributes, _li, (string li) => { attributes.socials.linkedin = li; });
-        Socialize(tags, attributes, _pi, (string pi) => { attributes.socials.pinterest = pi; });
-        Socialize(tags, attributes, _te, (string te) => { attributes.socials.telegram = te; });
-        Socialize(tags, attributes, _tw, (string tw) => { attributes.socials.twitter = tw; });
-        Socialize(tags, attributes, _yo, (string yo) => { attributes.socials.youtube = yo; });
+        Socialize(tags, attributes, _fa, (string fa) => { attributes.socialNetworks.facebook = fa; });
+        Socialize(tags, attributes, _it, (string it) => { attributes.socialNetworks.instagram = it; });
+        Socialize(tags, attributes, _li, (string li) => { attributes.socialNetworks.linkedin = li; });
+        Socialize(tags, attributes, _pi, (string pi) => { attributes.socialNetworks.pinterest = pi; });
+        Socialize(tags, attributes, _te, (string te) => { attributes.socialNetworks.telegram = te; });
+        Socialize(tags, attributes, _tw, (string tw) => { attributes.socialNetworks.twitter = tw; });
+        Socialize(tags, attributes, _yo, (string yo) => { attributes.socialNetworks.youtube = yo; });
     }
 
     private static void Email(TagsCollectionBase tags, Attributes attributes)
@@ -598,7 +598,7 @@ internal static class AttributeExtractor
         Image(tags, place.attributes);
         Website(tags, place.attributes);
         Address(tags, place.attributes);
-        Socials(tags, place.attributes);
+        SocialNetworks(tags, place.attributes);
         Payment(tags, place.attributes);
         Email(tags, place.attributes);
         Phone(tags, place.attributes);

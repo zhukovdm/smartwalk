@@ -40,7 +40,7 @@ internal sealed class Address
     public string postalCode { get; set; }
 }
 
-internal sealed class Socials
+internal sealed class SocialNetworks
 {
     [BsonIgnoreIfNull]
     public string facebook { get; set; }
@@ -85,7 +85,7 @@ internal sealed class Attributes
     public string phone { get; set; }
 
     [BsonIgnoreIfNull]
-    public Socials socials { get; set; }
+    public SocialNetworks socialNetworks { get; set; }
 
     [BsonIgnoreIfNull]
     public List<string> charge { get; set; }
