@@ -114,7 +114,7 @@ function fetchFromDbpedia(payload) {
     headers: {
       "Accept": DBPEDIA_ACCEPT_CONTENT + "; charset=utf-8",
       "Content-Type": "application/x-www-form-urlencoded",
-      "User-Agent": "GrainPath (https://github.com/grainpath)" },
+      "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)" },
     body: "query=" + encodeURIComponent(dbpediaQuery(payload))
   })
   .then((res) => res.text())

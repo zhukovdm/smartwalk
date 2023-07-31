@@ -1,10 +1,11 @@
 import consola from "consola";
 import {
-  dropIndexCollections,
-  getClient,
-  getPlaceCollection,
+  dropBoundCollection,
+  dropKeywordCollection,
   getBoundCollection,
-  getKeywordCollection
+  getClient,
+  getKeywordCollection,
+  getPlaceCollection
 } from "./shared.cjs";
 
 /**
@@ -59,18 +60,22 @@ function extractNumerics(doc, numeric, func) {
 /**
  * Main function performing index construction.
  */
-async function searchIndex() {
+async function advice() {
 
   const logger = consola.create();
   const client = getClient();
 
   try {
-    await dropIndexCollections(client);
-  } catch (ex) { logger.error(ex.message); }
+    await dropBoundCollection(client);
+  } catch (ex) { logger.error(`Bound collection: ${ex?.message}`); }
 
-  const placeColl = getPlaceCollection(client);
+  try {
+    await dropKeywordCollection(client);
+  } catch (ex) { logger.error(`Keyword collection: ${ex?.message}`); }
+
   const boundColl = getBoundCollection(client);
   const keywdColl = getKeywordCollection(client);
+  const placeColl = getPlaceCollection(client);
 
   let cnt = 0, tot = 0;
 
@@ -94,6 +99,7 @@ async function searchIndex() {
       year
     ] = arr(5).map(() => ({ min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER }));
 
+    logger.info(`Collecting information about stored documents.`);
     let gc = placeColl.find();
 
     while (await gc.hasNext()) {
@@ -119,7 +125,7 @@ async function searchIndex() {
       }
     }
 
-    logger.info(`Processed ${tot + cnt} documents, completing search index...`);
+    logger.info(`Processed ${tot + cnt} documents, completing advice...`);
 
     await gc.close();
 
@@ -149,10 +155,10 @@ async function searchIndex() {
       rental: map2arr(rental)
     });
 
-    logger.info(`Search index has been completed.`);
+    logger.info(`Advice has been completed.`);
   }
   catch (ex) { logger.error(ex); }
   finally { await client.close(); }
 }
 
-searchIndex();
+advice();

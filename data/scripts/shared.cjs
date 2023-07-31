@@ -5,9 +5,9 @@ const ASSETS_DIR = "../assets";
 
 const MONGO_CONN_STR = "mongodb://localhost:27017";
 const MONGO_DATABASE = "smartwalk";
-const MONGO_PLACE_COLLECTION = "place";
 const MONGO_BOUND_COLLECTION = "bound";
 const MONGO_KEYWORD_COLLECTION = "keyword";
+const MONGO_PLACE_COLLECTION = "place";
 
 function getClient() {
   return new MongoClient(MONGO_CONN_STR);
@@ -43,9 +43,12 @@ function dropMongoCollection(client, collection) {
  * Drops bound and keyword collections.
  * @param {MongoClient} client
  */
-async function dropIndexCollections(client) {
-  return await dropMongoCollection(client, MONGO_BOUND_COLLECTION)
-    && await dropMongoCollection(client, MONGO_KEYWORD_COLLECTION);
+async function dropBoundCollection(client) {
+  return await dropMongoCollection(client, MONGO_BOUND_COLLECTION);
+}
+
+async function dropKeywordCollection(client) {
+  return await dropMongoCollection(client, MONGO_KEYWORD_COLLECTION);
 }
 
 /**
@@ -54,13 +57,6 @@ async function dropIndexCollections(client) {
  */
 function getMongoCollection(client, collection) {
   return client.db(MONGO_DATABASE).collection(collection);
-}
-
-/**
- * @param {MongoClient} client
- */
-function getPlaceCollection(client) {
-  return getMongoCollection(client, MONGO_PLACE_COLLECTION);
 }
 
 /**
@@ -75,6 +71,13 @@ function getBoundCollection(client) {
  */
 function getKeywordCollection(client) {
   return getMongoCollection(client, MONGO_KEYWORD_COLLECTION);
+}
+
+/**
+ * @param {MongoClient} client
+ */
+function getPlaceCollection(client) {
+  return getMongoCollection(client, MONGO_PLACE_COLLECTION);
 }
 
 async function writeCreateToDatabase(client, ins) {
@@ -103,7 +106,7 @@ function reportCategory(category) {
 }
 
 function reportFetchedItems(lst, resource) {
-  console.info(`> Fetched ${lst.length} items from ${resource}.`)
+  consola.info(`> Fetched ${lst.length} items from ${resource}.`)
 }
 
 function reportEnrichedItems(cnt, tot, resource) {
@@ -155,13 +158,14 @@ module.exports = {
   convertKeywordToName,
   convertSnakeToKeyword,
   dropDatabase,
-  dropIndexCollections,
+  dropBoundCollection,
+  dropKeywordCollection,
+  getBoundCollection,
   getClient,
   getFirst,
+  getKeywordCollection,
   getPayload,
   getPlaceCollection,
-  getBoundCollection,
-  getKeywordCollection,
   isValidKeyword,
   reportCategory,
   reportCreatedItems,
