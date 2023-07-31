@@ -18,6 +18,8 @@ EXTRA_DIRS=database routing-engine taginfo
 
 R_CMD=docker run --rm -t -v $(A_DIR)/routing-engine:/data osrm/osrm-backend:v5.24.0
 
+.PHONY: clean check_clean init
+
 init:
 	@for dir in $(EXTRA_DIRS); do \
 		mkdir -p $(A_DIR)/$$dir; \
@@ -85,10 +87,13 @@ database-wikidata-enrich:
 database-dbpedia:
 	@cd $(S_DIR) && node dbpedia.cjs
 
-search-index:
-	@cd $(S_DIR) && node search-index.mjs
+advice:
+	@cd $(S_DIR) && node advice.mjs
 
-clean:
+check_clean:
+	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
+
+clean: check_clean
 	@for dir in $(EXTRA_DIRS) ; do \
 		sudo rm -rf $(A_DIR)/$$dir ; \
 	done

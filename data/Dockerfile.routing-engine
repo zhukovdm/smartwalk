@@ -1,4 +1,7 @@
 FROM osrm/osrm-backend:v5.24.0
 COPY ./assets/routing-engine /data
 
+ARG REGION_FILE
+
+EXPOSE 5000
 ENTRYPOINT osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${REGION_FILE}.osrm
