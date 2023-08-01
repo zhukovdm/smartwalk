@@ -10,15 +10,6 @@ internal sealed class Point
     public double lat { get; set; }
 }
 
-internal sealed class GeoJsonPoint
-{
-    public GeoJsonPoint(double lon, double lat) { coordinates = new() { lon, lat }; }
-
-    public string type { get; set; } = "Point";
-
-    public List<double> coordinates { get; set; }
-}
-
 internal sealed class Address
 {
     [BsonIgnoreIfNull]
@@ -164,7 +155,7 @@ internal sealed class Place
 {
     public string name { get; set; }
 
-    public GeoJsonPoint location { get; set; }
+    public Point location { get; set; }
 
     public SortedSet<string> keywords { get; set; } = new();
 

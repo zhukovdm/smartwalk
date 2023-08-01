@@ -1,5 +1,4 @@
 using OsmSharp;
-using OsmSharp.Tags;
 using System.Collections.Generic;
 
 namespace osm;
@@ -43,7 +42,7 @@ internal static class Inspector
                 NameExtractor.Extract(node.Tags, place);
                 LinkedExtractor.Extract(node, place.linked);
 
-                place.location = new(lon, lat);
+                place.location = new() { lon = lon, lat = lat };
 
                 return place;
             }
@@ -99,8 +98,7 @@ internal static class Inspector
                 var cen = Cartesian.Centroid(seq);
 
                 place.attributes.polygon = seq;
-
-                place.location = new(cen.lon, cen.lat);
+                place.location = new() { lon = cen.lon, lat = cen.lat };
 
                 return place;
             }
@@ -128,7 +126,8 @@ internal static class Inspector
                     NameExtractor.Extract(relation.Tags, place);
                     LinkedExtractor.Extract(relation, place.linked);
 
-                    place.location = new(loc.lon, loc.lat);
+                    place.location = new() { lon = loc.lon, lat = loc.lat };
+
                     return place;
                 }
             }
