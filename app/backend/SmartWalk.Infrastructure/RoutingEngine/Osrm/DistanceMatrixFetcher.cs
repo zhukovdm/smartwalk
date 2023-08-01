@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.RoutingEngine.Osrm;
+namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 
 /// <summary>
 /// Simple wrapper over List-based distance matrix calculated by OSRM.

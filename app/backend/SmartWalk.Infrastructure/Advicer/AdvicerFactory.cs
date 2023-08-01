@@ -1,7 +1,7 @@
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.Advicer;
+namespace SmartWalk.Infrastructure.Advicer;
 
 public static class AdvicerFactory
 {

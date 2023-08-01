@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using SmartWalk.Domain.Entities;
 
-namespace SmartWalk.Services.Advicer;
+namespace SmartWalk.Infrastructure.Advicer;
 
 internal sealed class MongoBound
 {

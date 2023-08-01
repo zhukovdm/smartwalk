@@ -1,7 +1,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace SmartWalk.Services.RoutingEngine.Osrm;
+namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 
 internal static class QueryExecutor
 {

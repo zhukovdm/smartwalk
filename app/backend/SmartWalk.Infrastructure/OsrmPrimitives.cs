@@ -1,6 +1,6 @@
 using System;
 
-namespace SmartWalk.Services;
+namespace SmartWalk.Infrastructure;
 
 internal static class OsrmPrimitives
 {

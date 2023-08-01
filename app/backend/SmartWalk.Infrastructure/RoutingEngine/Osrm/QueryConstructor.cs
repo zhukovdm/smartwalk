@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using SmartWalk.Domain.Entities;
 
-namespace SmartWalk.Services.RoutingEngine.Osrm;
+namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 
 internal static class QueryConstructor
 {

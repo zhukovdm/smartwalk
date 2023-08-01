@@ -1,6 +1,6 @@
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.RoutingEngine;
+namespace SmartWalk.Infrastructure.RoutingEngine;
 
 public static class RoutingEngineFactory
 {

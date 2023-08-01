@@ -1,6 +1,6 @@
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.EntityIndex;
+namespace SmartWalk.Infrastructure.EntityIndex;
 
 public static class EntityIndexFactory
 {

@@ -1,6 +1,6 @@
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.EntityStore;
+namespace SmartWalk.Infrastructure.EntityStore;
 
 public static class EntityStoreFactory
 {

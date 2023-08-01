@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.Advicer;
+namespace SmartWalk.Infrastructure.Advicer;
 
 using Trie = PruningRadixTrie.PruningRadixTrie;
 

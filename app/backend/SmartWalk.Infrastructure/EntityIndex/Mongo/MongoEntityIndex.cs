@@ -7,9 +7,9 @@ using MongoDB.Driver;
 using MongoDB.Driver.GeoJsonObjectModel;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
-using SmartWalk.Services.EntityIndex.Mongo;
+using SmartWalk.Infrastructure.EntityIndex.Mongo;
 
-namespace SmartWalk.Services.EntityIndex;
+namespace SmartWalk.Infrastructure.EntityIndex;
 
 using Filter = FilterDefinition<ExtendedPlace>;
 

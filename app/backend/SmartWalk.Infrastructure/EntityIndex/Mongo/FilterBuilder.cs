@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using SmartWalk.Domain.Entities;
 
-namespace SmartWalk.Services.EntityIndex.Mongo;
+namespace SmartWalk.Infrastructure.EntityIndex.Mongo;
 
 using B = FilterDefinitionBuilder<ExtendedPlace>;
 using F = FilterDefinition<ExtendedPlace>;

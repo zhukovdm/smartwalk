@@ -3,7 +3,7 @@ using MongoDB.Driver;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.EntityStore;
+namespace SmartWalk.Infrastructure.EntityStore;
 
 internal sealed class MongoEntityStore : MongoService, IEntityStore
 {

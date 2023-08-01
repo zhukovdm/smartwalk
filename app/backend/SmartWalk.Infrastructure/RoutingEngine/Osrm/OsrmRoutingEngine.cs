@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
-using SmartWalk.Services.RoutingEngine.Osrm;
+using SmartWalk.Infrastructure.RoutingEngine.Osrm;
 
-namespace SmartWalk.Services.RoutingEngine;
+namespace SmartWalk.Infrastructure.RoutingEngine;
 
 internal sealed class OsrmRoutingEngine : IRoutingEngine
 {

@@ -1,7 +1,7 @@
 using System;
 using MongoDB.Driver;
 
-namespace SmartWalk.Services;
+namespace SmartWalk.Infrastructure;
 
 internal abstract class MongoService
 {

@@ -1,7 +1,7 @@
 using MongoDB.Driver;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.Advicer;
+namespace SmartWalk.Infrastructure.Advicer;
 
 using Document = TrieKeywordAdvicer.Item;
 
