@@ -13,10 +13,11 @@ internal abstract class MongoService
 internal static class MongoDatabaseFactory
 {
     public static readonly string PLACE_COLL = "place";
+    private static readonly string CONN_STR
+        = Environment.GetEnvironmentVariable("SMARTWALK_MONGO_CONN_STR") ?? "mongodb://localhost:27017";
 
     public static IMongoDatabase GetInstance()
     {
-        var conn = Environment.GetEnvironmentVariable("SMARTWALK_MONGO_CONN_STR") ?? "mongodb://localhost:27017";
-        return new MongoClient(new MongoUrl(conn)).GetDatabase("smartwalk");
+        return new MongoClient(new MongoUrl(CONN_STR)).GetDatabase("smartwalk");
     }
 }

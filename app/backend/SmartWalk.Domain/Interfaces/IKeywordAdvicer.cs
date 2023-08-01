@@ -6,5 +6,5 @@ namespace SmartWalk.Domain.Interfaces;
 
 public interface IKeywordAdvicer
 {
-    Task<List<KeywordObject>> GetKeywords(string prefix, int count);
+    Task<List<Keyword>> GetTopK(string prefix, int count);
 }

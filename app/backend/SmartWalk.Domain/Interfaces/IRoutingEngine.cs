@@ -16,5 +16,5 @@ public interface IRoutingEngine
     /// visiting waypoints in a given order.
     /// </summary>
     /// <returns>Non-null, possibly empty list of shortest path objects.</returns>
-    public Task<List<ShortestPathObject>> GetShortestPath(List<WgsPoint> waypoints);
+    public Task<List<ShortestPath>> GetShortestPath(List<WgsPoint> waypoints);
 }
