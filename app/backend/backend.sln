@@ -11,6 +11,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api", "SmartWalk.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Services", "SmartWalk.Services\SmartWalk.Services.csproj", "{93723F2C-B584-4DD9-9097-03CE0AD2CF9F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core", "SmartWalk.Core\SmartWalk.Core.csproj", "{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core.Tests", "SmartWalk.Core.Tests\SmartWalk.Core.Tests.csproj", "{C2B24DBC-27E5-40BC-B50B-A8B954778E2A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +37,14 @@ Global
 		{93723F2C-B584-4DD9-9097-03CE0AD2CF9F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93723F2C-B584-4DD9-9097-03CE0AD2CF9F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93723F2C-B584-4DD9-9097-03CE0AD2CF9F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2B24DBC-27E5-40BC-B50B-A8B954778E2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2B24DBC-27E5-40BC-B50B-A8B954778E2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2B24DBC-27E5-40BC-B50B-A8B954778E2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2B24DBC-27E5-40BC-B50B-A8B954778E2A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
