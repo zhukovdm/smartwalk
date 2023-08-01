@@ -14,9 +14,10 @@ REGION_W=14.18
 A_DIR=${PWD}/assets
 S_DIR=${PWD}/scripts
 
-EXTRA_DIRS=database routing-engine taginfo
+EXTRA_DIRS=database routing-engine search-engine taginfo
 
 R_CMD=docker run --rm -t -v $(A_DIR)/routing-engine:/data osrm/osrm-backend:v5.24.0
+I_URL=http://localhost:9200
 
 .PHONY: clean check_clean init
 
@@ -89,6 +90,12 @@ database-dbpedia:
 
 advice:
 	@cd $(S_DIR) && node advice.mjs
+
+search-index:
+	@cd $(S_DIR) && \
+	curl -X DELETE $(I_URL)/_all; echo && \
+	curl -X PUT $(I_URL)/place -H "Content-Type: application/json" --data-binary @search.json; echo && \
+	node search.mjs
 
 check_clean:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
