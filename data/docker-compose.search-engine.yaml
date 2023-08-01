@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  search-engine:
+    image: elasticsearch:7.17.10
+    container_name: smartwalk-search-engine
+    ports:
+      - 9200:9200
+    environment:
+      discovery.type: single-node
+      ES_JAVA_OPTS: -Xms512m -Xmx512m
+      xpack.security.enabled: false
+      ingest.geoip.downloader.enabled: false
+    volumes:
+      - ./assets/search-engine:/usr/share/elasticsearch/data
