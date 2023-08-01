@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <Nullable>disable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeoJSON.Text" Version="1.0.1" />
+    <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartWalk.Domain\SmartWalk.Domain.csproj" />
+    <ProjectReference Include="..\WolfGarbe.PruningRadixTrie\PruningRadixTrie\PruningRadixTrie.csproj" />
+  </ItemGroup>
+
+</Project>
