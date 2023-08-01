@@ -1,0 +1,37 @@
+{
+  "settings": {
+    "number_of_shards": 1,
+    "number_of_replicas" : 0
+  },
+  "mappings": {
+    "properties": {
+      "name": {
+        "type": "keyword"
+      },
+      "location": {
+        "type": "geo_point"
+      },
+      "keyword": {
+        "type": "keyword"
+      },
+      "description": {
+        "type": "text"
+      },
+      "image": {
+        "type": "object"
+      },
+      "website": {
+        "type": "object"
+      },
+      "address": {
+        "type": "object"
+      },
+      "email": {
+        "type": "object"
+      },
+      "phone": {
+        "type": "object"
+      }
+    }
+  }
+}

@@ -116,10 +116,7 @@ async function wikidataCreate() {
           const ins = {
             name: "Noname",
             keywords: [],
-            location: {
-              type: "Point",
-              coordinates: [obj.location.lon, obj.location.lat]
-            },
+            location: obj.location,
             attributes: {},
             linked: {
               wikidata: obj.wikidata

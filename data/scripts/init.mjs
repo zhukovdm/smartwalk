@@ -17,7 +17,7 @@ async function init() {
 
     await placeColl.createIndex({ "linked.osm": 1 });
     await placeColl.createIndex({ "linked.wikidata": 1 });
-    await placeColl.createIndex({ "position": "2dsphere" });
+    await placeColl.createIndex({ "location": "2dsphere" });
 
     logger.info("Finished setting up database.")
   }
