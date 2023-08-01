@@ -1,12 +1,13 @@
 using MongoDB.Driver;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Services.Advicer.Mongo;
+namespace SmartWalk.Services.Advicer;
+
 using Document = TrieKeywordAdvicer.Item;
 
-internal static class MongoKeywordAdvicerFactory
+internal sealed class MongoKeywordAdvicer
 {
-    public static IKeywordAdvicer GetInstance(IMongoDatabase database)
+    internal static IKeywordAdvicer GetInstance(IMongoDatabase database)
     {
         var docs = database
             .GetCollection<Document>("keyword")

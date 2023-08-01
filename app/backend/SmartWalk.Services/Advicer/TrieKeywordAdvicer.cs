@@ -5,12 +5,15 @@ using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Services.Advicer;
+
 using Trie = PruningRadixTrie.PruningRadixTrie;
 
-internal class TrieKeywordAdvicer : IKeywordAdvicer
+internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
 {
     private readonly Trie _trie = new();
     private readonly Dictionary<string, List<string>> _attributeLists = new();
+
+    private TrieKeywordAdvicer() { }
 
     private void Add(string term, List<string> attributeList, long freq)
     {
@@ -27,8 +30,6 @@ internal class TrieKeywordAdvicer : IKeywordAdvicer
 
         return Task.FromResult(result);
     }
-
-    private TrieKeywordAdvicer() { }
 
     internal class Item : Keyword
     {

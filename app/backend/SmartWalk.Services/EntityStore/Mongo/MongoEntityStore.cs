@@ -12,7 +12,7 @@ internal sealed class MongoEntityStore : MongoService, IEntityStore
     public async Task<ExtendedPlace> GetPlace(string smartId)
     {
         return await _database
-            .GetCollection<ExtendedPlace>("place")
+            .GetCollection<ExtendedPlace>(MongoDatabaseFactory.PLACE_COLL)
             .Find(place => place.smartId == smartId)
             .FirstOrDefaultAsync();
     }

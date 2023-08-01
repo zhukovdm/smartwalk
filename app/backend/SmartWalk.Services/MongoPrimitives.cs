@@ -12,6 +12,8 @@ internal abstract class MongoService
 
 internal static class MongoDatabaseFactory
 {
+    public static readonly string PLACE_COLL = "place";
+
     public static IMongoDatabase GetInstance()
     {
         var conn = Environment.GetEnvironmentVariable("SMARTWALK_MONGO_CONN_STR") ?? "mongodb://localhost:27017";

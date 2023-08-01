@@ -1,9 +1,9 @@
 using MongoDB.Driver;
 using SmartWalk.Domain.Entities;
 
-namespace SmartWalk.Services.Advicer.Mongo;
+namespace SmartWalk.Services.Advicer;
 
-internal static class MongoBoundFactory
+internal sealed class MongoBound
 {
     internal static Bound GetInstance(IMongoDatabase database)
     {
