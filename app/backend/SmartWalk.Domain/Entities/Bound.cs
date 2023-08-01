@@ -13,7 +13,7 @@ public sealed class NumericBound
     public double max { get; set; }
 }
 
-public sealed class BoundObject
+public sealed class Bound
 {
     [Required]
     public NumericBound capacity { get; set; }
