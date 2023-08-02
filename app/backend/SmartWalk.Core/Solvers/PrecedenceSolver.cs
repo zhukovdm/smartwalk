@@ -5,7 +5,7 @@ using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Core.Solvers;
 
-internal sealed class PrecedenceSolver : SolverBase
+public sealed class PrecedenceSolver : SolverBase
 {
     private PrecedenceSolver() { }
 

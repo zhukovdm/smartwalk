@@ -7,13 +7,13 @@ namespace SmartWalk.Service;
 
 public static class AdviceService
 {
-    public static Bound GetBound(Bound bound) => bound;
+    public static Bounds GetBounds(Bounds bounds) => bounds;
 
     /// <summary>
     /// Get a list of autocomplete items.
     /// </summary>
     /// <param name="prefix">Keywords must have the passed prefix.</param>
     /// <param name="count">Maximum possible number of fetched items.</param>
-    public static Task<List<Keyword>> GetKeywords(IKeywordAdvicer advicer, string prefix, int count)
+    public static Task<List<Keyword>> GetKeywordsAsync(IKeywordAdvicer advicer, string prefix, int count)
         => advicer.GetTopK(prefix, count);
 }

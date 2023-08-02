@@ -40,7 +40,7 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
     }
 
     public async Task<List<Place>> GetAround(
-        IReadOnlyList<Category> categories, WgsPoint center, double radius, int offset, int bucket)
+        WgsPoint center, double radius, IReadOnlyList<Category> categories, int offset, int bucket)
     {
         var sf = Builders<ExtendedPlace>.Filter
             .NearSphere(p => p.location, GeoJson.Point(new GeoJson2DGeographicCoordinates(center.lon, center.lat)), maxDistance: radius);
@@ -100,7 +100,7 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
     }
 
     public async Task<List<Place>> GetAroundWithin(
-        IReadOnlyList<Category> categories, List<WgsPoint> polygon, WgsPoint refPoint, double distance, int bucket)
+        List<WgsPoint> polygon, WgsPoint refPoint, double distance, IReadOnlyList<Category> categories, int bucket)
     {
         /* Combine $geoWithin and $nearSphere filters to ensure points are
          * within the polygon and closed to the center of the circle. Typically

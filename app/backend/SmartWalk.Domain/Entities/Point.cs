@@ -19,25 +19,6 @@ public sealed class WgsPoint
 }
 
 /// <summary>
-/// Representation of a point in EPSG:4326 restricted to the range of EPSG:3857.
-/// See https://epsg.io/4326 and https://epsg.io/3857 for details.
-/// </summary>
-public sealed class WebPoint
-{
-    [Required]
-    [Range(-180.0, 180.0)]
-    public double? lon { get; set; }
-
-    [Required]
-    [Range(-85.06, 85.06)]
-    public double? lat { get; set; }
-
-    public WebPoint(double? lon, double? lat) { this.lon = lon; this.lat = lat; }
-
-    public WgsPoint AsWgs() => new(lon.Value, lat.Value);
-}
-
-/// <summary>
 /// Representation of a point in a Cartesian plane.
 /// </summary>
 public sealed class CartesianPoint

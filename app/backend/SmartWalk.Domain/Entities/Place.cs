@@ -10,6 +10,7 @@ namespace SmartWalk.Domain.Entities;
 [ElasticsearchType(IdProperty = nameof(smartId))]
 public class Place
 {
+    /// <example>64c91f8359914b93b23b01d9</example>
     [BsonId]
     [Required]
     [BsonRepresentation(BsonType.ObjectId)]

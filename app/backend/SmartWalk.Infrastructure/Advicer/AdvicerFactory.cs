@@ -5,8 +5,8 @@ namespace SmartWalk.Infrastructure.Advicer;
 
 public static class AdvicerFactory
 {
-    public static Bound GetBound()
-        => MongoBound.GetInstance(MongoDatabaseFactory.GetInstance());
+    public static Bounds GetBounds()
+        => MongoBounds.GetInstance(MongoDatabaseFactory.GetInstance());
 
     public static IKeywordAdvicer GetKeywordAdvicer()
         => MongoKeywordAdvicer.GetInstance(MongoDatabaseFactory.GetInstance());

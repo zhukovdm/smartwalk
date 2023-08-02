@@ -1,7 +1,7 @@
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Api.Context;
+namespace SmartWalk.Api.Contexts;
 
 public interface IAdviceContext
 {

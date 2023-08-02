@@ -4,7 +4,7 @@ using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Core.Solvers;
 
-internal class SolverBase
+public class SolverBase
 {
     protected SolverBase() { }
 

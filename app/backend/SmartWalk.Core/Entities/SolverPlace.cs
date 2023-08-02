@@ -1,6 +1,6 @@
 namespace SmartWalk.Core.Entities;
 
-internal class SolverPlace
+public class SolverPlace
 {
     public int Index { get; }
 

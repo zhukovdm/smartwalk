@@ -7,7 +7,7 @@ namespace SmartWalk.Core.Algorithms;
 /// <summary>
 /// <b>Scaled</b> wrapper over Haversine formula.
 /// </summary>
-internal sealed class HaversineDistanceMatrix : IDistanceMatrix
+public sealed class HaversineDistanceMatrix : IDistanceMatrix
 {
     private static readonly double SCALE_FACTOR = 1.0;
     private readonly List<WgsPoint> _points;

@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using MongoDB.Bson.Serialization.Attributes;
 
 using CollectBound = System.Collections.Generic.List<string>;
 
@@ -13,7 +14,8 @@ public sealed class NumericBound
     public double max { get; set; }
 }
 
-public sealed class Bound
+[BsonIgnoreExtraElements]
+public sealed class Bounds
 {
     [Required]
     public NumericBound capacity { get; set; }

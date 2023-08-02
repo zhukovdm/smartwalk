@@ -8,7 +8,7 @@ using NetTopologySuite.Utilities;
 
 namespace SmartWalk.Core.Algorithms;
 
-internal static class Spherical
+public static class Spherical
 {
     private static readonly double _deg2rad = Math.PI / 180.0;
     private static readonly double _rad2deg = 180.0 / Math.PI;
@@ -64,7 +64,7 @@ internal static class Spherical
     /// <summary>
     /// Approximate the midpoint between two points on a sphere (use <b>ONLY</b> for small distances).
     /// </summary>
-    internal static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
+    public static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
         => new((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
 
     /// <summary>
@@ -113,7 +113,7 @@ internal static class Spherical
     /// <param name="f1">Focus 1</param>
     /// <param name="f2">Focus 2</param>
     /// <param name="distance">Maximum walking distance (in meters).</param>
-    internal static List<WgsPoint> BoundingEllipse(WgsPoint f1, WgsPoint f2, double distance)
+    public static List<WgsPoint> BoundingEllipse(WgsPoint f1, WgsPoint f2, double distance)
     {
         var m = Spherical.Midpoint(f1, f2);
         var c = Spherical.HaversineDistance(f1, f2) / 2.0;

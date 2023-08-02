@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MongoDB.Bson.Serialization.Attributes;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
@@ -31,6 +32,7 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
         return Task.FromResult(result);
     }
 
+    [BsonIgnoreExtraElements]
     internal class Item : Keyword
     {
         public int count { get; init; }

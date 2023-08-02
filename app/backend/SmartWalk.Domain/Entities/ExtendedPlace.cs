@@ -117,27 +117,35 @@ public sealed class PlaceAttributes
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public double? elevation { get; set; }
 
+    /// <example>21</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public double? minimumAge { get; set; }
 
+    /// <example>5</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public double? rating { get; set; }
 
+    /// <example>2023</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public double? year { get; set; }
 
+    /// <example>["adult"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public SortedSet<string> clothes { get; set; }
 
+    /// <example>["czech"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public SortedSet<string> cuisine { get; set; }
 
+    /// <example>["catholic"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public SortedSet<string> denomination { get; set; }
 
+    /// <example>["cash"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public SortedSet<string> payment { get; set; }
 
+    /// <example>["bike"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public SortedSet<string> rental { get; set; }
 }
@@ -151,12 +159,15 @@ public sealed class PlaceLinked
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string geonames { get; set; }
 
+    /// <example>base&amp;id=1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string mapycz { get; set; }
 
+    /// <example>node/1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string osm { get; set; }
 
+    /// <example>Q1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string wikidata { get; set; }
 

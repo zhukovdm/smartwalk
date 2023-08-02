@@ -5,7 +5,7 @@ using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Core.Solvers;
 
-internal sealed class RelaxedSolver : SolverBase
+public sealed class RelaxedSolver : SolverBase
 {
     private RelaxedSolver() { }
 

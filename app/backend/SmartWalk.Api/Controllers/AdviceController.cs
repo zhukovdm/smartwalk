@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SmartWalk.Api.Context;
+using SmartWalk.Api.Contexts;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Service;
 
@@ -18,10 +18,12 @@ public sealed class AdviceController : ControllerBase
 {
     public sealed class KeywordsRequest
     {
+        /// <example>m</example>
         [Required]
         [MinLength(1)]
         public string prefix { get; set; }
 
+        /// <example>3</example>
         [Required]
         [Range(1, int.MaxValue)]
         public int count { get; set; }
@@ -35,7 +37,8 @@ public sealed class AdviceController : ControllerBase
         _context = context; _logger = logger;
     }
 
-    [HttpGet("bounds")]
+    [HttpGet]
+    [Route("bounds", Name = "GetBounds")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public ActionResult<Bounds> GetBounds()
@@ -43,14 +46,15 @@ public sealed class AdviceController : ControllerBase
         return AdviceService.GetBounds(_context.Bounds);
     }
 
-    [HttpGet("keywords")]
+    [HttpGet]
+    [Route("keywords", Name = "GetKeywords")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Keyword>>> GetKeywordsAsync([FromQuery] KeywordsRequest request)
     {
         try {
-            return await AdviceService.GetKeywords(
+            return await AdviceService.GetKeywordsAsync(
                 _context.KeywordAdvicer, request.prefix, request.count);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
