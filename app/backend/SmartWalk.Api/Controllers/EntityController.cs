@@ -38,7 +38,7 @@ public sealed class EntityController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ExtendedPlace>> GetPlaceAsync(string smartId)
+    public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
         try {
             if (!VerifySmartId(smartId)) { return BadRequest(); }

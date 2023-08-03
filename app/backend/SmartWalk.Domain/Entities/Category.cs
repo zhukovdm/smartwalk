@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Newtonsoft.Json;
 
 namespace SmartWalk.Domain.Entities;
 
@@ -50,9 +51,11 @@ public sealed class AttributeFilterBooleans
 public sealed class AttributeFilterNumeric
 {
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public double? min { get; set; }
 
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public double? max { get; set; }
 }
 
@@ -78,9 +81,11 @@ public sealed class AttributeFilterTextuals
 public sealed class AttributeFilterCollect
 {
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public SortedSet<string> includes { get; set; }
 
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public SortedSet<string> excludes { get; set; }
 }
 
@@ -100,18 +105,23 @@ public sealed class AttributeFilterCollects
 public sealed class AttributeFilters
 {
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public AttributeFilterExistens existens { get; set; }
 
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public AttributeFilterBooleans booleans { get; set; }
 
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public AttributeFilterNumerics numerics { get; set; }
 
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public AttributeFilterTextuals textuals { get; set; }
 
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public AttributeFilterCollects collects { get; set; }
 }
 
@@ -122,11 +132,13 @@ public sealed class Category
     /// </summary>
     [Required]
     [MinLength(1)]
+    [JsonProperty(Required = Required.Always)]
     public string keyword { get; set; }
 
     /// <summary>
     /// Additional attribute filters introduced by the user.
     /// </summary>
     [Required]
+    [JsonProperty(Required = Required.Always)]
     public AttributeFilters filters { get; set; }
 }

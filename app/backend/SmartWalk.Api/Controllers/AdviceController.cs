@@ -23,7 +23,7 @@ public sealed class AdviceController : ControllerBase
         [MinLength(1)]
         public string prefix { get; set; }
 
-        /// <example>3</example>
+        /// <example>5</example>
         [Required]
         [Range(1, int.MaxValue)]
         public int count { get; set; }
@@ -38,23 +38,23 @@ public sealed class AdviceController : ControllerBase
     }
 
     [HttpGet]
-    [Route("bounds", Name = "GetBounds")]
+    [Route("bounds", Name = "AdviseBounds")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<Bounds> GetBounds()
+    public ActionResult<Bounds> AdviseBounds()
     {
         return AdviceService.GetBounds(_context.Bounds);
     }
 
     [HttpGet]
-    [Route("keywords", Name = "GetKeywords")]
+    [Route("keywords", Name = "AdviseKeywords")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Keyword>>> GetKeywordsAsync([FromQuery] KeywordsRequest request)
+    public async Task<ActionResult<List<Keyword>>> AdviseKeywords([FromQuery] KeywordsRequest request)
     {
         try {
-            return await AdviceService.GetKeywordsAsync(
+            return await AdviceService.GetKeywords(
                 _context.KeywordAdvicer, request.prefix, request.count);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }

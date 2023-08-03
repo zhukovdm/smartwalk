@@ -18,7 +18,7 @@ public static class SearchService
 
     public static Task<List<ShortestPath>> GetDirecs(IRoutingEngine engine, List<WgsPoint> waypoints)
     {
-        return engine.GetShortestPath(waypoints);
+        return engine.GetShortestPaths(waypoints);
     }
 
     /// <summary>
@@ -87,7 +87,7 @@ public static class SearchService
 
         for (var i = 0; i < sequences.Count; ++i)
         {
-            var path = await engine.GetShortestPath(sequences[i].Select(w => locations[w]).ToList());
+            var path = await engine.GetShortestPaths(sequences[i].Select(w => locations[w]).ToList());
 
             if (path.Count == 0) { return null; }
 

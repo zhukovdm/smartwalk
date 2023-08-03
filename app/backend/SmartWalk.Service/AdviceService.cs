@@ -14,6 +14,6 @@ public static class AdviceService
     /// </summary>
     /// <param name="prefix">Keywords must have the passed prefix.</param>
     /// <param name="count">Maximum possible number of fetched items.</param>
-    public static Task<List<Keyword>> GetKeywordsAsync(IKeywordAdvicer advicer, string prefix, int count)
+    public static Task<List<Keyword>> GetKeywords(IKeywordAdvicer advicer, string prefix, int count)
         => advicer.GetTopK(prefix, count);
 }
