@@ -32,7 +32,7 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
         var docs = await _database
             .GetCollection<ExtendedPlace>(MongoDatabaseFactory.PLACE_COLL)
             .Find(filter)
-            .Project(Builders<ExtendedPlace>.Projection.Exclude(p => p.linked).Exclude(p => p.attributes).Exclude(p => p.location))
+            .Project(Builders<ExtendedPlace>.Projection.Exclude(p => p.linked).Exclude(p => p.attributes))
             .Skip(offset).Limit(bucket)
             .ToListAsync();
 
