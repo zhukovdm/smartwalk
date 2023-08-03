@@ -75,7 +75,7 @@ make database-dbpedia
 - Collect supporting data to aid autocomplete functionality.
 
 ```bash
-make suggestions
+make advice
 ```
 
 - Finally, stop the database instance. All relevant data are stored in the `./assets/database`.
@@ -94,3 +94,7 @@ docker build -f ./Dockerfile.routing-engine -t smartwalk-routing-engine
 ```
 
 ## Test environment
+
+### Environment variables
+
+`SMARTWALK_MONGO_CONN_STR`, `SMARTWALK_OSRM_BASE_URL`,

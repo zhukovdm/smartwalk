@@ -1,8 +1,8 @@
 import consola from "consola";
 import {
-  dropBoundCollection,
+  dropBoundsCollection,
   dropKeywordCollection,
-  getBoundCollection,
+  getBoundsCollection,
   getClient,
   getKeywordCollection,
   getPlaceCollection
@@ -66,14 +66,14 @@ async function advice() {
   const client = getClient();
 
   try {
-    await dropBoundCollection(client);
-  } catch (ex) { logger.error(`Bound collection: ${ex?.message}`); }
+    await dropBoundsCollection(client);
+  } catch (ex) { logger.error(`Bounds collection: ${ex?.message}`); }
 
   try {
     await dropKeywordCollection(client);
   } catch (ex) { logger.error(`Keyword collection: ${ex?.message}`); }
 
-  const boundColl = getBoundCollection(client);
+  const boundColl = getBoundsCollection(client);
   const keywdColl = getKeywordCollection(client);
   const placeColl = getPlaceCollection(client);
 
@@ -140,7 +140,7 @@ async function advice() {
 
     // insert bounds
 
-    const map2arr = (m) => [...m.keys()].map(key => m.get(key));
+    const map2arr = (m) => [...m.keys()].map(key => m.get(key).label);
 
     await boundColl.insertOne({
       capacity: capacity,

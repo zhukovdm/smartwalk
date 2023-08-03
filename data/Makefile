@@ -97,10 +97,10 @@ search-index:
 	curl -X PUT $(I_URL)/place -H "Content-Type: application/json" --data-binary @search.json; echo && \
 	node search.mjs
 
-check_clean:
+check-clean:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 
-clean: check_clean
+clean: check-clean
 	@for dir in $(EXTRA_DIRS) ; do \
 		sudo rm -rf $(A_DIR)/$$dir ; \
 	done

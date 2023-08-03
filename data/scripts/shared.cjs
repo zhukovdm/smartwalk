@@ -5,7 +5,7 @@ const ASSETS_DIR = "../assets";
 
 const MONGO_CONN_STR = "mongodb://localhost:27017";
 const MONGO_DATABASE = "smartwalk";
-const MONGO_BOUND_COLLECTION = "bound";
+const MONGO_BOUNDS_COLLECTION = "bounds";
 const MONGO_KEYWORD_COLLECTION = "keyword";
 const MONGO_PLACE_COLLECTION = "place";
 
@@ -43,8 +43,8 @@ function dropMongoCollection(client, collection) {
  * Drops bound and keyword collections.
  * @param {MongoClient} client
  */
-async function dropBoundCollection(client) {
-  return await dropMongoCollection(client, MONGO_BOUND_COLLECTION);
+async function dropBoundsCollection(client) {
+  return await dropMongoCollection(client, MONGO_BOUNDS_COLLECTION);
 }
 
 async function dropKeywordCollection(client) {
@@ -62,8 +62,8 @@ function getMongoCollection(client, collection) {
 /**
  * @param {MongoClient} client
  */
-function getBoundCollection(client) {
-  return getMongoCollection(client, MONGO_BOUND_COLLECTION);
+function getBoundsCollection(client) {
+  return getMongoCollection(client, MONGO_BOUNDS_COLLECTION);
 }
 
 /**
@@ -158,9 +158,9 @@ module.exports = {
   convertKeywordToName,
   convertSnakeToKeyword,
   dropDatabase,
-  dropBoundCollection,
+  dropBoundsCollection,
   dropKeywordCollection,
-  getBoundCollection,
+  getBoundsCollection,
   getClient,
   getFirst,
   getKeywordCollection,
