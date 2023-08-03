@@ -3,13 +3,13 @@ services:
   database:
     image: mongo:4.4.23
     ports:
-      - 3002:27017
+      - 27017:27017
     volumes:
       - ./data/assets/database:/data/db
   routing-engine:
     image: osrm/osrm-backend:v5.24.0
     ports:
-      - 3003:5000
+      - 5000:5000
     volumes:
       - ./data/assets/routing-engine:/data
     entrypoint: osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${REGION_FILE}.osrm

@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);1591</NoWarn>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GeoJSON.Text" Version="1.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Certificate" Version="6.0.14" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartWalk.Domain\SmartWalk.Domain.csproj" />
+    <ProjectReference Include="..\SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj" />
+    <ProjectReference Include="..\SmartWalk.Service\SmartWalk.Service.csproj" />
+  </ItemGroup>
+
+</Project>
