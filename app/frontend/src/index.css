@@ -1,0 +1,38 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root, #map {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-popup-content {
+  max-width: 220px;
+}
+
+.stored-place {
+  color: #9c2bcb;
+}
+
+.tagged-place {
+  color: #2a81cb;
+}
+
+.source-place {
+  color: #2aad27;
+}
+
+.target-place {
+  color: #cb2b3e;
+}
+
+.stored-direc,
+.adding-place,
+.center-place,
+.custom-place,
+.stored-route {
+  color: gray;
+}

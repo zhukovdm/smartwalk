@@ -1,0 +1,5 @@
+https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png
+https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png
+https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-grey.png
+https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png
+https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png
