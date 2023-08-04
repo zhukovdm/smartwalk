@@ -11,12 +11,10 @@
   <ItemGroup>
     <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
     <PackageReference Include="NEST" Version="7.17.5" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).MSTest" />
-    <InternalsVisibleTo Include="SmartWalk.Test" />
+    <InternalsVisibleTo Include="$(AssemblyName).Test" />
   </ItemGroup>
 
 </Project>

@@ -3,7 +3,7 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Algorithms;
 
-namespace SmartWalk.Core.Tests;
+namespace SmartWalk.Core.Test;
 
 [TestClass]
 public class CycleDetectorTests

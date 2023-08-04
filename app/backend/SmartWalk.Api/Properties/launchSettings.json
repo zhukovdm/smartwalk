@@ -9,7 +9,7 @@
     }
   },
   "profiles": {
-    "GrainPath.Api": {
+    "SmartWalk.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,

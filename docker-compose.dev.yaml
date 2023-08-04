@@ -1,4 +1,5 @@
 version: '3.8'
+name: smartwalk-dev
 services:
   database:
     image: mongo:4.4.23

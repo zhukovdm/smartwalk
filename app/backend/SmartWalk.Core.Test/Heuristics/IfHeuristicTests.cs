@@ -1,6 +1,6 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace GrainPath.Application.MSTest;
+namespace SmartWalk.Core.Test;
 
 [TestClass]
 public class IfHeuristicTests

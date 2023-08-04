@@ -98,3 +98,5 @@ docker build -f ./Dockerfile.routing-engine -t smartwalk-routing-engine
 ### Environment variables
 
 `SMARTWALK_MONGO_CONN_STR`, `SMARTWALK_OSRM_BASE_URL`,
+
+http://localhost:5017/swagger/index.html

@@ -1,6 +1,6 @@
 {
-  "name": "GrainPath",
-  "version": "0.1.0",
+  "name": "SmartWalk",
+  "version": "1.0.0",
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",

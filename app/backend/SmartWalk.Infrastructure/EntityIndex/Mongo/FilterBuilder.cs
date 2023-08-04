@@ -32,13 +32,13 @@ internal static class FilterDefinitionExtensions
 
     public static F collect(this F filter, B builder, AttributeFilterCollect x, EC expr)
     {
-        filter = (x is null || x.includes.Count == 0)
+        filter = (x is null || x.inc.Count == 0)
             ? filter
-            : filter & builder.AnyIn(expr, x.includes);
+            : filter & builder.AnyIn(expr, x.inc);
 
-        filter = (x is null || x.excludes.Count == 0)
+        filter = (x is null || x.exc.Count == 0)
             ? filter
-            : filter & builder.Not(builder.AnyIn(expr, x.excludes));
+            : filter & builder.Not(builder.AnyIn(expr, x.exc));
 
         return filter;
     }
@@ -59,43 +59,43 @@ internal static class FilterBuilder
         filter = filter & builder.AnyEq(o => o.keywords, category.keyword);
 
         filter = filter
-            .existen(builder, fs.existens.image, p => p.attributes.image)
-            .existen(builder, fs.existens.description, p => p.attributes.description)
-            .existen(builder, fs.existens.website, p => p.attributes.website)
-            .existen(builder, fs.existens.address, p => p.attributes.address)
-            .existen(builder, fs.existens.email, p => p.attributes.email)
-            .existen(builder, fs.existens.phone, p => p.attributes.phone)
-            .existen(builder, fs.existens.socialNetworks, p => p.attributes.socialNetworks)
-            .existen(builder, fs.existens.charge, p => p.attributes.charge)
-            .existen(builder, fs.existens.openingHours, p => p.attributes.openingHours);
+            .existen(builder, fs.es.image, p => p.attributes.image)
+            .existen(builder, fs.es.description, p => p.attributes.description)
+            .existen(builder, fs.es.website, p => p.attributes.website)
+            .existen(builder, fs.es.address, p => p.attributes.address)
+            .existen(builder, fs.es.email, p => p.attributes.email)
+            .existen(builder, fs.es.phone, p => p.attributes.phone)
+            .existen(builder, fs.es.socialNetworks, p => p.attributes.socialNetworks)
+            .existen(builder, fs.es.charge, p => p.attributes.charge)
+            .existen(builder, fs.es.openingHours, p => p.attributes.openingHours);
 
         filter = filter
-            .boolean(builder, fs.booleans.fee, p => p.attributes.fee)
-            .boolean(builder, fs.booleans.delivery, p => p.attributes.delivery)
-            .boolean(builder, fs.booleans.drinkingWater, p => p.attributes.drinkingWater)
-            .boolean(builder, fs.booleans.internetAccess, p => p.attributes.internetAccess)
-            .boolean(builder, fs.booleans.shower, p => p.attributes.shower)
-            .boolean(builder, fs.booleans.smoking, p => p.attributes.smoking)
-            .boolean(builder, fs.booleans.takeaway, p => p.attributes.takeaway)
-            .boolean(builder, fs.booleans.toilets, p => p.attributes.toilets)
-            .boolean(builder, fs.booleans.wheelchair, p => p.attributes.wheelchair);
+            .boolean(builder, fs.bs.fee, p => p.attributes.fee)
+            .boolean(builder, fs.bs.delivery, p => p.attributes.delivery)
+            .boolean(builder, fs.bs.drinkingWater, p => p.attributes.drinkingWater)
+            .boolean(builder, fs.bs.internetAccess, p => p.attributes.internetAccess)
+            .boolean(builder, fs.bs.shower, p => p.attributes.shower)
+            .boolean(builder, fs.bs.smoking, p => p.attributes.smoking)
+            .boolean(builder, fs.bs.takeaway, p => p.attributes.takeaway)
+            .boolean(builder, fs.bs.toilets, p => p.attributes.toilets)
+            .boolean(builder, fs.bs.wheelchair, p => p.attributes.wheelchair);
 
         filter = filter
-            .numeric(builder, fs.numerics.capacity, p => p.attributes.capacity)
-            .numeric(builder, fs.numerics.elevation, p => p.attributes.elevation)
-            .numeric(builder, fs.numerics.minimumAge, p => p.attributes.minimumAge)
-            .numeric(builder, fs.numerics.rating, p => p.attributes.rating)
-            .numeric(builder, fs.numerics.year, p => p.attributes.year);
+            .numeric(builder, fs.ns.capacity, p => p.attributes.capacity)
+            .numeric(builder, fs.ns.elevation, p => p.attributes.elevation)
+            .numeric(builder, fs.ns.minimumAge, p => p.attributes.minimumAge)
+            .numeric(builder, fs.ns.rating, p => p.attributes.rating)
+            .numeric(builder, fs.ns.year, p => p.attributes.year);
 
         filter = filter
-            .textual(builder, fs.textuals.name, p => p.name);
+            .textual(builder, fs.ts.name, p => p.name);
 
         filter = filter
-            .collect(builder, fs.collects.clothes, p => p.attributes.clothes)
-            .collect(builder, fs.collects.cuisine, p => p.attributes.cuisine)
-            .collect(builder, fs.collects.denomination, p => p.attributes.denomination)
-            .collect(builder, fs.collects.payment, p => p.attributes.payment)
-            .collect(builder, fs.collects.rental, p => p.attributes.rental);
+            .collect(builder, fs.cs.clothes, p => p.attributes.clothes)
+            .collect(builder, fs.cs.cuisine, p => p.attributes.cuisine)
+            .collect(builder, fs.cs.denomination, p => p.attributes.denomination)
+            .collect(builder, fs.cs.payment, p => p.attributes.payment)
+            .collect(builder, fs.cs.rental, p => p.attributes.rental);
 
         return filter;
     }

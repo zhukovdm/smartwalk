@@ -14,4 +14,8 @@
     <ProjectReference Include="..\SmartWalk.Domain\SmartWalk.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <InternalsVisibleTo Include="$(AssemblyName).Test" />
+  </ItemGroup>
+
 </Project>

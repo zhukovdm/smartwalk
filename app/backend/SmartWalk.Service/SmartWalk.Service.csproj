@@ -16,8 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <InternalsVisibleTo Include="$(AssemblyName).MSTest" />
-    <InternalsVisibleTo Include="SmartWalk.Test" />
+    <InternalsVisibleTo Include="$(AssemblyName).Test" />
   </ItemGroup>
 
 </Project>
