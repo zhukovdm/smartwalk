@@ -82,7 +82,7 @@ public class Program
         }
 
         wapp.UseCors(_policy)
-            .UseHttpsRedirection()
+//          .UseHttpsRedirection()
             .UseAuthorization()
             .UseAuthentication();
 

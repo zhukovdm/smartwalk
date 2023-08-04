@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.Mime;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
+using NJsonSchema;
 using SmartWalk.Api.Contexts;
 using SmartWalk.Core.Algorithms;
 using SmartWalk.Domain.Entities;
@@ -15,47 +16,22 @@ using SmartWalk.Service;
 
 namespace SmartWalk.Api.Controllers;
 
+using Direc = ShortestPath;
+
 [ApiController]
 [Route("api/search")]
 public sealed class SearchController : ControllerBase
 {
-    private readonly ISearchContext _context;
-    private readonly ILogger<SearchController> _logger;
-
-    private class MalformedQueryException : Exception
+    public class AnyRequest
     {
-        private static string GetMessage(string property) => $"Malformed property '{property}' detected.";
-
-        public MalformedQueryException() { }
-
-        public MalformedQueryException(string property) : base(GetMessage(property)) { }
-
-        public MalformedQueryException(string property, Exception inner) : base(GetMessage(property), inner) { }
+        [Required]
+        [MinLength(1)]
+        public string query { get; init; }
     }
-
-    private static void Error(string property)
-        => throw new MalformedQueryException(property);
 
     private static ProblemDetails GetProblemDetails(int status, string detail)
     {
         return new() { Status = status, Detail = detail };
-    }
-
-    private static bool VerifyCategory(Category category)
-    {
-        var err = false;
-        var num = category.filters.numerics;
-
-        foreach (var n in new[] { num.capacity, num.elevation, num.minimumAge, num.rating, num.year })
-        {
-            err |= n is not null && n.max < n.min;
-        }
-        return !err;
-    }
-
-    private static bool VerifyCategories(List<Category> categories)
-    {
-        return categories.Aggregate(true, (acc, category) => acc && VerifyCategory(category));
     }
 
     private static bool VerifyPrecedence(List<WebPrecedenceEdge> edges, int order)
@@ -75,112 +51,53 @@ public sealed class SearchController : ControllerBase
         return g.Cycle() is null;
     }
 
-    private static T DeserializeQuery<T>(string query)
+    internal static T DeserializeQuery<T>(string query, JsonSchema schema)
     {
-        var res = JsonConvert.DeserializeObject<T>(query);
-        return res is not null ? res : throw new ArgumentOutOfRangeException(nameof(query));
+        var errors = schema.Validate(query).ToList();
+        return errors.Count == 0
+            ? JsonSerializer.Deserialize<T>(query)
+            : throw new Exception(string.Join(", ", errors.Select((e) => e.Path + ' ' + e.Kind)));
     }
 
     /// <summary>
     /// Representation of a point in EPSG:4326 restricted to the range of EPSG:3857.
     /// See https://epsg.io/4326 and https://epsg.io/3857 for details.
     /// </summary>
-    private sealed class WebPoint
+    internal sealed class WebPoint
     {
-        [JsonProperty(Required = Required.Always)]
-        public double? lon { get; }
+        [Required]
+        [Range(-180.0, +180.0)]
+        public double? lon { get; init; }
 
-        [JsonProperty(Required = Required.Always)]
-        public double? lat { get; }
-
-        public WebPoint(double? lon, double? lat)
-        {
-            if (lon < -180.0 || lon > +180.0)
-            {
-                Error(nameof(lon));
-            }
-            if (lat < -85.06 || lat > +85.06)
-            {
-                Error(nameof(lat));
-            }
-
-            this.lon = lon;
-            this.lat = lat;
-        }
+        [Required]
+        [Range(-85.06, +85.06)]
+        public double? lat { get; init; }
 
         public WgsPoint AsWgs() => new(lon.Value, lat.Value);
     }
 
-    private sealed class WebPrecedenceEdge
+    internal sealed class WebPrecedenceEdge
     {
-        [JsonProperty(Required = Required.Always)]
-        public int? fr { get; set; }
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int? fr { get; init; }
 
-        [JsonProperty(Required = Required.Always)]
-        public int? to { get; set; }
-
-        public WebPrecedenceEdge(int? fr, int? to)
-        {
-            if (fr < 0)
-            {
-                Error(nameof(fr));
-            }
-            if (to < 0)
-            {
-                Error(nameof(to));
-            }
-
-            this.fr = fr;
-            this.to = to;
-        }
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int? to { get; init; }
     }
 
-    private sealed class PlacesQuery
+    internal sealed class DirecsQuery
     {
-        [JsonProperty(Required = Required.Always)]
-        public WebPoint center { get; }
-
-        /// <summary>
-        /// Radius around the center (in meters).
-        /// </summary>
-        [JsonProperty(Required = Required.Always)]
-        public double? radius { get; }
-
-        [JsonProperty(Required = Required.Always)]
-        public List<Category> categories { get; }
-
-        [JsonProperty(Required = Required.Always)]
-        public int? offset { get; }
-
-        [JsonProperty(Required = Required.Always)]
-        public int? bucket { get; }
-
-        public PlacesQuery(WebPoint center, double? radius, List<Category> categories, int? offset, int? bucket)
-        {
-            if (radius < 0 || radius > 12_000)
-            {
-                Error(nameof(radius));
-            }
-            if (!VerifyCategories(categories))
-            {
-                Error(nameof(categories));
-            }
-            if (offset < 0)
-            {
-                Error(nameof(offset));
-            }
-            if (bucket < 0)
-            {
-                Error(nameof(bucket));
-            }
-
-            this.center = center;
-            this.radius = radius;
-            this.categories = categories;
-            this.offset = offset;
-            this.bucket = bucket;
-        }
+        [Required]
+        [MinLength(2)]
+        public List<WebPoint> waypoints { get; init; }
     }
+
+    private static readonly JsonSchema _direcsSchema = JsonSchema.FromType<DirecsQuery>();
+
+    private readonly ISearchContext _context;
+    private readonly ILogger<SearchController> _logger;
 
     public SearchController(ISearchContext context, ILogger<SearchController> logger)
     {
@@ -188,18 +105,67 @@ public sealed class SearchController : ControllerBase
     }
 
     [HttpGet]
+    [Route("direcs", Name = "SearchDirecs")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] AnyRequest request)
+    {
+        DirecsQuery dq = null;
+
+        try
+        {
+            dq = DeserializeQuery<DirecsQuery>(request.query, _direcsSchema);
+        }
+        catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
+
+        try
+        {
+            return await SearchService.GetDirecs(_context.Engine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
+        }
+        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+    }
+
+    internal sealed class PlacesQuery
+    {
+        [Required]
+        public WebPoint center { get; init; }
+
+        /// <summary>
+        /// Radius around the center (in meters).
+        /// </summary>
+        [Required]
+        [Range(0, 12_000)]
+        public double? radius { get; init; }
+
+        [Required]
+        public List<Category> categories { get; init; }
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int? offset { get; init; }
+
+        [Required]
+        [Range(0, int.MaxValue)]
+        public int? bucket { get; init; }
+    }
+
+    private static readonly JsonSchema _placesSchema = JsonSchema.FromType<PlacesQuery>();
+
+    [HttpGet]
     [Route("places", Name = "SearchPlaces")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Place>>> SearchPlaces(string query)
+    public async Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] AnyRequest request)
     {
         PlacesQuery pq = null;
 
         try
         {
-            pq = DeserializeQuery<PlacesQuery>(query);
+            pq = DeserializeQuery<PlacesQuery>(request.query, _placesSchema);
         }
         catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
 
@@ -211,87 +177,30 @@ public sealed class SearchController : ControllerBase
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }
 
-    private sealed class DirecsQuery
+    internal sealed class RoutesQuery
     {
-        [JsonProperty(Required = Required.Always)]
-        public List<WebPoint> waypoints { get; }
+        [Required]
+        public WebPoint source { get; init; }
 
-        public DirecsQuery(List<WebPoint> waypoints)
-        {
-            if (waypoints.Count < 2)
-            {
-                Error(nameof(waypoints));
-            }
-
-            this.waypoints = waypoints;
-        }
-    }
-
-    [HttpGet]
-    [Route("direcs", Name = "SearchDirecs")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<ShortestPath>>> SearchDirecs(string query)
-    {
-        DirecsQuery dq = null;
-
-        try
-        {
-            dq = DeserializeQuery<DirecsQuery>(query);
-        }
-        catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
-
-        try
-        {
-            return await SearchService.GetDirecs(_context.Engine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
-        }
-        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
-    }
-
-    private sealed class RoutesQuery
-    {
-        [JsonProperty(Required = Required.Always)]
-        public WebPoint source { get; set; }
-
-        [JsonProperty(Required = Required.Always)]
-        public WebPoint target { get; set; }
+        [Required]
+        public WebPoint target { get; init; }
 
         /// <summary>
         /// Maximum walking distance in <b>meters</b>.
         /// </summary>
-        [JsonProperty(Required = Required.Always)]
-        public double? distance { get; set; }
+        [Required]
+        [Range(0, 30_000)]
+        public double? distance { get; init; }
 
-        [JsonProperty(Required = Required.Always)]
-        public List<Category> categories { get; set; }
+        [Required]
+        [MinLength(1)]
+        public List<Category> categories { get; init; }
 
-        [JsonProperty(Required = Required.Always)]
-        public List<WebPrecedenceEdge> precedence { get; set; }
-
-        public RoutesQuery(WebPoint source, WebPoint target, double? distance, List<Category> categories, List<WebPrecedenceEdge> precedence)
-        {
-            if (distance < 0 || distance > 30_000)
-            {
-                Error(nameof(distance));
-            }
-            if (!VerifyCategories(categories))
-            {
-                Error(nameof(categories));
-            }
-            if (!VerifyPrecedence(precedence, categories.Count))
-            {
-                Error(nameof(precedence));
-            }
-
-            this.source = source;
-            this.target = target;
-            this.distance = distance;
-            this.categories = categories;
-            this.precedence = precedence;
-        }
+        [Required]
+        public List<WebPrecedenceEdge> precedence { get; init; }
     }
+
+    private static readonly JsonSchema _routesSchema = JsonSchema.FromType<RoutesQuery>();
 
     [HttpGet]
     [Route("routes", Name = "SearchRoutes")]
@@ -299,13 +208,14 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Route>>> SearchRoutes(string query)
+    public async Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] AnyRequest request)
     {
         RoutesQuery rq = null;
 
         try
         {
-            rq = DeserializeQuery<RoutesQuery>(query);
+            rq = DeserializeQuery<RoutesQuery>(request.query, _routesSchema);
+            if (!VerifyPrecedence(rq.precedence, rq.categories.Count)) { throw new Exception("Malformed precedence graph"); }
         }
         catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
 

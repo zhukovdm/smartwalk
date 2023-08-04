@@ -41,7 +41,10 @@ public sealed class EntityController : ControllerBase
     public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
         try {
-            if (!VerifySmartId(smartId)) { return BadRequest(); }
+            if (!VerifySmartId(smartId))
+            {
+                return BadRequest(new ProblemDetails() { Status = 400, Detail = "Malformed smartId" });
+            }
             var place = await PlacesService.GetPlace(_context.Store, smartId);
 
             return (place is not null) ? place : NotFound();
