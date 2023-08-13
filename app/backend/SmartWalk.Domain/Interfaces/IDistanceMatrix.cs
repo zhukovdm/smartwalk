@@ -8,5 +8,5 @@ public interface IDistanceMatrix
     /// <param name="fr">Index of the source</param>
     /// <param name="to">Index of the target</param>
     /// <returns>Distance in meters.</returns>
-    public double Distance(int fr, int to);
+    public double GetDistance(int fr, int to);
 }

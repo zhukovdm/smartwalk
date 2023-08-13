@@ -3,6 +3,19 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Domain.Entities;
 
+public sealed class PrecedenceEdge
+{
+    /// <summary>
+    /// Category from.
+    /// </summary>
+    public int fr { get; set; }
+
+    /// <summary>
+    /// Category to.
+    /// </summary>
+    public int to { get; set; }
+}
+
 public sealed class Route
 {
     /// <summary>
@@ -16,17 +29,4 @@ public sealed class Route
     /// </summary>
     [Required]
     public List<Place> waypoints { get; set; }
-}
-
-public sealed class PrecedenceEdge
-{
-    /// <summary>
-    /// Category from.
-    /// </summary>
-    public int fr { get; set; }
-
-    /// <summary>
-    /// Category to.
-    /// </summary>
-    public int to { get; set; }
 }

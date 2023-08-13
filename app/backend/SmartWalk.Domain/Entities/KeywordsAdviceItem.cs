@@ -3,11 +3,11 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Domain.Entities;
 
-public class Keyword
+public class KeywordsAdviceItem
 {
     /// <example>museum</example>
     [Required]
-    public string label { get; set; }
+    public string keyword { get; set; }
 
     /// <example>["openingHours"]</example>
     [Required]

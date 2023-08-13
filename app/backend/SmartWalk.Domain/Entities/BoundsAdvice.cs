@@ -15,7 +15,7 @@ public sealed class NumericBound
 }
 
 [BsonIgnoreExtraElements]
-public sealed class Bounds
+public sealed class BoundsAdvice
 {
     [Required]
     public NumericBound capacity { get; set; }
