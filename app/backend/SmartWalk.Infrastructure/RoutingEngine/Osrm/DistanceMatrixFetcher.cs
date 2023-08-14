@@ -15,7 +15,7 @@ internal sealed class OsrmDistanceMatrix : IDistanceMatrix
 
     public OsrmDistanceMatrix(List<List<double>> matrix) { _matrix = matrix; }
 
-    public double Distance(int fr, int to) => _matrix[fr][to];
+    public double GetDistance(int fr, int to) => _matrix[fr][to];
 }
 
 internal static class DistanceMatrixFetcher

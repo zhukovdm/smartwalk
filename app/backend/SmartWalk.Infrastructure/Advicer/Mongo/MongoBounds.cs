@@ -5,11 +5,11 @@ namespace SmartWalk.Infrastructure.Advicer;
 
 internal sealed class MongoBounds
 {
-    internal static Bounds GetInstance(IMongoDatabase database)
+    internal static BoundsAdvice GetInstance(IMongoDatabase database)
     {
         return database
-            .GetCollection<Bounds>("bounds")
-            .Find(FilterDefinition<Bounds>.Empty)
+            .GetCollection<BoundsAdvice>("bounds")
+            .Find(FilterDefinition<BoundsAdvice>.Empty)
             .FirstOrDefault(); // synchronous!
     }
 }

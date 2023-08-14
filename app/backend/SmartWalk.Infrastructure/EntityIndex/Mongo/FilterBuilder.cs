@@ -58,44 +58,54 @@ internal static class FilterBuilder
 
         filter = filter & builder.AnyEq(o => o.keywords, category.keyword);
 
-        filter = filter
-            .existen(builder, fs.es.image, p => p.attributes.image)
-            .existen(builder, fs.es.description, p => p.attributes.description)
-            .existen(builder, fs.es.website, p => p.attributes.website)
-            .existen(builder, fs.es.address, p => p.attributes.address)
-            .existen(builder, fs.es.email, p => p.attributes.email)
-            .existen(builder, fs.es.phone, p => p.attributes.phone)
-            .existen(builder, fs.es.socialNetworks, p => p.attributes.socialNetworks)
-            .existen(builder, fs.es.charge, p => p.attributes.charge)
-            .existen(builder, fs.es.openingHours, p => p.attributes.openingHours);
+        if (fs.es is not null) {
+            filter = filter
+                .existen(builder, fs.es.image, p => p.attributes.image)
+                .existen(builder, fs.es.description, p => p.attributes.description)
+                .existen(builder, fs.es.website, p => p.attributes.website)
+                .existen(builder, fs.es.address, p => p.attributes.address)
+                .existen(builder, fs.es.email, p => p.attributes.email)
+                .existen(builder, fs.es.phone, p => p.attributes.phone)
+                .existen(builder, fs.es.socialNetworks, p => p.attributes.socialNetworks)
+                .existen(builder, fs.es.charge, p => p.attributes.charge)
+                .existen(builder, fs.es.openingHours, p => p.attributes.openingHours);
+        }
 
-        filter = filter
-            .boolean(builder, fs.bs.fee, p => p.attributes.fee)
-            .boolean(builder, fs.bs.delivery, p => p.attributes.delivery)
-            .boolean(builder, fs.bs.drinkingWater, p => p.attributes.drinkingWater)
-            .boolean(builder, fs.bs.internetAccess, p => p.attributes.internetAccess)
-            .boolean(builder, fs.bs.shower, p => p.attributes.shower)
-            .boolean(builder, fs.bs.smoking, p => p.attributes.smoking)
-            .boolean(builder, fs.bs.takeaway, p => p.attributes.takeaway)
-            .boolean(builder, fs.bs.toilets, p => p.attributes.toilets)
-            .boolean(builder, fs.bs.wheelchair, p => p.attributes.wheelchair);
+        if (fs.bs is not null) {
+            filter = filter
+                .boolean(builder, fs.bs.fee, p => p.attributes.fee)
+                .boolean(builder, fs.bs.delivery, p => p.attributes.delivery)
+                .boolean(builder, fs.bs.drinkingWater, p => p.attributes.drinkingWater)
+                .boolean(builder, fs.bs.internetAccess, p => p.attributes.internetAccess)
+                .boolean(builder, fs.bs.shower, p => p.attributes.shower)
+                .boolean(builder, fs.bs.smoking, p => p.attributes.smoking)
+                .boolean(builder, fs.bs.takeaway, p => p.attributes.takeaway)
+                .boolean(builder, fs.bs.toilets, p => p.attributes.toilets)
+                .boolean(builder, fs.bs.wheelchair, p => p.attributes.wheelchair);
+        }
 
-        filter = filter
-            .numeric(builder, fs.ns.capacity, p => p.attributes.capacity)
-            .numeric(builder, fs.ns.elevation, p => p.attributes.elevation)
-            .numeric(builder, fs.ns.minimumAge, p => p.attributes.minimumAge)
-            .numeric(builder, fs.ns.rating, p => p.attributes.rating)
-            .numeric(builder, fs.ns.year, p => p.attributes.year);
+        if (fs.ns is not null) {
+            filter = filter
+                .numeric(builder, fs.ns.capacity, p => p.attributes.capacity)
+                .numeric(builder, fs.ns.elevation, p => p.attributes.elevation)
+                .numeric(builder, fs.ns.minimumAge, p => p.attributes.minimumAge)
+                .numeric(builder, fs.ns.rating, p => p.attributes.rating)
+                .numeric(builder, fs.ns.year, p => p.attributes.year);
+        }
 
-        filter = filter
-            .textual(builder, fs.ts.name, p => p.name);
+        if (fs.ts is not null) {
+            filter = filter
+                .textual(builder, fs.ts.name, p => p.name);
+        }
 
-        filter = filter
-            .collect(builder, fs.cs.clothes, p => p.attributes.clothes)
-            .collect(builder, fs.cs.cuisine, p => p.attributes.cuisine)
-            .collect(builder, fs.cs.denomination, p => p.attributes.denomination)
-            .collect(builder, fs.cs.payment, p => p.attributes.payment)
-            .collect(builder, fs.cs.rental, p => p.attributes.rental);
+        if (fs.cs is not null) {
+            filter = filter
+                .collect(builder, fs.cs.clothes, p => p.attributes.clothes)
+                .collect(builder, fs.cs.cuisine, p => p.attributes.cuisine)
+                .collect(builder, fs.cs.denomination, p => p.attributes.denomination)
+                .collect(builder, fs.cs.payment, p => p.attributes.payment)
+                .collect(builder, fs.cs.rental, p => p.attributes.rental);
+        }
 
         return filter;
     }

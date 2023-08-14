@@ -9,12 +9,12 @@ namespace SmartWalk.Infrastructure.Advicer;
 
 using Trie = PruningRadixTrie.PruningRadixTrie;
 
-internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
+internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
 {
     private readonly Trie _trie = new();
     private readonly Dictionary<string, List<string>> _attributeLists = new();
 
-    private TrieKeywordAdvicer() { }
+    private TrieKeywordsAdvicer() { }
 
     private void Add(string term, List<string> attributeList, long freq)
     {
@@ -22,29 +22,30 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
         _trie.AddTerm(term, freq);
     }
 
-    public Task<List<Keyword>> GetTopK(string prefix, int count)
+    public Task<List<KeywordsAdviceItem>> GetTopK(string prefix, int count)
     {
         var result = _trie
             .GetTopkTermsForPrefix(prefix, count, out _)
-            .Select((pair) => new Keyword() { label = pair.term, attributeList = _attributeLists[pair.term] })
+            .Select((pair) => new KeywordsAdviceItem() {
+                keyword = pair.term, attributeList = _attributeLists[pair.term] })
             .ToList();
 
         return Task.FromResult(result);
     }
 
     [BsonIgnoreExtraElements]
-    internal class Item : Keyword
+    internal class Item : KeywordsAdviceItem
     {
         public int count { get; init; }
     }
 
-    internal static IKeywordAdvicer GetInstance(IEnumerable<Item> items)
+    internal static IKeywordsAdvicer GetInstance(IEnumerable<Item> items)
     {
-        var advicer = new TrieKeywordAdvicer();
+        var advicer = new TrieKeywordsAdvicer();
 
         foreach (var item in items)
         {
-            advicer.Add(item.label, item.attributeList, item.count);
+            advicer.Add(item.keyword, item.attributeList, item.count);
         }
         return advicer;
     }

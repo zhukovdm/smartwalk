@@ -4,6 +4,5 @@ namespace SmartWalk.Infrastructure.RoutingEngine;
 
 public static class RoutingEngineFactory
 {
-    public static IRoutingEngine GetInstance()
-        => OsrmRoutingEngine.GetInstance();
+    public static IRoutingEngine GetInstance() => OsrmRoutingEngine.GetInstance();
 }

@@ -3,17 +3,17 @@ using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Infrastructure.Advicer;
 
-using Document = TrieKeywordAdvicer.Item;
+using Document = TrieKeywordsAdvicer.Item;
 
-internal sealed class MongoKeywordAdvicer
+internal sealed class MongoKeywordsAdvicer
 {
-    internal static IKeywordAdvicer GetInstance(IMongoDatabase database)
+    internal static IKeywordsAdvicer GetInstance(IMongoDatabase database)
     {
         var docs = database
             .GetCollection<Document>("keyword")
             .Find(FilterDefinition<Document>.Empty)
             .ToEnumerable(); // synchronous!
 
-        return TrieKeywordAdvicer.GetInstance(docs);
+        return TrieKeywordsAdvicer.GetInstance(docs);
     }
 }

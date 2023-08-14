@@ -18,109 +18,64 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
     private MongoEntityIndex(IMongoDatabase database) : base(database) { }
 
     private static IEnumerable<T> Deserialize<T>(List<BsonDocument> docs)
-        => docs.Select((doc) => BsonSerializer.Deserialize<T>(doc)).ToList();
+        => docs.Select((doc) => BsonSerializer.Deserialize<T>(doc));
 
     /// <summary>
-    /// Place-specific fetch.
+    /// General-purpose fetch.
     /// </summary>
     /// <param name="filter"></param>
-    /// <param name="offset"></param>
-    /// <param name="bucket"></param>
+    /// <param name="categoryId"></param>
     /// <returns>List of places that satisfy at least one category filter.</returns>
-    private async Task<List<Place>> FetchAround(Filter filter, int offset, int bucket)
+    private async Task<List<Place>> FetchPlaces(Filter filter, int? categoryId)
     {
         var docs = await _database
             .GetCollection<ExtendedPlace>(MongoDatabaseFactory.PLACE_COLL)
             .Find(filter)
-            .Project(Builders<ExtendedPlace>.Projection.Exclude(p => p.linked).Exclude(p => p.attributes))
-            .Skip(offset).Limit(bucket)
+            .Project(Builders<ExtendedPlace>.Projection
+                .Exclude(p => p.linked)
+                .Exclude(p => p.attributes))
             .ToListAsync();
 
-        return Deserialize<Place>(docs).ToList();
+        var places = Deserialize<Place>(docs).Select((place) => {
+            if (categoryId is not null) { _ = place.categories.Add(categoryId.Value); }
+            return place;
+        }).ToList();
+
+        return places;
     }
 
-    public async Task<List<Place>> GetAround(
-        WgsPoint center, double radius, IReadOnlyList<Category> categories, int offset, int bucket)
+    private async Task<List<Place>> FetchCategories(Filter baseFilter, List<Category> categories)
     {
-        var sf = Builders<ExtendedPlace>.Filter
-            .NearSphere(p => p.location, GeoJson.Point(new GeoJson2DGeographicCoordinates(center.lon, center.lat)), maxDistance: radius);
+        var result = new List<Place>();
 
-        FilterDefinition<ExtendedPlace> cf = null;
-
-        foreach (var category in categories)
+        for (int i = 0; i < categories.Count; ++i)
         {
-            var filter = FilterBuilder.CategoryToFilter(category);
-            cf = (cf is null) ? filter : cf | filter ;
+            result.AddRange(await FetchPlaces(
+                baseFilter & FilterBuilder.CategoryToFilter(categories[i]), i));
         }
-        cf ??= Builders<ExtendedPlace>.Filter.Empty;
-
-        return await FetchAround(sf & cf, offset, bucket);
+        return result.WithMergedCategories();
     }
 
-    /// <summary>
-    /// Route-specific fetch with merge.
-    /// </summary>
-    /// <param name="baseFilter"></param>
-    /// <param name="catFilters"></param>
-    /// <param name="bucket"></param>
-    private async Task<List<Place>> FetchAroundWithin(Filter baseFilter, List<Filter> catFilters, int bucket)
+    public Task<List<Place>> GetAround(WgsPoint center, double radius, List<Category> categories)
     {
-        var result = new Dictionary<string, Place>();
-
-        for (int i = 0; i < catFilters.Count; ++i)
-        {
-            // Request database to obtain a list of places.
-
-            var docs = await _database
-                .GetCollection<ExtendedPlace>(MongoDatabaseFactory.PLACE_COLL)
-                .Find(baseFilter & catFilters[i])
-                .Project(Builders<ExtendedPlace>.Projection.Exclude(p => p.linked).Exclude(p => p.attributes))
-                .Limit(bucket)
-                .ToListAsync();
-
-            // Convert BSON documents to proper places, add category identifier.
-
-            var places = Deserialize<Place>(docs)
-                .Select(p => { _ = p.categories.Add(i); return p; });
-
-            /* Merge the list of places with the result in case the same place
-            * is associated with more than one category. */
-
-            foreach (var place in places)
-            {
-                if (result.TryGetValue(place.smartId, out var p))
-                {
-                    p.categories.Add(i);
-                }
-                else { result.Add(place.smartId, place); }
-            }
-        }
-
-        return result.Values.ToList();
-    }
-
-    public async Task<List<Place>> GetAroundWithin(
-        List<WgsPoint> polygon, WgsPoint refPoint, double distance, IReadOnlyList<Category> categories, int bucket)
-    {
-        /* Combine $geoWithin and $nearSphere filters to ensure points are
-         * within the polygon and closed to the center of the circle. Typically
-         * the circle is circumscribed about the polygon, and the polygon is
-         * a bounding ellipse.
-         * 
-         *  - https://www.mongodb.com/docs/manual/reference/operator/query/geoWithin/
-         *  - https://www.mongodb.com/docs/manual/reference/operator/query/nearSphere/
-         */
+        // $nearSphere returns objects sorted by distance from the center!
 
         var sf = Builders<ExtendedPlace>.Filter
-            .NearSphere(p => p.location, GeoJson.Point(new GeoJson2DGeographicCoordinates(refPoint.lon, refPoint.lat)), maxDistance: distance);
+            .NearSphere(p => p.location, GeoJson.Point(
+                new GeoJson2DGeographicCoordinates(center.lon, center.lat)), maxDistance: radius);
 
+        return categories.Count != 0
+            ? FetchCategories(sf, categories)
+            : FetchPlaces(sf & Builders<ExtendedPlace>.Filter.Empty, null);
+    }
+
+    public Task<List<Place>> GetWithin(List<WgsPoint> polygon, List<Category> categories)
+    {
         var wf = Builders<ExtendedPlace>.Filter
             .GeoWithin(p => p.location, GeoJson.Polygon(polygon.Select(point => 
                 new GeoJson2DGeographicCoordinates(point.lon, point.lat)).ToArray()));
 
-        var catFilters = categories.Select((cat) => FilterBuilder.CategoryToFilter(cat)).ToList();
-
-        return await FetchAroundWithin(sf & wf, catFilters, bucket);
+        return FetchCategories(wf, categories);
     }
 
     public static IEntityIndex GetInstance(IMongoDatabase database) => new MongoEntityIndex(database);
