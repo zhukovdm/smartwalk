@@ -1,8 +1,7 @@
 using System.Collections.Generic;
 using SmartWalk.Domain.Entities;
-using SmartWalk.Domain.Interfaces;
 
-namespace SmartWalk.Core.Interfaces;
+namespace SmartWalk.Domain.Interfaces;
 
 public interface ISolver
 {
