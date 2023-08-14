@@ -31,7 +31,7 @@ public static class SearchService
 
     #region Routes
 
-    private class RoutesComparer : IComparer<Route>
+    private sealed class RouteComparer : IComparer<Route>
     {
         public int Compare(Route l, Route r) => l.path.distance.CompareTo(r.path.distance);
     }
@@ -56,22 +56,21 @@ public static class SearchService
         {
             var solverPlaces = places
                 .Select((p, i) => (p, i))
-                .Aggregate(new List<SolverPlace>(), (acc, item) =>
+                .Aggregate(new List<SolverPlace>(), (acc, itm) =>
                 {
-                    foreach (var category in item.p.categories)
+                    foreach (var category in itm.p.categories)
                     {
-                        acc.Add(new(item.i, category));
+                        acc.Add(new(itm.i, category));
                     }
                     return acc;
                 });
 
             var matrix = new HaversineDistanceMatrix(places, detourRatio);
 
-            var seq = SolverFactory.GetInstance()
-                .Solve(solverPlaces, matrix, precedence, maxDistance);
+            var seq = SolverFactory.GetInstance().Solve(solverPlaces, matrix, precedence);
 
-            var path = (await routingEngine.GetShortestPaths(seq.Select((p) => places[p.Idx].location).ToList()))
-                .Where((path) => path.distance <= maxDistance)
+            var path = (await routingEngine.GetShortestPaths(seq.Select((sp) => places[sp.Idx].location).ToList()))
+                .Where((p) => p.distance <= maxDistance)
                 .FirstOrDefault();
 
             var trimmedSeq = seq.Skip(1).SkipLast(1).ToList();
@@ -102,7 +101,7 @@ public static class SearchService
             places = places.Where((p) => p.categories.Count > 0).ToList();
         }
 
-        result.Sort(new RoutesComparer());
+        result.Sort(new RouteComparer());
         return result;
     }
 
