@@ -19,11 +19,6 @@ public static class Spherical
     private static readonly double _earthRadius = 6_378_137.0;
 
     /// <summary>
-    /// Calculate x^2
-    /// </summary>
-    private static double Square(double x) => x * x;
-
-    /// <summary>
     /// Convert degrees to radians.
     /// </summary>
     private static double DegToRad(double deg) => deg * _deg2rad;
@@ -85,9 +80,9 @@ public static class Spherical
 
     /// <summary>
     /// Calculate the central angle between two given points on a sphere in
-    /// radians and multiply by the Earth radius.
+    /// radians and multiply by the Earth radius.<br/>
     /// 
-    /// hav(x) = sin^2 (x^2 / 2) and arcsin(x) = arctan(x / sqrt(1 - x^2)).
+    /// hav(x) = sin^2 (x^2 / 2.0), arcsin(x) = arctan(x / sqrt(1.0 - x^2)).
     /// <list>
     /// <item>https://www.movable-type.co.uk/scripts/latlong.html</item>
     /// <item>https://en.wikipedia.org/wiki/Haversine_formula#Formulation</item>
@@ -99,9 +94,9 @@ public static class Spherical
         var deltaLam = DegToRad(p2.lon - p1.lon);
         var deltaPhi = DegToRad(p2.lat - p1.lat);
 
-        var hav = Square(Math.Sin(deltaPhi / 2.0)) + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Square(Math.Sin(deltaLam / 2.0));
+        var hav = Math.Pow((Math.Sin(deltaPhi / 2.0)), 2.0) + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow((Math.Sin(deltaLam / 2.0)), 2.0);
 
-        var ang = 2.0 * Math.Atan2(Math.Sqrt(hav), Math.Sqrt(1 - hav));
+        var ang = 2.0 * Math.Atan2(Math.Sqrt(hav), Math.Sqrt(1.0 - hav));
 
         return _earthRadius * ang;
     }
@@ -119,7 +114,7 @@ public static class Spherical
         var c = Spherical.HaversineDistance(f1, f2) / 2.0;
 
         /* Construct a bounding ellipse with the center at the origin (0, 0).
-         * Coordinates of the result are in meters! */
+         * Note that coordinates of the result are in meters! */
 
         var a = ((distance > (2.0 * c)) ? distance : (2.0 * c + 200.0)) / 2.0;
         var b = Math.Sqrt(a * a - c * c);
@@ -128,14 +123,14 @@ public static class Spherical
         factory.Envelope = new(-a, +a, -b, +b);
         var e1 = factory.CreateEllipse();
 
-        // Rotated ellipse
+        // rotate ellipse
 
         var e2 = new AffineTransformation()
             .Rotate(Spherical.RotAngle(f1, f2))
             .Transform(e1);
 
         /* Transform the ellipse with respect to the parallel at the latitude
-         * of the midpoint. Coordinates of the result are in degrees! */
+         * of the midpoint. Note that coordinates of the result are in degs! */
 
         var lr = DegToRad(m.lat);
         var cs = new Coordinate[e2.Coordinates.Length];
@@ -148,7 +143,7 @@ public static class Spherical
                 Spherical.RadToDeg(pt.Y / Spherical.LatRadLeng(lr)));
         }
 
-        // Translated ellipse
+        // translate ellipse
 
         var e3 = new AffineTransformation()
             .Translate(m.lon, m.lat)

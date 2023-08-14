@@ -4,8 +4,7 @@ using System.Linq;
 namespace SmartWalk.Core.Algorithms;
 
 /// <summary>
-/// Detect a cycle in a <b>directed</b> graph using standard 3-color recursive
-/// procedure.
+/// Detect a cycle in a directed graph using standard 3-color recursive procedure.
 /// </summary>
 public sealed class CycleDetector
 {
@@ -50,11 +49,11 @@ public sealed class CycleDetector
         _Es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
     }
 
-    /// <summary>
-    /// Loops are recognized as cycles.
-    /// </summary>
     public CycleDetector AddEdge(int fr, int to) { _ = _Es[fr].Add(to); return this; }
 
+    /// <summary>
+    /// Cycle-detection procedure. Note that loops are recognized as cycles.
+    /// </summary>
     public List<int> Cycle()
     {
         var res = new List<int>();
