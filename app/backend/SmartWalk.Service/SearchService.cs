@@ -12,17 +12,9 @@ public static class SearchService
 {
     #region Direcs
 
-    private class DirecsComparer : IComparer<ShortestPath>
+    public static async Task<ShortestPath> GetDirecs(IRoutingEngine routingEngine, List<WgsPoint> waypoints)
     {
-        public int Compare(ShortestPath l, ShortestPath r) => l.distance.CompareTo(r.distance);
-    }
-
-    public static async Task<List<ShortestPath>> GetDirecs(IRoutingEngine routingEngine, List<WgsPoint> waypoints)
-    {
-        var direcs = await routingEngine.GetShortestPaths(waypoints);
-
-        direcs.Sort(new DirecsComparer());
-        return direcs;
+        return (await routingEngine.GetShortestPaths(waypoints)).FirstOrDefault();
     }
 
     #endregion
