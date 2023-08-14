@@ -4,14 +4,18 @@ namespace SmartWalk.Api.Contexts;
 
 public interface ISearchContext
 {
-    IEntityIndex Index { get; init; }
+    IEntityIndex EntityIndex { get; init; }
 
-    IRoutingEngine Engine { get; init; }
+    IGeoIndex GeoIndex { get; init; }
+
+    IRoutingEngine RoutingEngine { get; init; }
 }
 
 public sealed class SearchContext : ISearchContext
 {
-    public IEntityIndex Index { get; init; }
+    public IEntityIndex EntityIndex { get; init; }
 
-    public IRoutingEngine Engine { get; init; }
+    public IGeoIndex GeoIndex { get; init; }
+
+    public IRoutingEngine RoutingEngine { get; init; }
 }

@@ -16,19 +16,6 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/advice")]
 public sealed class AdviceController : ControllerBase
 {
-    public sealed class KeywordsRequest
-    {
-        /// <example>m</example>
-        [Required]
-        [MinLength(1)]
-        public string prefix { get; set; }
-
-        /// <example>5</example>
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int count { get; set; }
-    }
-
     private readonly IAdviceContext _context;
     private readonly ILogger<AdviceController> _logger;
 
@@ -41,9 +28,22 @@ public sealed class AdviceController : ControllerBase
     [Route("bounds", Name = "AdviseBounds")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<Bounds> AdviseBounds()
+    public ActionResult<BoundsAdvice> AdviseBounds()
     {
-        return AdviceService.GetBounds(_context.Bounds);
+        return AdviceService.GetBounds(_context.BoundsAdvice);
+    }
+
+    public sealed class KeywordsRequest
+    {
+        /// <example>m</example>
+        [Required]
+        [MinLength(1)]
+        public string prefix { get; init; }
+
+        /// <example>5</example>
+        [Required]
+        [Range(1, int.MaxValue)]
+        public int? count { get; init; }
     }
 
     [HttpGet]
@@ -51,11 +51,11 @@ public sealed class AdviceController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Keyword>>> AdviseKeywords([FromQuery] KeywordsRequest request)
+    public async Task<ActionResult<List<KeywordsAdviceItem>>> AdviseKeywords([FromQuery] KeywordsRequest request)
     {
         try {
             return await AdviceService.GetKeywords(
-                _context.KeywordAdvicer, request.prefix, request.count);
+                _context.KeywordsAdvicer, request.prefix, request.count.Value);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }

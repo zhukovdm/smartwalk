@@ -53,7 +53,8 @@ public sealed class SearchController : ControllerBase
 
     internal static T DeserializeQuery<T>(string query, JsonSchema schema)
     {
-        var errors = schema.Validate(query).ToList();
+        var errors = schema.Validate(query);
+
         return errors.Count == 0
             ? JsonSerializer.Deserialize<T>(query)
             : throw new Exception(string.Join(", ", errors.Select((e) => e.Path + ' ' + e.Kind)));
@@ -109,8 +110,9 @@ public sealed class SearchController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] AnyRequest request)
+    public async Task<ActionResult<Direc>> SearchDirecs([FromQuery] AnyRequest request)
     {
         DirecsQuery dq = null;
 
@@ -122,7 +124,8 @@ public sealed class SearchController : ControllerBase
 
         try
         {
-            return await SearchService.GetDirecs(_context.Engine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
+            var direc = await SearchService.GetDirecs(_context.RoutingEngine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
+            return (direc is not null) ? direc : NotFound();
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }
@@ -136,19 +139,11 @@ public sealed class SearchController : ControllerBase
         /// Radius around the center (in meters).
         /// </summary>
         [Required]
-        [Range(0, 12_000)]
+        [Range(0, 15_000)]
         public double? radius { get; init; }
 
         [Required]
         public List<Category> categories { get; init; }
-
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int? offset { get; init; }
-
-        [Required]
-        [Range(0, int.MaxValue)]
-        public int? bucket { get; init; }
     }
 
     private static readonly JsonSchema _placesSchema = JsonSchema.FromType<PlacesQuery>();
@@ -172,7 +167,7 @@ public sealed class SearchController : ControllerBase
         try
         {
             return await SearchService.GetPlaces(
-                _context.Index, pq.center.AsWgs(), pq.radius.Value, pq.categories, pq.offset.Value, pq.bucket.Value);
+                _context.EntityIndex, pq.center.AsWgs(), pq.radius.Value, pq.categories);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }
@@ -196,6 +191,9 @@ public sealed class SearchController : ControllerBase
         [MinLength(1)]
         public List<Category> categories { get; init; }
 
+        /// <summary>
+        /// Edges of a category precedence graph.
+        /// </summary>
         [Required]
         public List<WebPrecedenceEdge> precedence { get; init; }
     }
@@ -220,12 +218,13 @@ public sealed class SearchController : ControllerBase
         catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
 
         var precedence = rq.precedence
-            .Select(p => new PrecedenceEdge() { fr = p.fr.Value, to = p.to.Value }).ToList();
+            .Select(p => new PrecedenceEdge(p.fr.Value, p.to.Value)).ToList();
 
         try
         {
             return await SearchService.GetRoutes(
-                _context.Index, _context.Engine, rq.source.AsWgs(), rq.target.AsWgs(), rq.distance.Value, rq.categories, precedence);
+                _context.EntityIndex, _context.GeoIndex, _context.RoutingEngine,
+                rq.source.AsWgs(), rq.target.AsWgs(), rq.distance.Value, rq.categories, precedence);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }

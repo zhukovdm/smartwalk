@@ -5,14 +5,14 @@ namespace SmartWalk.Api.Contexts;
 
 public interface IAdviceContext
 {
-    Bounds Bounds { get; init; }
+    BoundsAdvice BoundsAdvice { get; init; }
 
-    IKeywordAdvicer KeywordAdvicer { get; init; }
+    IKeywordsAdvicer KeywordsAdvicer { get; init; }
 }
 
 public sealed class AdviceContext : IAdviceContext
 {
-    public Bounds Bounds { get; init; }
+    public BoundsAdvice BoundsAdvice { get; init; }
 
-    public IKeywordAdvicer KeywordAdvicer { get; init; }
+    public IKeywordsAdvicer KeywordsAdvicer { get; init; }
 }

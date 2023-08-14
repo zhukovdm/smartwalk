@@ -40,13 +40,14 @@ public sealed class EntityController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
-        try {
-            if (!VerifySmartId(smartId))
-            {
-                return BadRequest(new ProblemDetails() { Status = 400, Detail = "Malformed smartId" });
-            }
-            var place = await PlacesService.GetPlace(_context.Store, smartId);
+        if (!VerifySmartId(smartId))
+        {
+            return BadRequest(new ProblemDetails() { Status = 400, Detail = "Malformed smartId" });
+        }
 
+        try
+        {
+            var place = await PlacesService.GetPlace(_context.Store, smartId);
             return (place is not null) ? place : NotFound();
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
