@@ -9,4 +9,6 @@ internal class StandardGeoIndex : IGeoIndex
 {
     public Task<double> GetDetourRatio(List<WgsPoint> polygon)
         => Task.FromResult(1.25);
+
+    public static IGeoIndex GetInstance() => new StandardGeoIndex();
 }
