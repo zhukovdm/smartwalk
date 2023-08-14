@@ -71,6 +71,8 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
 
     public Task<List<Place>> GetWithin(List<WgsPoint> polygon, List<Category> categories)
     {
+        // $geoWithin does not sort objects.
+
         var wf = Builders<ExtendedPlace>.Filter
             .GeoWithin(p => p.location, GeoJson.Polygon(polygon.Select(point => 
                 new GeoJson2DGeographicCoordinates(point.lon, point.lat)).ToArray()));

@@ -14,26 +14,24 @@ internal static class ShortestPathFetcher
         /// <summary>
         /// Distance of a route in <b>meters</b>.
         /// </summary>
-        public double? distance { get; set; }
+        public double distance { get; init; }
 
         /// <summary>
         /// Duration of a route in <b>seconds</b>.
         /// </summary>
-        public double? duration { get; set; }
+        public double duration { get; init; }
 
         /// <summary>
         /// Shape of a route as GeoJSON object.
         /// </summary>
-        public LineString geometry { get; set; }
+        public LineString geometry { get; init; }
     }
 
     private sealed class Answer
     {
-        public string code { get; set; }
+        public string code { get; init; }
 
-        public string message { get; set; }
-
-        public List<Route> routes { get; set; }
+        public List<Route> routes { get; init; }
     }
 
     /// <summary>
@@ -43,22 +41,21 @@ internal static class ShortestPathFetcher
     /// <item>http://project-osrm.org/docs/v5.24.0/api/#route-service</item>
     /// </list>
     /// </summary>
-    /// <param name="addr">base URL of the service</param>
-    /// <param name="waypoints">list of WGS 84 points</param>
-    /// <returns>list of shortest path objects or error message</returns>
+    /// <param name="addr">Base URL of the service</param>
+    /// <param name="waypoints">List of WGS 84 points</param>
+    /// <returns>Non-null list of shortest paths.</returns>
     public static async Task<List<ShortestPath>> Fetch(string addr, List<WgsPoint> waypoints)
     {
         var res = await QueryExecutor.Execute(QueryConstructor.Route(addr, waypoints));
-        if (res is null) { return null; }
+        if (res is null) { return new(); }
 
         var ans = JsonSerializer.Deserialize<Answer>(res);
-
-        if (ans.code != "Ok") { return null; }
+        if (ans.code != "Ok") { return new(); }
 
         var routes = ans.routes.Select(r => new ShortestPath()
         {
-            distance = r.distance ?? 0.0,
-            duration = r.duration ?? 0.0,
+            distance = r.distance,
+            duration = r.duration,
             polyline = r.geometry.Coordinates
                 .Select(p => new WgsPoint(p.Longitude, p.Latitude))
                 .ToList()

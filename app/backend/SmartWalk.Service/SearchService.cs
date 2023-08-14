@@ -10,93 +10,109 @@ namespace SmartWalk.Service;
 
 public static class SearchService
 {
-    public static Task<List<Place>> GetPlaces(
-        IEntityIndex index, WgsPoint center, double radius, List<Category> categories, int offset, int bucket)
+    #region Direcs
+
+    private class DirecsComparer : IComparer<ShortestPath>
     {
-        return index.GetAround(center, radius, categories, offset, bucket);
+        public int Compare(ShortestPath l, ShortestPath r) => l.distance.CompareTo(r.distance);
     }
 
-    public static Task<List<ShortestPath>> GetDirecs(IRoutingEngine engine, List<WgsPoint> waypoints)
+    public static async Task<List<ShortestPath>> GetDirecs(IRoutingEngine routingEngine, List<WgsPoint> waypoints)
     {
-        return engine.GetShortestPaths(waypoints);
+        var direcs = await routingEngine.GetShortestPaths(waypoints);
+
+        direcs.Sort(new DirecsComparer());
+        return direcs;
     }
 
-    /// <summary>
-    /// Consider at most quantity places in each category.
-    /// </summary>
-    private static readonly int BUCKET_SIZE = 20;
+    #endregion
 
-    /// <summary>
-    /// Find up to COUNT routes.
-    /// </summary>
-    private static readonly int ROUTES_COUNT = 10;
+    #region Places
 
-    /// <summary>
-    /// Selector between Routing Engine (precise) and Haversine (approximate)
-    /// distance matrices.
-    /// </summary>
-    private static readonly int DISTANCE_MATRIX_THRESHOLD = 3;
+    public static async Task<List<Place>> GetPlaces(
+        IEntityIndex entityIndex, WgsPoint center, double radius, List<Category> categories)
+    {
+        return await entityIndex.GetAround(center, radius, categories);
+    }
 
-    /// <summary>
-    /// Construct properly ordered continuous sequence.
-    /// </summary>
-    private static List<T> Concat<T>(T source, IEnumerable<T> waypoints, T target)
-        => new List<T>().Concat(new[] { source }).Concat(waypoints).Concat(new[] { target }).ToList();
+    #endregion
 
-    /// <summary>
-    /// Extract waypoints out of the route sequence. Skip first and last items
-    /// (source and target).
-    /// </summary>
-    private static List<Place> Extract(List<int> route, List<Place> places)
-        => route.Skip(1).SkipLast(1).Select(i => places[i]).ToList();
+    #region Routes
+
+    private class RoutesComparer : IComparer<Route>
+    {
+        public int Compare(Route l, Route r) => l.path.distance.CompareTo(r.path.distance);
+    }
 
     public async static Task<List<Route>> GetRoutes(
-        IEntityIndex index, IRoutingEngine engine, WgsPoint source, WgsPoint target,
-        double maxDistance, List<Category> categories, List<PrecedenceEdge> precedence)
+        IEntityIndex entityIndex, IGeoIndex geoIndex, IRoutingEngine routingEngine,
+        WgsPoint source, WgsPoint target, double maxDistance, List<Category> categories, List<PrecedenceEdge> precedence)
     {
-        /* Get list of places and locations within bounding ellipse. Note that
-         * the source and target are part of the list. */
+        var result = new List<Route>();
 
         var ellipse = Spherical.BoundingEllipse(source, target, maxDistance);
 
-        var around = await index.GetAroundWithin(
-            ellipse, Spherical.Midpoint(source, target), maxDistance / 2.0, categories, BUCKET_SIZE);
+        var places = new List<Place>()
+            .Concat(new[] { new Place() { location = source, categories = new() { -1 } } })
+            .Concat(await entityIndex.GetWithin(ellipse, categories))
+            .Concat(new[] { new Place() { location = target, categories = new() { -1 } } })
+            .ToList();
 
-        if (around is null) { return null; }
+        var detourRatio = await geoIndex.GetDetourRatio(ellipse);
 
-        var places = Concat(new Place() { location = source }, around, new Place() { location = target });
-        var locations = places.Select(place => place.location).ToList();
-
-        // Obtain distance matrix.
-
-        var matrix = categories.Count <= DISTANCE_MATRIX_THRESHOLD
-            ? (await engine.GetDistanceMatrix(locations))
-            : (new HaversineDistanceMatrix(locations));
-
-        if (matrix is null) { return null; }
-
-        // Construct waypoint sequences.
-
-        var sequences = (precedence.Count == 0)
-            ? (RelaxedSolver.Solve(places, matrix, maxDistance, ROUTES_COUNT))
-            : (PrecedenceSolver.Solve(places, matrix, precedence, maxDistance, ROUTES_COUNT));
-
-        // Construct polylines.
-
-        var polylines = new List<ShortestPath>();
-
-        for (var i = 0; i < sequences.Count; ++i)
+        while (places.Count > 2)
         {
-            var path = await engine.GetShortestPaths(sequences[i].Select(w => locations[w]).ToList());
+            var solverPlaces = places
+                .Select((p, i) => (p, i))
+                .Aggregate(new List<SolverPlace>(), (acc, item) =>
+                {
+                    foreach (var category in item.p.categories)
+                    {
+                        acc.Add(new(item.i, category));
+                    }
+                    return acc;
+                });
 
-            if (path.Count == 0) { return null; }
+            var matrix = new HaversineDistanceMatrix(places, detourRatio);
 
-            polylines.Add(path[0]);
+            var seq = SolverFactory.GetInstance()
+                .Solve(solverPlaces, matrix, precedence, maxDistance);
+
+            var path = (await routingEngine.GetShortestPaths(seq.Select((p) => places[p.Idx].location).ToList()))
+                .Where((path) => path.distance <= maxDistance)
+                .FirstOrDefault();
+
+            var trimmedSeq = seq.Skip(1).SkipLast(1).ToList();
+
+            if (trimmedSeq.Count == categories.Count && path is not null)
+            {
+                var routePlaces = trimmedSeq.Aggregate(new List<Place>(), (acc, sp) =>
+                {
+                    var p = places[sp.Idx];
+                    acc.Add(new()
+                    {
+                        smartId = p.smartId, name = p.name, location = p.location, keywords = p.keywords, categories = new() { sp.Cat }
+                    });
+                    return acc;
+                })
+                .WithMergedCategories();
+
+                var routeWaypoints = trimmedSeq.Aggregate(new List<string>(), (acc, sp) =>
+                {
+                    acc.Add(places[sp.Idx].smartId);
+                    return acc;
+                });
+
+                result.Add(new() { path = path, places = routePlaces, waypoints = routeWaypoints });
+            }
+
+            trimmedSeq.ForEach((p) => places[p.Idx].categories.Remove(p.Cat));
+            places = places.Where((p) => p.categories.Count > 0).ToList();
         }
 
-        // Finalize route objects.
-
-        return Enumerable.Range(0, sequences.Count).Aggregate(new List<Route>(), (acc, i) => {
-            acc.Add(new() { path = polylines[i], waypoints = Extract(sequences[i], places) }); return acc; });
+        result.Sort(new RoutesComparer());
+        return result;
     }
+
+    #endregion
 }
