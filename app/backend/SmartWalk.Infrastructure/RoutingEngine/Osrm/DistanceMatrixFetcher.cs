@@ -1,22 +1,11 @@
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
+using SmartWalk.Core.Algorithms;
 using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
-
-/// <summary>
-/// Simple wrapper over List-based distance matrix calculated by OSRM.
-/// </summary>
-internal sealed class OsrmDistanceMatrix : IDistanceMatrix
-{
-    private readonly List<List<double>> _matrix;
-
-    public OsrmDistanceMatrix(List<List<double>> matrix) { _matrix = matrix; }
-
-    public double GetDistance(int fr, int to) => _matrix[fr][to];
-}
 
 internal static class DistanceMatrixFetcher
 {
@@ -56,6 +45,6 @@ internal static class DistanceMatrixFetcher
             }
         }
 
-        return new OsrmDistanceMatrix(ans.durations);
+        return new ListDistanceMatrix(ans.durations);
     }
 }
