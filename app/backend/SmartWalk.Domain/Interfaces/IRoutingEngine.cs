@@ -14,7 +14,8 @@ public interface IRoutingEngine
     public Task<List<ShortestPath>> GetShortestPaths(List<WgsPoint> waypoints);
 
     /// <summary>
-    /// Calculate distance in meters between all pairs of waypoints.
+    /// Calculate distance in meters between all pairs of waypoints (expected
+    /// to be an expensive operation).
     /// </summary>
     public Task<IDistanceMatrix> GetDistanceMatrix(List<WgsPoint> waypoints);
 }

@@ -6,27 +6,38 @@ namespace SmartWalk.Domain.Entities;
 public sealed class PrecedenceEdge
 {
     /// <summary>
-    /// Category from.
+    /// Source category.
     /// </summary>
-    public int fr { get; set; }
+    [Required]
+    public int fr { get; }
 
     /// <summary>
-    /// Category to.
+    /// Target category.
     /// </summary>
-    public int to { get; set; }
+    [Required]
+    public int to { get; }
+
+    public PrecedenceEdge(int fr, int to) { this.fr = fr; this.to = to; }
 }
 
 public sealed class Route
 {
     /// <summary>
-    /// Connect source, target, and waypoints in-between.
+    /// Ordered sequence of points representing connected linestring.
     /// </summary>
     [Required]
-    public ShortestPath path { get; set; }
+    public ShortestPath path { get; init; }
 
     /// <summary>
-    /// Ordered sequence of places.
+    /// Unordered list of visited places.
     /// </summary>
     [Required]
-    public List<Place> waypoints { get; set; }
+    public List<Place> places { get; init; }
+
+    /// <summary>
+    /// Ordered sequence of visited waypoints, each represented by the
+    /// corresponding smartId.
+    /// </summary>
+    [Required]
+    public List<string> waypoints { get; init; }
 }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 
@@ -57,10 +58,20 @@ public sealed class PlaceSocialNetworks
 [BsonIgnoreExtraElements]
 public sealed class PlaceAttributes
 {
+    /// <example>
+    ///   [
+    ///     {"lon":0.0, "lat":0.0},
+    ///     {"lon":0.0, "lat":1.0},
+    ///     {"lon":1.0, "lat":1.0},
+    ///     {"lon":1.0, "lat":0.0},
+    ///     {"lon":0.0, "lat":0.0}
+    ///   ]
+    /// </example>
+    [MinLength(4)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public List<WgsPoint> polygon { get; set; }
 
-    /// <example>Czech Republic</example>
+    /// <example>Detailed object description</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string description { get; set; }
 

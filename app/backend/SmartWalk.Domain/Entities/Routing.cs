@@ -16,7 +16,7 @@ public sealed class ShortestPath
     /// <summary>
     /// Duration of the route in <b>seconds</b>.
     /// </summary>
-    /// <example>10.00</example>
+    /// <example>300.00</example>
     [Required]
     [Range(0, double.MaxValue)]
     public double duration { get; set; }
