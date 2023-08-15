@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using SmartWalk.Core.Entities;
+using SmartWalk.Domain.Entities;
 using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Core.Heuristics;
@@ -18,17 +18,24 @@ internal static class IfCategoryFormer
     /// <summary>
     /// Separate points by category.
     /// </summary>
-    private static List<List<SolverPlace>> Group(IReadOnlyList<SolverPlace> places)
+    private static List<List<SolverPlace>> Group(List<SolverPlace> places, int catsCount)
     {
-        return places.Aggregate(new SortedDictionary<int, List<SolverPlace>>(), (acc, place) =>
+        var groups = places.Aggregate(new SortedDictionary<int, List<SolverPlace>>(), (acc, place) =>
         {
-            if (!acc.ContainsKey(place.Category))
+            if (!acc.ContainsKey(place.Cat))
             {
-                acc.Add(place.Category, new());
+                acc.Add(place.Cat, new());
             }
-            acc[place.Category].Add(place);
+            acc[place.Cat].Add(place);
             return acc;
-        }).Values.ToList();
+        });
+
+        // remove source and target cats!
+
+        groups.Remove(-1);
+        groups.Remove(catsCount);
+
+        return groups.Values.ToList();
     }
 
     /// <summary>
@@ -43,18 +50,23 @@ internal static class IfCategoryFormer
     /// <summary>
     /// Group places by category and sort categories by relevancy.
     /// </summary>
-    public static List<List<SolverPlace>> Form(IReadOnlyList<SolverPlace> places)
-        => Sort(Group(places));
+    public static List<List<SolverPlace>> Form(List<SolverPlace> places, int catsCount)
+        => Sort(Group(places, catsCount));
 }
 
 internal static class IfCandidateFinder
 {
-    /// <summary>
-    /// Given a certain category, find a pair of place and position for
-    /// insertion that gives the smallest distance increase.
-    /// </summary>
+    private static double NextDistance(
+        List<SolverPlace> seq, IDistanceMatrix distMatrix, SolverPlace place, double currDist, int seqIdx)
+    {
+        return currDist
+            - distMatrix.GetDistance(seq[seqIdx - 1].Idx, seq[seqIdx].Idx)
+            + distMatrix.GetDistance(seq[seqIdx - 1].Idx, place.Idx)
+            + distMatrix.GetDistance(place.Idx,           seq[seqIdx].Idx);
+    }
+
     public static (SolverPlace, double, int) FindBest(
-        IReadOnlyList<int> seq, IReadOnlyList<SolverPlace> cat, IDistanceMatrix matrix, double currDist)
+        List<SolverPlace> seq, List<SolverPlace> cat, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix, double currDist)
     {
         SolverPlace best = null;
         double lastDist = double.MaxValue;
@@ -63,14 +75,27 @@ internal static class IfCandidateFinder
 
         foreach (var place in cat)
         {
-            for (int i = 1; i < seq.Count; ++i)
+            for (int seqIdx = 1; seqIdx < seq.Count; ++seqIdx)
             {
-                var candDist = DistanceAdjuster
-                    .NextDistance(seq, matrix, place, currDist, i);
+                // category cannot be inserted
+
+                if (precMatrix.IsBefore(place.Cat, seq[seqIdx - 1].Cat))
+                {
+                    break;
+                }
+
+                // try insert in the next step
+
+                if (precMatrix.IsBefore(seq[seqIdx].Cat, place.Cat))
+                {
+                    continue;
+                }
+
+                var candDist = NextDistance(seq, distMatrix, place, currDist, seqIdx);
 
                 if (candDist < lastDist)
                 {
-                    index = i;
+                    index = seqIdx;
                     best = place;
                     lastDist = candDist;
                 }
@@ -82,30 +107,27 @@ internal static class IfCandidateFinder
 }
 
 /// <summary>
-/// Infrequent-First Heuristic, see https://doi.org/10.1145/1463434.1463449.
+/// The Infrequent-First Heuristic (https://doi.org/10.1145/1463434.1463449)
+/// extended to handle precedence constraints.
 /// </summary>
-internal static class IfHeuristic
+internal sealed class IfHeuristic
 {
-    /// <summary>
-    /// Advise a route.
-    /// </summary>
-    public static List<int> Advise(
-        IReadOnlyList<SolverPlace> places, IDistanceMatrix matrix, double maxDist, int placesCount)
+    /// <param name="precMatrix">Transitive closure of a category graph.</param>
+    public static List<SolverPlace> Advise(
+        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        var seq = new List<int>() { 0, placesCount - 1 };
-        var currDist = matrix.Distance(0, placesCount - 1);
+        var seq = new List<SolverPlace>() { places[0], places[^1] };
+        var currDist = distMatrix.GetDistance(0, distMatrix.Count - 1);
 
-        var cats = IfCategoryFormer.Form(places);
+        var cats = IfCategoryFormer.Form(places, precMatrix.CsCount);
 
         foreach (var cat in cats)
         {
-            var (best, nextDist, seqIndex) = IfCandidateFinder.FindBest(seq, cat, matrix, currDist);
+            var (best, nextDist, seqIdx) = IfCandidateFinder.FindBest(seq, cat, distMatrix, precMatrix, currDist);
 
-            if (best is not null && nextDist <= maxDist * 1.0)
-            {
-                currDist = nextDist;
-                seq.Insert(seqIndex, best.Index);
-            }
+            if (best is null) { break; } // no candidates left!
+
+            seq.Insert(seqIdx, best);
         }
 
         return seq;
