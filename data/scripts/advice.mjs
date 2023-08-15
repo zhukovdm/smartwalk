@@ -15,7 +15,7 @@ import {
  */
 function extractKeywords(doc, keywords) {
 
-  const base = (word) => ({ label: word, count: 0, attributeList: new Set() });
+  const base = (word) => ({ keyword: word, count: 0, attributeList: new Set() });
 
   doc.keywords.forEach(word => {
     if (!keywords.has(word)) { keywords.set(word, base(word)); }
