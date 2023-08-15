@@ -37,8 +37,8 @@ public static class SearchService
     }
 
     public async static Task<List<Route>> GetRoutes(
-        IEntityIndex entityIndex, IGeoIndex geoIndex, IRoutingEngine routingEngine,
-        WgsPoint source, WgsPoint target, double maxDistance, List<Category> categories, List<PrecedenceEdge> precedence)
+        IEntityIndex entityIndex, IRoutingEngine routingEngine, WgsPoint source, WgsPoint target,
+        double maxDistance, List<Category> categories, List<PrecedenceEdge> precedence)
     {
         var result = new List<Route>();
 
@@ -47,30 +47,26 @@ public static class SearchService
         var places = new List<Place>()
             .Concat(new[] { new Place() { location = source, categories = new() { -1 } } })
             .Concat(await entityIndex.GetWithin(ellipse, categories))
-            .Concat(new[] { new Place() { location = target, categories = new() { -1 } } })
+            .Concat(new[] { new Place() { location = target, categories = new() { categories.Count } } })
             .ToList();
 
-        var detourRatio = await geoIndex.GetDetourRatio(ellipse);
-
-        while (places.Count > 2)
+        while (true)
         {
             var solverPlaces = places
                 .Select((p, i) => (p, i))
                 .Aggregate(new List<SolverPlace>(), (acc, itm) =>
                 {
-                    foreach (var category in itm.p.categories)
+                    foreach (var cat in itm.p.categories)
                     {
-                        acc.Add(new(itm.i, category));
+                        acc.Add(new(itm.i, cat));
                     }
                     return acc;
                 });
 
-            var distMatrix = new HaversineDistanceMatrix(places, detourRatio);
+            var distMatrix = new HaversineDistanceMatrix(places);
 
-            var precMatrix = new ListPrecedenceMatrix(
-                new TransitiveClosure(categories.Count, precedence).Closure(), precedence.Count);
-
-            var seq = SolverFactory.GetInstance().Solve(solverPlaces, distMatrix, precMatrix);
+            var seq = SolverFactory.GetInstance()
+                .Solve(solverPlaces, distMatrix, precedence, categories.Count);
 
             var path = (await routingEngine.GetShortestPaths(seq.Select((sp) => places[sp.Idx].location).ToList()))
                 .Where((p) => p.distance <= maxDistance)
@@ -78,7 +74,9 @@ public static class SearchService
 
             var trimmedSeq = seq.Skip(1).SkipLast(1).ToList();
 
-            if (trimmedSeq.Count == categories.Count && path is not null)
+            if (trimmedSeq.Count < categories.Count) { break; } // no candidates left
+
+            if (path is not null)
             {
                 var routePlaces = trimmedSeq.Aggregate(new List<Place>(), (acc, sp) =>
                 {

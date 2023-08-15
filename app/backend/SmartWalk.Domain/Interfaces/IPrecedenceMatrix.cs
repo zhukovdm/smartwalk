@@ -14,6 +14,6 @@ public interface IPrecedenceMatrix
 
     /// <param name="l">L-category</param>
     /// <param name="r">R-category</param>
-    /// <returns>L-category shall appear before R-category.</returns>
+    /// <returns>Shall L-category appear before R-category?</returns>
     bool IsBefore(int l, int r);
 }

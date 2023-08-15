@@ -14,5 +14,18 @@ public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
 
     public int EsCount { get; }
 
-    public bool IsBefore(int l, int r) => _matrix[l][r];
+    public bool IsBefore(int l, int r)
+    {
+        if (l < 0 /* source before any */ || r >= CsCount /* any before target */)
+        {
+            return true;
+        }
+
+        if (l >= CsCount /* no after target */ || r < 0 /* no before source */)
+        {
+            return false;
+        }
+
+        return _matrix[l][r];
+    }
 }

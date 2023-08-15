@@ -10,7 +10,6 @@ using SmartWalk.Api.Contexts;
 using SmartWalk.Infrastructure.Advicer;
 using SmartWalk.Infrastructure.EntityIndex;
 using SmartWalk.Infrastructure.EntityStore;
-using SmartWalk.Infrastructure.GeoIndex;
 using SmartWalk.Infrastructure.RoutingEngine;
 
 namespace SmartWalk.Api;
@@ -68,7 +67,6 @@ public class Program
             return new()
             {
                 EntityIndex = EntityIndexFactory.GetInstance(),
-                GeoIndex = GeoIndexFactory.GetInstance(),
                 RoutingEngine = RoutingEngineFactory.GetInstance()
             };
         });

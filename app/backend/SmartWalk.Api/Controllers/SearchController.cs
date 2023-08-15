@@ -223,8 +223,8 @@ public sealed class SearchController : ControllerBase
         try
         {
             return await SearchService.GetRoutes(
-                _context.EntityIndex, _context.GeoIndex, _context.RoutingEngine,
-                rq.source.AsWgs(), rq.target.AsWgs(), rq.distance.Value, rq.categories, precedence);
+                _context.EntityIndex, _context.RoutingEngine, rq.source.AsWgs(),
+                rq.target.AsWgs(), rq.distance.Value, rq.categories, precedence);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }
