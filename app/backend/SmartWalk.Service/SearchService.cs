@@ -65,9 +65,12 @@ public static class SearchService
                     return acc;
                 });
 
-            var matrix = new HaversineDistanceMatrix(places, detourRatio);
+            var distMatrix = new HaversineDistanceMatrix(places, detourRatio);
 
-            var seq = SolverFactory.GetInstance().Solve(solverPlaces, matrix, precedence);
+            var precMatrix = new ListPrecedenceMatrix(
+                new TransitiveClosure(categories.Count, precedence).Closure(), precedence.Count);
+
+            var seq = SolverFactory.GetInstance().Solve(solverPlaces, distMatrix, precMatrix);
 
             var path = (await routingEngine.GetShortestPaths(seq.Select((sp) => places[sp.Idx].location).ToList()))
                 .Where((p) => p.distance <= maxDistance)
