@@ -22,13 +22,6 @@ using Direc = ShortestPath;
 [Route("api/search")]
 public sealed class SearchController : ControllerBase
 {
-    public class AnyRequest
-    {
-        [Required]
-        [MinLength(1)]
-        public string query { get; init; }
-    }
-
     private static ProblemDetails GetProblemDetails(int status, string detail)
     {
         return new() { Status = status, Detail = detail };
@@ -88,6 +81,18 @@ public sealed class SearchController : ControllerBase
         public int? to { get; init; }
     }
 
+    #region SearchDirecs
+
+    public class DirecsRequest
+    {
+        /// <example>
+        ///   {"waypoints":[{"lon":14.4035264,"lat":50.0884344},{"lon":14.4057219,"lat":50.0919964}]}
+        /// </example>
+        [Required]
+        [MinLength(1)]
+        public string query { get; init; }
+    }
+
     internal sealed class DirecsQuery
     {
         [Required]
@@ -112,7 +117,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Direc>> SearchDirecs([FromQuery] AnyRequest request)
+    public async Task<ActionResult<Direc>> SearchDirecs([FromQuery] DirecsRequest request)
     {
         DirecsQuery dq = null;
 
@@ -128,6 +133,23 @@ public sealed class SearchController : ControllerBase
             return (direc is not null) ? direc : NotFound();
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+    }
+
+    #endregion
+
+    #region SearchPlaces
+
+    public sealed class PlacesRequest
+    {
+        /// <example>
+        ///   {"center":{"lon":14.4035264,"lat":50.0884344},"radius":100,"categories":[]}
+        /// </example>
+        /// <example>
+        ///   {"center":{"lon":14.4035264,"lat":50.0884344},"radius":500,"categories":[{"keyword":"museum","filters":{}},{"keyword":"tourism","filters":{}}]}
+        /// </example>
+        [Required]
+        [MinLength(1)]
+        public string query { get; init; }
     }
 
     internal sealed class PlacesQuery
@@ -154,7 +176,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] AnyRequest request)
+    public async Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] PlacesRequest request)
     {
         PlacesQuery pq = null;
 
@@ -170,6 +192,20 @@ public sealed class SearchController : ControllerBase
                 _context.EntityIndex, pq.center.AsWgs(), pq.radius.Value, pq.categories);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+    }
+
+    #endregion
+
+    #region SearchRoutes
+
+    public sealed class RoutesRequest
+    {
+        /// <example>
+        ///   {"source":{"lon":14.4035264,"lat":50.0884344},"target":{"lon":14.4039444,"lat":50.0894092},"distance":300,"categories":[{"keyword":"museum","filters":{}},{"keyword":"tourism","filters":{}}],"precedence":[]}
+        /// </example>
+        [Required]
+        [MinLength(1)]
+        public string query { get; init; }
     }
 
     internal sealed class RoutesQuery
@@ -206,7 +242,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] AnyRequest request)
+    public async Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] RoutesRequest request)
     {
         RoutesQuery rq = null;
 
@@ -228,4 +264,6 @@ public sealed class SearchController : ControllerBase
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }
+
+    #endregion
 }
