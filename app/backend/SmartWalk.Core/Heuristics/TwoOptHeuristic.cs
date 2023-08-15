@@ -33,7 +33,7 @@ internal static class TwoOptHeuristic
                         + matrix.GetDistance(seq[i    ].Idx, seq[j    ].Idx)
                         + matrix.GetDistance(seq[i + 1].Idx, seq[j + 1].Idx);
 
-                    if (diff < 0.0)
+                    if (diff < -1.0)
                     {
                         change = true;
                         seq.Reverse(i + 1, j - i);

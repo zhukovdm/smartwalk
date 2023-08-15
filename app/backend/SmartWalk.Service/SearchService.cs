@@ -99,7 +99,6 @@ public static class SearchService
             }
 
             trimmedSeq.ForEach((p) => places[p.Idx].categories.Remove(p.Cat));
-            places = places.Where((p) => p.categories.Count > 0).ToList();
         }
 
         result.Sort(new RouteComparer());

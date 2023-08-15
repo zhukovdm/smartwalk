@@ -71,38 +71,38 @@ internal static class IfCandidateFinder
         SolverPlace best = null;
         double lastDist = double.MaxValue;
 
-        int index = -1;
+        int seqIdx = -1;
 
         foreach (var place in cat)
         {
-            for (int seqIdx = 1; seqIdx < seq.Count; ++seqIdx)
+            for (int i = 1; i < seq.Count; ++i)
             {
                 // category cannot be inserted
 
-                if (precMatrix.IsBefore(place.Cat, seq[seqIdx - 1].Cat))
+                if (precMatrix.IsBefore(place.Cat, seq[i - 1].Cat))
                 {
                     break;
                 }
 
                 // try insert in the next step
 
-                if (precMatrix.IsBefore(seq[seqIdx].Cat, place.Cat))
+                if (precMatrix.IsBefore(seq[i].Cat, place.Cat))
                 {
                     continue;
                 }
 
-                var candDist = NextDistance(seq, distMatrix, place, currDist, seqIdx);
+                var candDist = NextDistance(seq, distMatrix, place, currDist, i);
 
                 if (candDist < lastDist)
                 {
-                    index = seqIdx;
+                    seqIdx = i;
                     best = place;
                     lastDist = candDist;
                 }
             }
         }
 
-        return (best, lastDist, index);
+        return (best, lastDist, seqIdx);
     }
 }
 
@@ -127,6 +127,7 @@ internal sealed class IfHeuristic
 
             if (best is null) { break; } // no candidates left!
 
+            currDist = nextDist;
             seq.Insert(seqIdx, best);
         }
 
