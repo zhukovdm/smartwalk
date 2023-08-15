@@ -21,7 +21,7 @@ public sealed class CycleDetector
     private readonly List<Vertex> _Vs;
     private readonly List<SortedSet<int>> _Es;
 
-    private bool cycle(int u)
+    private bool CycleImpl(int u)
     {
         _Vs[u].Color = Color.B;
 
@@ -31,7 +31,7 @@ public sealed class CycleDetector
             switch (_Vs[v].Color)
             {
                 case Color.A:
-                    if (cycle(v)) { return true; }
+                    if (CycleImpl(v)) { return true; }
                     break;
                 case Color.B:
                     _cycleRef = v;
@@ -60,7 +60,7 @@ public sealed class CycleDetector
 
         for (int u = 0; u < _Vs.Count; ++u)
         {
-            if (_Vs[u].Color == Color.A && cycle(u)) { break; }
+            if (_Vs[u].Color == Color.A && CycleImpl(u)) { break; }
         }
 
         if (_cycleRef > -1)
