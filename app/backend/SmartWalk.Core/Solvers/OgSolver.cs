@@ -8,8 +8,8 @@ namespace SmartWalk.Core.Solvers;
 internal sealed class OgSolver : HeuristicSolverBase, ISolver
 {
     protected override List<SolverPlace> SolveImpl(
-        List<SolverPlace> solverPlaces, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int _)
+        List<SolverPlace> places, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int _)
     {
-        return OgHeuristic.Advise(solverPlaces, distMatrix, precedence);
+        return OgHeuristic.Advise(places, distMatrix, precedence);
     }
 }

@@ -8,11 +8,11 @@ namespace SmartWalk.Core.Solvers;
 internal sealed class IfSolver : HeuristicSolverBase, ISolver
 {
     protected override List<SolverPlace> SolveImpl(
-        List<SolverPlace> solverPlaces, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int catCount)
+        List<SolverPlace> places, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int catsCount)
     {
         var precMatrix = new ListPrecedenceMatrix(
-            new TransitiveClosure(catCount, precedence).Closure(), precedence.Count);
+            new TransitiveClosure(catsCount, precedence).Closure(), precedence.Count);
 
-        return IfHeuristic.Advise(solverPlaces, distMatrix, precMatrix);
+        return IfHeuristic.Advise(places, distMatrix, precMatrix);
     }
 }
