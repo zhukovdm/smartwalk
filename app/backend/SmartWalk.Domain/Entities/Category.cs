@@ -7,9 +7,9 @@ public sealed class AttributeFilterExisten { }
 
 public sealed class AttributeFilterExistens
 {
-    public AttributeFilterExisten image { get; set; }
-
     public AttributeFilterExisten description { get; set; }
+
+    public AttributeFilterExisten image { get; set; }
 
     public AttributeFilterExisten website { get; set; }
 
