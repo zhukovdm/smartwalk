@@ -1,5 +1,7 @@
 /**
- * Point in [WGS84] CRS.
+ * Point in [WGS84] CRS with web mercator bounds.
+ * - https://epsg.io/3857
+ * - https://epsg.io/4326
  */
 export type WgsPoint = {
 
@@ -17,14 +19,14 @@ type PlaceAttributes = {
   name: string;
   location: WgsPoint;
   keywords: string[];
-  selected: string[];
+  categories: string[];
 };
 
 /**
  * Standard server-defined place representation.
  */
 export type Place = PlaceAttributes & {
-  grainId: string;
+  smartId: string;
 };
 
 /**
@@ -32,7 +34,7 @@ export type Place = PlaceAttributes & {
  */
 export type UiPlace = PlaceAttributes & {
   placeId?: string;
-  grainId?: string;
+  smartId?: string;
 };
 
 /**
@@ -40,25 +42,25 @@ export type UiPlace = PlaceAttributes & {
  */
 export type StoredPlace = PlaceAttributes & {
   placeId: string;
-  grainId?: string;
+  smartId?: string;
 };
 
 /**
- * Entity external links with owl:sameAs semantics.
+ * Place external links with owl:sameAs semantics.
  */
-type EntityLinked = {
-  osm?: string;
+type PlaceLinked = {
   dbpedia?: string;
   geonames?: string;
   mapycz?: string;
+  osm?: string;
   wikidata?: string;
   yago?: string;
 };
 
 /**
- * Entity address.
+ * Place address object.
  */
-export type EntityAddress = {
+export type PlaceAddress = {
   country?: string;
   settlement?: string;
   district?: string;
@@ -68,16 +70,16 @@ export type EntityAddress = {
 };
 
 /**
- * Entity payment options.
+ * Place social networks object.
  */
-export type EntityPayment = {
-  cash?: boolean;
-  card?: boolean;
-  amex?: boolean;
-  jcb?: boolean;
-  mastercard?: boolean;
-  visa?: boolean;
-  crypto?: boolean;
+export type PlaceSocialNetworks = {
+  facebook?: string;
+  instagram?: string;
+  linkedin?: string;
+  pinterest?: string;
+  telegram?: string;
+  twitter?: string;
+  youtube?: string;
 };
 
 /**
@@ -85,13 +87,13 @@ export type EntityPayment = {
  */
 type EntityAttributes = {
   polygon?: WgsPoint[];
-  image?: string;
   description?: string;
+  image?: string;
   website?: string;
-  address?: EntityAddress;
-  payment?: EntityPayment;
+  address?: PlaceAddress;
   email?: string;
   phone?: string;
+  socialNetworks?: PlaceSocialNetworks;
   charge?: string[];
   openingHours?: string[];
   fee?: boolean;
@@ -103,19 +105,23 @@ type EntityAttributes = {
   takeaway?: boolean;
   toilets?: boolean;
   wheelchair?: boolean;
-  rating?: number;
   capacity?: number;
+  elevation?: number;
   minimumAge?: number;
+  rating?: number;
+  year?: number;
   clothes?: string[];
   cuisine?: string[];
+  denomination?: string[];
+  payment?: string[];
   rental?: string[];
 };
 
 /**
- * Place representation with links and entity-extended attributes.
+ * Place representation with links and attributes.
  */
-export type Entity = Place & {
-  linked: EntityLinked;
+export type ExtendedPlace = Place & {
+  linked: PlaceLinked;
   attributes: EntityAttributes;
 };
 
@@ -130,33 +136,37 @@ type BoundNumeric = {
 /**
  * Current bounds limiting user input fields.
  */
-export type Bounds = {
-  rating: BoundNumeric;
+export type BoundsAdvice = {
   capacity: BoundNumeric;
+  elevation: BoundNumeric;
   minimumAge: BoundNumeric;
-  rental: string[];
+  rating: BoundNumeric;
+  year: BoundNumeric;
   clothes: string[];
   cuisine: string[];
+  denomination: string[];
+  payment: string[];
+  rental: string[];
 };
 
 /**
  * Filter for checking attribute existence.
  */
-export type KeywordFilterExisten = {};
+export type KeywordFilterExisten = { };
 
 /**
  * Possible attributes checked for existence.
  */
 type KeywordFilterExistens = {
-  image?: KeywordFilterExisten;
   description?: KeywordFilterExisten;
+  image?: KeywordFilterExisten;
   website?: KeywordFilterExisten;
   address?: KeywordFilterExisten;
-  payment?: KeywordFilterExisten;
   email?: KeywordFilterExisten;
   phone?: KeywordFilterExisten;
+  socialNetworks?: KeywordFilterExisten;
   charge?: KeywordFilterExisten;
-  openingHours: KeywordFilterExisten;
+  openingHours?: KeywordFilterExisten;
 };
 
 /**
@@ -191,9 +201,11 @@ export type KeywordFilterNumeric = {
  * Possible numeric attributes.
  */
 type KeywordFilterNumerics = {
-  rating?: KeywordFilterNumeric;
   capacity?: KeywordFilterNumeric;
+  elevation?: KeywordFilterNumeric;
   minimumAge?: KeywordFilterNumeric;
+  rating?: KeywordFilterNumeric;
+  year?: KeywordFilterNumeric;
 };
 
 /**
@@ -212,51 +224,66 @@ type KeywordFilterTextuals = {
  * Filter for collections with "include" and "exclude" semantics.
  */
 export type KeywordFilterCollect = {
-  includes: string[],
-  excludes: string[];
+
+  /** Include any of */
+  inc: string[];
+
+  /** Exclude all of */
+  exc: string[];
 };
 
 /**
  * Possible collections in the attributes.
  */
 type KeywordFilterCollects = {
-  rental?: KeywordFilterCollect;
   clothes?: KeywordFilterCollect;
   cuisine?: KeywordFilterCollect;
+  denomination?: KeywordFilterCollect;
+  payment?: KeywordFilterCollect;
+  rental?: KeywordFilterCollect;
 };
 
 /**
  * All possible keyword filters.
  */
 export type KeywordFilters = {
-  existens: KeywordFilterExistens;
-  booleans: KeywordFilterBooleans;
-  numerics: KeywordFilterNumerics;
-  textuals: KeywordFilterTextuals;
-  collects: KeywordFilterCollects;
+  es?: KeywordFilterExistens;
+  bs?: KeywordFilterBooleans;
+  ns?: KeywordFilterNumerics;
+  ts?: KeywordFilterTextuals;
+  cs?: KeywordFilterCollects;
 };
 
 /**
  * Keyword and keyword-specific attributes.
  */
-export type KeywordAutoc = {
+export type KeywordAdviceItem = {
   keyword: string;
   attributeList: string[];
 };
 
 /**
- * Condition enabling a place to be found.
+ * Category enabling a place to be found.
  */
-export type PlaceCondition = {
+export type PlaceCategory = {
   keyword: string;
   filters: KeywordFilters;
 };
 
 /**
- * User-defined condition restricting search.
+ * User-defined category restricting search.
  */
-export type KeywordCondition = PlaceCondition & {
+export type KeywordCategory = PlaceCategory & {
   attributeList: string[];
+};
+
+export type PrecedenceEdge = {
+
+  /** Category from. */
+  fr: number;
+
+  /** Category to. */
+  to: number;
 };
 
 /**
@@ -274,7 +301,7 @@ type Path = {
 export type DirecAttributes = {
   name: string;
   path: Path;
-  sequence: UiPlace[];
+  waypoints: UiPlace[];
 };
 
 /**
@@ -302,8 +329,8 @@ export type PlacesRequest = {
   /** Radius in kilometers. */
   radius: number;
 
-  /** Conditions to be fulfilled. */
-  conditions: PlaceCondition[];
+  /** Categories to be fulfilled. */
+  categories: PlaceCategory[];
 };
 
 /**
@@ -328,13 +355,25 @@ export type RoutesRequest = {
   distance: number;
 
   /** Conditions to be fulfilled. */
-  conditions: PlaceCondition[];
+  conditions: PlaceCategory[];
+
+  /** Poset on categories. */
+  precedence: PrecedenceEdge[];
 };
 
 type RouteAttributes = RoutesRequest & {
+
+  /** */
   name: string;
+
+  /**  */
   path: Path;
-  waypoints: Place[];
+
+  /** Places lying on the path. */
+  places: Place[];
+
+  /** List of smartId identifiers. */
+  waypoints: string[];
 };
 
 export type UiRoute = RouteAttributes & {

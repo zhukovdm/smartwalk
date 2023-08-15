@@ -54,13 +54,13 @@ export default function KeywordFilterViewCollect({ label, setter, initial }: Key
   const bound = (useAppSelector(state => state.panel.bounds) as any)[label] as string[];
 
   const [check, setCheck] = useState(!!initial);
-  const [includes, setIncludes] = useState(initial ? initial.includes : []);
-  const [excludes, setExcludes] = useState(initial ? initial.excludes : []);
+  const [includes, setIncludes] = useState(initial ? initial.inc : []);
+  const [excludes, setExcludes] = useState(initial ? initial.exc : []);
 
   const toggle = () => { setCheck(!check); };
 
   useEffect(() => {
-    setter(check ? { includes: includes, excludes: excludes } : undefined);
+    setter(check ? { inc: includes, exc: excludes } : undefined);
   }, [check, includes, excludes, setter]);
 
   return (

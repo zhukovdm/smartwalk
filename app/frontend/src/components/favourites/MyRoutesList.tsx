@@ -43,7 +43,7 @@ function MyRoutesListItem({ index, route, grains }: MyRoutesListItemProps): JSX.
   const dispatch = useAppDispatch();
 
   const { map, storage } = useContext(AppContext);
-  const { name, source, target, path, waypoints } = route;
+  const { name, source, target, path, places: waypoints } = route;
 
   const [showU, setShowU] = useState(false);
   const [showD, setShowD] = useState(false);
@@ -51,7 +51,7 @@ function MyRoutesListItem({ index, route, grains }: MyRoutesListItemProps): JSX.
   const onRoute = () => {
     map?.clear();
     waypoints.forEach((place) => {
-      const grain = grains.get(place.grainId);
+      const grain = grains.get(place.smartId);
       (grain) ? map?.addStored(grain) : map?.addTagged(place);
     });
     map?.addSource(source, false);
@@ -105,7 +105,7 @@ export default function MyRoutesList({ routes }: MyRoutesListProps): JSX.Element
 
   const grains = useMemo(() => {
     return places.reduce((map, place) => {
-      if (place.grainId) { map.set(place.grainId, place); }
+      if (place.smartId) { map.set(place.smartId, place); }
       return map;
     }, new Map<string, StoredPlace>());
   }, [places]);

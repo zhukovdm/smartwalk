@@ -17,8 +17,8 @@ import {
   useTheme
 } from "@mui/material";
 import { AppContext } from "../../App";
-import { KeywordAutoc, KeywordCondition } from "../../domain/types";
-import { GrainPathFetcher } from "../../utils/grainpath";
+import { KeywordAdviceItem, KeywordCategory } from "../../domain/types";
+import { SmartWalkFetcher } from "../../utils/smartwalk";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { setBounds } from "../../features/panelSlice";
 import KeywordFiltersList from "./KeywordFiltersList";
@@ -32,10 +32,10 @@ type ConditionDialogProps = {
   keywords: Set<string>;
 
   /** Either new, or existing condition. */
-  condition?: KeywordCondition;
+  condition?: KeywordCategory;
 
   /** Action inserting condition at `i`-position. */
-  insert: (condition: KeywordCondition) => void;
+  insert: (condition: KeywordCategory) => void;
 };
 
 function ConditionDialog({ condition: cond, keywords, onHide, insert }: ConditionDialogProps): JSX.Element {
@@ -52,9 +52,9 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
   const [mount, setMount] = useState(true);
   const [error, setError] = useState(false);
 
-  const [value, setValue] = useState<KeywordAutoc | null>(cond ?? null);
+  const [value, setValue] = useState<KeywordAdviceItem | null>(cond ?? null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [options, setOptions] = useState<KeywordAutoc[]>([]);
+  const [options, setOptions] = useState<KeywordAdviceItem[]>([]);
 
   const filters = cond
     ? structuredClone(cond.filters)
@@ -66,7 +66,7 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
   // fetch bounds if not already present
   useEffect(() => {
     if (!bounds) {
-      GrainPathFetcher.fetchBounds()
+      SmartWalkFetcher.adviceBounds()
         .then((obj) => { if (obj) { dispatch(setBounds(obj)); } })
         .catch((ex) => alert(ex));
     }
@@ -81,7 +81,7 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
     if (cached) { setOptions(cached); return; }
 
     new Promise((res, _) => { res(setLoading(true)); })
-      .then(() => GrainPathFetcher.fetchAutocs(prefix))
+      .then(() => SmartWalkFetcher.adviceKeywords(prefix))
       .then((items) => {
         if (items) { autocs.set(prefix, items); setOptions(items); }
       })
@@ -139,13 +139,13 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
 type KeywordsBoxProps = {
 
   /** List of already added  conditions. */
-  conditions: KeywordCondition[];
+  conditions: KeywordCategory[];
 
   /** Action deleting condition at `i`-position. */
   deleteCondition: (i: number) => void;
 
   /** Action inserting new condition at `i`-position. */
-  insertCondition: (condition: KeywordCondition, i: number) => void;
+  insertCondition: (condition: KeywordCategory, i: number) => void;
 };
 
 /**

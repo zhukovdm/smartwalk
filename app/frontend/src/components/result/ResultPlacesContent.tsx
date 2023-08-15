@@ -21,7 +21,7 @@ type ResultPlacesContentProps = {
  */
 export default function ResultPlacesContent({ result }: ResultPlacesContentProps): JSX.Element {
 
-  const { center, radius, conditions, places: foundPlaces } = result;
+  const { center, radius, categories: conditions, places: foundPlaces } = result;
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
@@ -39,15 +39,15 @@ export default function ResultPlacesContent({ result }: ResultPlacesContentProps
 
   // select places based on the activated filters
   const shownPlaces = useMemo(() => foundPlaces.filter((place) => {
-    return filterSet.size === 0 || place.selected.some((keyword) => filterSet.has(keyword));
+    return filterSet.size === 0 || place.categories.some((keyword) => filterSet.has(keyword));
   }), [foundPlaces, filterSet]);
 
   // draw places based on selected filters
   useEffect(() => {
     map?.clear();
     shownPlaces.forEach((place) => {
-      const grain = knownGrains.get(place.grainId);
-      if (grain) { grain.selected = place.selected; } // (!) change structuredClone
+      const grain = knownGrains.get(place.smartId);
+      if (grain) { grain.categories = place.categories; } // (!) change structuredClone
       (grain) ? map?.addStored(grain) : map?.addTagged(place);
     });
     (center.placeId) ? map?.addStored(center) : map?.addCustom(center, false);

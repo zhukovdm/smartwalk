@@ -48,7 +48,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
 
   const onShow = () => {
     dispatch(setEntityBack(FAVOURITES_ADDR));
-    navigate(ENTITY_ADDR + "/" + place.grainId);
+    navigate(ENTITY_ADDR + "/" + place.smartId);
   };
 
   const onUpdate = async (name: string): Promise<void> => {
@@ -67,7 +67,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
       <BusyListItem
         label={place.name}
         l={<PlaceButton kind="stored" onPlace={onPlace} />}
-        r={<ListItemMenu onShow={place.grainId ? onShow : undefined} showDeleteDialog={() => { setShowD(true); }} showUpdateDialog={() => { setShowU(true); }} />}
+        r={<ListItemMenu onShow={place.smartId ? onShow : undefined} showDeleteDialog={() => { setShowD(true); }} showUpdateDialog={() => { setShowU(true); }} />}
       />
       {showD && <DeleteSomethingDialog name={place.name} what="place" onHide={() => { setShowD(false); }} onDelete={onDelete} />}
       {showU && <UpdateSomethingDialog name={place.name} what="place" onHide={() => { setShowU(false); }} onUpdate={onUpdate} />}

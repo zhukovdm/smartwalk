@@ -17,7 +17,7 @@ import {
   KeywordFilterCollect,
   KeywordFilterNumeric,
   KeywordFilterTextual,
-  PlaceCondition
+  PlaceCategory
 } from "../../domain/types";
 
 type CollectSelectProps = {
@@ -55,7 +55,7 @@ type PlaceConditionDialogProps = {
   onHide: () => void;
 
   /** Condition to be presented. */
-  condition: PlaceCondition;
+  condition: PlaceCategory;
 };
 
 /**
@@ -64,7 +64,7 @@ type PlaceConditionDialogProps = {
 export default function PlaceConditionDialog({ onHide, condition }: PlaceConditionDialogProps): JSX.Element {
 
   const { keyword, filters } = condition;
-  const { existens: es, booleans: bs, numerics: ns, textuals: ts, collects: cs } = filters;
+  const { es: es, bs: bs, ns: ns, ts: ts, cs: cs } = filters;
 
   const extractKeys = (xs: any) => Object.keys(xs).filter((x) => !!(xs as any)[x]);
   const [esKeys, bsKeys, nsKeys, tsKeys, csKeys] = [es, bs, ns, ts, cs].map((xs) => extractKeys(xs));
@@ -124,7 +124,7 @@ export default function PlaceConditionDialog({ onHide, condition }: PlaceConditi
               <Typography>Includes any / Excludes all</Typography>
               <Stack direction="column" gap={1}>
                 {csKeys.map((c, i) => {
-                  const { includes, excludes } = ((cs as any)[c]) as KeywordFilterCollect;
+                  const { inc: includes, exc: excludes } = ((cs as any)[c]) as KeywordFilterCollect;
                   return (
                     <Stack direction="column" gap={1}>
                       <Typography>{c}</Typography>

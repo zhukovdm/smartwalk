@@ -62,19 +62,19 @@ export default function PlacesList({ back, places, grains }: PlacesListProps): J
     <Stack direction="column" gap={2}>
       {places
         .map((place, i) => {
-          const grain = grains.get(place.grainId);
+          const grain = grains.get(place.smartId);
           return (grain)
             ? <BusyListItem
                 key={i}
                 label={grain.name}
                 l={<PlaceButton kind="stored" onPlace={() => { map?.flyTo(grain); }} />}
-                r={<ListItemLink icon={<Favorite />} back={back} grainId={place.grainId} />}
+                r={<ListItemLink icon={<Favorite />} back={back} grainId={place.smartId} />}
               />
             : <BusyListItem
                 key={i}
                 label={place.name}
                 l={<PlaceButton kind="tagged" onPlace={() => { map?.flyTo(place); }} />}
-                r={<ListItemLink icon={<Link />} back={back} grainId={place.grainId} />}
+                r={<ListItemLink icon={<Link />} back={back} grainId={place.smartId} />}
               />
         })
       }

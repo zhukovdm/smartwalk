@@ -1,6 +1,6 @@
 import { Map as LeafletRawMap } from "leaflet"
 import { LeafletMap } from "../utils/leaflet";
-import { Entity, KeywordAutoc } from "../domain/types";
+import { ExtendedPlace, KeywordAdviceItem } from "../domain/types";
 import { IMap, IStorage } from "../domain/interfaces";
 import LocalStorage from "../utils/localStorage";
 
@@ -8,8 +8,8 @@ type AppContextValue = {
   map?: IMap;
   storage: IStorage;
   grain: {
-    autocs: Map<string, KeywordAutoc[]>;
-    entity: Map<string, Entity>;
+    autocs: Map<string, KeywordAdviceItem[]>;
+    entity: Map<string, ExtendedPlace>;
   }
 };
 

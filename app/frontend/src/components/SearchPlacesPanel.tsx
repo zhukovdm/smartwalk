@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { AppContext } from "../App";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
-import { GrainPathFetcher } from "../utils/grainpath";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { point2place } from "../utils/helpers";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { setBlock } from "../features/panelSlice";
@@ -44,7 +44,7 @@ export default function SearchPlacesPanel(): JSX.Element {
     const meters = radius * 1000;
 
     if (center) {
-      (center.placeId || center.grainId)
+      (center.placeId || center.smartId)
         ? (map?.addStored(center))
         : (map?.addCustom(center, true).withDrag(pt => dispatch(setSearchPlacesCenter(point2place(pt)))).withCirc(map, meters));
 
@@ -54,10 +54,10 @@ export default function SearchPlacesPanel(): JSX.Element {
 
   const searchAction = () => {
     new Promise<void>((res, _) => { dispatch(setBlock(true)); res(); })
-      .then(() => GrainPathFetcher.fetchPlaces({
+      .then(() => SmartWalkFetcher.searchPlaces({
         center: center!,
         radius: radius,
-        conditions: conditions.map((c) => {
+        categories: conditions.map((c) => {
           return { keyword: c.keyword, filters: c.filters };
         })
       }))

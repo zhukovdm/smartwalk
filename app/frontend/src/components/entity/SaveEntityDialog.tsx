@@ -10,7 +10,7 @@ import {
   Typography
 } from "@mui/material";
 import { AppContext } from "../../App";
-import { Entity } from "../../domain/types";
+import { ExtendedPlace } from "../../domain/types";
 import { IdGenerator } from "../../utils/helpers";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { createFavouritePlace } from "../../features/favouritesSlice";
@@ -19,7 +19,7 @@ import { setBlock } from "../../features/panelSlice";
 type SaveEntityDialogProps = {
 
   /** An entity to be saved. */
-  entity: Entity;
+  entity: ExtendedPlace;
 
   /** Action hiding the dialog. */
   onHide: () => void;
@@ -42,7 +42,7 @@ export default function SaveEntityDialog({ entity, onHide }: SaveEntityDialogPro
       const pl = { name: name, location: entity.location, keywords: entity.keywords, selected: [] };
       const st = {
         ...pl,
-        grainId: entity.grainId,
+        grainId: entity.smartId,
         placeId: IdGenerator.generateId(pl)
       };
       await storage.createPlace(st);

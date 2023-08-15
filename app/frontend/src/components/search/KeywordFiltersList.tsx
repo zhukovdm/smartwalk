@@ -7,7 +7,7 @@ import {
   Typography
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { KeywordAutoc } from "../../domain/types";
+import { KeywordAdviceItem } from "../../domain/types";
 import { AutocAttributes } from "../../utils/helpers";
 import { useAppSelector } from "../../features/hooks";
 import KeywordFilterViewExisten from "./KeywordFilterViewExisten";
@@ -19,7 +19,7 @@ import KeywordFilterViewCollect from "./KeywordFilterViewCollect";
 type KeywordAttributeListProps = {
 
   /** Autocomplete confguration for a particular word. */
-  autoc: KeywordAutoc;
+  autoc: KeywordAdviceItem;
 
   /** Latest known filters. */
   filters: any; // (!)

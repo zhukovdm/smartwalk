@@ -11,7 +11,7 @@ import { SwapVert } from "@mui/icons-material";
 import { AppContext } from "../App";
 import { RESULT_ROUTES_ADDR, SEARCH_ROUTES_ADDR } from "../domain/routing";
 import { point2place } from "../utils/helpers";
-import { GrainPathFetcher } from "../utils/grainpath";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { setBlock } from "../features/panelSlice";
 import {
@@ -50,13 +50,13 @@ export default function SearchRoutesPanel(): JSX.Element {
     map?.clear();
 
     if (source) {
-      (source.placeId || source.grainId)
+      (source.placeId || source.smartId)
         ? (map?.addSource(source, false))
         : (map?.addSource(source, true).withDrag(pt => dispatch(setSearchRoutesSource(point2place(pt)))));
     }
 
     if (target) {
-      (target.placeId || target.grainId)
+      (target.placeId || target.smartId)
         ? (map?.addTarget(target, false))
         : (map?.addTarget(target, true).withDrag(pt => dispatch(setSearchRoutesTarget(point2place(pt)))));
     }
@@ -69,7 +69,7 @@ export default function SearchRoutesPanel(): JSX.Element {
 
   const searchAction = () => {
     new Promise<void>((res, _) => { dispatch(setBlock(true)); res(); })
-      .then(() => GrainPathFetcher.fetchRoutes({
+      .then(() => SmartWalkFetcher.searchRoutes({
         source: source!,
         target: target!,
         distance: distance,

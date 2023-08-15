@@ -46,7 +46,7 @@ function MyDirecsListItem({ index, direc, knowns }: MyDirecsListItemProps): JSX.
   const dispatch = useAppDispatch();
 
   const { map, storage } = useContext(AppContext);
-  const { name, path, sequence } = direc;
+  const { name, path, waypoints: sequence } = direc;
 
   const [showU, setShowU] = useState(false);
   const [showD, setShowD] = useState(false);

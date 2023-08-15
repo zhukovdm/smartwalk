@@ -24,8 +24,8 @@ import {
 import Image from "mui-image";
 import { AppContext } from "../../App";
 import {
-  Entity,
-  EntityAddress,
+  ExtendedPlace,
+  PlaceAddress,
   EntityPayment,
   StoredPlace
 } from "../../domain/types";
@@ -38,7 +38,7 @@ import SaveEntityDialog from "./SaveEntityDialog";
 type EntityContentProps = {
 
   /** An entity contained in the panel. */
-  entity: Entity;
+  entity: ExtendedPlace;
 };
 
 /**
@@ -80,7 +80,7 @@ export default function EntityContent({ entity }: EntityContentProps): JSX.Eleme
     rental
   } = entity.attributes;
 
-  const composeAddress = ({ country, settlement, district, place, house, postalCode }: EntityAddress) => {
+  const composeAddress = ({ country, settlement, district, place, house, postalCode }: PlaceAddress) => {
     return [place, house, postalCode, district, settlement, country].filter((str) => !!str).join(", ");
   };
 
@@ -92,7 +92,7 @@ export default function EntityContent({ entity }: EntityContentProps): JSX.Eleme
   }
 
   useEffect(() => {
-    setFound(places.find((p) => p.grainId === entity.grainId));
+    setFound(places.find((p) => p.smartId === entity.smartId));
   }, [places, entity]);
 
   useEffect(() => {

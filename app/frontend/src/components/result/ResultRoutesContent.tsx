@@ -51,7 +51,7 @@ export default function ResultRoutesContent({ result }: ResultRoutesContentProps
     distance,
     conditions,
     path,
-    waypoints
+    places: waypoints
   } = route;
 
   const knownGrains = useMemo(() => getCopyKnownGrains(knownPlaces), [knownPlaces]);
@@ -65,8 +65,8 @@ export default function ResultRoutesContent({ result }: ResultRoutesContentProps
   useEffect(() => {
     map?.clear();
     waypoints.forEach((place) => {
-      const grain = knownGrains.get(place.grainId);
-      if (grain) { grain.selected = place.selected; } // (!) change structuredClone
+      const grain = knownGrains.get(place.smartId);
+      if (grain) { grain.categories = place.categories; } // (!) change structuredClone
       (grain) ? map?.addStored(grain) : map?.addTagged(place);
     });
     map?.addSource(source, false);

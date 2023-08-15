@@ -1,10 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { KeywordCondition, UiPlace } from "../domain/types";
+import { KeywordCategory, UiPlace } from "../domain/types";
 
 type SearchPlacesState = {
   center?: UiPlace;
   radius: number;
-  conditions: KeywordCondition[];
+  conditions: KeywordCategory[];
 };
 
 const initialState = (): SearchPlacesState => {
@@ -22,7 +22,7 @@ export const placesSlice = createSlice({
       const i = action.payload;
       state.conditions = [...state.conditions.slice(0, i), ...state.conditions.slice(i + 1)];
     },
-    insertSearchPlacesCondition: (state, action: PayloadAction<{ condition: KeywordCondition; i: number; }>) => {
+    insertSearchPlacesCondition: (state, action: PayloadAction<{ condition: KeywordCategory; i: number; }>) => {
       const { i, condition } = action.payload;
       state.conditions = [...state.conditions.slice(0, i), condition, ...state.conditions.slice(i + 1)];
     }

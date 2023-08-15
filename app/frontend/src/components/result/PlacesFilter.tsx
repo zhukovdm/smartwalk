@@ -5,7 +5,7 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { PlaceCondition } from "../../domain/types";
+import { PlaceCategory } from "../../domain/types";
 import PlaceConditionDialog from "./PlaceConditionDialog";
 
 type PlacesFilterProps = {
@@ -20,7 +20,7 @@ type PlacesFilterProps = {
   disabled: boolean;
 
   /** Condition that forms filter */
-  condition: PlaceCondition;
+  condition: PlaceCategory;
 
   /** Toggle filter selection */
   onToggle: () => void;

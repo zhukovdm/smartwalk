@@ -13,7 +13,7 @@ export function point2text(point: WgsPoint): string {
  * Convert a point to a simple place.
  */
 export function point2place(point: WgsPoint): UiPlace {
-  return { name: point2text(point), location: point, keywords: [], selected: [] };
+  return { name: point2text(point), location: point, keywords: [], categories: [] };
 }
 
 /**

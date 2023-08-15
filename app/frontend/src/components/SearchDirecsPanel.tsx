@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
 import { RESULT_DIRECS_ADDR, SEARCH_DIRECS_ADDR } from "../domain/routing";
-import { GrainPathFetcher } from "../utils/grainpath";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import { setBlock } from "../features/panelSlice";
 import { setSearchDirecsSequence } from "../features/searchDirecsSlice";
@@ -22,7 +22,7 @@ export default function SearchDirecsPanel(): JSX.Element {
 
   const searchAction = () => {
     new Promise<void>((res, _) => { dispatch(setBlock(true)); res(); })
-      .then(() => GrainPathFetcher.fetchDirecs(sequence))
+      .then(() => SmartWalkFetcher.searchDirecs(sequence))
       .then((res) => {
         dispatch(setResultDirecs(res));
         dispatch(setResultDirecsBack(SEARCH_DIRECS_ADDR));

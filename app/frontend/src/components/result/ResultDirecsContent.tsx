@@ -32,7 +32,7 @@ export default function ResultDirecsContent({ result }: ResultDirecsContentProps
     direcId,
     name,
     path,
-    sequence
+    waypoints: sequence
   } = result;
 
   const knownPlaces = useMemo(() => {

@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Alert, Box, Skeleton, Stack } from "@mui/material";
 import { AppContext } from "../App";
-import { GrainPathFetcher } from "../utils/grainpath";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { useAppDispatch, useAppSelector } from "../features/hooks";
 import {
   setFavouritePlaces,
@@ -46,7 +46,7 @@ export default function EntityPanel(): JSX.Element {
     const load = async () => {
       try {
         if (!entity && !entityLoaded) {
-          const e = await GrainPathFetcher.fetchEntity(id);
+          const e = await SmartWalkFetcher.entityPlaces(id);
           if (e) { setEntity(e); entities.set(id, e); }
         }
       }

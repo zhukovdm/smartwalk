@@ -1,9 +1,9 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { Entity } from "../domain/types";
+import { ExtendedPlace } from "../domain/types";
 
 type EntityState = {
   back?: string;
-  entity?: Entity;
+  entity?: ExtendedPlace;
 };
 
 const initialState = (): EntityState => {
@@ -14,7 +14,7 @@ export const entitySlice = createSlice({
   name: "entity",
   initialState: initialState(),
   reducers: {
-    setEntity: (state, action: PayloadAction<Entity>) => { state.entity = action.payload; },
+    setEntity: (state, action: PayloadAction<ExtendedPlace>) => { state.entity = action.payload; },
     setEntityBack: (state, action: PayloadAction<string>) => { state.back = action.payload }
   }
 });

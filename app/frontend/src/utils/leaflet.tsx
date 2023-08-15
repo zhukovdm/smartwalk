@@ -67,7 +67,7 @@ type PlacePopupProps = {
  */
 function PlacePopup({ place }: PlacePopupProps): JSX.Element {
 
-  const set = new Set(place.selected);
+  const set = new Set(place.categories);
 
   return (
     <div>
@@ -96,7 +96,7 @@ class PlacePopupFactory {
 
 class LeafletConverter {
 
-  // see https://epsg.io/3857
+  // https://epsg.io/3857
   private static ensureLonBounds (lon: number): number { return Math.min(Math.max(lon, -180.0), +180.0); }
   private static ensureLatBounds (lat: number): number { return Math.min(Math.max(lat, -85.06), +85.06); }
 
