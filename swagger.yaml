@@ -1,0 +1,646 @@
+openapi: 3.0.1
+info:
+  title: SmartWalk.Api
+  description: Web application for keyword-aware walking route search
+  version: 1.0.0
+paths:
+  /api/advice/bounds:
+    get:
+      tags:
+        - Advice
+      operationId: AdviseBounds
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BoundsAdvice'
+  /api/advice/keywords:
+    get:
+      tags:
+        - Advice
+      operationId: AdviseKeywords
+      parameters:
+        - name: prefix
+          in: query
+          required: true
+          schema:
+            minLength: 1
+            type: string
+            example: m
+          example: m
+        - name: count
+          in: query
+          required: true
+          schema:
+            maximum: 2147483647
+            minimum: 1
+            type: integer
+            format: int32
+            example: 5
+          example: 5
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KeywordsAdviceItem'
+        '500':
+          description: Server Error
+  '/api/entity/places/{smartId}':
+    get:
+      tags:
+        - Entity
+      summary: ''
+      operationId: GetPlace
+      parameters:
+        - name: smartId
+          in: path
+          description: ''
+          required: true
+          schema:
+            type: string
+          example: 64c91f8359914b93b23b01d9
+      responses:
+        '200':
+          description: Returns object with an entity item.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtendedPlace'
+        '400':
+          description: Invalid identifier detected.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: An entity with identifier does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Some of the backend services malfunction.
+  /api/search/direcs:
+    get:
+      tags:
+        - Search
+      operationId: SearchDirecs
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            minLength: 1
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShortestPath'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Server Error
+  /api/search/places:
+    get:
+      tags:
+        - Search
+      operationId: SearchPlaces
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            minLength: 1
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Place'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Server Error
+  /api/search/routes:
+    get:
+      tags:
+        - Search
+      operationId: SearchRoutes
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            minLength: 1
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Route'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProblemDetails'
+        '500':
+          description: Server Error
+components:
+  schemas:
+    BoundsAdvice:
+      required:
+        - capacity
+        - clothes
+        - cuisine
+        - denomination
+        - elevation
+        - minimumAge
+        - payment
+        - rating
+        - rental
+        - year
+      type: object
+      properties:
+        capacity:
+          $ref: '#/components/schemas/NumericBound'
+        elevation:
+          $ref: '#/components/schemas/NumericBound'
+        minimumAge:
+          $ref: '#/components/schemas/NumericBound'
+        rating:
+          $ref: '#/components/schemas/NumericBound'
+        year:
+          $ref: '#/components/schemas/NumericBound'
+        clothes:
+          type: array
+          items:
+            type: string
+        cuisine:
+          type: array
+          items:
+            type: string
+        denomination:
+          type: array
+          items:
+            type: string
+        payment:
+          type: array
+          items:
+            type: string
+        rental:
+          type: array
+          items:
+            type: string
+      additionalProperties: false
+    ExtendedPlace:
+      required:
+        - categories
+        - keywords
+        - location
+        - name
+        - smartId
+      type: object
+      properties:
+        smartId:
+          type: string
+          example: 64c91f8359914b93b23b01d9
+        name:
+          type: string
+          example: Noname
+        location:
+          $ref: '#/components/schemas/WgsPoint'
+        keywords:
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          example:
+            - keyword
+        categories:
+          uniqueItems: true
+          type: array
+          items:
+            type: integer
+            format: int32
+          example:
+            - 0
+            - 1
+        linked:
+          $ref: '#/components/schemas/PlaceLinked'
+        attributes:
+          $ref: '#/components/schemas/PlaceAttributes'
+      additionalProperties: false
+    KeywordsAdviceItem:
+      required:
+        - attributeList
+        - keyword
+      type: object
+      properties:
+        keyword:
+          type: string
+          example: museum
+        attributeList:
+          type: array
+          items:
+            type: string
+          example:
+            - openingHours
+      additionalProperties: false
+    NumericBound:
+      required:
+        - max
+        - min
+      type: object
+      properties:
+        min:
+          type: number
+          format: double
+        max:
+          type: number
+          format: double
+      additionalProperties: false
+    Place:
+      required:
+        - categories
+        - keywords
+        - location
+        - name
+        - smartId
+      type: object
+      properties:
+        smartId:
+          type: string
+          example: 64c91f8359914b93b23b01d9
+        name:
+          type: string
+          example: Noname
+        location:
+          $ref: '#/components/schemas/WgsPoint'
+        keywords:
+          minItems: 1
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          example:
+            - keyword
+        categories:
+          uniqueItems: true
+          type: array
+          items:
+            type: integer
+            format: int32
+          example:
+            - 0
+            - 1
+      additionalProperties: false
+    PlaceAddress:
+      type: object
+      properties:
+        country:
+          type: string
+          nullable: true
+          example: Czech Republic
+        settlement:
+          type: string
+          nullable: true
+        district:
+          type: string
+          nullable: true
+        place:
+          type: string
+          nullable: true
+        house:
+          type: string
+          nullable: true
+          example: '1'
+        postalCode:
+          type: string
+          nullable: true
+          example: 100 00
+      additionalProperties: false
+    PlaceAttributes:
+      type: object
+      properties:
+        polygon:
+          minItems: 4
+          type: array
+          items:
+            $ref: '#/components/schemas/WgsPoint'
+          nullable: true
+          example:
+            - lon: 0
+              lat: 0
+            - lon: 0
+              lat: 1
+            - lon: 1
+              lat: 1
+            - lon: 1
+              lat: 0
+            - lon: 0
+              lat: 0
+        description:
+          type: string
+          nullable: true
+          example: Detailed object description
+        image:
+          type: string
+          nullable: true
+          example: http://www.image.com/1
+        website:
+          type: string
+          nullable: true
+          example: http://www.example.com/
+        address:
+          $ref: '#/components/schemas/PlaceAddress'
+        email:
+          type: string
+          nullable: true
+          example: example@email.com
+        phone:
+          type: string
+          nullable: true
+          example: +420 123 456 789
+        socialNetworks:
+          $ref: '#/components/schemas/PlaceSocialNetworks'
+        charge:
+          type: array
+          items:
+            type: string
+          nullable: true
+        openingHours:
+          type: array
+          items:
+            type: string
+          nullable: true
+        fee:
+          type: boolean
+          nullable: true
+          example: true
+        delivery:
+          type: boolean
+          nullable: true
+          example: true
+        drinkingWater:
+          type: boolean
+          nullable: true
+          example: true
+        internetAccess:
+          type: boolean
+          nullable: true
+          example: true
+        shower:
+          type: boolean
+          nullable: true
+          example: true
+        smoking:
+          type: boolean
+          nullable: true
+          example: true
+        takeaway:
+          type: boolean
+          nullable: true
+          example: true
+        toilets:
+          type: boolean
+          nullable: true
+          example: true
+        wheelchair:
+          type: boolean
+          nullable: true
+          example: true
+        capacity:
+          type: number
+          format: double
+          nullable: true
+          example: 10
+        elevation:
+          type: number
+          format: double
+          nullable: true
+          example: 10
+        minimumAge:
+          type: number
+          format: double
+          nullable: true
+          example: 21
+        rating:
+          type: number
+          format: double
+          nullable: true
+          example: 5
+        year:
+          type: number
+          format: double
+          nullable: true
+          example: 2023
+        clothes:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          nullable: true
+          example:
+            - men
+        cuisine:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          nullable: true
+          example:
+            - czech
+        denomination:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          nullable: true
+          example:
+            - catholic
+        payment:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          nullable: true
+          example:
+            - cash
+        rental:
+          uniqueItems: true
+          type: array
+          items:
+            type: string
+          nullable: true
+          example:
+            - bike
+      additionalProperties: false
+    PlaceLinked:
+      type: object
+      properties:
+        dbpedia:
+          type: string
+          nullable: true
+          example: Example
+        geonames:
+          type: string
+          nullable: true
+          example: '1'
+        mapycz:
+          type: string
+          nullable: true
+          example: base&id=1
+        osm:
+          type: string
+          nullable: true
+          example: node/1
+        wikidata:
+          type: string
+          nullable: true
+          example: Q1
+        yago:
+          type: string
+          nullable: true
+          example: Example
+      additionalProperties: false
+    PlaceSocialNetworks:
+      type: object
+      properties:
+        facebook:
+          type: string
+          nullable: true
+        instagram:
+          type: string
+          nullable: true
+        linkedin:
+          type: string
+          nullable: true
+        pinterest:
+          type: string
+          nullable: true
+        telegram:
+          type: string
+          nullable: true
+        twitter:
+          type: string
+          nullable: true
+        youtube:
+          type: string
+          nullable: true
+      additionalProperties: false
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        status:
+          type: integer
+          format: int32
+          nullable: true
+        detail:
+          type: string
+          nullable: true
+        instance:
+          type: string
+          nullable: true
+      additionalProperties: { }
+    Route:
+      required:
+        - path
+        - places
+        - waypoints
+      type: object
+      properties:
+        path:
+          $ref: '#/components/schemas/ShortestPath'
+        places:
+          type: array
+          items:
+            $ref: '#/components/schemas/Place'
+          description: Unordered list of visited places.
+        waypoints:
+          type: array
+          items:
+            type: string
+          description: "Ordered sequence of visited waypoints, each represented by the\r\ncorresponding smartId."
+      additionalProperties: false
+    ShortestPath:
+      required:
+        - distance
+        - duration
+        - polyline
+      type: object
+      properties:
+        distance:
+          minimum: 0
+          type: number
+          description: Distance of the route in <b>meters</b>.
+          format: double
+          example: 1234.56
+        duration:
+          minimum: 0
+          type: number
+          description: Duration of the route in <b>seconds</b>.
+          format: double
+          example: 300
+        polyline:
+          type: array
+          items:
+            $ref: '#/components/schemas/WgsPoint'
+          description: Ordered sequence of points representing connected linestring.
+      additionalProperties: false
+    WgsPoint:
+      required:
+        - lat
+        - lon
+      type: object
+      properties:
+        lon:
+          maximum: 180
+          minimum: -180
+          type: number
+          format: double
+        lat:
+          maximum: 85.06
+          minimum: -85.06
+          type: number
+          format: double
+      additionalProperties: false
+      description: Representation of a point on an ellipsoidal body.
