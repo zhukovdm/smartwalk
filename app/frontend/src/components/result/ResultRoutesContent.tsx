@@ -11,7 +11,7 @@ import { AppContext } from "../../App";
 import { UiRoute } from "../../domain/types";
 import { RESULT_ROUTES_ADDR } from "../../domain/routing";
 import {
-  getCopyKnownGrains,
+  getCopyStoredPlaces,
   getSatConditions,
   replaceName
 } from "../../domain/functions";
@@ -54,7 +54,7 @@ export default function ResultRoutesContent({ result }: ResultRoutesContentProps
     places: waypoints
   } = route;
 
-  const knownGrains = useMemo(() => getCopyKnownGrains(knownPlaces), [knownPlaces]);
+  const knownGrains = useMemo(() => getCopyStoredPlaces(knownPlaces), [knownPlaces]);
 
   const satConditions = useMemo(() => getSatConditions(waypoints), [waypoints]);
 

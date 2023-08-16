@@ -38,7 +38,7 @@ export class SmartWalkFetcher {
   /**
    * Standard `GET` from an application server. Note that only JSON content
    * type is available.
-   * @param url endpoint with query string
+   * @param url endpoint url with a query string
    */
   private static async fetch(url: string): Promise<any> {
     const content = "application/json";
@@ -69,7 +69,7 @@ export class SmartWalkFetcher {
    */
   public static adviceKeywords(prefix: string): Promise<KeywordAdviceItem[]> {
     const qry = new URLSearchParams({ prefix: prefix, count: "5" });
-    return SmartWalkFetcher.fetch(SMARTWALK_ADVICE_URL + qry);
+    return SmartWalkFetcher.fetch(SMARTWALK_ADVICE_KEYWORDS_URL + qry);
   }
 
   /**

@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
 import { KeywordAdviceItem } from "../../domain/types";
-import { AutocAttributes } from "../../utils/helpers";
+import { KeywordAdviceAttributes } from "../../utils/helpers";
 import { useAppSelector } from "../../features/hooks";
 import KeywordFilterViewExisten from "./KeywordFilterViewExisten";
 import KeywordFilterViewBoolean from "./KeywordFilterViewBoolean";
@@ -33,7 +33,7 @@ export default function KeywordFilterList({ autoc, filters }: KeywordAttributeLi
   const expandIcon = <ExpandMore />
 
   const { bounds } = useAppSelector(state => state.panel);
-  const { es, bs, ns, ts, cs } = AutocAttributes.group(autoc.attributeList);
+  const { es, bs, ns, ts, cs } = KeywordAdviceAttributes.group(autoc.attributeList);
 
   return(
     <Box>

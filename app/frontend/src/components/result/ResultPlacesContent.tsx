@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import { AppContext } from "../../App";
 import { PlacesResult } from "../../domain/types";
 import { RESULT_PLACES_ADDR } from "../../domain/routing";
-import { getCopyKnownGrains, getSatConditions } from "../../domain/functions";
+import { getCopyStoredPlaces, getSatConditions } from "../../domain/functions";
 import { useAppDispatch, useAppSelector } from "../../features/hooks";
 import { setResultPlacesFilters } from "../../features/resultPlacesSlice";
 import { SteadyPlaceListItem } from "../shared/list-items";
@@ -32,7 +32,7 @@ export default function ResultPlacesContent({ result }: ResultPlacesContentProps
   const filterSet = useMemo(() => new Set(filterLst), [filterLst]);
 
   // create a copy of known grains found in the pile of known places
-  const knownGrains = useMemo(() => getCopyKnownGrains(knownPlaces), [knownPlaces]);
+  const knownGrains = useMemo(() => getCopyStoredPlaces(knownPlaces), [knownPlaces]);
 
   // extract conditions satisfied by the result
   const satConditions = useMemo(() => getSatConditions(foundPlaces), [foundPlaces]);
