@@ -115,9 +115,8 @@ public sealed class SearchController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Direc>> SearchDirecs([FromQuery] DirecsRequest request)
+    public async Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] DirecsRequest request)
     {
         DirecsQuery dq = null;
 
@@ -129,8 +128,8 @@ public sealed class SearchController : ControllerBase
 
         try
         {
-            var direc = await SearchService.GetDirecs(_context.RoutingEngine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
-            return (direc is not null) ? direc : NotFound();
+            return await SearchService.GetDirecs(
+                _context.RoutingEngine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }

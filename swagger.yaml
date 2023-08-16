@@ -104,15 +104,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ShortestPath'
+                type: array
+                items:
+                  $ref: '#/components/schemas/ShortestPath'
         '400':
           description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ProblemDetails'
-        '404':
-          description: Not Found
           content:
             application/json:
               schema:

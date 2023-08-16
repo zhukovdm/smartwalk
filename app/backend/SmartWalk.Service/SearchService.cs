@@ -12,9 +12,9 @@ public static class SearchService
 {
     #region Direcs
 
-    public static async Task<ShortestPath> GetDirecs(IRoutingEngine routingEngine, List<WgsPoint> waypoints)
+    public static Task<List<ShortestPath>> GetDirecs(IRoutingEngine routingEngine, List<WgsPoint> waypoints)
     {
-        return (await routingEngine.GetShortestPaths(waypoints)).FirstOrDefault();
+        return routingEngine.GetShortestPaths(waypoints);
     }
 
     #endregion
