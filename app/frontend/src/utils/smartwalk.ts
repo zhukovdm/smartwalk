@@ -65,7 +65,7 @@ export class SmartWalkFetcher {
   }
 
   /**
-   * Fetch keyword advice based on provided prefix.
+   * Fetch at most 5 keywords based on provided prefix.
    */
   public static adviceKeywords(prefix: string): Promise<KeywordAdviceItem[]> {
     const qry = new URLSearchParams({ prefix: prefix, count: "5" });
@@ -82,13 +82,11 @@ export class SmartWalkFetcher {
   /**
    * Fetch walking path visiting a sequence of locations in a given order.
    */
-  public static async searchDirecs(waypoints: UiPlace[]): Promise<UiDirec | undefined> {
+  public static async searchDirecs(waypoints: UiPlace[]): Promise<UiDirec[]> {
     const qry = { waypoints: waypoints.map((l) => l.location) };
     const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_DIRECS_URL + encodeURIComponent(JSON.stringify(qry)));
 
-    return (jsn)
-      ? { name: "", path: { ...jsn, distance: jsn.distance / 1000.0 }, waypoints: waypoints }
-      : undefined;
+    return jsn.map((direc: any) => ({ name: "", path: { ...direc, distance: direc.distance / 1000.0 }, waypoints: waypoints }));
   }
 
   /**
@@ -111,7 +109,7 @@ export class SmartWalkFetcher {
     const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_ROUTES_URL + encodeURIComponent(JSON.stringify(qry)));
 
     return jsn.map((route: any) => {
-      route.path.distance = route.path.distance / 1000.0;
+      route.path.distance /= 1000.0;
       return { name: "", ...request, ...route };
     });
   }

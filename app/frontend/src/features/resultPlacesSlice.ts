@@ -6,14 +6,18 @@ type ResultPlacesState = {
   filters: string[];
 };
 
-function initialState(): ResultPlacesState { return { filters: [] }; };
+const initialState = (): ResultPlacesState => ({ filters: [] });
 
 export const resultPlacesSlice = createSlice({
   name: "result/places",
   initialState: initialState(),
   reducers: {
-    setResultPlaces: (state, action: PayloadAction<PlacesResult | undefined>) => { state.result = action.payload; },
-    setResultPlacesFilters: (state, action: PayloadAction<string[]>) => { state.filters = action.payload; }
+    setResultPlaces: (state, action: PayloadAction<PlacesResult | undefined>) => {
+      state.result = action.payload;
+    },
+    setResultPlacesFilters: (state, action: PayloadAction<string[]>) => {
+      state.filters = action.payload;
+    }
   }
 });
 

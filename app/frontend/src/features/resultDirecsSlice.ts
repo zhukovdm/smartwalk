@@ -2,24 +2,23 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiDirec } from "../domain/types";
 
 type ResultDirecsState = {
-  back?: string;
-  result?: UiDirec;
+  result: UiDirec[];
 };
 
-function initialState(): ResultDirecsState { return { }; };
+const initialState = (): ResultDirecsState => ({ result: [] });
 
 export const resultDirecsSlice = createSlice({
   name: "result/direcs",
   initialState: initialState(),
   reducers: {
-    setResultDirecs: (state, action: PayloadAction<UiDirec | undefined>) => { state.result = action.payload; },
-    setResultDirecsBack: (state, action: PayloadAction<string | undefined>) => { state.back = action.payload; }
+    setResultDirecs: (state, action: PayloadAction<UiDirec[]>) => {
+      state.result = action.payload;
+    },
   }
 });
 
 export const {
-  setResultDirecs,
-  setResultDirecsBack
+  setResultDirecs
 } = resultDirecsSlice.actions;
 
 export default resultDirecsSlice.reducer;

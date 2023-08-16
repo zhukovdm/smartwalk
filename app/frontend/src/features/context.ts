@@ -7,19 +7,21 @@ import LocalStorage from "../utils/localStorage";
 type AppContextValue = {
   map?: IMap;
   storage: IStorage;
-  grain: {
-    autocs: Map<string, KeywordAdviceItem[]>;
-    entity: Map<string, ExtendedPlace>;
+  smart: {
+    entityPlaces: Map<string, ExtendedPlace>;
+    adviceKeywords: Map<string, KeywordAdviceItem[]>;
   }
 };
 
 export class MapFactory {
 
   /**
-   * @param map original Leaflet Map.
-   * @returns wrapper with desired functionality.
+   * @param map original Leaflet map object
+   * @returns wrapper with desired functionality
    */
-  static getMap(map: LeafletRawMap): IMap { return new LeafletMap(map); }
+  static getMap(map: LeafletRawMap): IMap {
+    return new LeafletMap(map);
+  }
 }
 
 /**
@@ -27,8 +29,8 @@ export class MapFactory {
  */
 export const context: AppContextValue = {
   storage: new LocalStorage(),
-  grain: {
-    autocs: new Map(),
-    entity: new Map()
+  smart: {
+    entityPlaces: new Map(),
+    adviceKeywords: new Map()
   }
 };

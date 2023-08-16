@@ -13,29 +13,47 @@ type SolidState = {
   direcsTotCount?: number;
 };
 
-const initialState = (): SolidState => {
-  return {
-    webId: "",
-    redirect: false,
-    selectedPod: null
-  };
-}
+const initialState = (): SolidState => ({
+  webId: "",
+  redirect: false,
+  selectedPod: null
+});
 
 export const solidSlice = createSlice({
   name: "solid",
   initialState: initialState(),
   reducers: {
-    resetSolid: () => { return initialState(); },
-    setSolidRedirect: (state) => { state.redirect = true; },
-    setSolidWebId: (state, action: PayloadAction<string>) => { state.webId = action.payload; },
-    setSolidSelectedPod: (state, action: PayloadAction<string | null>) => { state.selectedPod = action.payload; },
-    setSolidAvailablePods: (state, action: PayloadAction<string[]>) => { state.availablePods = action.payload; },
-    setSolidPlacesCurCount: (state, action: PayloadAction<number>) => { state.placesCurCount = action.payload; },
-    setSolidPlacesTotCount: (state, action: PayloadAction<number>) => { state.placesTotCount = action.payload; },
-    setSolidRoutesCurCount: (state, action: PayloadAction<number>) => { state.routesCurCount = action.payload; },
-    setSolidRoutesTotCount: (state, action: PayloadAction<number>) => { state.routesTotCount = action.payload; },
-    setSolidDirecsCurCount: (state, action: PayloadAction<number>) => { state.direcsCurCount = action.payload; },
-    setSolidDirecsTotCount: (state, action: PayloadAction<number>) => { state.direcsTotCount = action.payload; }
+    resetSolid: () => initialState(),
+    setSolidRedirect: (state) => {
+      state.redirect = true;
+    },
+    setSolidWebId: (state, action: PayloadAction<string>) => {
+      state.webId = action.payload;
+    },
+    setSolidSelectedPod: (state, action: PayloadAction<string | null>) => {
+      state.selectedPod = action.payload;
+    },
+    setSolidAvailablePods: (state, action: PayloadAction<string[]>) => {
+      state.availablePods = action.payload;
+    },
+    setSolidPlacesCurCount: (state, action: PayloadAction<number>) => {
+      state.placesCurCount = action.payload;
+    },
+    setSolidPlacesTotCount: (state, action: PayloadAction<number>) => {
+      state.placesTotCount = action.payload;
+    },
+    setSolidRoutesCurCount: (state, action: PayloadAction<number>) => {
+      state.routesCurCount = action.payload;
+    },
+    setSolidRoutesTotCount: (state, action: PayloadAction<number>) => {
+      state.routesTotCount = action.payload;
+    },
+    setSolidDirecsCurCount: (state, action: PayloadAction<number>) => {
+      state.direcsCurCount = action.payload;
+    },
+    setSolidDirecsTotCount: (state, action: PayloadAction<number>) => {
+      state.direcsTotCount = action.payload;
+    }
   }
 });
 

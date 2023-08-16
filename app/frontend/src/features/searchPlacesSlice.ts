@@ -1,40 +1,42 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { KeywordCategory, UiPlace } from "../domain/types";
+import { deleteItemImmutable, updateItemImmutable } from "./immutable";
 
 type SearchPlacesState = {
   center?: UiPlace;
   radius: number;
-  conditions: KeywordCategory[];
+  categories: KeywordCategory[];
 };
 
-const initialState = (): SearchPlacesState => {
-  return { radius: 3.0, conditions: [] };
-};
+const initialState = (): SearchPlacesState => ({ radius: 3.0, categories: [] });
 
 export const placesSlice = createSlice({
   name: "search/places",
   initialState: initialState(),
   reducers: {
-    clearSearchPlaces: () => { return initialState(); },
-    setSearchPlacesCenter: (state, action: PayloadAction<UiPlace | undefined>) => { state.center = action.payload; },
-    setSearchPlacesRadius: (state, action: PayloadAction<number>) => { state.radius = action.payload; },
-    deleteSearchPlacesCondition: (state, action: PayloadAction<number>) => {
-      const i = action.payload;
-      state.conditions = [...state.conditions.slice(0, i), ...state.conditions.slice(i + 1)];
+    resetSearchPlaces: () => initialState(),
+    setSearchPlacesCenter: (state, action: PayloadAction<UiPlace | undefined>) => {
+      state.center = action.payload;
     },
-    insertSearchPlacesCondition: (state, action: PayloadAction<{ condition: KeywordCategory; i: number; }>) => {
-      const { i, condition } = action.payload;
-      state.conditions = [...state.conditions.slice(0, i), condition, ...state.conditions.slice(i + 1)];
+    setSearchPlacesRadius: (state, action: PayloadAction<number>) => {
+      state.radius = action.payload;
+    },
+    deleteSearchPlacesCategory: (state, action: PayloadAction<number>) => {
+      state.categories = deleteItemImmutable(state.categories, action.payload);
+    },
+    updateSearchPlacesCategory: (state, action: PayloadAction<{ category: KeywordCategory; i: number; }>) => {
+      const { category, i } = action.payload;
+      state.categories = updateItemImmutable(state.categories, category, i);
     }
   }
 });
 
 export const {
-  clearSearchPlaces,
+  resetSearchPlaces,
   setSearchPlacesCenter,
   setSearchPlacesRadius,
-  deleteSearchPlacesCondition,
-  insertSearchPlacesCondition
+  deleteSearchPlacesCategory,
+  updateSearchPlacesCategory
 } = placesSlice.actions;
 
 export default placesSlice.reducer;

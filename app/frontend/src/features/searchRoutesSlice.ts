@@ -1,43 +1,57 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { KeywordCategory, UiPlace } from "../domain/types";
+import { KeywordCategory, PrecedenceEdge, UiPlace } from "../domain/types";
+import { deleteItemImmutable, updateItemImmutable } from "./immutable";
 
 type SearchRoutesState = {
   source?: UiPlace;
   target?: UiPlace;
   distance: number;
-  conditions: KeywordCategory[];
+  categories: KeywordCategory[];
+  precedence: PrecedenceEdge[];
 };
 
-function initialState(): SearchRoutesState {
-  return { distance: 5.0, conditions: [] };
-}
+const initialState = (): SearchRoutesState => ({ distance: 5.0, categories: [], precedence: [] });
 
 export const searchRoutesSlice = createSlice({
   name: "search/routes",
   initialState: initialState(),
   reducers: {
-    clearSearchRoutes: () => { return initialState(); },
-    setSearchRoutesSource: (state, action: PayloadAction<UiPlace | undefined>) => { state.source = action.payload; },
-    setSearchRoutesTarget: (state, action: PayloadAction<UiPlace | undefined>) => { state.target = action.payload; },
-    setSearchRoutesDistance: (state, action: PayloadAction<number>) => { state.distance = action.payload; },
-    deleteSearchRoutesCondition: (state, action: PayloadAction<number>) => {
-      const i = action.payload;
-      state.conditions = [...state.conditions.slice(0, i), ...state.conditions.slice(i + 1)];
+    resetSearchRoutes: () => initialState(),
+    setSearchRoutesSource: (state, action: PayloadAction<UiPlace | undefined>) => {
+      state.source = action.payload;
     },
-    insertSearchRoutesCondition: (state, action: PayloadAction<{ condition: KeywordCategory; i: number; }>) => {
-      const { i, condition } = action.payload;
-      state.conditions = [...state.conditions.slice(0, i), condition, ...state.conditions.slice(i + 1)];
+    setSearchRoutesTarget: (state, action: PayloadAction<UiPlace | undefined>) => {
+      state.target = action.payload;
+    },
+    setSearchRoutesDistance: (state, action: PayloadAction<number>) => {
+      state.distance = action.payload;
+    },
+    deleteSearchRoutesCategory: (state, action: PayloadAction<number>) => {
+      state.categories = deleteItemImmutable(state.categories, action.payload);
+    },
+    updateSearchRoutesCategory: (state, action: PayloadAction<{ category: KeywordCategory; i: number; }>) => {
+      const { category, i } = action.payload;
+      state.categories = updateItemImmutable(state.categories, category, i);
+    },
+    deleteSearchRoutesPrecEdge: (state, action: PayloadAction<number>) => {
+      state.precedence = deleteItemImmutable(state.precedence, action.payload);
+    },
+    updateSearchRoutesPrecEdge: (state, action: PayloadAction<{ precEdge: PrecedenceEdge; i: number; }>) => {
+      const { precEdge, i } = action.payload;
+      state.precedence = updateItemImmutable(state.precedence, precEdge, i);
     }
   }
 });
 
 export const {
-  clearSearchRoutes,
+  resetSearchRoutes,
   setSearchRoutesSource,
   setSearchRoutesTarget,
   setSearchRoutesDistance,
-  deleteSearchRoutesCondition,
-  insertSearchRoutesCondition
+  deleteSearchRoutesCategory,
+  updateSearchRoutesCategory,
+  deleteSearchRoutesPrecEdge,
+  updateSearchRoutesPrecEdge
 } = searchRoutesSlice.actions;
 
 export default searchRoutesSlice.reducer;

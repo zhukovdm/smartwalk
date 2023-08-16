@@ -14,16 +14,19 @@ export const RESULT_DIRECS_ADDR = `${RESULT_ADDR}${DIREC_ADDR}s`;
 export const RESULT_PLACES_ADDR = `${RESULT_ADDR}${PLACE_ADDR}s`;
 export const RESULT_ROUTES_ADDR = `${RESULT_ADDR}${ROUTE_ADDR}s`;
 
-const DETAIL_ADDR = "/detail";
+const ENTITY_ADDR = "/entity";
 
-export const DETAIL_DIREC_ADDR = `${DETAIL_ADDR}${DIREC_ADDR}`;
-export const DETAIL_PLACE_ADDR = `${DETAIL_ADDR}${PLACE_ADDR}`;
-export const DETAIL_ROUTE_ADDR = `${DETAIL_ADDR}${ROUTE_ADDR}`;
+export const ENTITY_PLACES_ADDR = `${ENTITY_ADDR}${PLACE_ADDR}s`;
 
-export const FAVOURITES_ADDR = "/favourites";
-export const HOME_ADDR = "/";
-export const PLACES_ADDR = "/places"
+const VIEWER_ADDR = "/viewer";
+
+export const VIEWER_DIREC_ADDR = `${VIEWER_ADDR}${DIREC_ADDR}`;
+export const VIEWER_PLACE_ADDR = `${VIEWER_ADDR}${PLACE_ADDR}`;
+export const VIEWER_ROUTE_ADDR = `${VIEWER_ADDR}${ROUTE_ADDR}`;
 
 const SESSION_ADDR = "/session";
 
 export const SESSION_SOLID_ADDR = `${SESSION_ADDR}/solid`;
+
+export const HOME_ADDR = "/";
+export const FAVORITES_ADDR = "/favorites";

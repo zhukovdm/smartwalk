@@ -5,17 +5,19 @@ type SessionState = {
   solid: boolean;
 };
 
-const initialState = (): SessionState => {
-  return { login: false, solid: false };
-};
+const initialState = (): SessionState => ({ login: false, solid: false });
 
 export const sessionSlice = createSlice({
   name: "session",
   initialState: initialState(),
   reducers: {
-    resetSession: () => { return initialState(); },
-    setSessionLogin: (state) => { state.login = true; },
-    setSessionSolid: (state) => { state.solid = true; }
+    resetSession: () => initialState(),
+    setSessionLogin: (state) => {
+      state.login = true;
+    },
+    setSessionSolid: (state) => {
+      state.solid = true;
+    }
   }
 });
 
