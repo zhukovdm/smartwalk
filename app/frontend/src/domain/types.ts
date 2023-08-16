@@ -19,7 +19,7 @@ type PlaceAttributes = {
   name: string;
   location: WgsPoint;
   keywords: string[];
-  categories: string[];
+  categories: number[];
 };
 
 /**

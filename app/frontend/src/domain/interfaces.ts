@@ -14,9 +14,9 @@ export interface IPin {
   withDrag(drag: (point: WgsPoint) => void): IPin;
 
   /**
-   * Clear shapes and draw new circle.
-   * @param map Currently used map.
-   * @param radius (in meters!)
+   * Attach circle-drawing functionality.
+   * @param map currently used map
+   * @param radius in meters!
    */
   withCirc(map: IMap, radius: number): IPin;
 }
@@ -36,48 +36,43 @@ export interface IMap {
 
   /**
    * Move map center to the place location and open popup. Prior to the flight,
-   * place should be created in a map.
+   * the corresponding pin should be created in a map.
    */
   flyTo(place: UiPlace): void;
 
   /**
-   * Pins of this kind are always non-draggable.
-   * @param place describe an object stored in an IStorage.
+   * @param place stored place
    */
-  addStored(place: UiPlace): IPin;
+  addStored(place: UiPlace, categories: string[]): IPin;
 
   /**
-   * Places from the server unknown to the user have potential
-   * to become stored.
+   * @param place not stored place
    */
-  addTagged(place: UiPlace): IPin;
+  addCommon(place: UiPlace, draggable: boolean, categories: string[]): IPin;
 
   /**
-   * Custom pins in @b Navigate tab are all draggable. But the very same pins
-   * are non-draggable in the result, because attached to a constructed path.
-   * @param place describe an object.
-   * @param draggable draggability of a pin.
+   * @param place starting point of a route in `Routes` form
    */
-  addCustom(place: UiPlace, draggable: boolean): IPin;
+  addSource(place: UiPlace, draggable: boolean, categories: string[]): IPin;
 
   /**
-   * Anything that has a location.
+   * @param place destination of a route in `Routes` form
    */
-  addSource(place: UiPlace, draggable: boolean): IPin;
+  addTarget(place: UiPlace, draggable: boolean, categories: string[]): IPin;
 
   /**
-   * Anything that has a location.
+   * @param place the center of a circle in `Places` form
    */
-  addTarget(place: UiPlace, draggable: boolean): IPin;
+  addCenter(place: UiPlace, draggable: boolean, categories: string[]): IPin;
 
   /**
-   * @param center User-defined center of a circle.
+   * @param center Location of the center of a circle.
    * @param radius Radius of a circle (in meters!).
    */
   drawCircle(center: WgsPoint, radius: number): void;
 
   /**
-   * @param polygon Closed sequence of points with at least 4 items (first and last must be the same).
+   * @param polygon Closed sequence of points with at least 4 items (the first and last must be identical).
    */
   drawPolygon(polygon: WgsPoint[]): void;
 
