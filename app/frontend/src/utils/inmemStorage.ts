@@ -2,89 +2,117 @@ import { IStorage } from "../domain/interfaces";
 import { StoredDirec, StoredPlace, StoredRoute } from "../domain/types";
 
 /**
- * Wrapper over standard (k, v) collection.
+ * Wrapper over standard kv-collection.
  */
 export default class InmemStorage implements IStorage {
 
-  private readonly places = new Map<string, StoredPlace>();
-  private readonly routes = new Map<string, StoredRoute>();
-  private readonly direcs = new Map<string, StoredDirec>();
+  private readonly direcStore = new Map<string, StoredDirec>();
+  private readonly placeStore = new Map<string, StoredPlace>();
+  private readonly routeStore = new Map<string, StoredRoute>();
 
-  public inmem(): boolean { return true;  }
+  public mem(): boolean {
+    return true;
+  }
 
-  public local(): boolean { return false; }
+  public loc(): boolean {
+    return false;
+  }
 
-  public remote(): boolean { return false; }
+  public rem(): boolean {
+    return false;
+  }
 
-  // [C]reate
+  public init(): Promise<void> {
+    return Promise.resolve();
+  }
+
+  // create
 
   private createT<T>(store: Map<string, T>, key: string, value: T): Promise<void> {
     return new Promise((res, _) => { store.set(key, value); res(); });
   }
 
   public createPlace(place: StoredPlace): Promise<void> {
-    return this.createT(this.places, place.placeId, place);
+    return this.createT(this.placeStore, place.placeId, place);
   }
 
   public createRoute(route: StoredRoute): Promise<void> {
-    return this.createT(this.routes, route.routeId, route);
+    return this.createT(this.routeStore, route.routeId, route);
   }
 
   public createDirec(direc: StoredDirec): Promise<void> {
-    return this.createT(this.direcs, direc.direcId, direc);
+    return this.createT(this.direcStore, direc.direcId, direc);
   }
 
-  // [R]ead
+  // get identifiers
 
-  public getAllT<T>(store: Map<string, T>): Promise<T[]> {
-    return new Promise((res, _) => { res(Array.from(store.values())); })
+  private getTIdentifiers<T>(store: Map<string, T>): Promise<string[]> {
+    return Promise.resolve(Array.from(store.keys()));
   }
 
-  public getAllPlaces(): Promise<StoredPlace[]> {
-    return this.getAllT(this.places);
+  public getDirecIdentifiers(): Promise<string[]> {
+    return this.getTIdentifiers(this.direcStore);
   }
 
-  public getAllRoutes(): Promise<StoredRoute[]> {
-    return this.getAllT(this.routes);
+  public getPlaceIdentifiers(): Promise<string[]> {
+    return this.getTIdentifiers(this.placeStore);
   }
 
-  public getAllDirecs(): Promise<StoredDirec[]> {
-    return this.getAllT(this.direcs);
+  public getRouteIdentifiers(): Promise<string[]> {
+    return this.getTIdentifiers(this.routeStore);
   }
 
-  // [U]pdate
+  // get by identifier
+
+  public getT<T>(store: Map<string, T>, key: string): Promise<T | undefined> {
+    return Promise.resolve(store.get(key));
+  }
+
+  public getDirec(direcId: string): Promise<StoredDirec | undefined> {
+    return this.getT(this.direcStore, direcId);
+  }
+
+  public getPlace(placeId: string): Promise<StoredPlace | undefined> {
+    return this.getT(this.placeStore, placeId);
+  }
+
+  public getRoute(routeId: string): Promise<StoredRoute | undefined> {
+    return this.getT(this.routeStore, routeId);
+  }
+
+  // update
 
   private updateT<T>(store: Map<string, T>, key: string, value: T): Promise<void> {
     return new Promise((res, _) => { store.set(key, value); res(); });
   }
 
+  public updateDirec(direc: StoredDirec): Promise<void> {
+    return this.updateT(this.direcStore, direc.direcId, direc);
+  }
+
   public updatePlace(place: StoredPlace): Promise<void> {
-    return this.updateT(this.places, place.placeId, place);
+    return this.updateT(this.placeStore, place.placeId, place);
   }
 
   public updateRoute(route: StoredRoute): Promise<void> {
-    return this.updateT(this.routes, route.routeId, route);
+    return this.updateT(this.routeStore, route.routeId, route);
   }
 
-  public updateDirec(direc: StoredDirec): Promise<void> {
-    return this.updateT(this.direcs, direc.direcId, direc);
-  }
-
-  // [D]elete
+  // delete
 
   public deleteT<T>(store: Map<string, T>, key: string): Promise<void> {
     return new Promise((res, _) => { store.delete(key); res(); });
   }
 
+  public deleteDirec(direcId: string): Promise<void> {
+    return this.deleteT(this.direcStore, direcId);
+  }
+
   public deletePlace(placeId: string): Promise<void> {
-    return this.deleteT(this.places, placeId);
+    return this.deleteT(this.placeStore, placeId);
   }
 
   public deleteRoute(routeId: string): Promise<void> {
-    return this.deleteT(this.routes, routeId);
-  }
-
-  public deleteDirec(direcId: string): Promise<void> {
-    return this.deleteT(this.direcs, direcId);
+    return this.deleteT(this.routeStore, routeId);
   }
 }

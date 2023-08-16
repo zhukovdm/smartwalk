@@ -93,48 +93,59 @@ export interface IMap {
 }
 
 /**
- * Wraps CRUD operations over an arbitrary object storage.
+ * Standard operations over an arbitrary object storage.
  */
 export interface IStorage {
 
   /** In-memory storage. */
-  inmem(): boolean;
+  mem(): boolean;
 
   /** Data are persisted locally. */
-  local(): boolean;
+  loc(): boolean;
 
   /** Remote storage, such as Solid. */
-  remote(): boolean;
+  rem(): boolean;
 
-  // [C]reate
+  /** Initialization procedure. */
+  init(): Promise<void>;
+
+  // create
+
+  createDirec(direc: StoredDirec): Promise<void>;
 
   createPlace(place: StoredPlace): Promise<void>;
 
   createRoute(route: StoredRoute): Promise<void>;
 
-  createDirec(direc: StoredDirec): Promise<void>;
+  // get identifiers
 
-  // [R]ead
+  getDirecIdentifiers(): Promise<string[]>;
 
-  getAllPlaces(): Promise<StoredPlace[]>;
+  getPlaceIdentifiers(): Promise<string[]>;
 
-  getAllRoutes(): Promise<StoredRoute[]>;
+  getRouteIdentifiers(): Promise<string[]>;
 
-  getAllDirecs(): Promise<StoredDirec[]>;
+  // get by identifier
 
-  // [U]pdate
+  getDirec(direcId: string): Promise<StoredDirec | undefined>;
+
+  getPlace(placeId: string): Promise<StoredPlace | undefined>;
+
+  getRoute(routeId: string): Promise<StoredRoute | undefined>;
+
+  // update
+
+  updateDirec(direc: StoredDirec): Promise<void>;
 
   updatePlace(place: StoredPlace): Promise<void>;
 
   updateRoute(route: StoredRoute): Promise<void>;
 
-  updateDirec(direc: StoredDirec): Promise<void>;
+  // delete
 
-  // [D]elete
+  deleteDirec(direcId: string): Promise<void>;
 
   deletePlace(placeId: string): Promise<void>;
 
   deleteRoute(routeId: string): Promise<void>;
-
-  deleteDirec(direcId: string): Promise<void>;
 }

@@ -7,15 +7,12 @@ import {
   getUrlAll,
   overwriteFile
 } from "@inrupt/solid-client";
-import {
-  fetch,
-  getDefaultSession
-} from "@inrupt/solid-client-authn-browser";
+import { fetch } from "@inrupt/solid-client-authn-browser";
 import namespace from "@rdfjs/namespace";
 import {
+  StoredDirec,
   StoredPlace,
-  StoredRoute,
-  StoredDirec
+  StoredRoute
 } from "../domain/types";
 import { IStorage } from "../domain/interfaces";
 import StorageErrorGenerator from "./storageErrorGenerator";
@@ -29,47 +26,65 @@ const ns = {
  */
 export default class SolidStorage implements IStorage {
 
-  // HTTP
+  private static readonly EMPTY_STRING = "";
+
+  // http
 
   private static readonly content = "application/json";
 
-  // URL
+  // url
 
-  private static readonly dir = "grainpath/";
+  private static readonly dir = "smartwalk/";
 
+  private static readonly direcs = "direcs/";
   private static readonly places = "places/";
   private static readonly routes = "routes/";
-  private static readonly direcs = "direcs/";
 
-  private readonly storage: string;
+  private readonly storageUrl: string;
 
-  private getDir(what: string): string {
-    return `${this.storage}${SolidStorage.dir}${what}`;
+  private getDirUrl(what: string): string {
+    return `${this.storageUrl}${SolidStorage.dir}${what}`;
   }
 
-  private getPlacesDir(): string { return this.getDir(SolidStorage.places); }
+  private getDirecsDirUrl(): string {
+    return this.getDirUrl(SolidStorage.direcs);
+  }
 
-  private getRoutesDir(): string { return this.getDir(SolidStorage.routes); }
+  private getPlacesDirUrl(): string {
+    return this.getDirUrl(SolidStorage.places);
+  }
 
-  private getDirecsDir(): string { return this.getDir(SolidStorage.direcs); }
+  private getRoutesDirUrl(): string {
+    return this.getDirUrl(SolidStorage.routes);
+  }
 
-  // Init
+  private static getItemUrl(dirUrl: string, itemId: string) {
+    return `${dirUrl}${itemId}.json`;
+  }
 
-  constructor(storage: string) { this.storage = storage; }
+  constructor(storageUrl: string) {
+    this.storageUrl = storageUrl;
+  }
 
-  public inmem(): boolean { return false; }
+  public mem(): boolean {
+    return false;
+  }
 
-  public local(): boolean { return false; }
+  public loc(): boolean {
+    return false;
+  }
 
-  public remote(): boolean { return true; }
+  public rem(): boolean {
+    return true;
+  }
 
-  /**
-   * Initialize storage:
-   * 
-   *  - ensure containers exist.
-   */
-  public async init(): Promise<SolidStorage> {
-    const dirs = [this.getPlacesDir(), this.getRoutesDir(), this.getDirecsDir()];
+  public async init(): Promise<void> {
+    const dirs = [
+      this.getDirecsDirUrl(),
+      this.getPlacesDirUrl(),
+      this.getRoutesDirUrl()
+    ];
+
     for (const dir of dirs) {
       try {
         await getSolidDataset(dir, { fetch: fetch });
@@ -80,131 +95,117 @@ export default class SolidStorage implements IStorage {
         }
         catch (ex) {
           console.log(ex);
-          throw StorageErrorGenerator.generateSolidErrorCont(dir);
+          throw StorageErrorGenerator.generateSolidErrorInit(dir);
         }
       }
     }
-    return this;
   }
 
-  // List
+  // overwrite
 
-  public async getList(url: string, what: string): Promise<string[]> {
+  private static async overwriteT<T>(url: string, item: T, action: "create" | "update"): Promise<void> {
     try {
-      const ds = await getSolidDataset(url, { fetch: fetch });
-      return getUrlAll(getThing(ds, url)!, ns.ldp.contains);
+      await overwriteFile(
+        url,
+        new Blob([JSON.stringify(item)], { type: SolidStorage.content }),
+        { contentType: SolidStorage.content, fetch: fetch }
+      )
     }
     catch (ex) {
       console.log(ex);
-      throw StorageErrorGenerator.generateSolidErrorList(url, what);
+      throw StorageErrorGenerator.generateSolidErrorAction(action, url);
     }
   }
 
-  public async getPlacesList(): Promise<string[]> {
-    return this.getList(this.getPlacesDir(), "places");
+  // create
+
+  public createDirec(direc: StoredDirec): Promise<void> {
+    return SolidStorage.overwriteT(
+      SolidStorage.getItemUrl(this.getDirecsDirUrl(), direc.direcId), direc, "create");
   }
 
-  public async getRoutesList(): Promise<string[]> {
-    return this.getList(this.getRoutesDir(), "routes");
+  public createPlace(place: StoredPlace): Promise<void> {
+    return SolidStorage.overwriteT(
+      SolidStorage.getItemUrl(this.getPlacesDirUrl(), place.placeId), place, "create");
   }
 
-  public async getDirecsList(): Promise<string[]> {
-    return this.getList(this.getDirecsDir(), "direcs");
+  public createRoute(route: StoredRoute): Promise<void> {
+    return SolidStorage.overwriteT(
+      SolidStorage.getItemUrl(this.getRoutesDirUrl(), route.routeId), route, "create");
   }
 
-  // Overwrite
+  // get identifiers
 
-  private static async overwriteT<T>(url: string, item: T, action: "create" | "update"): Promise<void> {
-    const session = getDefaultSession();
-    if (session.info.isLoggedIn) {
-      try {
-        await overwriteFile(
-          url,
-          new Blob([JSON.stringify(item)], { type: SolidStorage.content }),
-          { contentType: SolidStorage.content, fetch: fetch }
-        )
-      }
-      catch (ex) {
-        console.log(ex);
-        throw StorageErrorGenerator.generateSolidErrorX(url, action);
-      }
+  public static async getTIdentifiers(url: string, what: string): Promise<string[]> {
+    try {
+      const ds = await getSolidDataset(url, { fetch: fetch });
+      return getUrlAll(getThing(ds, url)!, ns.ldp.contains)
+        .map((absUrl) => absUrl.replace(url, this.EMPTY_STRING).replace(".json", this.EMPTY_STRING));
+    }
+    catch (ex) {
+      console.log(ex);
+      throw StorageErrorGenerator.generateSolidErrorGetIdentifiers(what, url);
     }
   }
 
-  // [C]reate
-
-  public async createPlace(place: StoredPlace): Promise<void> {
-    return SolidStorage.overwriteT(
-      `${this.getPlacesDir()}${place.placeId}.json`, place, "create");
+  public getDirecIdentifiers(): Promise<string[]> {
+    return SolidStorage.getTIdentifiers(this.getDirecsDirUrl(), "direc");
   }
 
-  public async createRoute(route: StoredRoute): Promise<void> {
-    return SolidStorage.overwriteT(
-      `${this.getRoutesDir()}${route.routeId}.json`, route, "create");
+  public getPlaceIdentifiers(): Promise<string[]> {
+    return SolidStorage.getTIdentifiers(this.getPlacesDirUrl(), "place");
   }
 
-  public async createDirec(direc: StoredDirec): Promise<void> {
-    return SolidStorage.overwriteT(
-      `${this.getDirecsDir()}${direc.direcId}.json`, direc, "create");
+  public getRouteIdentifiers(): Promise<string[]> {
+    return SolidStorage.getTIdentifiers(this.getRoutesDirUrl(), "route");
   }
 
-  // [R]ead
+  // get by identifier
 
-  public static async readT<T>(url: string): Promise<T> {
+  public static async getT<T>(url: string): Promise<T> {
     try {
       const blob = await getFile(url, { fetch: fetch });
       return JSON.parse(await blob.text());
     }
     catch (ex) {
       console.log(ex);
-      throw StorageErrorGenerator.generateSolidErrorX(url, "read");
+      throw StorageErrorGenerator.generateSolidErrorAction("get", url);
     }
   }
 
-  public async getPlace(placeUrl: string): Promise<StoredPlace> {
-    return SolidStorage.readT(placeUrl);
+  public getDirec(direcId: string): Promise<StoredDirec> {
+    return SolidStorage.getT(
+      SolidStorage.getItemUrl(this.getDirecsDirUrl(), direcId));
   }
 
-  public async getRoute(routeUrl: string): Promise<StoredRoute> {
-    return SolidStorage.readT(routeUrl);
+  public getPlace(placeId: string): Promise<StoredPlace> {
+    return SolidStorage.getT(
+      SolidStorage.getItemUrl(this.getPlacesDirUrl(), placeId));
   }
 
-  public async getDirec(direcUrl: string): Promise<StoredDirec> {
-    return SolidStorage.readT(direcUrl);
+  public getRoute(routeId: string): Promise<StoredRoute> {
+    return SolidStorage.getT(
+      SolidStorage.getItemUrl(this.getRoutesDirUrl(), routeId));
   }
 
-  // [R]ead All, not used!
+  // update
 
-  public getAllPlaces(): Promise<StoredPlace[]> {
-    throw new Error("Method not implemented.");
+  public updateDirec(direc: StoredDirec): Promise<void> {
+    return SolidStorage.overwriteT(
+      SolidStorage.getItemUrl(this.getDirecsDirUrl(), direc.direcId), direc, "update");
   }
-
-  public getAllRoutes(): Promise<StoredRoute[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  public getAllDirecs(): Promise<StoredDirec[]> {
-    throw new Error("Method not implemented.");
-  }
-
-  // [U]pdate
 
   public updatePlace(place: StoredPlace): Promise<void> {
     return SolidStorage.overwriteT(
-      `${this.getPlacesDir()}${place.placeId}.json`, place, "update");
+      SolidStorage.getItemUrl(this.getPlacesDirUrl(), place.placeId), place, "update");
   }
 
   public updateRoute(route: StoredRoute): Promise<void> {
     return SolidStorage.overwriteT(
-      `${this.getRoutesDir()}${route.routeId}.json`, route, "update");
+      SolidStorage.getItemUrl(this.getRoutesDirUrl(), route.routeId), route, "update");
   }
 
-  public updateDirec(direc: StoredDirec): Promise<void> {
-    return SolidStorage.overwriteT(
-      `${this.getDirecsDir()}${direc.direcId}.json`, direc, "update");
-  }
-
-  // [D]elete
+  // delete
 
   private static async deleteT(url: string): Promise<void> {
     try {
@@ -212,19 +213,22 @@ export default class SolidStorage implements IStorage {
     }
     catch (ex) {
       console.log(ex);
-      throw StorageErrorGenerator.generateSolidErrorX(url, "delete");
+      throw StorageErrorGenerator.generateSolidErrorAction("delete", url);
     }
   }
 
+  public deleteDirec(direcId: string): Promise<void> {
+    return SolidStorage.deleteT(
+      SolidStorage.getItemUrl(this.getDirecsDirUrl(), direcId));
+  }
+
   public deletePlace(placeId: string): Promise<void> {
-    return SolidStorage.deleteT(`${this.getPlacesDir()}${placeId}.json`);
+    return SolidStorage.deleteT(
+      SolidStorage.getItemUrl(this.getPlacesDirUrl(), placeId));
   }
 
   public deleteRoute(routeId: string): Promise<void> {
-    return SolidStorage.deleteT(`${this.getRoutesDir()}${routeId}.json`);
-  }
-
-  public deleteDirec(direcId: string): Promise<void> {
-    return SolidStorage.deleteT(`${this.getDirecsDir()}${direcId}.json`);
+    return SolidStorage.deleteT(
+      SolidStorage.getItemUrl(this.getRoutesDirUrl(), routeId));
   }
 }

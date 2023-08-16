@@ -12,69 +12,131 @@ import StorageErrorGenerator from "./storageErrorGenerator";
  */
 export default class LocalStorage implements IStorage {
 
-  private static db = "grainpath";
+  private static db = "smartwalk";
 
   private static places = "places";
   private static routes = "routes";
   private static direcs = "direcs";
 
-  private static getDb(e: Event) { return (e.target as IDBOpenDBRequest).result; }
-
-  private mock?: IStorage = undefined;
-
-  constructor() {
-    const request = indexedDB.open(LocalStorage.db);
-    request.onupgradeneeded = function (e) {
-      const db = (e.target as IDBOpenDBRequest).result;
-      db.createObjectStore(LocalStorage.places, { keyPath: "placeId" });
-      db.createObjectStore(LocalStorage.routes, { keyPath: "routeId" });
-      db.createObjectStore(LocalStorage.direcs, { keyPath: "direcId" });
-    }
-    request.onerror = () => { this.mock = new InmemStorage(); }
+  private static getDb(e: Event) {
+    return (e.target as IDBOpenDBRequest).result;
   }
 
-  public inmem(): boolean { return !!this.mock; }
+  private mock?: IStorage = new InmemStorage();
 
-  public local(): boolean { return !this.mock; }
+  public mem(): boolean {
+    return !!this.mock;
+  }
 
-  public remote(): boolean { return false; }
+  public loc(): boolean {
+    return !this.mock;
+  }
 
-  // [C]reate
+  public rem(): boolean {
+    return false;
+  }
 
-  private static createT<T>(store: string, item: T): Promise<void> {
+  public init(): Promise<void> {
+    const request = indexedDB.open(LocalStorage.db);
+
+    request.onupgradeneeded = (evt) => {
+      const db = (evt.target as IDBOpenDBRequest).result;
+      db.createObjectStore(LocalStorage.direcs, { keyPath: "direcId" });
+      db.createObjectStore(LocalStorage.places, { keyPath: "placeId" });
+      db.createObjectStore(LocalStorage.routes, { keyPath: "routeId" });
+    };
+
     return new Promise((res, rej) => {
-      const r1 = indexedDB.open(LocalStorage.db);
-      r1.onsuccess = (evt) => {
-        const r2 = LocalStorage
-          .getDb(evt)
-          .transaction(store, "readwrite")
-          .objectStore(store)
-          .add(item);
-        r2.onsuccess = () => { res(); };
-        r2.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorCreate()); };
+      request.onsuccess = () => {
+        this.mock = undefined; res();
       };
-      r1.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorOpen()); };
+      request.onerror = () => {
+        rej();
+      };
     });
   }
 
-  public createPlace(place: StoredPlace): Promise<void> {
-    return this.mock?.createPlace(place)
-      ?? LocalStorage.createT(LocalStorage.places, place);
-  }
+  // create
 
-  public createRoute(route: StoredRoute): Promise<void> {
-    return this.mock?.createRoute(route)
-      ?? LocalStorage.createT(LocalStorage.routes, route);
+  private static createT<T>(store: string, item: T, itemId: string): Promise<void> {
+    return new Promise((res, rej) => {
+      const r1 = indexedDB.open(this.db);
+      r1.onsuccess = (e) => {
+        const r2 = this
+          .getDb(e)
+          .transaction(store, "readwrite")
+          .objectStore(store)
+          .add(item);
+        r2.onsuccess = () => {
+          res();
+        };
+        r2.onerror = () => {
+          rej(StorageErrorGenerator.generateLocalErrorAction("create", itemId, store));
+        };
+      };
+      r1.onerror = () => {
+        rej(StorageErrorGenerator.generateLocalErrorOpen());
+      };
+    });
   }
 
   public createDirec(direc: StoredDirec): Promise<void> {
     return this.mock?.createDirec(direc)
-      ?? LocalStorage.createT(LocalStorage.direcs, direc);
+      ?? LocalStorage.createT(LocalStorage.direcs, direc, direc.direcId);
   }
 
-  // [R]ead All
+  public createPlace(place: StoredPlace): Promise<void> {
+    return this.mock?.createPlace(place)
+      ?? LocalStorage.createT(LocalStorage.places, place, place.placeId);
+  }
 
-  private static getAllT<T>(store: string): Promise<T[]> {
+  public createRoute(route: StoredRoute): Promise<void> {
+    return this.mock?.createRoute(route)
+      ?? LocalStorage.createT(LocalStorage.routes, route, route.routeId);
+  }
+
+  // get identifiers
+
+  private static getTIdentifiers(store: string): Promise<string[]> {
+    return new Promise((res, rej) => {
+      const r1 = indexedDB.open(this.db);
+      r1.onsuccess = (e) => {
+        const r2 = this
+          .getDb(e)
+          .transaction(store)
+          .objectStore(store)
+          .getAllKeys();
+        r2.onsuccess = (e) => {
+          res((e.target as IDBRequest<string[]>).result);
+        }
+        r2.onerror = () => {
+          rej(StorageErrorGenerator.generateLocalErrorGetIdentifiers(store));
+        }
+      };
+      r1.onerror = () => {
+        rej(StorageErrorGenerator.generateLocalErrorOpen());
+      };
+    });
+  }
+
+  public getDirecIdentifiers(): Promise<string[]> {
+    return this.mock?.getDirecIdentifiers()
+      ?? LocalStorage.getTIdentifiers(LocalStorage.direcs);
+  }
+
+  public getPlaceIdentifiers(): Promise<string[]> {
+    return this.mock?.getPlaceIdentifiers()
+      ?? LocalStorage.getTIdentifiers(LocalStorage.places);
+  }
+
+  public getRouteIdentifiers(): Promise<string[]> {
+    return this.mock?.getRouteIdentifiers()
+      ?? LocalStorage.getTIdentifiers(LocalStorage.routes);
+  }
+
+  // get by identifier
+
+  private static getT<T>(store: string, itemId: string): Promise<T | undefined> {
     return new Promise((res, rej) => {
       const r1 = indexedDB.open(LocalStorage.db);
       r1.onsuccess = (evt) => {
@@ -82,32 +144,38 @@ export default class LocalStorage implements IStorage {
           .getDb(evt)
           .transaction(store)
           .objectStore(store)
-          .getAll();
-        r2.onsuccess = (e) => { res((e.target as IDBRequest<T[]>).result); };
-        r2.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorGetAll(store)); };
+          .get(itemId);
+        r2.onsuccess = (e) => {
+          res((e.target as IDBRequest<T | undefined>).result);
+        };
+        r2.onerror = () => {
+          rej(StorageErrorGenerator.generateLocalErrorAction("get", itemId, store));
+        };
       };
-      r1.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorOpen()); }
+      r1.onerror = () => {
+        rej(StorageErrorGenerator.generateLocalErrorOpen());
+      }
     });
   }
 
-  public getAllPlaces(): Promise<StoredPlace[]> {
-    return this.mock?.getAllPlaces()
-      ?? LocalStorage.getAllT(LocalStorage.places);
+  public getDirec(direcId: string): Promise<StoredDirec | undefined> {
+    return this.mock?.getDirec(direcId)
+      ?? LocalStorage.getT(LocalStorage.direcs, direcId);
   }
 
-  public getAllRoutes(): Promise<StoredRoute[]> {
-    return this.mock?.getAllRoutes()
-      ?? LocalStorage.getAllT(LocalStorage.routes);
+  public getPlace(placeId: string): Promise<StoredPlace | undefined> {
+    return this.mock?.getPlace(placeId)
+      ?? LocalStorage.getT(LocalStorage.places, placeId);
   }
 
-  public getAllDirecs(): Promise<StoredDirec[]> {
-    return this.mock?.getAllDirecs()
-      ?? LocalStorage.getAllT(LocalStorage.direcs);
+  public getRoute(routeId: string): Promise<StoredRoute | undefined> {
+    return this.mock?.getRoute(routeId)
+      ?? LocalStorage.getT(LocalStorage.routes, routeId);
   }
 
-  // [U]pdate
+  // update
 
-  private updateT<T>(store: string, item: T): Promise<void> {
+  private static updateT<T>(store: string, item: T, itemId: string): Promise<void> {
     return new Promise((res, rej) => {
       const r1 = indexedDB.open(LocalStorage.db);
       r1.onsuccess = (evt) => {
@@ -116,31 +184,37 @@ export default class LocalStorage implements IStorage {
           .transaction(store, "readwrite")
           .objectStore(store)
           .put(item)
-        r2.onsuccess = () => { res(); };
-        r2.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorUpdate()); };
+        r2.onsuccess = () => {
+          res();
+        };
+        r2.onerror = () => {
+          rej(StorageErrorGenerator.generateLocalErrorAction("update", itemId, store));
+        };
       }
-      r1.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorOpen()); };
+      r1.onerror = () => {
+        rej(StorageErrorGenerator.generateLocalErrorOpen());
+      };
     });
-  }
-
-  public updatePlace(place: StoredPlace): Promise<void> {
-    return this.mock?.updatePlace(place)
-      ?? this.updateT(LocalStorage.places, place);
-  }
-
-  public updateRoute(route: StoredRoute): Promise<void> {
-    return this.mock?.updateRoute(route)
-      ?? this.updateT(LocalStorage.routes, route);
   }
 
   public updateDirec(direc: StoredDirec): Promise<void> {
     return this.mock?.updateDirec(direc)
-      ?? this.updateT(LocalStorage.direcs, direc);
+      ?? LocalStorage.updateT(LocalStorage.direcs, direc, direc.direcId);
   }
 
-  // [D]elete
+  public updatePlace(place: StoredPlace): Promise<void> {
+    return this.mock?.updatePlace(place)
+      ?? LocalStorage.updateT(LocalStorage.places, place, place.placeId);
+  }
 
-  private deleteT(store: string, itemId: string): Promise<void> {
+  public updateRoute(route: StoredRoute): Promise<void> {
+    return this.mock?.updateRoute(route)
+      ?? LocalStorage.updateT(LocalStorage.routes, route, route.routeId);
+  }
+
+  // delete
+
+  private static deleteT(store: string, itemId: string): Promise<void> {
     return new Promise((res, rej) => {
       const r1 = indexedDB.open(LocalStorage.db);
       r1.onsuccess = (evt) => {
@@ -149,25 +223,31 @@ export default class LocalStorage implements IStorage {
           .transaction(store, "readwrite")
           .objectStore(store)
           .delete(itemId)
-        r2.onsuccess = () => { res(); };
-        r2.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorDelete()); };
+        r2.onsuccess = () => {
+          res();
+        };
+        r2.onerror = () => {
+          rej(StorageErrorGenerator.generateLocalErrorAction("delete", itemId, store));
+        };
       }
-      r1.onerror = () => { rej(StorageErrorGenerator.generateLocalErrorOpen()); };
+      r1.onerror = () => {
+        rej(StorageErrorGenerator.generateLocalErrorOpen());
+      };
     });
-  }
-
-  public deletePlace(placeId: string): Promise<void> {
-    return this.mock?.deletePlace(placeId)
-      ?? this.deleteT(LocalStorage.places, placeId);
-  }
-
-  public deleteRoute(routeId: string): Promise<void> {
-    return this.mock?.deleteRoute(routeId)
-      ?? this.deleteT(LocalStorage.routes, routeId);
   }
 
   public deleteDirec(direcId: string): Promise<void> {
     return this.mock?.deleteDirec(direcId)
-      ?? this.deleteT(LocalStorage.direcs, direcId);
+      ?? LocalStorage.deleteT(LocalStorage.direcs, direcId);
+  }
+
+  public deletePlace(placeId: string): Promise<void> {
+    return this.mock?.deletePlace(placeId)
+      ?? LocalStorage.deleteT(LocalStorage.places, placeId);
+  }
+
+  public deleteRoute(routeId: string): Promise<void> {
+    return this.mock?.deleteRoute(routeId)
+      ?? LocalStorage.deleteT(LocalStorage.routes, routeId);
   }
 }
