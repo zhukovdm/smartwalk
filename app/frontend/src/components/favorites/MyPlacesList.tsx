@@ -14,8 +14,8 @@ import {
   deleteFavoritePlace
 } from "../../features/favoritesSlice";
 import { setViewerPlace } from "../../features/viewerSlice";
-import { PlaceButton } from "../shared/buttons";
-import { BusyListItem } from "../shared/list-items";
+import { PlaceButton } from "../shared/_buttons";
+import { BusyListItem } from "../shared/_list-items";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
 import UpdateSomethingDialog from "./UpdateSomethingDialog";
 import ListItemMenu from "./ListItemMenu";

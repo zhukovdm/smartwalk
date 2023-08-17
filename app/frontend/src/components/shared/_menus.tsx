@@ -16,14 +16,14 @@ import {
   IconButton
 } from "@mui/material";
 import {
-  FAVOURITES_ADDR,
+  FAVORITES_ADDR,
   HOME_ADDR,
   SEARCH_DIRECS_ADDR,
   SEARCH_PLACES_ADDR,
   SEARCH_ROUTES_ADDR
-} from "../../../domain/routing";
-import { useAppDispatch, useAppSelector } from "../../../features/hooks";
-import { hidePanel } from "../../../features/panelSlice";
+} from "../../domain/routing";
+import { useAppDispatch, useAppSelector } from "../../features/store";
+import { hidePanel } from "../../features/panelSlice";
 
 /**
  * Upper menu with `home` and `close` buttons.
@@ -132,7 +132,7 @@ export function MainMenu({ panel }: MainMenuProps): JSX.Element {
           label="Favourites"
           icon={<Favorite />}
           disabled={block}
-          onClick={() => { navigate(FAVOURITES_ADDR); }}
+          onClick={() => { navigate(FAVORITES_ADDR); }}
         />
       </BottomNavigation>
     </Box>

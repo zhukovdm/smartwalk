@@ -7,7 +7,7 @@ import {
   SxProps,
   Typography
 } from "@mui/material";
-import { SomethingKind } from "../shared/types";
+import { SomethingKind } from "../shared/_types";
 
 type FavoriteStubProps = {
 

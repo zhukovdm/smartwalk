@@ -17,8 +17,8 @@ import {
   deleteFavoriteRoute,
   updateFavoriteRoute
 } from "../../features/favoritesSlice";
-import { RouteButton } from "../shared/buttons";
-import { BusyListItem } from "../shared/list-items";
+import { RouteButton } from "../shared/_buttons";
+import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import UpdateSomethingDialog from "./UpdateSomethingDialog";

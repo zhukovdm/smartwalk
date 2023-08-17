@@ -1,7 +1,7 @@
 import { ReactElement } from "react";
 import { Box, Stack, Typography } from "@mui/material";
-import { PlaceKind } from "../types";
-import { DeleteButton, PlaceButton } from "../buttons";
+import { PlaceKind } from "./_types";
+import { DeleteButton, PlaceButton } from "./_buttons";
 
 type ListItemLabelProps = {
 

@@ -21,7 +21,7 @@ import {
 import {
   FreePlaceListItem,
   RemovablePlaceListItem
-} from "../shared/list-items";
+} from "../shared/_list-items";
 import { LoadingButton } from "@mui/lab";
 import { Save } from "@mui/icons-material";
 

@@ -4,7 +4,7 @@ import { Alert, Box, CircularProgress } from "@mui/material";
 import { AppContext } from "../App";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { useAppSelector } from "../features/store";
-import { BackCloseMenu } from "./shared/menus";
+import { BackCloseMenu } from "./shared/_menus";
 import PlaceContent from "./entity/PlaceContent";
 
 /**

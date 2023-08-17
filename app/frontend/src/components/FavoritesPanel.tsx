@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Stack } from "@mui/material";
-import { LogoCloseMenu, MainMenu } from "./shared/menus";
+import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import StorageSection from "./favorites/StorageSection";
 import MyDirecsSection from "./favorites/MyDirecsSection";
 import MyPlacesSection from "./favorites/MyPlacesSection";

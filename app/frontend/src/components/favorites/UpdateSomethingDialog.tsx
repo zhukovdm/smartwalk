@@ -13,7 +13,7 @@ import { LoadingButton } from "@mui/lab";
 import { Save } from "@mui/icons-material";
 import { useAppDispatch, useAppSelector } from "../../features/store";
 import { setDialogBlock } from "../../features/panelSlice";
-import { SomethingKind } from "../shared/types";
+import { SomethingKind } from "../shared/_types";
 
 type UpdateSomethingDialogProps = {
 
