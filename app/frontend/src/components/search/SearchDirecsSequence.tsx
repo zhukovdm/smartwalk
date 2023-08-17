@@ -16,20 +16,20 @@ import { DragIndicator } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
 import { point2place } from "../../utils/helpers";
-import { useAppDispatch } from "../../features/hooks";
+import { useAppDispatch } from "../../features/store";
 import {
   appendSearchDirecsPlace,
   deleteSearchDirecsPlace,
   fromtoSearchDirecsPlace,
-  setSearchDirecsSequence,
+  setSearchDirecsWaypoints,
   updateSearchDirecsPlace
 } from "../../features/searchDirecsSlice";
 import {
   DeleteButton,
   PlaceButton,
   SwapButton
-} from "../shared/buttons";
-import { ListItemLabel } from "../shared/list-items";
+} from "../shared/_buttons";
+import { ListItemLabel } from "../shared/_list-items";
 import SelectPlaceDialog from "../shared/SelectPlaceDialog";
 
 /**
@@ -63,15 +63,24 @@ type DirectControlListItemProps = {
 function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProps): JSX.Element {
 
   return (
-    <Stack direction="row" gap={0.5} color="gray">
+    <Stack
+      color={"gray"}
+      direction={"row"}
+      gap={0.5}
+    >
       <div style={{ display: "flex", alignItems: "center" }}>
         <DragIndicator />
       </div>
-      <Stack direction="row" gap={0.5} onClick={onAppend} sx={{ width: "100%", cursor: "pointer" }}>
-        <PlaceButton kind="custom" onPlace={() => { }} />
+      <Stack
+        direction={"row"}
+        gap={0.5}
+        onClick={onAppend}
+        sx={{ width: "100%", cursor: "pointer" }}
+      >
+        <PlaceButton kind={"adding"} onPlace={() => { }} />
         <ListItemLabel label={"Append point..."} />
       </Stack>
-      <SwapButton onSwap={onRevers} title="Reverse" />
+      <SwapButton onSwap={onRevers} title={"Reverse"} />
     </Stack>
   );
 }
@@ -137,8 +146,8 @@ export default function SearchDirecsSequence({ sequence }: SearchDirecsSequenceP
     map?.clear();
     sequence.forEach((place, i) => {
       place.placeId
-        ? map?.addStored(place)
-        : map?.addCustom(place, true).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
+        ? map?.addStored(place, [])
+        : map?.addCommon(place, [], true).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
     });
   }, [map, dispatch, sequence]);
 
@@ -161,11 +170,12 @@ export default function SearchDirecsSequence({ sequence }: SearchDirecsSequenceP
       </DragDropContext>
       <DirecsControlListItem
         onAppend={() => { setSelectDialog(true); }}
-        onRevers={() => { dispatch(setSearchDirecsSequence([...sequence].reverse())); }}
+        onRevers={() => { dispatch(setSearchDirecsWaypoints([...sequence].reverse())); }}
       />
       {selectDialog &&
         <SelectPlaceDialog
-          kind="custom"
+          show={selectDialog}
+          kind={"custom"}
           onHide={() => { setSelectDialog(false); }}
           onSelect={(place) => { dispatch(appendSearchDirecsPlace(place)); }}
         />

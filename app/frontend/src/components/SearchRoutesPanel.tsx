@@ -12,25 +12,22 @@ import { AppContext } from "../App";
 import { RESULT_ROUTES_ADDR, SEARCH_ROUTES_ADDR } from "../domain/routing";
 import { point2place } from "../utils/helpers";
 import { SmartWalkFetcher } from "../utils/smartwalk";
-import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { useAppDispatch, useAppSelector } from "../features/store";
 import { setBlock } from "../features/panelSlice";
 import {
-  clearSearchRoutes,
-  deleteSearchRoutesCondition,
-  insertSearchRoutesCondition,
+  resetSearchRoutes,
+  deleteSearchRoutesCategory,
+  updateSearchRoutesCategory,
   setSearchRoutesDistance,
   setSearchRoutesSource,
   setSearchRoutesTarget,
 } from "../features/searchRoutesSlice";
-import {
-  setResultRoutesBack,
-  setResultRoutes
-} from "../features/resultRoutesSlice";
+import { setResultRoutes } from "../features/resultRoutesSlice";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem,
-} from "./shared/list-items";
-import { LogoCloseMenu, MainMenu } from "./shared/menus";
+} from "./shared/_list-items";
+import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import DistanceSlider from "./search/DistanceSlider";
 import KeywordsBox from "./search/KeywordsBox";
@@ -41,7 +38,7 @@ export default function SearchRoutesPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
-  const { source, target, distance, conditions } = useAppSelector(state => state.searchRoutes);
+  const { source, target, distance, categories } = useAppSelector(state => state.searchRoutes);
 
   const [sourceSelectDialog, setSourceSelectDialog] = useState(false);
   const [targetSelectDialog, setTargetSelectDialog] = useState(false);
@@ -50,15 +47,15 @@ export default function SearchRoutesPanel(): JSX.Element {
     map?.clear();
 
     if (source) {
-      (source.placeId || source.smartId)
-        ? (map?.addSource(source, false))
-        : (map?.addSource(source, true).withDrag(pt => dispatch(setSearchRoutesSource(point2place(pt)))));
+      (source.placeId)
+        ? map?.addSource(source, [], false)
+        : map?.addSource(source, [], true).withDrag(pt => dispatch(setSearchRoutesSource(point2place(pt))));
     }
 
     if (target) {
-      (target.placeId || target.smartId)
-        ? (map?.addTarget(target, false))
-        : (map?.addTarget(target, true).withDrag(pt => dispatch(setSearchRoutesTarget(point2place(pt)))));
+      (target.placeId)
+        ? map?.addTarget(target, [], false)
+        : map?.addTarget(target, [], true).withDrag(pt => dispatch(setSearchRoutesTarget(point2place(pt))));
     }
   }, [map, navigate, dispatch, source, target]);
 
@@ -67,73 +64,77 @@ export default function SearchRoutesPanel(): JSX.Element {
     dispatch(setSearchRoutesTarget(source));
   }
 
-  const searchAction = () => {
-    new Promise<void>((res, _) => { dispatch(setBlock(true)); res(); })
-      .then(() => SmartWalkFetcher.searchRoutes({
+  const searchAction = async () => {
+    try {
+      dispatch(setBlock(true));
+      const routes = await SmartWalkFetcher.searchRoutes({
         source: source!,
         target: target!,
         distance: distance,
-        conditions: conditions.map((c) => {
-          return { keyword: c.keyword, filters: c.filters };
-        })
-      }))
-      .then((res) => {
-        dispatch(setResultRoutes(res));
-        dispatch(setResultRoutesBack(SEARCH_ROUTES_ADDR));
-        navigate(RESULT_ROUTES_ADDR);
-      })
-      .catch((ex) => { alert(ex); })
-      .finally(() => { dispatch(setBlock(false)); });
+        categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters })),
+        precedence: []
+      });
+      dispatch(setResultRoutes(routes));
+      navigate(RESULT_ROUTES_ADDR);
+    }
+    catch (ex) { alert(ex); }
+    finally {
+      dispatch(setBlock(false));
+    }
   };
 
   return (
     <Box>
-      <LogoCloseMenu onLogo={() => { }} />
+      <LogoCloseMenu onLogo={() => {}} />
       <MainMenu panel={0} />
-      <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
+      <Stack
+        direction={"column"}
+        gap={4}
+        sx={{ mx: 2, my: 4 }}
+      >
         <Typography>Find routes between two points:</Typography>
-        <Stack direction="column" gap={1}>
-          <Stack direction="column" gap={2}>
+        <Stack direction={"column"} gap={1}>
+          <Stack direction={"column"} gap={2}>
             {(source)
               ? <RemovablePlaceListItem
-                  kind="source"
+                  kind={"source"}
                   label={source.name}
                   onPlace={() => { map?.flyTo(source); }}
                   onDelete={() => { dispatch(setSearchRoutesSource(undefined)); }}
                 />
               : <FreePlaceListItem
-                  kind="source"
-                  label="Select starting point..."
+                  kind={"source"}
+                  label={"Select starting point..."}
                   onPlace={() => { setSourceSelectDialog(true); }}
                 />
             }
             {(target)
               ? <RemovablePlaceListItem
-                  kind="target"
+                  kind={"target"}
                   label={target.name}
                   onPlace={() => { map?.flyTo(target); }}
                   onDelete={() => { dispatch(setSearchRoutesTarget(undefined)); }}
                 />
               : <FreePlaceListItem
-                  kind="target"
-                  label="Select destination..."
+                  kind={"target"}
+                  label={"Select destination..."}
                   onPlace={() => { setTargetSelectDialog(true); }}
                 />
             }
           </Stack>
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
+          <Box display={"flex"} justifyContent={"center"}>
             <Button
-              size="small"
+              size={"small"}
               startIcon={<SwapVert />}
               onClick={() => { swapAction(); }}
               sx={{ mt: 1, textTransform: "none" }}
             >
-              Swap points
+              <span>Swap points</span>
             </Button>
           </Box>
         </Stack>
         <Typography>
-          With maximum walking distance (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometres" underline="hover">km</Link>):
+          With maximum walking distance (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometers" underline="hover">km</Link>):
         </Typography>
         <DistanceSlider
           max={30}
@@ -143,28 +144,30 @@ export default function SearchRoutesPanel(): JSX.Element {
           dispatch={(value) => { dispatch(setSearchRoutesDistance(value)); }}
         />
         <Typography>
-          Visit places satisfying the following conditions:
+          Visit places from the following categories:
         </Typography>
         <KeywordsBox
-          conditions={conditions}
-          deleteCondition={(i) => dispatch(deleteSearchRoutesCondition(i))}
-          insertCondition={(condition, i) => dispatch(insertSearchRoutesCondition({ condition: condition, i: i }))}
+          categories={categories}
+          deleteCategory={(i) => dispatch(deleteSearchRoutesCategory(i))}
+          updateCategory={(category, i) => dispatch(updateSearchRoutesCategory({ category: category, i: i }))}
         />
         <BottomButtons
-          disabled={!source || !target || !(conditions.length > 0)}
-          onClear={() => { dispatch(clearSearchRoutes()); }}
+          disabled={!source || !target || !(categories.length > 0)}
+          onClear={() => { dispatch(resetSearchRoutes()); }}
           onSearch={() => { searchAction(); }}
         />
         {sourceSelectDialog &&
           <SelectPlaceDialog
-            kind="source"
+            show={sourceSelectDialog}
+            kind={"source"}
             onHide={() => setSourceSelectDialog(false)}
             onSelect={(place) => dispatch(setSearchRoutesSource(place))}
           />
         }
         {targetSelectDialog &&
           <SelectPlaceDialog
-            kind="target"
+            show={targetSelectDialog}
+            kind={"target"}
             onHide={() => setTargetSelectDialog(false)}
             onSelect={(place) => dispatch(setSearchRoutesTarget(place))}
           />

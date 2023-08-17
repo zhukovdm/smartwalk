@@ -10,21 +10,21 @@ import { AppContext } from "../App";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { point2place } from "../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { useAppDispatch, useAppSelector } from "../features/store";
 import { setBlock } from "../features/panelSlice";
-import { clearSearchPlaces } from "../features/searchPlacesSlice";
+import { resetSearchPlaces } from "../features/searchPlacesSlice";
 import { setResultPlaces } from "../features/resultPlacesSlice";
 import {
-  deleteSearchPlacesCondition,
-  insertSearchPlacesCondition,
+  deleteSearchPlacesCategory,
   setSearchPlacesCenter,
-  setSearchPlacesRadius
+  setSearchPlacesRadius,
+  updateSearchPlacesCategory
 } from "../features/searchPlacesSlice";
-import { LogoCloseMenu, MainMenu } from "./shared/menus";
+import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem
-} from "./shared/list-items";
+} from "./shared/_list-items";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import DistanceSlider from "./search/DistanceSlider";
 import KeywordsBox from "./search/KeywordsBox";
@@ -35,45 +35,49 @@ export default function SearchPlacesPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
-  const { center, radius, conditions } = useAppSelector(state => state.searchPlaces);
+  const { center, radius, categories } = useAppSelector(state => state.searchPlaces);
 
   const [selectDialog, setSelectDialog] = useState(false);
 
   useEffect(() => {
     map?.clear();
-    const meters = radius * 1000;
+    const meters = radius * 1000.0;
 
     if (center) {
-      (center.placeId || center.smartId)
-        ? (map?.addStored(center))
-        : (map?.addCustom(center, true).withDrag(pt => dispatch(setSearchPlacesCenter(point2place(pt)))).withCirc(map, meters));
+      (center.placeId)
+        ? map?.addStored(center, [])
+        : map?.addCommon(center, [], true).withDrag(pt => dispatch(setSearchPlacesCenter(point2place(pt)))).withCirc(map, meters);
 
       map?.drawCircle(center.location, meters);
     }
   }, [map, navigate, dispatch, center, radius]);
 
-  const searchAction = () => {
-    new Promise<void>((res, _) => { dispatch(setBlock(true)); res(); })
-      .then(() => SmartWalkFetcher.searchPlaces({
+  const searchAction = async () => {
+    try {
+      dispatch(setBlock(true));
+      const places = await SmartWalkFetcher.searchPlaces({
         center: center!,
         radius: radius,
-        categories: conditions.map((c) => {
-          return { keyword: c.keyword, filters: c.filters };
-        })
-      }))
-      .then((res) => {
-        dispatch(setResultPlaces(res));
-        navigate(RESULT_PLACES_ADDR);
-      })
-      .catch((ex) => { alert(ex); })
-      .finally(() => { dispatch(setBlock(false)); });
+        categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters }))
+      });
+      dispatch(setResultPlaces(places));
+      navigate(RESULT_PLACES_ADDR);
+    }
+    catch (ex) { alert(ex); }
+    finally {
+      dispatch(setBlock(false));
+    }
   };
 
   return (
     <Box>
-      <LogoCloseMenu onLogo={() => { }} />
+      <LogoCloseMenu onLogo={() => {}} />
       <MainMenu panel={1} />
-      <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
+      <Stack
+        direction={"column"}
+        gap={4}
+        sx={{ mx: 2, my: 4 }}
+      >
         <Box>
           <Typography>Find places around the center point:</Typography>
         </Box>
@@ -86,21 +90,21 @@ export default function SearchPlacesPanel(): JSX.Element {
                 onDelete={() => { dispatch(setSearchPlacesCenter(undefined)); }}
               />
             : <FreePlaceListItem
-                kind="center"
-                label="Select point..."
+                kind={"center"}
+                label={"Select point..."}
                 onPlace={() => { setSelectDialog(true); }}
               />
           }
         </Box>
         <Box>
           <Typography>
-            At a distance at most (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometres" underline="hover">km</Link>):
+            At a distance at most (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometers" underline="hover">km</Link>):
           </Typography>
         </Box>
         <Box>
           <DistanceSlider
-            max={12}
-            seq={[ 2, 4, 6, 8, 10 ]}
+            max={15}
+            seq={[ 3, 6, 9, 12 ]}
             step={0.1}
             distance={radius}
             dispatch={(value) => { dispatch(setSearchPlacesRadius(value)); }}
@@ -110,18 +114,19 @@ export default function SearchPlacesPanel(): JSX.Element {
           Satisfying the following conditions:
         </Typography>
         <KeywordsBox
-          conditions={conditions}
-          deleteCondition={(i) => dispatch(deleteSearchPlacesCondition(i))}
-          insertCondition={(condition, i) => dispatch(insertSearchPlacesCondition({ condition: condition, i: i }))}
+          categories={categories}
+          deleteCategory={(i) => dispatch(deleteSearchPlacesCategory(i))}
+          updateCategory={(category, i) => dispatch(updateSearchPlacesCategory({ category: category, i: i }))}
         />
         <BottomButtons
-          disabled={!center || !(conditions.length > 0)}
-          onClear={() => { dispatch(clearSearchPlaces()); }}
+          disabled={!center}
+          onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
         />
         {selectDialog &&
           <SelectPlaceDialog
-            kind="center"
+            show={selectDialog}
+            kind={"center"}
             onHide={() => { setSelectDialog(false); }}
             onSelect={(place) => { dispatch(setSearchPlacesCenter(place)) }}
           />

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Autocomplete, Stack, TextField } from "@mui/material";
 import { KeywordFilterCollect } from "../../domain/types";
-import { useAppSelector } from "../../features/hooks";
+import { useAppSelector } from "../../features/store";
 import KeywordFilterCheckBox from "./KeywordFilterCheckBox";
 
 type CollectAutocompleteProps = {
@@ -29,7 +29,7 @@ function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompletePr
       multiple
       fullWidth
       onChange={(_, v) => onChange(v)}
-      renderInput={(params) => <TextField {...params} label={label} /> }
+      renderInput={(params) => (<TextField {...params} label={label} />)}
     />
   )
 }
@@ -51,7 +51,7 @@ type KeywordFilterViewCollectProps = {
  */
 export default function KeywordFilterViewCollect({ label, setter, initial }: KeywordFilterViewCollectProps): JSX.Element {
 
-  const bound = (useAppSelector(state => state.panel.bounds) as any)[label] as string[];
+  const bound = (useAppSelector((state) => state.panel.bounds) as any)[label] as string[];
 
   const [check, setCheck] = useState(!!initial);
   const [includes, setIncludes] = useState(initial ? initial.inc : []);

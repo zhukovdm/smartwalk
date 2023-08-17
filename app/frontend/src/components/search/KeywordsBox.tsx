@@ -19,11 +19,11 @@ import {
 import { AppContext } from "../../App";
 import { KeywordAdviceItem, KeywordCategory } from "../../domain/types";
 import { SmartWalkFetcher } from "../../utils/smartwalk";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/store";
 import { setBounds } from "../../features/panelSlice";
 import KeywordFiltersList from "./KeywordFiltersList";
 
-type ConditionDialogProps = {
+type CategoryDialogProps = {
 
   /** Action hiding condition dialog. */
   onHide: () => void;
@@ -32,18 +32,18 @@ type ConditionDialogProps = {
   keywords: Set<string>;
 
   /** Either new, or existing condition. */
-  condition?: KeywordCategory;
+  category?: KeywordCategory;
 
-  /** Action inserting condition at `i`-position. */
-  insert: (condition: KeywordCategory) => void;
+  /** Action inserting category at `i`-position. */
+  insert: (category: KeywordCategory) => void;
 };
 
-function ConditionDialog({ condition: cond, keywords, onHide, insert }: ConditionDialogProps): JSX.Element {
+function CategoryDialog({ category, keywords, onHide, insert }: CategoryDialogProps): JSX.Element {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { autocs } = useContext(AppContext).grain;
+  const { adviceKeywords: autocs } = useContext(AppContext).smart;
   const { bounds } = useAppSelector(state => state.panel);
 
   const dispatch = useAppDispatch();
@@ -52,24 +52,46 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
   const [mount, setMount] = useState(true);
   const [error, setError] = useState(false);
 
-  const [value, setValue] = useState<KeywordAdviceItem | null>(cond ?? null);
+  const [value, setValue] = useState<KeywordAdviceItem | null>(category ?? null);
   const [loading, setLoading] = useState<boolean>(false);
   const [options, setOptions] = useState<KeywordAdviceItem[]>([]);
 
-  const filters = cond
-    ? structuredClone(cond.filters)
-    : { existens: {}, booleans: {}, numerics: {}, textuals: {}, collects: {} };
+  const filters = category ? structuredClone(category.filters) : {};
 
   // hard reset of the attribute component
   useEffect(() => { if (!mount) { setMount(true); } }, [mount]);
 
   // fetch bounds if not already present
   useEffect(() => {
-    if (!bounds) {
-      SmartWalkFetcher.adviceBounds()
-        .then((obj) => { if (obj) { dispatch(setBounds(obj)); } })
-        .catch((ex) => alert(ex));
-    }
+    let ignore = false;
+
+    const load = async () => {
+      try {
+        if (!bounds) {
+          const obj = await SmartWalkFetcher.adviceBounds();
+          if (obj) {
+            obj.capacity.min = Math.max(obj.capacity.min, 0);
+            obj.capacity.max = Math.min(obj.capacity.max, 500);
+  
+            obj.minimumAge.min = Math.max(obj.minimumAge.min, 0);
+            obj.minimumAge.max = Math.min(obj.minimumAge.max, 150);
+  
+            obj.rating.min = Math.max(obj.rating.min, 0);
+            obj.rating.max = Math.min(obj.rating.max, 5);
+  
+            obj.year.max = Math.min(obj.year.max, new Date().getFullYear());
+  
+            if (!ignore) {
+              dispatch(setBounds(obj));
+            }
+          }
+        }
+      }
+      catch (ex) { alert(ex); }
+    };
+
+    load();
+    return () => { ignore = true; };
   }, [dispatch, bounds]);
 
   // fetch autocomplete options based on the user input
@@ -95,15 +117,15 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
   };
 
   return (
-    <Dialog fullScreen={fullScreen} open>
-      <DialogTitle>Add condition</DialogTitle>
+    <Dialog open={true} fullScreen={fullScreen}>
+      <DialogTitle>Add category</DialogTitle>
       <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
         <DialogContentText>
           Enter a keyword that places should associate with.
         </DialogContentText>
         <Autocomplete
           value={value}
-          disabled={!!cond}
+          disabled={!!category}
           options={options}
           loading={loading}
           filterOptions={(x) => x}
@@ -115,16 +137,21 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
           }}
           onInputChange={(_, v) => { setInput(v); }}
           getOptionLabel={(o) => o.keyword ?? ""}
-          renderInput={(params) => {
-            return <TextField {...params} error={error} helperText={error ? "Keyword already appears in the box." : undefined} placeholder="Start typing..." />;
-          }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              error={error}
+              helperText={error ? "Keyword already appears in the box." : undefined}
+              placeholder={"Start typing..."}
+            />
+          )}
           isOptionEqualToValue={(o, v) => { return o.keyword === v.keyword }}
         />
         <DialogContentText>
           Select (optional) attributes to customize this condition further.
         </DialogContentText>
         { (!error && mount && value)
-          ? (<KeywordFiltersList autoc={value} filters={filters} />)
+          ? (<KeywordFiltersList adviceItem={value} filters={filters} />)
           : (<Alert severity="info">Attributes are keyword-specific.</Alert>)
         }
       </DialogContent>
@@ -138,45 +165,60 @@ function ConditionDialog({ condition: cond, keywords, onHide, insert }: Conditio
 
 type KeywordsBoxProps = {
 
-  /** List of already added  conditions. */
-  conditions: KeywordCategory[];
+  /** List of already added categories. */
+  categories: KeywordCategory[];
 
-  /** Action deleting condition at `i`-position. */
-  deleteCondition: (i: number) => void;
+  /** Action deleting the category at `i`-position. */
+  deleteCategory: (i: number) => void;
 
   /** Action inserting new condition at `i`-position. */
-  insertCondition: (condition: KeywordCategory, i: number) => void;
+  updateCategory: (category: KeywordCategory, i: number) => void;
 };
 
 /**
  * Component rendering box with removable keywords.
  */
-export default function KeywordsBox({ conditions, deleteCondition, insertCondition }: KeywordsBoxProps): JSX.Element {
+export default function KeywordsBox(
+  { categories, deleteCategory, updateCategory }: KeywordsBoxProps): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
-  const [currCondition, setCurrCondition] = useState<number>(0);
+  const [currCategory, setCurrCategory] = useState<number>(0);
 
-  const dialog = (i: number) => { setCurrCondition(i); setShowDialog(true); };
+  const dialog = (i: number) => {
+    setCurrCategory(i);
+    setShowDialog(true);
+  };
 
   return (
     <Box>
-      <Paper variant="outlined">
-        <Stack direction="row" sx={{ flexWrap: "wrap" }}>
-          {conditions.map((condition, i) => (
-            <Chip key={i} color="primary" variant="outlined" sx={{ m: 0.35, color: "black" }}
-              label={condition.keyword} onClick={() => dialog(i)} onDelete={() => deleteCondition(i)} />
+      <Paper variant={"outlined"}>
+        <Stack direction={"row"} sx={{ flexWrap: "wrap" }}>
+          {categories.map((condition, i) => (
+            <Chip
+              key={i}
+              color={"primary"}
+              variant={"outlined"}
+              sx={{ m: 0.35, color: "black" }}
+              label={condition.keyword}
+              onClick={() => dialog(i)}
+              onDelete={() => deleteCategory(i)}
+            />
           ))}
         </Stack>
-        <Button size="large" sx={{ width: "100%" }} onClick={() => { dialog(conditions.length); }}>
-          Add condition
+        <Button
+          size={"large"}
+          sx={{ width: "100%" }}
+          onClick={() => { dialog(categories.length); }}
+        >
+          <span>Add category</span>
         </Button>
       </Paper>
       {showDialog &&
-        <ConditionDialog
-          condition={conditions[currCondition]}
+        <CategoryDialog
+          category={categories[currCategory]}
           onHide={() => setShowDialog(false)}
-          keywords={new Set(conditions.map((v) => v.keyword))}
-          insert={(condition) => insertCondition(condition, currCondition)}
+          keywords={new Set(categories.map((v) => v.keyword))}
+          insert={(category) => updateCategory(category, currCategory)}
         />
       }
     </Box>

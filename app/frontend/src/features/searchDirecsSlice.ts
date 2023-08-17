@@ -7,40 +7,40 @@ import {
 } from "./immutable";
 
 type SearchDirectState = {
-  sequence: UiPlace[];
+  waypoints: UiPlace[];
 }
 
-const initialState = (): SearchDirectState => ({ sequence: [] });
+const initialState = (): SearchDirectState => ({ waypoints: [] });
 
 export const searchDirecsSlice = createSlice({
   name: "search/direcs",
   initialState: initialState(),
   reducers: {
     resetSearchDirecs: () => initialState(),
-    setSearchDirecsSequence: (state, action: PayloadAction<UiPlace[]>) => {
-      state.sequence = action.payload;
+    setSearchDirecsWaypoints: (state, action: PayloadAction<UiPlace[]>) => {
+      state.waypoints = action.payload;
     },
     appendSearchDirecsPlace: (state, action: PayloadAction<UiPlace>) => {
-      state.sequence.push(action.payload);
+      state.waypoints.push(action.payload);
     },
     updateSearchDirecsPlace: (state, action: PayloadAction<{ place: UiPlace, index: number }>) => {
       const { place, index } = action.payload;
-      state.sequence = updateItemImmutable(state.sequence, place, index);
+      state.waypoints = updateItemImmutable(state.waypoints, place, index);
     },
     deleteSearchDirecsPlace: (state, action: PayloadAction<number>) => {
       const index = action.payload;
-      state.sequence = deleteItemImmutable(state.sequence, index);
+      state.waypoints = deleteItemImmutable(state.waypoints, index);
     },
     fromtoSearchDirecsPlace: (state, action: PayloadAction<{ fr: number, to: number }>) => {
       const { fr, to } = action.payload;
-      state.sequence = fromtoItemImmutable(state.sequence, fr, to);
+      state.waypoints = fromtoItemImmutable(state.waypoints, fr, to);
     }
   }
 });
 
 export const {
   resetSearchDirecs,
-  setSearchDirecsSequence,
+  setSearchDirecsWaypoints,
   appendSearchDirecsPlace,
   updateSearchDirecsPlace,
   deleteSearchDirecsPlace,

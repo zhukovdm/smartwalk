@@ -1,4 +1,4 @@
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useState } from "react";
 import {
   Autocomplete,
   Box,
@@ -17,16 +17,15 @@ import { Close } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { WgsPoint, UiPlace, StoredPlace } from "../../domain/types";
 import { point2place } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/store";
 import { hidePanel, showPanel } from "../../features/panelSlice";
-import {
-  setFavouritePlaces,
-  setFavouritePlacesLoaded
-} from "../../features/favouritesSlice";
-import { PlaceKind } from "./types";
-import { AddPlaceButton } from "./buttons";
+import { PlaceKind } from "./_types";
+import { AddPlaceButton } from "./_buttons";
 
 type SelectPlaceDialogProps = {
+
+  /** Set to open dialog. */
+  show: boolean;
 
   /** Place kind (source, target, etc.) */
   kind: PlaceKind;
@@ -41,10 +40,11 @@ type SelectPlaceDialogProps = {
 /**
  * Component showing a dialog for selecting a place, either stored or user-defined.
  */
-export default function SelectPlaceDialog({ kind, onHide, onSelect }: SelectPlaceDialogProps): JSX.Element {
+export default function SelectPlaceDialog(
+  { show, kind, onHide, onSelect }: SelectPlaceDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
-  const { map, storage } = useContext(AppContext);
+  const { map } = useContext(AppContext);
 
   // custom place
 
@@ -62,20 +62,7 @@ export default function SelectPlaceDialog({ kind, onHide, onSelect }: SelectPlac
   // stored place
 
   const [place, setPlace] = useState<StoredPlace | null>(null);
-  const { places, placesLoaded } = useAppSelector(state => state.favourites);
-
-  useEffect(() => {
-    const load = async () => {
-      if (!placesLoaded) {
-        try {
-          dispatch(setFavouritePlaces(await storage.getAllPlaces()));
-          dispatch(setFavouritePlacesLoaded());
-        }
-        catch (ex) { alert(ex); }
-      }
-    };
-    load();
-  }, [storage, dispatch, placesLoaded]);
+  const { loaded, places } = useAppSelector((state) => state.favorites);
 
   const handleFavourites = () => {
     onSelect(place!);
@@ -83,28 +70,29 @@ export default function SelectPlaceDialog({ kind, onHide, onSelect }: SelectPlac
   };
 
   return (
-    <Dialog open onClose={onHide}>
+    <Dialog open={show} onClose={onHide}>
       <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
         <span>Select a point</span>
-        <IconButton size="small" onClick={onHide}>
-          <Close fontSize="small" />
+        <IconButton size={"small"} onClick={onHide}>
+          <Close fontSize={"small"} />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         <Typography>
-          Click <AddPlaceButton kind={kind} size="large" onPlace={handleCustom} /> to select a point.
+          Click <AddPlaceButton kind={kind} size={"large"} onPlace={handleCustom} /> to select a point.
         </Typography>
         <Divider>
           <Typography>OR</Typography>
         </Divider>
         <Stack direction="column" gap={2} sx={{ mt: 2 }}>
           <Typography>
-            Select a place from <b>Favourites</b>.
+            Select a place from <b>Favorites</b>.
           </Typography>
           <Autocomplete
-            options={places}
-            loading={!placesLoaded}
+            loading={!loaded}
             onChange={(_, v) => { setPlace(v); }}
+            options={places}
+            size={"small"}
             getOptionLabel={(option) => option.name ?? ""}
             isOptionEqualToValue={(option, value) => option.placeId === value.placeId}
             renderInput={(params) => (
@@ -114,7 +102,7 @@ export default function SelectPlaceDialog({ kind, onHide, onSelect }: SelectPlac
                   ...params.InputProps,
                   endAdornment: (
                     <Fragment>
-                      {!placesLoaded ? <CircularProgress color="inherit" size={20} /> : null}
+                      {!loaded ? <CircularProgress color={"inherit"} size={20} /> : null}
                       {params.InputProps.endAdornment}
                     </Fragment>
                   )
@@ -124,7 +112,13 @@ export default function SelectPlaceDialog({ kind, onHide, onSelect }: SelectPlac
             renderOption={(props, option) => (<li {...props} key={option.placeId}>{option.name}</li>)}
           />
           <Box sx={{ mt: 1, display: "flex", justifyContent: "right" }}>
-            <Button color="primary" disabled={!place} onClick={() => { handleFavourites(); }}>Confirm</Button>
+            <Button
+              color={"primary"}
+              disabled={!place}
+              onClick={() => { handleFavourites(); }}
+            >
+              <span>Confirm</span>
+            </Button>
           </Box>
         </Stack>
       </DialogContent>

@@ -1,15 +1,14 @@
 import { useNavigate } from "react-router-dom";
 import { Box, Stack, Typography } from "@mui/material";
-import { RESULT_DIRECS_ADDR, SEARCH_DIRECS_ADDR } from "../domain/routing";
-import { SmartWalkFetcher } from "../utils/smartwalk";
-import { useAppDispatch, useAppSelector } from "../features/hooks";
-import { setBlock } from "../features/panelSlice";
-import { setSearchDirecsSequence } from "../features/searchDirecsSlice";
 import {
-  setResultDirecs,
-  setResultDirecsBack
-} from "../features/resultDirecsSlice";
-import { LogoCloseMenu, MainMenu } from "./shared/menus";
+  RESULT_DIRECS_ADDR
+} from "../domain/routing";
+import { SmartWalkFetcher } from "../utils/smartwalk";
+import { useAppDispatch, useAppSelector } from "../features/store";
+import { setBlock } from "../features/panelSlice";
+import { setSearchDirecsWaypoints } from "../features/searchDirecsSlice";
+import { setResultDirecs } from "../features/resultDirecsSlice";
+import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import BottomButtons from "./search/BottomButtons";
 import SearchDirecsSequence from "./search/SearchDirecsSequence";
 
@@ -18,18 +17,19 @@ export default function SearchDirecsPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { sequence } = useAppSelector(state => state.searchDirecs);
+  const { waypoints } = useAppSelector((state) => state.searchDirecs);
 
-  const searchAction = () => {
-    new Promise<void>((res, _) => { dispatch(setBlock(true)); res(); })
-      .then(() => SmartWalkFetcher.searchDirecs(sequence))
-      .then((res) => {
-        dispatch(setResultDirecs(res));
-        dispatch(setResultDirecsBack(SEARCH_DIRECS_ADDR));
-        navigate(RESULT_DIRECS_ADDR);
-      })
-      .catch((ex) => { alert(ex); })
-      .finally(() => { dispatch(setBlock(false)); })
+  const searchAction = async () => {
+    try {
+      dispatch(setBlock(true));
+      const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
+      dispatch(setResultDirecs(direcs));
+      navigate(RESULT_DIRECS_ADDR);
+    }
+    catch (ex) { alert(ex); }
+    finally {
+      dispatch(setBlock(false));
+    }
   };
 
   return (
@@ -38,13 +38,13 @@ export default function SearchDirecsPanel(): JSX.Element {
       <MainMenu panel={2} />
       <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
         <Typography>
-          Define sequence of points (at least two), and find the fastest route
+          Define sequence of points (at least two), and find the fastest routes
           visiting them in order.
         </Typography>
-        <SearchDirecsSequence sequence={sequence} />
+        <SearchDirecsSequence sequence={waypoints} />
         <BottomButtons
-          disabled={sequence.length < 2}
-          onClear={() => { dispatch(setSearchDirecsSequence([])); }}
+          disabled={waypoints.length < 2}
+          onClear={() => { dispatch(setSearchDirecsWaypoints([])); }}
           onSearch={() => { searchAction(); }}
         />
       </Stack>

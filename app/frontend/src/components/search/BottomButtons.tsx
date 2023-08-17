@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button } from "@mui/material";
-import { useAppSelector } from "../../features/hooks";
+import { useAppSelector } from "../../features/store";
 
 type BottomButtonsProps = {
 
@@ -20,18 +20,18 @@ type BottomButtonsProps = {
  */
 export default function BottomButtons({ disabled, onClear, onSearch }: BottomButtonsProps): JSX.Element {
 
-  const { block } = useAppSelector(state => state.panel);
+  const { block } = useAppSelector((state) => state.panel);
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-evenly" }}>
+    <Box display={"flex"} justifyContent={"space-evenly"}>
       <Button disabled={block} color="error" onClick={onClear}>
         <span>Clear</span>
       </Button>
       <LoadingButton
-        size="large"
-        variant="contained"
+        size={"large"}
+        variant={"contained"}
         startIcon={<Search />}
-        loadingPosition="start"
+        loadingPosition={"start"}
         onClick={onSearch}
         loading={block}
         disabled={block || disabled}

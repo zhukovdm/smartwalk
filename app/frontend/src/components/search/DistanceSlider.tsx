@@ -25,14 +25,14 @@ export default function DistanceSlider({ seq, distance, dispatch, ...rest }: Dis
   const marks = seq.map(m => { return { value: m, label: m }; });
 
   return (
-    <Box sx={{ display: "flex", justifyContent: "center" }}>
+    <Box display={"flex"} justifyContent={"center"}>
       <Box sx={{ width: "94%" }}>
         <Slider
           {...rest}
           min={0}
           marks={marks}
           value={distance}
-          valueLabelDisplay="auto"
+          valueLabelDisplay={"auto"}
           onChange={(_, value) => { dispatch(value as number); }}
         />
       </Box>

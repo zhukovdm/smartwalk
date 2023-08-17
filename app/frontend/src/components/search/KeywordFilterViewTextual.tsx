@@ -27,9 +27,19 @@ export default function KeywordFilterViewTextual({ label, setter, initial }: Key
   }, [check, value, setter]);
 
   return (
-    <Stack spacing={1} direction="row">
-      <KeywordFilterCheckBox label={label} checked={check} toggle={toggle} />
-      <TextField fullWidth size="small" value={value} disabled={!check} onChange={(e) => { setValue(e.target.value); }} />
+    <Stack direction={"row"} spacing={1}>
+      <KeywordFilterCheckBox
+        checked={check}
+        label={label}
+        toggle={toggle}
+      />
+      <TextField
+        disabled={!check}
+        fullWidth
+        onChange={(e) => { setValue(e.target.value); }}
+        size={"small"}
+        value={value}
+      />
     </Stack>
   );
 }

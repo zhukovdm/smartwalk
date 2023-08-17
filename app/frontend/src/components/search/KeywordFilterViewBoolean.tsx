@@ -36,10 +36,22 @@ export default function KeywordFilterViewBoolean({ label, setter, initial }: Key
   useEffect(() => { setter(check ? (!!value) : undefined) }, [check, value, setter]);
 
   return (
-    <Stack direction="row" justifyContent="space-between" flexWrap="wrap">
-      <KeywordFilterCheckBox label={label} checked={check} toggle={toggle} />
+    <Stack
+      direction={"row"}
+      flexWrap={"wrap"}
+      justifyContent={"space-between"}
+    >
+      <KeywordFilterCheckBox
+        label={label}
+        checked={check}
+        toggle={toggle}
+      />
       <FormControl>
-        <RadioGroup row value={value} onChange={(e) => { setValue(parseInt(e.target.value)); }}>
+        <RadioGroup
+          row={true}
+          value={value}
+          onChange={(e) => { setValue(parseInt(e.target.value)); }}
+        >
           <FormControlLabel disabled={!check} value={1} control={<Radio />} label="Yes" />
           <FormControlLabel disabled={!check} value={0} control={<Radio />} label="No" />
         </RadioGroup>
