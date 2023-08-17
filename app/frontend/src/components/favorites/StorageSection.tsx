@@ -1,0 +1,30 @@
+import { useContext } from "react";
+import { Alert, Box } from "@mui/material";
+import { AppContext } from "../../App";
+
+export default function StorageSection(): JSX.Element {
+
+  const { storage } = useContext(AppContext);
+
+  return (
+    <Box>
+      {storage.mem() &&
+        <Alert severity="error">
+          You use an <strong>in-memory</strong> storage. This could happen due
+          to several reasons (old browser, private mode, etc.). Data are not
+          persisted.
+        </Alert>
+      }
+      {storage.loc() &&
+        <Alert severity="info">
+          Data are stored on your device.
+        </Alert>
+      }
+      {storage.rem() &&
+        <Alert severity="success">
+          You use a remote storage.
+        </Alert>
+      }
+    </Box>
+  );
+}

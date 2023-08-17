@@ -1,0 +1,25 @@
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography
+} from "@mui/material";
+import { ExpandMore } from "@mui/icons-material";
+import { useAppSelector } from "../../features/store";
+import MyRoutesList from "./MyRoutesList";
+
+export default function MyRoutesSection(): JSX.Element {
+
+  const { routes } = useAppSelector((state) => state.favorites);
+
+  return (
+    <Accordion defaultExpanded>
+      <AccordionSummary expandIcon={<ExpandMore />}>
+        <Typography>My Routes</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <MyRoutesList routes={routes} />
+      </AccordionDetails>
+    </Accordion>
+  );
+}
