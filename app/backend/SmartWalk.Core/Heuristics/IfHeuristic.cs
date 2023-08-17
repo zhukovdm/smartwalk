@@ -22,18 +22,18 @@ internal static class IfCategoryFormer
     {
         var groups = places.Aggregate(new SortedDictionary<int, List<SolverPlace>>(), (acc, place) =>
         {
-            if (!acc.ContainsKey(place.Cat))
+            if (!acc.ContainsKey(place.cat))
             {
-                acc.Add(place.Cat, new());
+                acc.Add(place.cat, new());
             }
-            acc[place.Cat].Add(place);
+            acc[place.cat].Add(place);
             return acc;
         });
 
         // remove source and target cats!
 
-        groups.Remove(-1);
-        groups.Remove(catsCount);
+        groups.Remove(catsCount + 0);
+        groups.Remove(catsCount + 1);
 
         return groups.Values.ToList();
     }
@@ -60,9 +60,9 @@ internal static class IfCandidateFinder
         List<SolverPlace> seq, IDistanceMatrix distMatrix, SolverPlace place, double currDist, int seqIdx)
     {
         return currDist
-            - distMatrix.GetDistance(seq[seqIdx - 1].Idx, seq[seqIdx].Idx)
-            + distMatrix.GetDistance(seq[seqIdx - 1].Idx, place.Idx)
-            + distMatrix.GetDistance(place.Idx,           seq[seqIdx].Idx);
+            - distMatrix.GetDistance(seq[seqIdx - 1].idx, seq[seqIdx].idx)
+            + distMatrix.GetDistance(seq[seqIdx - 1].idx, place.idx)
+            + distMatrix.GetDistance(place.idx,           seq[seqIdx].idx);
     }
 
     public static (SolverPlace, double, int) FindBest(
@@ -79,14 +79,14 @@ internal static class IfCandidateFinder
             {
                 // category cannot be inserted
 
-                if (precMatrix.IsBefore(place.Cat, seq[i - 1].Cat))
+                if (precMatrix.IsBefore(place.cat, seq[i - 1].cat))
                 {
                     break;
                 }
 
                 // try insert in the next step
 
-                if (precMatrix.IsBefore(seq[i].Cat, place.Cat))
+                if (precMatrix.IsBefore(seq[i].cat, place.cat))
                 {
                     continue;
                 }
@@ -116,14 +116,15 @@ internal sealed class IfHeuristic
     public static List<SolverPlace> Advise(
         List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        var seq = new List<SolverPlace>() { places[0], places[^1] };
-        var currDist = distMatrix.GetDistance(0, distMatrix.Count - 1);
+        var seq = new List<SolverPlace>() { places[^2], places[^1] };
+        var currDist = distMatrix.GetDistance(distMatrix.Count - 2, distMatrix.Count - 1);
 
         var cats = IfCategoryFormer.Form(places, precMatrix.CsCount);
 
         foreach (var cat in cats)
         {
-            var (best, nextDist, seqIdx) = IfCandidateFinder.FindBest(seq, cat, distMatrix, precMatrix, currDist);
+            var (best, nextDist, seqIdx) = IfCandidateFinder
+                .FindBest(seq, cat, distMatrix, precMatrix, currDist);
 
             if (best is null) { break; } // no candidates left!
 

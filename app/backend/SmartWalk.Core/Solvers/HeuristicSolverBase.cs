@@ -10,14 +10,14 @@ internal abstract class HeuristicSolverBase : ISolver
     protected HeuristicSolverBase() { }
 
     protected abstract List<SolverPlace> SolveImpl(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int catsCount);
+        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix);
 
     public List<SolverPlace> Solve(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int catsCount)
+        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        var seq = SolveImpl(places, distMatrix, precedence, catsCount);
+        var seq = SolveImpl(places, distMatrix, precMatrix);
 
-        if (precedence.Count == 0)
+        if (precMatrix.EsCount == 0)
         {
             seq = TwoOptHeuristic.Refine(seq, distMatrix);
         }

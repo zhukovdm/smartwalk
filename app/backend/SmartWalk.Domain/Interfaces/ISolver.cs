@@ -11,9 +11,8 @@ public interface ISolver
     /// </summary>
     /// <param name="places">Sequence of places, the first and last are always source and target respectively.</param>
     /// <param name="distMatrix">Matrix of distances between original places.</param>
-    /// <param name="precedence">Edges of a category precedence graph.</param>
-    /// <param name="catsCount">Total number of categories taken into consideration.</param>
+    /// <param name="precMatrix">Edges of a category precedence graph (or its transitive closure).</param>
     /// <returns>The first place (source), waypoints in-between, the last place (target).</returns>
     List<SolverPlace> Solve(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, List<PrecedenceEdge> precedence, int catsCount);
+        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix);
 }

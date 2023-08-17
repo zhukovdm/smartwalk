@@ -17,15 +17,3 @@ public sealed class WgsPoint
 
     public WgsPoint(double lon, double lat) { this.lon = lon; this.lat = lat; }
 }
-
-/// <summary>
-/// Representation of a point in a Cartesian plane.
-/// </summary>
-public sealed class CartesianPoint
-{
-    public double x { get; }
-
-    public double y { get; }
-
-    public CartesianPoint(double x, double y) { this.x = x; this.y = y; }
-}

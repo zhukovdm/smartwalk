@@ -45,10 +45,13 @@ public static class SearchService
         var ellipse = Spherical.BoundingEllipse(source, target, maxDistance);
 
         var places = new List<Place>()
-            .Concat(new[] { new Place() { location = source, categories = new() { -1 } } })
             .Concat(await entityIndex.GetWithin(ellipse, categories))
-            .Concat(new[] { new Place() { location = target, categories = new() { categories.Count } } })
+            .Concat(new[] { new Place() { location = source, categories = new() { categories.Count + 0 } } })
+            .Concat(new[] { new Place() { location = target, categories = new() { categories.Count + 1 } } })
             .ToList();
+
+        var precMatrix = SolverFactory
+            .GetPrecedenceMatrix(categories.Count, precedence);
 
         while (true)
         {
@@ -65,25 +68,25 @@ public static class SearchService
 
             var distMatrix = new HaversineDistanceMatrix(places);
 
-            var seq = SolverFactory.GetInstance()
-                .Solve(solverPlaces, distMatrix, precedence, categories.Count);
-
-            var path = (await routingEngine.GetShortestPaths(seq.Select((sp) => places[sp.Idx].location).ToList()))
-                .Where((p) => p.distance <= maxDistance)
-                .FirstOrDefault();
+            var seq = SolverFactory.GetSolver()
+                .Solve(solverPlaces, distMatrix, precMatrix);
 
             var trimmedSeq = seq.Skip(1).SkipLast(1).ToList();
 
             if (trimmedSeq.Count < categories.Count) { break; } // no candidates left
 
+            var path = (await routingEngine.GetShortestPaths(seq.Select((sp) => places[sp.idx].location).ToList()))
+                .Where((p) => p.distance <= maxDistance)
+                .FirstOrDefault();
+
             if (path is not null)
             {
                 var routePlaces = trimmedSeq.Aggregate(new List<Place>(), (acc, sp) =>
                 {
-                    var p = places[sp.Idx];
+                    var p = places[sp.idx];
                     acc.Add(new()
                     {
-                        smartId = p.smartId, name = p.name, location = p.location, keywords = p.keywords, categories = new() { sp.Cat }
+                        smartId = p.smartId, name = p.name, location = p.location, keywords = p.keywords, categories = new() { sp.cat }
                     });
                     return acc;
                 })
@@ -91,14 +94,14 @@ public static class SearchService
 
                 var routeWaypoints = trimmedSeq.Aggregate(new List<string>(), (acc, sp) =>
                 {
-                    acc.Add(places[sp.Idx].smartId);
+                    acc.Add(places[sp.idx].smartId);
                     return acc;
                 });
 
                 result.Add(new() { path = path, places = routePlaces, waypoints = routeWaypoints });
             }
 
-            trimmedSeq.ForEach((p) => places[p.Idx].categories.Remove(p.Cat));
+            trimmedSeq.ForEach((p) => places[p.idx].categories.Remove(p.cat));
         }
 
         result.Sort(new RouteComparer());

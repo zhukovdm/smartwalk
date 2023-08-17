@@ -27,6 +27,10 @@ public sealed class SearchController : ControllerBase
         return new() { Status = status, Detail = detail };
     }
 
+    /// <summary>
+    /// Check if edges define directed acyclic loop-free graph, repeated edges
+    /// are tolerable.
+    /// </summary>
     private static bool VerifyPrecedence(List<WebPrecedenceEdge> edges, int order)
     {
         var g = new CycleDetector(order);

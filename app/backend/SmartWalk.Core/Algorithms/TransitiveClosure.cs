@@ -1,32 +1,21 @@
 using System.Collections.Generic;
-using System.Linq;
-using SmartWalk.Domain.Entities;
 
-public sealed class TransitiveClosure
+public static class TransitiveClosure
 {
-    private readonly int _ord;
-    private readonly List<List<bool>> _mtx;
-
-    public TransitiveClosure(int order, List<PrecedenceEdge> precedence)
+    public static List<List<bool>> Closure(List<List<bool>> precMatrix)
     {
-        _ord = order;
-        _mtx = Enumerable.Range(0, _ord).Select(_ => Enumerable.Repeat(false, _ord).ToList()).ToList();
+        var order = precMatrix.Count;
 
-        foreach (var edge in precedence) { _mtx[edge.fr][edge.to] = true; }
-    }
-
-    public List<List<bool>> Closure()
-    {
-        for (int k = 0; k < _ord; ++k)
+        for (int k = 0; k < order; ++k)
         {
-            for (int i = 0; i < _ord; ++i)
+            for (int i = 0; i < order; ++i)
             {
-                for (int j = 0; j < _ord; ++j)
+                for (int j = 0; j < order; ++j)
                 {
-                    _mtx[i][j] = _mtx[i][j] || (_mtx[i][k] && _mtx[k][j]);
+                    precMatrix[i][j] = precMatrix[i][j] || (precMatrix[i][k] && precMatrix[k][j]);
                 }
             }
         }
-        return _mtx;
+        return precMatrix;
     }
 }

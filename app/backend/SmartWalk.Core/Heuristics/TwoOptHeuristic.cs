@@ -28,10 +28,10 @@ internal static class TwoOptHeuristic
                 for (int j = i + 1; j < seq.Count - 2; ++j)
                 {
                     double diff = 0.0
-                        - matrix.GetDistance(seq[i    ].Idx, seq[i + 1].Idx)
-                        - matrix.GetDistance(seq[j    ].Idx, seq[j + 1].Idx)
-                        + matrix.GetDistance(seq[i    ].Idx, seq[j    ].Idx)
-                        + matrix.GetDistance(seq[i + 1].Idx, seq[j + 1].Idx);
+                        - matrix.GetDistance(seq[i    ].idx, seq[i + 1].idx)
+                        - matrix.GetDistance(seq[j    ].idx, seq[j + 1].idx)
+                        + matrix.GetDistance(seq[i    ].idx, seq[j    ].idx)
+                        + matrix.GetDistance(seq[i + 1].idx, seq[j + 1].idx);
 
                     if (diff < -1.0)
                     {
