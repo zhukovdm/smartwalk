@@ -1,26 +1,25 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
-import { Grain } from "@mui/icons-material";
+import { Place } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { StoredPlace } from "../../domain/types";
 import {
-  ENTITY_ADDR,
-  FAVOURITES_ADDR,
-  SEARCH_PLACES_ADDR
+  SEARCH_PLACES_ADDR,
+  VIEWER_PLACE_ADDR
 } from "../../domain/routing";
-import { useAppDispatch } from "../../features/hooks";
-import { setEntityBack } from "../../features/entitySlice";
+import { useAppDispatch } from "../../features/store";
 import {
-  updateFavouritePlace,
-  deleteFavouritePlace
-} from "../../features/favouritesSlice";
+  updateFavoritePlace,
+  deleteFavoritePlace
+} from "../../features/favoritesSlice";
+import { setViewerPlace } from "../../features/viewerSlice";
 import { PlaceButton } from "../shared/buttons";
 import { BusyListItem } from "../shared/list-items";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
 import UpdateSomethingDialog from "./UpdateSomethingDialog";
 import ListItemMenu from "./ListItemMenu";
-import FavouriteStub from "./FavouriteStub";
+import FavoriteStub from "./FavoriteStub";
 
 type MyPlacesListItemProps = {
 
@@ -42,42 +41,65 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
 
   const onPlace = () => {
     map?.clear();
-    map?.addStored(place);
+    map?.addStored(place, []);
     map?.flyTo(place);
   };
 
   const onShow = () => {
-    dispatch(setEntityBack(FAVOURITES_ADDR));
-    navigate(ENTITY_ADDR + "/" + place.smartId);
+    dispatch(setViewerPlace(place));
+    navigate(VIEWER_PLACE_ADDR);
   };
 
   const onUpdate = async (name: string): Promise<void> => {
     const pl = { ...place, name: name };
     await storage.updatePlace(pl);
-    dispatch(updateFavouritePlace({ place: pl, index: index }));
+    dispatch(updateFavoritePlace({ place: pl, index: index }));
   };
 
   const onDelete = async (): Promise<void> => {
     await storage.deletePlace(place.placeId);
-    dispatch(deleteFavouritePlace(index));
+    dispatch(deleteFavoritePlace(index));
   };
 
   return (
     <Box>
       <BusyListItem
         label={place.name}
-        l={<PlaceButton kind="stored" onPlace={onPlace} />}
-        r={<ListItemMenu onShow={place.smartId ? onShow : undefined} showDeleteDialog={() => { setShowD(true); }} showUpdateDialog={() => { setShowU(true); }} />}
+        l={
+          <PlaceButton
+            kind={"stored"}
+            onPlace={onPlace}
+          />
+        }
+        r={
+          <ListItemMenu
+            onShow={onShow}
+            showDeleteDialog={() => { setShowD(true); }}
+            showUpdateDialog={() => { setShowU(true); }}
+          />
+        }
       />
-      {showD && <DeleteSomethingDialog name={place.name} what="place" onHide={() => { setShowD(false); }} onDelete={onDelete} />}
-      {showU && <UpdateSomethingDialog name={place.name} what="place" onHide={() => { setShowU(false); }} onUpdate={onUpdate} />}
+      <DeleteSomethingDialog
+        show={showD}
+        name={place.name}
+        what={"place"}
+        onHide={() => { setShowD(false); }}
+        onDelete={onDelete}
+      />
+      <UpdateSomethingDialog
+        show={showU}
+        name={place.name}
+        what={"place"}
+        onHide={() => { setShowU(false); }}
+        onUpdate={onUpdate}
+      />
     </Box>
   );
 }
 
 type MyPlacesListProps = {
 
-  /** List of favourite places available in the storage. */
+  /** List of favorite places available in the storage. */
   places: StoredPlace[];
 };
 
@@ -89,10 +111,14 @@ export default function MyPlacesList({ places }: MyPlacesListProps): JSX.Element
   return (
     <Box>
       {places.length > 0
-        ? <Stack direction="column" gap={2}>
+        ? <Stack direction={"column"} gap={2}>
             {places.map((p, i) => <MyPlacesListItem key={i} index={i} place={p} />)}
           </Stack>
-        : <FavouriteStub link={SEARCH_PLACES_ADDR} what="place" icon={(sx) => <Grain sx={sx} />} />
+        : <FavoriteStub
+            what={"place"}
+            link={SEARCH_PLACES_ADDR}
+            icon={(sx) => <Place sx={sx} />}
+          />
       }
     </Box>
   );

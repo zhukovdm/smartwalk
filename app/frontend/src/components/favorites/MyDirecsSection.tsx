@@ -10,7 +10,7 @@ import MyDirecsList from "./MyDirecsList";
 
 export default function MyDirecsSection(): JSX.Element {
 
-  const { direcs } = useAppSelector((state) => state.favorites);
+  const { direcs, places } = useAppSelector((state) => state.favorites);
 
   return (
     <Accordion defaultExpanded>
@@ -18,7 +18,7 @@ export default function MyDirecsSection(): JSX.Element {
         <Typography>My Directions</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyDirecsList direcs={direcs} />
+        <MyDirecsList direcs={direcs} places={places} />
       </AccordionDetails>
     </Accordion>
   );

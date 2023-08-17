@@ -10,7 +10,7 @@ import MyRoutesList from "./MyRoutesList";
 
 export default function MyRoutesSection(): JSX.Element {
 
-  const { routes } = useAppSelector((state) => state.favorites);
+  const { places, routes } = useAppSelector((state) => state.favorites);
 
   return (
     <Accordion defaultExpanded>
@@ -18,7 +18,7 @@ export default function MyRoutesSection(): JSX.Element {
         <Typography>My Routes</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyRoutesList routes={routes} />
+        <MyRoutesList routes={routes} places={places} />
       </AccordionDetails>
     </Accordion>
   );
