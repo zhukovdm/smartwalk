@@ -10,5 +10,5 @@ type ExtraChipProps = {
  * Chip smaller than keywor chip to show `extra` information.
  */
 export default function ExtraChip(props: ExtraChipProps): JSX.Element {
-  return (<Chip size="small" variant="outlined" {...props} />);
+  return (<Chip size={"small"} variant={"outlined"} {...props} />);
 }
