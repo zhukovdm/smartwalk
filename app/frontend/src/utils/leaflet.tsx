@@ -220,23 +220,23 @@ export class LeafletMap implements IMap {
     }
   }
 
-  public addStored(place: UiPlace, categories: string[] = []): IPin {
+  public addStored(place: UiPlace, categories: string[]): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.stored, false);
   }
 
-  public addCommon(place: UiPlace, draggable: boolean = true, categories: string[] = []): IPin {
+  public addCommon(place: UiPlace, categories: string[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.common, draggable);
   }
 
-  public addSource(place: UiPlace, draggable: boolean = true, categories: string[] = []): IPin {
+  public addSource(place: UiPlace, categories: string[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.source, draggable);
   }
 
-  public addTarget(place: UiPlace, draggable: boolean = true, categories: string[] = []): IPin {
+  public addTarget(place: UiPlace, categories: string[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.target, draggable);
   }
 
-  public addCenter(place: UiPlace, draggable: boolean = true, categories: string[] = []): IPin {
+  public addCenter(place: UiPlace, categories: string[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.center, draggable);
   }
 

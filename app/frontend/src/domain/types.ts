@@ -354,8 +354,8 @@ export type RoutesRequest = {
   /** Distance in kilometers. */
   distance: number;
 
-  /** Conditions to be fulfilled. */
-  conditions: PlaceCategory[];
+  /** Categories to be fulfilled. */
+  categories: PlaceCategory[];
 
   /** Poset on categories. */
   precedence: PrecedenceEdge[];

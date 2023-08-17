@@ -48,22 +48,22 @@ export interface IMap {
   /**
    * @param place not stored place
    */
-  addCommon(place: UiPlace, draggable: boolean, categories: string[]): IPin;
+  addCommon(place: UiPlace, categories: string[], draggable: boolean): IPin;
 
   /**
    * @param place starting point of a route in `Routes` form
    */
-  addSource(place: UiPlace, draggable: boolean, categories: string[]): IPin;
+  addSource(place: UiPlace, categories: string[], draggable: boolean): IPin;
 
   /**
    * @param place destination of a route in `Routes` form
    */
-  addTarget(place: UiPlace, draggable: boolean, categories: string[]): IPin;
+  addTarget(place: UiPlace, categories: string[], draggable: boolean): IPin;
 
   /**
    * @param place the center of a circle in `Places` form
    */
-  addCenter(place: UiPlace, draggable: boolean, categories: string[]): IPin;
+  addCenter(place: UiPlace, categories: string[], draggable: boolean): IPin;
 
   /**
    * @param center Location of the center of a circle.

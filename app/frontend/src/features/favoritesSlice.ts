@@ -8,24 +8,20 @@ import {
 } from "../domain/types";
 
 type FavoritesState = {
+  loaded: boolean;
   name: string;
   location?: WgsPoint;
   direcs: StoredDirec[];
-  direcsLoaded: boolean;
   places: StoredPlace[];
-  placesLoaded: boolean;
   routes: StoredRoute[];
-  routesLoaded: boolean;
 };
 
 const initialState = (): FavoritesState => ({
+  loaded: false,
   name: "",
   direcs: [],
-  direcsLoaded: false,
   places: [],
-  placesLoaded: false,
-  routes: [],
-  routesLoaded: false
+  routes: []
 });
 
 export const favoritesSlice = createSlice({
@@ -34,6 +30,10 @@ export const favoritesSlice = createSlice({
   reducers: {
 
     resetFavorites: () => initialState(),
+
+    setFavoritesLoaded: (state) => {
+      state.loaded = true;
+    },
 
     // custom place
 
@@ -56,9 +56,6 @@ export const favoritesSlice = createSlice({
     setFavoriteDirecs: (state, action: PayloadAction<StoredDirec[]>) => {
       state.direcs = action.payload;
     },
-    setFavoriteDirecsLoaded: (state) => {
-      state.direcsLoaded = true;
-    },
     createFavoriteDirec: (state, action: PayloadAction<StoredDirec>) => {
       state.direcs.push(action.payload);
     },
@@ -74,9 +71,6 @@ export const favoritesSlice = createSlice({
 
     setFavoritePlaces: (state, action: PayloadAction<StoredPlace[]>) => {
       state.places = action.payload;
-    },
-    setFavoritePlacesLoaded: (state) => {
-      state.placesLoaded = true;
     },
     createFavoritePlace: (state, action: PayloadAction<StoredPlace>) => {
       state.places.push(action.payload);
@@ -94,9 +88,6 @@ export const favoritesSlice = createSlice({
     setFavoriteRoutes: (state, action: PayloadAction<StoredRoute[]>) => {
       state.routes = action.payload;
     },
-    setFavoriteRoutesLoaded: (state) => {
-      state.routesLoaded = true;
-    },
     createFavoriteRoute: (state, action: PayloadAction<StoredRoute>) => {
       state.routes.push(action.payload);
     },
@@ -113,6 +104,7 @@ export const favoritesSlice = createSlice({
 export const {
 
   resetFavorites,
+  setFavoritesLoaded,
 
   // custom
 
@@ -124,7 +116,6 @@ export const {
   // direcs
 
   setFavoriteDirecs,
-  setFavoriteDirecsLoaded,
   createFavoriteDirec,
   updateFavoriteDirec,
   deleteFavoriteDirec,
@@ -132,7 +123,6 @@ export const {
   // places
 
   setFavoritePlaces,
-  setFavoritePlacesLoaded,
   createFavoritePlace,
   updateFavoritePlace,
   deleteFavoritePlace,
@@ -140,7 +130,6 @@ export const {
   // routes
 
   setFavoriteRoutes,
-  setFavoriteRoutesLoaded,
   createFavoriteRoute,
   updateFavoriteRoute,
   deleteFavoriteRoute,
