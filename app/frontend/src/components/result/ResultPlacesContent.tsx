@@ -43,14 +43,12 @@ export default function ResultPlacesContent(
 
   const center = usePlace(resultCenter, storedPlaces, new Map())!;
 
-  const places = useMemo(() => (
-    usePlaces(resultPlaces, new Map(), storedSmarts)
-      .map((place, i) => ({
-        ...structuredClone(place), /* ! */
-        categories: resultPlaces[i].categories
-      }))
-      .filter((place) => (place.categories.some((c) => filterList[c])))
-  ), [resultPlaces, storedSmarts, filterList]);
+  const places = usePlaces(resultPlaces, new Map(), storedSmarts)
+    .map((place, i) => ({
+      ...structuredClone(place), /* ! */
+      categories: resultPlaces[i].categories
+    }))
+    .filter((place) => (place.categories.some((c: number) => filterList[c])));
 
   const satCategories = useMemo(() => getSatCategories(resultPlaces), [resultPlaces]);
 
@@ -63,7 +61,7 @@ export default function ResultPlacesContent(
     });
     map?.addCenter(center, [], false);
     map?.drawCircle(center.location, radius * 1000.0);
-  }, [map, center, radius, places, storedSmarts]);
+  }, [map, center, radius, places, storedSmarts, categories]);
 
   return (
     <Stack direction={"column"} gap={2.7}>

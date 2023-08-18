@@ -8,7 +8,7 @@ function useFavoritePlaces(f: (place: StoredPlace) => string | undefined): Map<s
     favoritePlaces
       .filter((place) => !!f(place))
       .reduce((acc, place) => acc.set(f(place)!, place), new Map<string, StoredPlace>())
-  ), [favoritePlaces]);
+  ), [f, favoritePlaces]);
 }
 
 export function useStoredPlaces(): Map<string, StoredPlace> {

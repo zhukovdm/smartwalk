@@ -38,7 +38,6 @@ import { useAppSelector } from "../../features/store";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 import SavePlaceDialog from "./SavePlaceDialog";
-import { title } from "process";
 
 type PlaceContentProps = {
 

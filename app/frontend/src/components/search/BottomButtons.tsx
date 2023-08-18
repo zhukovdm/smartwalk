@@ -24,7 +24,11 @@ export default function BottomButtons({ disabled, onClear, onSearch }: BottomBut
 
   return (
     <Box display={"flex"} justifyContent={"space-evenly"}>
-      <Button disabled={block} color="error" onClick={onClear}>
+      <Button
+        color={"error"}
+        disabled={block}
+        onClick={onClear}
+      >
         <span>Clear</span>
       </Button>
       <LoadingButton

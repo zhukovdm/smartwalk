@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Alert, Box, CircularProgress } from "@mui/material";
 import { AppContext } from "../App";
 import { SmartWalkFetcher } from "../utils/smartwalk";
@@ -13,7 +13,6 @@ import PlaceContent from "./entity/PlaceContent";
 export default function EntityPlacePanel(): JSX.Element {
 
   const id = useParams().id!; // (!) non-empty
-  const navigate = useNavigate();
 
   const entityPlaces = useContext(AppContext).smart.entityPlaces;
 
@@ -47,7 +46,7 @@ export default function EntityPlacePanel(): JSX.Element {
 
   return (
     <Box>
-      <BackCloseMenu onBack={() => { navigate(-1); }} />
+      <BackCloseMenu />
       <Box sx={{ mx: 2, my: 4 }}>
         {(favoritesLoaded && placeLoaded)
           ? <Box>

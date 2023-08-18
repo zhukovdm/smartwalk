@@ -45,10 +45,6 @@ function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps)
 
   const { name, source, target, path, waypoints, categories } = route;
 
-  const routeCats = useMemo(() => (
-    categories.map((category) => category.keyword)
-  ), [categories]);
-
   const routeSmarts = useMemo(() => (
     route.places.reduce((acc, place) => (acc.set(place.smartId, place)), new Map<string, Place>())
   ), [route]);
@@ -61,8 +57,8 @@ function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps)
     waypoints.forEach((waypoint) => {
       const smart = storedSmarts.get(waypoint);
       smart
-        ? map?.addStored(smart, routeCats)
-        : map?.addCommon(routeSmarts.get(waypoint)!, routeCats, false);
+        ? map?.addStored(smart, categories)
+        : map?.addCommon(routeSmarts.get(waypoint)!, categories, false);
     });
     map?.addSource(source, [], false);
     map?.addTarget(target, [], false);

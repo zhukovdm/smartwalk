@@ -1,4 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Box,
@@ -60,13 +60,11 @@ export default function ResultRoutesContent(
   const source = usePlace(resultSource, storedPlaces, new Map())!;
   const target = usePlace(resultTarget, storedPlaces, new Map())!;
 
-  const places = useMemo(() => (
-    usePlaces(resultPlaces, new Map(), storedSmarts)
-      .map((place, i) => ({
-        ...structuredClone(place), /* ! */
-        categories: resultPlaces[i].categories
-      }))
-  ), [resultPlaces, storedSmarts]);
+  const places = usePlaces(resultPlaces, new Map(), storedSmarts)
+    .map((place, i) => ({
+      ...structuredClone(place), /* ! */
+      categories: resultPlaces[i].categories
+    }));
 
   useEffect(() => {
     map?.clear();

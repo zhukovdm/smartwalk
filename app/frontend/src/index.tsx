@@ -1,4 +1,5 @@
 import "./index.css";
+import "typeface-roboto";
 import "leaflet/dist/leaflet.css";
 import "leaflet.locatecontrol/src/L.Control.Locate.js";
 import "leaflet.locatecontrol/dist/L.Control.Locate.css";

@@ -9,7 +9,6 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { Favorite } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { FAVORITES_ADDR } from "../../domain/routing";
 import { useAppDispatch, useAppSelector } from "../../features/store";
