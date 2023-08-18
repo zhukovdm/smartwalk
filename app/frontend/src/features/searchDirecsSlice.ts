@@ -17,8 +17,8 @@ export const searchDirecsSlice = createSlice({
   initialState: initialState(),
   reducers: {
     resetSearchDirecs: () => initialState(),
-    setSearchDirecsWaypoints: (state, action: PayloadAction<UiPlace[]>) => {
-      state.waypoints = action.payload;
+    reverseSearchDirecsWaypoints: (state) => {
+      state.waypoints = [...state.waypoints].reverse();
     },
     appendSearchDirecsPlace: (state, action: PayloadAction<UiPlace>) => {
       state.waypoints.push(action.payload);
@@ -40,7 +40,7 @@ export const searchDirecsSlice = createSlice({
 
 export const {
   resetSearchDirecs,
-  setSearchDirecsWaypoints,
+  reverseSearchDirecsWaypoints,
   appendSearchDirecsPlace,
   updateSearchDirecsPlace,
   deleteSearchDirecsPlace,

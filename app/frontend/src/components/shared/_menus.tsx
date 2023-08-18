@@ -4,8 +4,8 @@ import {
   Close,
   Directions,
   Favorite,
-  Grain,
   Home,
+  Place,
   Route
 } from "@mui/icons-material";
 import {
@@ -48,7 +48,7 @@ export function HomeCloseMenu(): JSX.Element {
 type LogoCloseMenuProps = {
 
   /** Action upon clicking on a logo. */
-  onLogo: () => void;
+  onLogo?: () => void;
 };
 
 /**
@@ -111,25 +111,25 @@ export function MainMenu({ panel }: MainMenuProps): JSX.Element {
     <Box sx={{ borderTop: 1, borderBottom: 1, borderColor: "divider" }}>
       <BottomNavigation showLabels value={panel}>
         <BottomNavigationAction
-          label="Routes"
+          label={"Routes"}
           icon={<Route />}
           disabled={block}
           onClick={() => { navigate(SEARCH_ROUTES_ADDR); }}
         />
         <BottomNavigationAction
-          label="Places"
-          icon={<Grain />}
+          label={"Places"}
+          icon={<Place />}
           disabled={block}
           onClick={() => { navigate(SEARCH_PLACES_ADDR); }}
         />
         <BottomNavigationAction
-          label="Directions"
+          label={"Directions"}
           icon={<Directions />}
           disabled={block}
           onClick={() => { navigate(SEARCH_DIRECS_ADDR); }}
         />
         <BottomNavigationAction
-          label="Favourites"
+          label={"Favorites"}
           icon={<Favorite />}
           disabled={block}
           onClick={() => { navigate(FAVORITES_ADDR); }}

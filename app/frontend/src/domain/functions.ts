@@ -1,27 +1,24 @@
-import { Place, StoredPlace, UiPlace } from "./types";
+import { UiPlace } from "./types";
 
-export function getCopyStoredPlaces(places: StoredPlace[]): Map<string, StoredPlace> {
-  return places
-    .filter((place) => !!place.smartId)
-    .map((place) => structuredClone(place))
-    .reduce((map, place) => map.set(place.smartId!, place), new Map<string, StoredPlace>());
-}
-
-export function getSatConditions(places: Place[]): Set<number> {
-  return places
-    .map((p) => p.categories).flat()
-    .reduce((set, cat) => set.add(cat), new Set<number>());
-}
-
-export function replaceName({ smartId, name, ...rest }: UiPlace, places: Map<string, StoredPlace>): UiPlace {
-  const n = smartId ? (places.get(smartId)?.name ?? name) : name;
-  return { ...rest, smartId: smartId, name: n };
-}
-
-export function camelCaseToKeyword(token: string): string {
+/**
+ * Convert `aB` to `a b`.
+ */
+export function camelCaseToLabel(token: string): string {
   const res = [];
-  for (const l of token) {
-    res.push((l === l.toLowerCase()) ? l : ` ${l.toLowerCase()}`);
+  for (const ch of token) {
+    res.push((ch === ch.toLowerCase()) ? ch : ` ${ch.toLowerCase()}`);
   }
   return res.join("");
+}
+
+export function getSatCategories(places: UiPlace[]): Set<number> {
+  return places
+    .map((place) => place.categories).flat()
+    .reduce((acc, cat) => acc.add(cat), new Set<number>());
+}
+
+export function isPlaceStored(place: UiPlace, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): boolean {
+  const pid = place.placeId;
+  const sid = place.smartId;
+  return (!!pid && storedPlaces.has(pid)) || (!!sid && storedSmarts.has(sid));
 }

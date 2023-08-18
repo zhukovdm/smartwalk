@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import { SwapVert } from "@mui/icons-material";
 import { AppContext } from "../App";
-import { RESULT_ROUTES_ADDR, SEARCH_ROUTES_ADDR } from "../domain/routing";
-import { point2place } from "../utils/helpers";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+import { RESULT_ROUTES_ADDR } from "../domain/routing";
+import { usePlace, useStoredPlaces } from "../features/hooks";
 import { useAppDispatch, useAppSelector } from "../features/store";
 import { setBlock } from "../features/panelSlice";
 import {
@@ -23,6 +22,8 @@ import {
   setSearchRoutesTarget,
 } from "../features/searchRoutesSlice";
 import { setResultRoutes } from "../features/resultRoutesSlice";
+import { point2place } from "../utils/helpers";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem,
@@ -38,7 +39,17 @@ export default function SearchRoutesPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
-  const { source, target, distance, categories } = useAppSelector(state => state.searchRoutes);
+
+  const storedPlaces = useStoredPlaces();
+  const {
+    source: storedSource,
+    target: storedTarget,
+    distance,
+    categories
+  } = useAppSelector(state => state.searchRoutes);
+
+  const source = usePlace(storedSource, storedPlaces, new Map());
+  const target = usePlace(storedTarget, storedPlaces, new Map());
 
   const [sourceSelectDialog, setSourceSelectDialog] = useState(false);
   const [targetSelectDialog, setTargetSelectDialog] = useState(false);
@@ -85,7 +96,7 @@ export default function SearchRoutesPanel(): JSX.Element {
 
   return (
     <Box>
-      <LogoCloseMenu onLogo={() => {}} />
+      <LogoCloseMenu />
       <MainMenu panel={0} />
       <Stack
         direction={"column"}
@@ -134,7 +145,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           </Box>
         </Stack>
         <Typography>
-          With maximum walking distance (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometers" underline="hover">km</Link>):
+          With maximum walking distance (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometres" underline="hover">km</Link>):
         </Typography>
         <DistanceSlider
           max={30}

@@ -15,20 +15,17 @@ import { Box, Stack } from "@mui/material";
 import { DragIndicator } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
-import { point2place } from "../../utils/helpers";
+import { isPlaceStored } from "../../domain/functions";
 import { useAppDispatch } from "../../features/store";
 import {
   appendSearchDirecsPlace,
   deleteSearchDirecsPlace,
   fromtoSearchDirecsPlace,
-  setSearchDirecsWaypoints,
+  reverseSearchDirecsWaypoints,
   updateSearchDirecsPlace
 } from "../../features/searchDirecsSlice";
-import {
-  DeleteButton,
-  PlaceButton,
-  SwapButton
-} from "../shared/_buttons";
+import { point2place } from "../../utils/helpers";
+import { DeleteButton, PlaceButton, SwapButton } from "../shared/_buttons";
 import { ListItemLabel } from "../shared/_list-items";
 import SelectPlaceDialog from "../shared/SelectPlaceDialog";
 
@@ -77,7 +74,7 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
         onClick={onAppend}
         sx={{ width: "100%", cursor: "pointer" }}
       >
-        <PlaceButton kind={"adding"} onPlace={() => { }} />
+        <PlaceButton kind={"adding"} onPlace={() => {}} />
         <ListItemLabel label={"Append point..."} />
       </Stack>
       <SwapButton onSwap={onRevers} title={"Reverse"} />
@@ -109,8 +106,15 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
     <Draggable draggableId={`place-${index}`} index={index}>
       {(provided) => (
         <div ref={provided.innerRef} {...provided.draggableProps}>
-          <Stack direction="row" gap={0.5} paddingBottom={2}>
-            <div style={{ display: "flex", alignItems: "center" }} {...provided.dragHandleProps}>
+          <Stack
+            direction={"row"}
+            gap={0.5}
+            paddingBottom={2}
+          >
+            <div
+              style={{ display: "flex", alignItems: "center" }}
+              {...provided.dragHandleProps}
+            >
               <DragIndicator />
             </div>
             <PlaceButton
@@ -128,28 +132,35 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
 
 type SearchDirecsSequenceProps = {
 
-  /** Sequence of places entered by the user. */
-  sequence: UiPlace[];
+  /** Waypoints configured by the user. */
+  waypoints: UiPlace[];
+
+  /**  */
+  storedPlaces: Map<string, UiPlace>;
+
+  /**  */
+  storedSmarts: Map<string, UiPlace>;
 }
 
 /**
  * Component rendering sequence for searching directions.
  */
-export default function SearchDirecsSequence({ sequence }: SearchDirecsSequenceProps): JSX.Element {
+export default function SearchDirecsSequence(
+  { waypoints, storedPlaces, storedSmarts }: SearchDirecsSequenceProps): JSX.Element {
 
-  const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
 
+  const dispatch = useAppDispatch();
   const [selectDialog, setSelectDialog] = useState(false);
 
   useEffect(() => {
     map?.clear();
-    sequence.forEach((place, i) => {
-      place.placeId
-        ? map?.addStored(place, [])
-        : map?.addCommon(place, [], true).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
+    waypoints.forEach((waypoint, i) => {
+      (isPlaceStored(waypoint, storedPlaces, storedSmarts))
+        ? map?.addStored(waypoint, [])
+        : map?.addCommon(waypoint, [], true).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
     });
-  }, [map, dispatch, sequence]);
+  }, [map, dispatch, waypoints, storedPlaces, storedSmarts]);
 
   const onDragEnd = ({ source, destination }: DropResult) => {
     if (!source || !destination || source.index === destination.index) { return; }
@@ -162,7 +173,13 @@ export default function SearchDirecsSequence({ sequence }: SearchDirecsSequenceP
         <StrictModeDroppable droppableId="droppable">
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
-              {sequence.map((place, i) => <DirecsPresentListItem key={i} place={place} index={i} />)}
+              {waypoints.map((place, i) => (
+                <DirecsPresentListItem
+                  key={i}
+                  place={place}
+                  index={i}
+                />
+              ))}
               {provided.placeholder}
             </div>
           )}
@@ -170,7 +187,7 @@ export default function SearchDirecsSequence({ sequence }: SearchDirecsSequenceP
       </DragDropContext>
       <DirecsControlListItem
         onAppend={() => { setSelectDialog(true); }}
-        onRevers={() => { dispatch(setSearchDirecsWaypoints([...sequence].reverse())); }}
+        onRevers={() => { dispatch(reverseSearchDirecsWaypoints()); }}
       />
       {selectDialog &&
         <SelectPlaceDialog

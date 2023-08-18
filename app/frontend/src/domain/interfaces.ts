@@ -1,4 +1,5 @@
 import {
+  PlaceCategory,
   StoredDirec,
   StoredPlace,
   StoredRoute,
@@ -43,27 +44,27 @@ export interface IMap {
   /**
    * @param place stored place
    */
-  addStored(place: UiPlace, categories: string[]): IPin;
+  addStored(place: UiPlace, categories: PlaceCategory[]): IPin;
 
   /**
    * @param place not stored place
    */
-  addCommon(place: UiPlace, categories: string[], draggable: boolean): IPin;
+  addCommon(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
 
   /**
    * @param place starting point of a route in `Routes` form
    */
-  addSource(place: UiPlace, categories: string[], draggable: boolean): IPin;
+  addSource(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
 
   /**
    * @param place destination of a route in `Routes` form
    */
-  addTarget(place: UiPlace, categories: string[], draggable: boolean): IPin;
+  addTarget(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
 
   /**
    * @param place the center of a circle in `Places` form
    */
-  addCenter(place: UiPlace, categories: string[], draggable: boolean): IPin;
+  addCenter(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
 
   /**
    * @param center Location of the center of a circle.

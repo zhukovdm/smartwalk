@@ -8,8 +8,7 @@ import {
 } from "@mui/material";
 import { AppContext } from "../App";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
-import { SmartWalkFetcher } from "../utils/smartwalk";
-import { point2place } from "../utils/helpers";
+import { usePlace, useStoredPlaces } from "../features/hooks";
 import { useAppDispatch, useAppSelector } from "../features/store";
 import { setBlock } from "../features/panelSlice";
 import { resetSearchPlaces } from "../features/searchPlacesSlice";
@@ -20,6 +19,8 @@ import {
   setSearchPlacesRadius,
   updateSearchPlacesCategory
 } from "../features/searchPlacesSlice";
+import { point2place } from "../utils/helpers";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import {
   FreePlaceListItem,
@@ -35,7 +36,15 @@ export default function SearchPlacesPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
-  const { center, radius, categories } = useAppSelector(state => state.searchPlaces);
+
+  const storedPlaces = useStoredPlaces();
+  const {
+    center: storedCenter,
+    radius,
+    categories
+  } = useAppSelector((state) => state.searchPlaces);
+
+  const center = usePlace(storedCenter, storedPlaces, new Map());
 
   const [selectDialog, setSelectDialog] = useState(false);
 
@@ -53,8 +62,8 @@ export default function SearchPlacesPanel(): JSX.Element {
   }, [map, navigate, dispatch, center, radius]);
 
   const searchAction = async () => {
+    dispatch(setBlock(true));
     try {
-      dispatch(setBlock(true));
       const places = await SmartWalkFetcher.searchPlaces({
         center: center!,
         radius: radius,
@@ -71,7 +80,7 @@ export default function SearchPlacesPanel(): JSX.Element {
 
   return (
     <Box>
-      <LogoCloseMenu onLogo={() => {}} />
+      <LogoCloseMenu />
       <MainMenu panel={1} />
       <Stack
         direction={"column"}
@@ -98,7 +107,7 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Box>
         <Box>
           <Typography>
-            At a distance at most (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometers" underline="hover">km</Link>):
+            At a distance at most (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometres" underline="hover">km</Link>):
           </Typography>
         </Box>
         <Box>

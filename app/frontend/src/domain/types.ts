@@ -372,7 +372,7 @@ type RouteAttributes = RoutesRequest & {
   /** Places lying on the path. */
   places: Place[];
 
-  /** List of smartId identifiers. */
+  /** Ordered list of smartId identifiers. */
   waypoints: string[];
 };
 

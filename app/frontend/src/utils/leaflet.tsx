@@ -8,7 +8,7 @@ import L, {
   PointExpression
 } from "leaflet";
 import * as ReactDOMServer from "react-dom/server";
-import { WgsPoint, UiPlace } from "../domain/types";
+import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { IMap, IPin } from "../domain/interfaces";
 import { point2place } from "./helpers";
 
@@ -63,7 +63,7 @@ class LeafletFace implements BaseIconOptions {
 
 type PlacePopupProps = {
   place: UiPlace;
-  categories: string[];
+  categories: PlaceCategory[];
 };
 
 /**
@@ -74,7 +74,7 @@ function PlacePopup({ place, categories }: PlacePopupProps): JSX.Element {
 
   const lst = categories.length === 0
     ? place.keywords
-    : place.categories.map((c) => `${c}: ${categories[c]}`);
+    : place.categories.map((c) => `${c + 1}: ${categories[c].keyword}`);
 
   return (
     <div>
@@ -91,7 +91,7 @@ function PlacePopup({ place, categories }: PlacePopupProps): JSX.Element {
 
 class PlacePopupFactory {
 
-  public static getPopup(place: UiPlace, categories: string[]): string {
+  public static getPopup(place: UiPlace, categories: PlaceCategory[]): string {
     return ReactDOMServer.renderToString(<PlacePopup place={place} categories={categories} />);
   }
 }
@@ -175,7 +175,7 @@ export class LeafletMap implements IMap {
     return L.marker(new LatLng(point.lat, point.lon), { icon: icon, draggable: draggable }).addTo(this.markerLayer);
   }
 
-  private generatePin(place: UiPlace, categories: string[], icon: Icon<any>, draggable: boolean): LeafletPin {
+  private generatePin(place: UiPlace, categories: PlaceCategory[], icon: Icon<any>, draggable: boolean): LeafletPin {
     const p = PlacePopupFactory.getPopup(place, categories);
     return new LeafletPin(place, this.addMarker(place.location, icon, draggable).bindPopup(p));
   }
@@ -184,7 +184,7 @@ export class LeafletMap implements IMap {
     return this.pins[this.pins.push(pin) - 1];
   }
 
-  private addPlace(place: UiPlace, categories: string[], icon: Icon<any>, draggable: boolean): IPin {
+  private addPlace(place: UiPlace, categories: PlaceCategory[], icon: Icon<any>, draggable: boolean): IPin {
     return this.appendPin(this.generatePin(place, categories, icon, draggable));
   }
 
@@ -220,23 +220,23 @@ export class LeafletMap implements IMap {
     }
   }
 
-  public addStored(place: UiPlace, categories: string[]): IPin {
+  public addStored(place: UiPlace, categories: PlaceCategory[]): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.stored, false);
   }
 
-  public addCommon(place: UiPlace, categories: string[], draggable: boolean): IPin {
+  public addCommon(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.common, draggable);
   }
 
-  public addSource(place: UiPlace, categories: string[], draggable: boolean): IPin {
+  public addSource(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.source, draggable);
   }
 
-  public addTarget(place: UiPlace, categories: string[], draggable: boolean): IPin {
+  public addTarget(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.target, draggable);
   }
 
-  public addCenter(place: UiPlace, categories: string[], draggable: boolean): IPin {
+  public addCenter(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin {
     return this.addPlace(place, categories, LeafletMap.icons.center, draggable);
   }
 

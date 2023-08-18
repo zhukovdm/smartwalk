@@ -7,7 +7,7 @@ import {
   Stack
 } from "@mui/material";
 import { KeywordFilterNumeric } from "../../domain/types";
-import { camelCaseToKeyword } from "../../domain/functions";
+import { camelCaseToLabel } from "../../domain/functions";
 import { useAppSelector } from "../../features/store";
 
 type KeywordFilterViewNumericProps = {
@@ -44,7 +44,7 @@ export default function KeywordFilterViewNumeric({ label, setter, initial }: Key
     <Stack spacing={3}>
       <FormControlLabel
         control={<Checkbox checked={check} onChange={toggle} />}
-        label={`${camelCaseToKeyword(label)} between ${value[0]} and ${value[1]}`}
+        label={`${camelCaseToLabel(label)} between ${value[0]} and ${value[1]}`}
       />
       <Box display={"flex"} justifyContent={"center"}>
         <Slider

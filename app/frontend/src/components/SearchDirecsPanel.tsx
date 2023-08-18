@@ -6,24 +6,30 @@ import {
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { useAppDispatch, useAppSelector } from "../features/store";
 import { setBlock } from "../features/panelSlice";
-import { setSearchDirecsWaypoints } from "../features/searchDirecsSlice";
+import { resetSearchDirecs } from "../features/searchDirecsSlice";
 import { setResultDirecs } from "../features/resultDirecsSlice";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import BottomButtons from "./search/BottomButtons";
 import SearchDirecsSequence from "./search/SearchDirecsSequence";
+import { usePlaces, useStoredPlaces, useStoredSmarts } from "../features/hooks";
 
 export default function SearchDirecsPanel(): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const { waypoints } = useAppSelector((state) => state.searchDirecs);
+  const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
+  const {
+    waypoints: storedWaypoints
+  } = useAppSelector((state) => state.searchDirecs);
+
+  const waypoints = usePlaces(storedWaypoints, storedPlaces, storedSmarts);
 
   const searchAction = async () => {
+    dispatch(setBlock(true));
     try {
-      dispatch(setBlock(true));
-      const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
-      dispatch(setResultDirecs(direcs));
+      dispatch(setResultDirecs(await SmartWalkFetcher.searchDirecs(waypoints)));
       navigate(RESULT_DIRECS_ADDR);
     }
     catch (ex) { alert(ex); }
@@ -41,10 +47,14 @@ export default function SearchDirecsPanel(): JSX.Element {
           Define sequence of points (at least two), and find the fastest routes
           visiting them in order.
         </Typography>
-        <SearchDirecsSequence sequence={waypoints} />
+        <SearchDirecsSequence
+          waypoints={waypoints}
+          storedPlaces={storedPlaces}
+          storedSmarts={storedSmarts}
+        />
         <BottomButtons
           disabled={waypoints.length < 2}
-          onClear={() => { dispatch(setSearchDirecsWaypoints([])); }}
+          onClear={() => { dispatch(resetSearchDirecs()); }}
           onSearch={() => { searchAction(); }}
         />
       </Stack>
