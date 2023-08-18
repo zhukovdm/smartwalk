@@ -8,6 +8,7 @@ import resultDirecsReducer from "./resultDirecsSlice";
 import resultPlacesReducer from "./resultPlacesSlice";
 import resultRoutesReducer from "./resultRoutesSlice";
 import favoritesReducer from "./favoritesSlice";
+import viewerReducer from "./viewerSlice";
 import entityReducer from "./entitySlice";
 import sessionReducer from "./sessionSlice";
 import solidReducer from "./solidSlice";
@@ -22,6 +23,7 @@ export const store = configureStore({
     resultPlaces: resultPlacesReducer,
     resultRoutes: resultRoutesReducer,
     favorites: favoritesReducer,
+    viewer: viewerReducer,
     entity: entityReducer,
     session: sessionReducer,
     solid: solidReducer,
