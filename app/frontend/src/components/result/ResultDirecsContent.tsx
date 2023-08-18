@@ -1,21 +1,29 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Box,
   Button,
+  Pagination,
   Stack,
   Typography
 } from "@mui/material";
 import { AppContext } from "../../App";
-import { StoredPlace, UiDirec } from "../../domain/types";
-import { useAppSelector } from "../../features/hooks";
-import { SteadyPlaceListItem } from "../shared/list-items";
+import { UiDirec } from "../../domain/types";
+import { isPlaceStored } from "../../domain/functions";
+import {
+  usePlaces,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/store";
+import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
+import { SteadyPlaceListItem } from "../shared/_list-items";
 import SaveDirecDialog from "./SaveDirecDialog";
 
 type ResultDirecsContentProps = {
 
   /** Direction object. */
-  result: UiDirec;
+  result: UiDirec[];
 };
 
 /**
@@ -24,71 +32,87 @@ type ResultDirecsContentProps = {
 export default function ResultDirecsContent({ result }: ResultDirecsContentProps): JSX.Element {
 
   const { map } = useContext(AppContext);
-  const { places } = useAppSelector(state => state.favourites);
+
+  const dispatch = useAppDispatch();
+  const { index } = useAppSelector((state) => state.resultDirecs);
 
   const [saveDialog, setSaveDialog] = useState(false);
 
+  const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
   const {
     direcId,
     name,
     path,
-    waypoints: sequence
-  } = result;
+    waypoints: resultWaypoints
+  } = result[index];
 
-  const knownPlaces = useMemo(() => {
-    return places.reduce((str, place) => { return str.set(place.placeId, place) }, new Map<string, StoredPlace>());
-  }, [places]);
+  const waypoints = usePlaces(resultWaypoints, storedPlaces, storedSmarts);
 
   useEffect(() => {
     map?.clear();
-    sequence.forEach((place) => {
-      place.placeId && knownPlaces.has(place.placeId)
-        ? map?.addStored(knownPlaces.get(place.placeId)!)
-        : map?.addCustom(place, false);
+    waypoints.forEach((waypoint) => {
+      (isPlaceStored(waypoint, storedPlaces, storedSmarts))
+        ? map?.addStored(waypoint, [])
+        : map?.addCommon(waypoint, [], false);
     });
     map?.drawPolyline(path.polyline);
-  }, [map, path, sequence, knownPlaces])
+  }, [map, path, waypoints, storedPlaces, storedSmarts]);
+
+  const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
+    dispatch(setResultDirecsIndex(value - 1));
+  };
 
   return (
-    <Stack direction="column" gap={2.7}>
+    <Stack direction={"column"} gap={2.7}>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        width={"100%"}
+      >
+        <Pagination
+          count={result.length}
+          page={index + 1}
+          onChange={onPage}
+        />
+      </Box>
       {(direcId)
-        ? <Alert severity="success">
+        ? <Alert severity={"success"}>
             Saved as <strong>{name}</strong>.
           </Alert>
         : <Box>
             <Alert
               icon={false}
-              severity="info"
-              action={<Button color="inherit" size="small" onClick={() => { setSaveDialog(true); }}>Save</Button>}
+              severity={"info"}
+              action={
+                <Button
+                  color={"inherit"}
+                  size={"small"}
+                  onClick={() => { setSaveDialog(true); }}
+                >
+                  <span>Save</span>
+                </Button>}
             >
               Would you like to save this direction?
             </Alert>
-            {saveDialog && <SaveDirecDialog direc={result} onHide={() => { setSaveDialog(false); }} />}
+            {saveDialog && <SaveDirecDialog direc={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />}
           </Box>
       }
-      <Box display="flex" alignItems="center">
-        <Typography fontSize="1.2rem">
+      <Box display={"flex"} alignItems={"center"}>
+        <Typography fontSize={"1.2rem"}>
           Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> km
         </Typography>
       </Box>
-      <Stack direction="column" gap={2}>
-        {sequence
-          .map((place, i) => {
-            const pt = place.placeId ? knownPlaces.get(place.placeId) : undefined;
-            return (pt)
-              ? <SteadyPlaceListItem  
-                  key={i}
-                  kind="stored"
-                  label={pt.name}
-                  onPlace={() => { map?.flyTo(pt); }}
-                />
-              : <SteadyPlaceListItem
-                  key={i}
-                  kind="custom"
-                  label={place.name}
-                  onPlace={() => { map?.flyTo(place); }}
-                />
-          })
+      <Stack direction={"column"} gap={2}>
+        {waypoints
+          .map((waypoint, i) => (
+            <SteadyPlaceListItem  
+              key={i}
+              kind={isPlaceStored(waypoint, storedPlaces, storedSmarts) ? "stored" : "custom"}
+              label={waypoint.name}
+              onPlace={() => { map?.flyTo(waypoint); }}
+            />
+          ))
         }
       </Stack>
     </Stack>

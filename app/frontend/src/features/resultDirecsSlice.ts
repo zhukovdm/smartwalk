@@ -1,11 +1,16 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiDirec } from "../domain/types";
+import { updateItemImmutable } from "./immutable";
 
 type ResultDirecsState = {
+  index: number;
   result: UiDirec[];
 };
 
-const initialState = (): ResultDirecsState => ({ result: [] });
+const initialState = (): ResultDirecsState => ({
+  index: 0,
+  result: []
+});
 
 export const resultDirecsSlice = createSlice({
   name: "result/direcs",
@@ -14,11 +19,20 @@ export const resultDirecsSlice = createSlice({
     setResultDirecs: (state, action: PayloadAction<UiDirec[]>) => {
       state.result = action.payload;
     },
+    updateResultDirec: (state, action: PayloadAction<{ direc: UiDirec, index: number }>) => {
+      const { direc, index } = action.payload;
+      state.result = updateItemImmutable(state.result, direc, index);
+    },
+    setResultDirecsIndex: (state, action: PayloadAction<number>) => {
+      state.index = action.payload;
+    }
   }
 });
 
 export const {
-  setResultDirecs
+  setResultDirecs,
+  setResultDirecsIndex,
+  updateResultDirec,
 } = resultDirecsSlice.actions;
 
 export default resultDirecsSlice.reducer;

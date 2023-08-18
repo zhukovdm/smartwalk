@@ -3,12 +3,16 @@ import { UiRoute } from "../domain/types";
 import { updateItemImmutable } from "./immutable";
 
 type ResultRoutesState = {
+  filters: string[];
   index: number;
   result: UiRoute[];
-  filters: string[];
 };
 
-const initialState = (): ResultRoutesState => ({ index: 0, result: [], filters: [] });
+const initialState = (): ResultRoutesState => ({
+  filters: [],
+  index: 0,
+  result: [],
+});
 
 export const resultRoutesSlice = createSlice({
   name: "result/routes",
@@ -32,9 +36,9 @@ export const resultRoutesSlice = createSlice({
 
 export const {
   setResultRoutes,
-  updateResultRoute,
   setResultRoutesIndex,
-  setResultRoutesFilters
+  setResultRoutesFilters,
+  updateResultRoute
 } = resultRoutesSlice.actions;
 
 export default resultRoutesSlice.reducer;

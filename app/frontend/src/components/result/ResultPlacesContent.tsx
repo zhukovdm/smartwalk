@@ -2,11 +2,16 @@ import { useContext, useEffect, useMemo } from "react";
 import { Stack, Typography } from "@mui/material";
 import { AppContext } from "../../App";
 import { PlacesResult } from "../../domain/types";
-import { RESULT_PLACES_ADDR } from "../../domain/routing";
-import { getCopyStoredPlaces, getSatConditions } from "../../domain/functions";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { setResultPlacesFilters } from "../../features/resultPlacesSlice";
-import { SteadyPlaceListItem } from "../shared/list-items";
+import { getSatCategories } from "../../domain/functions";
+import {
+  usePlace,
+  usePlaces,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/store";
+import { updateResultPlacesFilter } from "../../features/resultPlacesSlice";
+import { SteadyPlaceListItem } from "../shared/_list-items";
 import PlacesList from "./PlacesList";
 import PlacesFilter from "./PlacesFilter";
 
@@ -19,46 +24,53 @@ type ResultPlacesContentProps = {
 /**
  * Component presenting a result of searching places within a given circle.
  */
-export default function ResultPlacesContent({ result }: ResultPlacesContentProps): JSX.Element {
-
-  const { center, radius, categories: conditions, places: foundPlaces } = result;
+export default function ResultPlacesContent(
+  { result }: ResultPlacesContentProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
-  const { places: knownPlaces } = useAppSelector(state => state.favourites);
-  const { filters: filterLst } = useAppSelector(state => state.resultPlaces);
 
-  // get a set of activated filters
-  const filterSet = useMemo(() => new Set(filterLst), [filterLst]);
+  const { filters: filterList } = useAppSelector(state => state.resultPlaces);
 
-  // create a copy of known grains found in the pile of known places
-  const knownGrains = useMemo(() => getCopyStoredPlaces(knownPlaces), [knownPlaces]);
+  const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
+  const {
+    center: resultCenter,
+    radius,
+    places: resultPlaces,
+    categories
+  } = result;
 
-  // extract conditions satisfied by the result
-  const satConditions = useMemo(() => getSatConditions(foundPlaces), [foundPlaces]);
+  const center = usePlace(resultCenter, storedPlaces, new Map())!;
 
-  // select places based on the activated filters
-  const shownPlaces = useMemo(() => foundPlaces.filter((place) => {
-    return filterSet.size === 0 || place.categories.some((keyword) => filterSet.has(keyword));
-  }), [foundPlaces, filterSet]);
+  const places = useMemo(() => (
+    usePlaces(resultPlaces, new Map(), storedSmarts)
+      .map((place, i) => ({
+        ...structuredClone(place), /* ! */
+        categories: resultPlaces[i].categories
+      }))
+      .filter((place) => (place.categories.some((c) => filterList[c])))
+  ), [resultPlaces, storedSmarts, filterList]);
 
-  // draw places based on selected filters
+  const satCategories = useMemo(() => getSatCategories(resultPlaces), [resultPlaces]);
+
   useEffect(() => {
     map?.clear();
-    shownPlaces.forEach((place) => {
-      const grain = knownGrains.get(place.smartId);
-      if (grain) { grain.categories = place.categories; } // (!) change structuredClone
-      (grain) ? map?.addStored(grain) : map?.addTagged(place);
+    places.forEach((place) => {
+      (storedSmarts.has(place.smartId!))
+        ? map?.addStored(place, categories)
+        : map?.addCommon(place, categories, false);
     });
-    (center.placeId) ? map?.addStored(center) : map?.addCustom(center, false);
-    map?.drawCircle(center.location, radius * 1000);
-  }, [map, center, radius, foundPlaces, knownGrains, shownPlaces]);
+    map?.addCenter(center, [], false);
+    map?.drawCircle(center.location, radius * 1000.0);
+  }, [map, center, radius, places, storedSmarts]);
 
   return (
-    <Stack direction="column" gap={2.7}>
-      <Stack direction="column" gap={2}>
-        <Typography fontSize="1.2rem">
-          Found <strong>{foundPlaces.length}</strong> places at a distance at most <strong>{radius}</strong>&nbsp;km around the center point:
+    <Stack direction={"column"} gap={2.7}>
+      <Stack direction={"column"} gap={2}>
+        <Typography fontSize={"1.2rem"}>
+          Found <strong>{resultPlaces.length}</strong> places at a distance
+          at most <strong>{radius}</strong>&nbsp;km around the center point:
         </Typography>
         <SteadyPlaceListItem
           kind={center.placeId ? "stored" : "custom"}
@@ -66,27 +78,31 @@ export default function ResultPlacesContent({ result }: ResultPlacesContentProps
           onPlace={() => { map?.flyTo(center); }}
         />
       </Stack>
-      <Stack spacing={2} direction="row" justifyContent="center" flexWrap="wrap">
-        {conditions.map((c, i) => {
-          const active = filterSet.has(c.keyword);
-          return (
-            <PlacesFilter
-              key={i}
-              found={satConditions.has(c.keyword)}
-              active={active}
-              disabled={false}
-              condition={c}
-              onToggle={() => {
-                const fs = (active)
-                  ? filterLst.filter((f) => f !== c.keyword)
-                  : [...filterLst, c.keyword];
-                dispatch(setResultPlacesFilters(fs));
-              }}
-            />
-          );
-        })}
+      {categories.length > 0 &&
+        <Stack
+          direction={"row"}
+          flexWrap={"wrap"}
+          justifyContent={"center"}
+          spacing={2}
+        >
+          {categories.map((c, i) => {
+            const active = filterList[i];
+            return (
+              <PlacesFilter
+                key={i}
+                active={active}
+                category={c}
+                disabled={false}
+                found={satCategories.has(i)}
+                onToggle={() => {
+                  dispatch(updateResultPlacesFilter({ filter: !active, index: i }));
+                }}
+              />
+            );
+          })}
       </Stack>
-      <PlacesList back={RESULT_PLACES_ADDR} places={shownPlaces} grains={knownGrains} />
+      }
+      <PlacesList places={places} smarts={storedSmarts} />
     </Stack>
   );
 }

@@ -12,15 +12,18 @@ import {
 import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
 import { IdGenerator } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { createFavouriteDirec } from "../../features/favouritesSlice";
-import { setResultDirecs } from "../../features/resultDirecsSlice";
+import { useAppDispatch, useAppSelector } from "../../features/store";
+import { createFavoriteDirec } from "../../features/favoritesSlice";
+import { updateResultDirec } from "../../features/resultDirecsSlice";
 import { setBlock } from "../../features/panelSlice";
 
 type SaveDirecDialogProps = {
 
   /** Direction to be saved. */
   direc: UiDirec;
+
+  /** Position of the route in the list. */
+  index: number;
 
   /** Action hiding dialog. */
   onHide: () => void;
@@ -29,7 +32,8 @@ type SaveDirecDialogProps = {
 /**
  * Dialog for saving a direction appeared in the result.
  */
-export default function SaveDirecDialog({ direc, onHide }: SaveDirecDialogProps): JSX.Element {
+export default function SaveDirecDialog(
+  { direc, index, onHide }: SaveDirecDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { storage } = useContext(AppContext);
@@ -38,41 +42,54 @@ export default function SaveDirecDialog({ direc, onHide }: SaveDirecDialogProps)
   const [name, setName] = useState(direc.name);
 
   const saveAction = async (): Promise<void> => {
-    dispatch(setBlock(true));
     try {
+      dispatch(setBlock(true));
       const dr = { ...direc, name: name };
       const sd = {
         ...dr,
         direcId: IdGenerator.generateId(dr)
       };
       await storage.createDirec(sd);
-      dispatch(createFavouriteDirec(sd));
-      dispatch(setResultDirecs(sd));
+      dispatch(createFavoriteDirec(sd));
+      dispatch(updateResultDirec({ direc: sd, index: index }));
       onHide();
     }
     catch (ex) { alert(ex); }
-    finally { dispatch(setBlock(false)); }
+    finally {
+      dispatch(setBlock(false));
+    }
   };
 
   return (
     <Dialog open>
       <DialogTitle>Save direction</DialogTitle>
       <DialogContent>
-        <Stack direction="column" gap={2}>
+        <Stack direction={"column"} gap={2}>
           <TextField
-            value={name}
-            sx={{ mt: 0.5 }}
             onChange={(e) => setName(e.target.value)}
+            sx={{ mt: 0.5 }}
+            value={name}
           />
-          <Box maxWidth="350px">
-            <Typography fontSize="small" color="grey">
-              Save operation creates a <strong>local</strong> copy of this
-              direction. Local copies are no longer synchronized with the server.
+          <Box maxWidth={"350px"}>
+            <Typography fontSize={"small"} color={"grey"}>
+              Save operation creates a <strong>local copy</strong> of this
+              direction. Those are no longer synchronized with the server.
             </Typography>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button disabled={block} onClick={onHide} color="error">Discard</Button>
-            <Button disabled={block || !(name.trim().length > 0)} onClick={() => { saveAction(); }}>Save</Button>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Button
+              color={"error"}
+              disabled={block}
+              onClick={onHide}
+            >
+              <span>Discard</span>
+            </Button>
+            <Button
+              disabled={block || !(name.trim().length > 0)}
+              onClick={() => { saveAction(); }}
+            >
+              <span>Save</span>
+            </Button>
           </Box>
         </Stack>
       </DialogContent>

@@ -8,16 +8,16 @@ import {
   Typography
 } from "@mui/material";
 import { AppContext } from "../../App";
-import { UiRoute } from "../../domain/types";
-import { RESULT_ROUTES_ADDR } from "../../domain/routing";
+import { UiPlace, UiRoute } from "../../domain/types";
 import {
-  getCopyStoredPlaces,
-  getSatConditions,
-  replaceName
-} from "../../domain/functions";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
+  usePlace,
+  usePlaces,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../../features/hooks";
+import { useAppDispatch, useAppSelector } from "../../features/store";
 import { setResultRoutesIndex } from "../../features/resultRoutesSlice";
-import { SteadyPlaceListItem } from "../shared/list-items";
+import { SteadyPlaceListItem } from "../shared/_list-items";
 import PlacesList from "./PlacesList";
 import PlacesFilter from "./PlacesFilter";
 import SaveRouteDialog from "./SaveRouteDialog";
@@ -25,7 +25,7 @@ import SaveRouteDialog from "./SaveRouteDialog";
 type ResultRoutesContentProps = {
 
   /**
-   * Non-empty list of routes.
+   * **Non-empty** list of routes.
    */
   result: UiRoute[];
 };
@@ -33,93 +33,130 @@ type ResultRoutesContentProps = {
 /**
  * Component presenting the content of a route search result.
  */
-export default function ResultRoutesContent({ result }: ResultRoutesContentProps): JSX.Element {
+export default function ResultRoutesContent(
+  { result }: ResultRoutesContentProps): JSX.Element {
+
+  const { map } = useContext(AppContext);
 
   const dispatch = useAppDispatch();
-  const { map } = useContext(AppContext);
   const { index } = useAppSelector(state => state.resultRoutes);
-  const { places: knownPlaces } = useAppSelector(state => state.favourites);
 
   const [saveDialog, setSaveDialog] = useState(false);
 
-  const route = useMemo(() => result[index], [result, index]);
+  const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
   const {
     routeId,
-    name,
-    source: s,
-    target: t,
+    source: resultSource,
+    target: resultTarget,
     distance,
-    conditions,
+    categories,
+    name,
     path,
-    places: waypoints
-  } = route;
+    places: resultPlaces,
+    waypoints // true route sequence!
+  } = result[index];
 
-  const knownGrains = useMemo(() => getCopyStoredPlaces(knownPlaces), [knownPlaces]);
+  const source = usePlace(resultSource, storedPlaces, new Map())!;
+  const target = usePlace(resultTarget, storedPlaces, new Map())!;
 
-  const satConditions = useMemo(() => getSatConditions(waypoints), [waypoints]);
-
-  const source = useMemo(() => replaceName(s, knownGrains), [s, knownGrains]);
-
-  const target = useMemo(() => replaceName(t, knownGrains), [t, knownGrains]);
+  const places = useMemo(() => (
+    usePlaces(resultPlaces, new Map(), storedSmarts)
+      .map((place, i) => ({
+        ...structuredClone(place), /* ! */
+        categories: resultPlaces[i].categories
+      }))
+  ), [resultPlaces, storedSmarts]);
 
   useEffect(() => {
     map?.clear();
-    waypoints.forEach((place) => {
-      const grain = knownGrains.get(place.smartId);
-      if (grain) { grain.categories = place.categories; } // (!) change structuredClone
-      (grain) ? map?.addStored(grain) : map?.addTagged(place);
+
+    const ps = places
+      .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>());
+
+    waypoints.forEach((waypoint) => {
+      const place = ps.get(waypoint)!;
+      (storedSmarts.has(place.smartId!))
+        ? map?.addStored(place, categories)
+        : map?.addCommon(place, categories, false);
     });
-    map?.addSource(source, false);
-    map?.addTarget(target, false);
+
+    map?.addSource(source, [], false);
+    map?.addTarget(target, [], false);
     map?.drawPolyline(path.polyline);
-  }, [map, source, target, path, waypoints, knownGrains]);
+  }, [map, waypoints, source, target, path, places, storedSmarts, categories]);
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultRoutesIndex(value - 1));
   };
 
   return (
-    <Stack direction="column" gap={2.7}>
-      <Box display="flex" justifyContent="center" width="100%">
-        <Pagination count={result.length} page={index + 1} onChange={onPage} />
+    <Stack direction={"column"} gap={2.7}>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+        width={"100%"}
+      >
+        <Pagination
+          count={result.length}
+          onChange={onPage}
+          page={index + 1}
+        />
       </Box>
       {(routeId)
-        ? <Alert severity="success">
+        ? <Alert severity={"success"}>
             Saved as <strong>{name}</strong>.
           </Alert>
         : <Box>
-            <Alert icon={false} severity="info" action={<Button color="inherit" size="small" onClick={() => { setSaveDialog(true); }}>Save</Button>}>
+            <Alert
+              icon={false}
+              severity={"info"}
+              action={
+                <Button
+                  color={"inherit"}
+                  size={"small"}
+                  onClick={() => { setSaveDialog(true); }}
+                >
+                  <span>Save</span>
+                </Button>
+              }
+            >
               Would you like to save this route?
             </Alert>
-            {saveDialog && <SaveRouteDialog index={index} route={route} onHide={() => { setSaveDialog(false); }} />}
+            {saveDialog && <SaveRouteDialog route={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />}
           </Box>
       }
-      <Box display="flex" alignItems="center">
-        <Typography fontSize="1.2rem">
+      <Box display={"flex"} alignItems={"center"}>
+        <Typography fontSize={"1.2rem"}>
           Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> / {distance} km
         </Typography>
       </Box>
-      <Stack direction="row" justifyContent="center" flexWrap="wrap" gap={2}>
-        {conditions.map((c, i) => (
+      <Stack
+        direction={"row"}
+        flexWrap={"wrap"}
+        gap={2}
+        justifyContent={"center"}
+      >
+        {categories.map((c, i) => (
           <PlacesFilter
             key={i}
-            found={satConditions.has(c.keyword)}
             active={false}
+            category={c}
             disabled={true}
-            condition={c}
+            found={true}
             onToggle={() => {}}
           />
         ))}
       </Stack>
-      <Stack direction="column" gap={2}>
+      <Stack direction={"column"} gap={2}>
         <SteadyPlaceListItem
-          kind="source"
+          kind={"source"}
           label={source.name}
           onPlace={() => { map?.flyTo(source); }}
         />
-        <PlacesList back={RESULT_ROUTES_ADDR} places={waypoints} grains={knownGrains} />
+        <PlacesList places={places} smarts={storedSmarts} />
         <SteadyPlaceListItem
-          kind="target"
+          kind={"target"}
           label={target.name}
           onPlace={() => { map?.flyTo(target); }}
         />

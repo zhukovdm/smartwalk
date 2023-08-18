@@ -6,7 +6,7 @@ import {
   Typography
 } from "@mui/material";
 import { PlaceCategory } from "../../domain/types";
-import PlaceConditionDialog from "./PlaceConditionDialog";
+import PlaceCategoryDialog from "./PlaceCategoryDialog";
 
 type PlacesFilterProps = {
 
@@ -19,8 +19,8 @@ type PlacesFilterProps = {
   /** Indicate if the filter is disabled. */
   disabled: boolean;
 
-  /** Condition that forms filter */
-  condition: PlaceCategory;
+  /** Category that forms a filter. */
+  category: PlaceCategory;
 
   /** Toggle filter selection */
   onToggle: () => void;
@@ -29,21 +29,33 @@ type PlacesFilterProps = {
 /**
  * Filter based on actual conditions.
  */
-export default function PlacesFilter({ found, active, disabled, condition, onToggle }: PlacesFilterProps): JSX.Element {
+export default function PlacesFilter(
+  { found, active, disabled, category, onToggle }: PlacesFilterProps): JSX.Element {
 
   const [condDialog, setCondDialog] = useState(false);
 
   return (
     <Box>
-      <Stack direction="row" justifyContent="center" alignItems="center">
-        <Checkbox disabled={disabled || !found} checked={active} onChange={onToggle} />
-        <Box onClick={() => { setCondDialog(true); }} sx={{ cursor: "pointer" }}>
+      <Stack
+        alignItems={"center"}
+        direction={"row"}
+        justifyContent={"center"}
+      >
+        <Checkbox
+          checked={active}
+          disabled={disabled || !found}
+          onChange={onToggle}
+        />
+        <Box
+          onClick={() => { setCondDialog(true); }}
+          sx={{ cursor: "pointer" }}
+        >
           <Typography sx={{ textDecorationLine: found ? undefined : "line-through", color: found ? undefined : "grey" }}>
-            {condition.keyword}
+            {category.keyword}
           </Typography>
         </Box>
       </Stack>
-      {condDialog && <PlaceConditionDialog onHide={() => { setCondDialog(false); }} condition={condition} />}
+      {condDialog && <PlaceCategoryDialog onHide={() => { setCondDialog(false); }} category={category} />}
     </Box>
   );
 }

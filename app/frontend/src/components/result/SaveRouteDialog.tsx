@@ -12,8 +12,8 @@ import {
 import { AppContext } from "../../App";
 import { UiRoute } from "../../domain/types";
 import { IdGenerator } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { createFavouriteRoute } from "../../features/favouritesSlice";
+import { useAppDispatch, useAppSelector } from "../../features/store";
+import { createFavoriteRoute } from "../../features/favoritesSlice";
 import { updateResultRoute } from "../../features/resultRoutesSlice";
 import { setBlock } from "../../features/panelSlice";
 
@@ -32,7 +32,8 @@ type SaveRouteDialogProps = {
 /**
  * Dialog for saving a route appeared in the result.
  */
-export default function SaveRouteDialog({ route, index, onHide }: SaveRouteDialogProps): JSX.Element {
+export default function SaveRouteDialog(
+  { route, index, onHide }: SaveRouteDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { storage } = useContext(AppContext);
@@ -49,7 +50,7 @@ export default function SaveRouteDialog({ route, index, onHide }: SaveRouteDialo
         routeId: IdGenerator.generateId(rt)
       };
       await storage.createRoute(sr);
-      dispatch(createFavouriteRoute(sr));
+      dispatch(createFavoriteRoute(sr));
       dispatch(updateResultRoute({ route: sr, index: index }));
       onHide();
     }
@@ -61,21 +62,32 @@ export default function SaveRouteDialog({ route, index, onHide }: SaveRouteDialo
     <Dialog open>
       <DialogTitle>Save route</DialogTitle>
       <DialogContent>
-        <Stack direction="column" gap={2}>
+        <Stack direction={"column"} gap={2}>
           <TextField
             value={name}
             sx={{ mt: 0.5 }}
             onChange={(e) => setName(e.target.value)}
           />
-          <Box maxWidth="350px">
-            <Typography fontSize="small" color="grey">
-              Save operation creates a <strong>local</strong> copy of this
-              route. Local copies are no longer synchronized with the server.
+          <Box maxWidth={"350px"}>
+            <Typography fontSize={"small"} color={"grey"}>
+              Save operation creates a <strong>local copy</strong> of this
+              route. Those are no longer synchronized with the server.
             </Typography>
           </Box>
-          <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-            <Button disabled={block} onClick={onHide} color="error">Discard</Button>
-            <Button disabled={block || !(name.trim().length > 0)} onClick={() => { saveAction(); }}>Save</Button>
+          <Box display={"flex"} justifyContent={"space-between"}>
+            <Button
+              color={"error"}
+              disabled={block}
+              onClick={onHide}
+            >
+              <span>Discard</span>
+            </Button>
+            <Button
+              disabled={block || !(name.trim().length > 0)}
+              onClick={() => { saveAction(); }}
+            >
+              <span>Save</span>
+            </Button>
           </Box>
         </Stack>
       </DialogContent>
