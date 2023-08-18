@@ -10,8 +10,8 @@ import {
 } from "@mui/material";
 import SolidProvider from "../../utils/solidProvider";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../features/hooks";
-import { setBlock } from "../../features/panelSlice";
+import { useAppDispatch, useAppSelector } from "../../features/store";
+import { setDialogBlock } from "../../features/panelSlice";
 import SolidPodLink from "./SolidPodLink";
 
 type SolidLoginDialogProps = {
@@ -26,18 +26,18 @@ type SolidLoginDialogProps = {
 export default function SolidLoginDialog({ onHide }: SolidLoginDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
-  const { block } = useAppSelector(state => state.panel);
+  const { dialogBlock } = useAppSelector((state) => state.panel);
 
   const https = "https://";
   const [provider, setProvider] = useState(https);
 
   const loginAction = async () => {
-    dispatch(setBlock(true));
+    dispatch(setDialogBlock(true));
     try {
       await SolidProvider.login(provider);
     }
     catch (ex) { alert(ex); }
-    finally { dispatch(setBlock(false)); }
+    finally { dispatch(setDialogBlock(false)); }
   };
 
   return (
@@ -50,16 +50,27 @@ export default function SolidLoginDialog({ onHide }: SolidLoginDialogProps): JSX
           </Typography>
           <Autocomplete
             freeSolo
-            size="small"
+            size={"small"}
             value={provider}
-            disabled={block}
+            disabled={dialogBlock}
             options={SolidProvider.getIdProviders()}
             onChange={(_, v) => { setProvider(v ?? ""); }}
             renderInput={(params) => (<TextField {...params} />)}
           />
-          <Stack direction="row" justifyContent="space-between">
-            <Button disabled={block} onClick={onHide} color="secondary">Cancel</Button>
-            <Button disabled={block || !(provider.length > 0)} onClick={loginAction}>Login</Button>
+          <Stack direction={"row"} justifyContent={"space-between"}>
+            <Button
+              disabled={dialogBlock}
+              onClick={onHide}
+              color={"secondary"}
+            >
+              <span>Cancel</span>
+            </Button>
+            <Button
+              disabled={dialogBlock || !(provider.length > 0)}
+              onClick={loginAction}
+            >
+              <span>Login</span>
+            </Button>
           </Stack>
         </Stack>
       </DialogContent>

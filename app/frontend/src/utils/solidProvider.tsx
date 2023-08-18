@@ -29,7 +29,7 @@ export default class SolidProvider {
   public static async login(oidcIssuer: string): Promise<void> {
     await login({
       oidcIssuer: oidcIssuer,
-      clientName: "GrainPath App",
+      clientName: "SmartWalk App",
       redirectUrl: window.location.origin + window.location.pathname
     });
   }
@@ -41,7 +41,9 @@ export default class SolidProvider {
   /**
    * Redirect handler.
    */
-  public static async redirect(onLogin: (webId: string) => void, onError: (error: string | null) => void, onLogout: () => void): Promise<void> {
+  public static async redirect(
+    onLogin: (webId: string) => void, onError: (error: string | null) => void, onLogout: () => void): Promise<void> {
+
     await handleIncomingRedirect();
     const session = getDefaultSession();
     if (session.info.isLoggedIn) {

@@ -1,8 +1,8 @@
 import { Alert, Box } from "@mui/material";
-import { useAppSelector } from "../features/hooks";
-import { HomeCloseMenu } from "./shared/menus";
+import { useAppSelector } from "../features/store";
 import SolidContent from "./session/SolidContent";
 import SolidPodLink from "./session/SolidPodLink";
+import { BackCloseMenu } from "./shared/_menus";
 
 /**
  * Panel corresponding to Solid storage provider.
@@ -12,11 +12,11 @@ export default function SessionSolidPanel(): JSX.Element {
   const {
     login,
     solid
-  } = useAppSelector(state => state.session);
+  } = useAppSelector((state) => state.session);
 
   return (
     <Box>
-      <HomeCloseMenu />
+      <BackCloseMenu />
       <Box sx={{ m: 2 }}>
         {login && solid
           ? <SolidContent />

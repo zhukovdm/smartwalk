@@ -1,22 +1,18 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 type SolidState = {
-  webId: string;
+  activated: boolean;
+  availablePods?: string[];
   redirect: boolean;
   selectedPod: string | null;
-  availablePods?: string[];
-  placesCurCount?: number;
-  placesTotCount?: number;
-  routesCurCount?: number;
-  routesTotCount?: number;
-  direcsCurCount?: number;
-  direcsTotCount?: number;
+  webId: string;
 };
 
 const initialState = (): SolidState => ({
-  webId: "",
+  activated: false,
   redirect: false,
-  selectedPod: null
+  selectedPod: null,
+  webId: ""
 });
 
 export const solidSlice = createSlice({
@@ -24,11 +20,11 @@ export const solidSlice = createSlice({
   initialState: initialState(),
   reducers: {
     resetSolid: () => initialState(),
+    activateSolid: (state) => {
+      state.activated = true;
+    },
     setSolidRedirect: (state) => {
       state.redirect = true;
-    },
-    setSolidWebId: (state, action: PayloadAction<string>) => {
-      state.webId = action.payload;
     },
     setSolidSelectedPod: (state, action: PayloadAction<string | null>) => {
       state.selectedPod = action.payload;
@@ -36,39 +32,19 @@ export const solidSlice = createSlice({
     setSolidAvailablePods: (state, action: PayloadAction<string[]>) => {
       state.availablePods = action.payload;
     },
-    setSolidPlacesCurCount: (state, action: PayloadAction<number>) => {
-      state.placesCurCount = action.payload;
-    },
-    setSolidPlacesTotCount: (state, action: PayloadAction<number>) => {
-      state.placesTotCount = action.payload;
-    },
-    setSolidRoutesCurCount: (state, action: PayloadAction<number>) => {
-      state.routesCurCount = action.payload;
-    },
-    setSolidRoutesTotCount: (state, action: PayloadAction<number>) => {
-      state.routesTotCount = action.payload;
-    },
-    setSolidDirecsCurCount: (state, action: PayloadAction<number>) => {
-      state.direcsCurCount = action.payload;
-    },
-    setSolidDirecsTotCount: (state, action: PayloadAction<number>) => {
-      state.direcsTotCount = action.payload;
+    setSolidWebId: (state, action: PayloadAction<string>) => {
+      state.webId = action.payload;
     }
   }
 });
 
 export const {
   resetSolid,
+  activateSolid,
   setSolidRedirect,
-  setSolidWebId,
   setSolidSelectedPod,
   setSolidAvailablePods,
-  setSolidPlacesCurCount,
-  setSolidPlacesTotCount,
-  setSolidRoutesCurCount,
-  setSolidRoutesTotCount,
-  setSolidDirecsCurCount,
-  setSolidDirecsTotCount
+  setSolidWebId,
 } = solidSlice.actions;
 
 export default solidSlice.reducer;

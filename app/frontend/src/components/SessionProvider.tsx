@@ -15,9 +15,9 @@ import { AppContext } from "../App";
 import { SESSION_SOLID_ADDR } from "../domain/routing";
 import LocalStorage from "../utils/localStorage";
 import SolidProvider from "../utils/solidProvider";
-import { useAppDispatch, useAppSelector } from "../features/hooks";
+import { useAppDispatch, useAppSelector } from "../features/store";
 import { showPanel } from "../features/panelSlice";
-import { resetFavourites } from "../features/favouritesSlice";
+import { resetFavorites } from "../features/favoritesSlice";
 import {
   resetSession,
   setSessionLogin,
@@ -28,7 +28,7 @@ import {
   setSolidRedirect,
   setSolidWebId
 } from "../features/solidSlice";
-import { SESSION_SOLID_ICON } from "./session/icons";
+import { SESSION_SOLID_ICON } from "./session/_icons";
 import SolidLoginDialog from "./session/SolidLoginDialog";
 
 const SessionButton = styled(Button)<ButtonProps>(() => ({
@@ -49,10 +49,7 @@ export default function SessionProvider():JSX.Element {
 
   // state
 
-  const {
-    login,
-    solid
-  } = useAppSelector(state => state.session);
+  const { login, solid } = useAppSelector(state => state.session);
 
   // menu
 
@@ -85,7 +82,7 @@ export default function SessionProvider():JSX.Element {
         () => {
           dispatch(resetSolid());
           dispatch(resetSession());
-          dispatch(resetFavourites());
+          dispatch(resetFavorites());
           context.storage = new LocalStorage();
         }
       );
@@ -108,21 +105,21 @@ export default function SessionProvider():JSX.Element {
     <Box sx={{ position: "absolute", top: "10px", right: "10px", zIndex: 1000 }}>
       {!login
         ? <Box>
-            <SessionButton variant="outlined" color="primary" onClick={clickMenuAction}>
+            <SessionButton variant={"outlined"} color={"primary"} onClick={clickMenuAction}>
               Log in
             </SessionButton>
             <Menu anchorEl={anchorEl} open={!!anchorEl} onClose={closeMenuAction}>
               <MenuItem onClick={() => { setSolidLoginDialog(true); closeMenuAction(); }}>
                 <ListItemIcon>
                   <Icon sx={{ display: "flex" }}>
-                    <img src={SESSION_SOLID_ICON} alt="Solid logo" />
+                    <img src={SESSION_SOLID_ICON} alt={"Solid logo"} />
                   </Icon>
                 </ListItemIcon>
                 <Typography>Solid</Typography>
               </MenuItem>
             </Menu>
           </Box>
-        : <SessionButton variant="outlined" color="success" onClick={sessionAction}>
+        : <SessionButton variant={"outlined"} color={"success"} onClick={sessionAction}>
             {sessionLabel()}
           </SessionButton>
       }

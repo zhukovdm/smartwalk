@@ -37,7 +37,7 @@ type PlacesListProps = {
   /** List of places. */
   places: UiPlace[];
 
-  /** Known places with grainId appearing in the storage. */
+  /** Known places with smartId appearing in the storage. */
   smarts: Map<string, StoredPlace>;
 };
 

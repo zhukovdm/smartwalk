@@ -1,7 +1,7 @@
 import { Link } from "@mui/material";
 
 /**
- * Standard link refering to the `Solid project / Get a pod`.
+ * Standard link referring to the `Solid project / Get a pod`.
  */
 export default function SolidPodLink(): JSX.Element {
 
@@ -10,9 +10,9 @@ export default function SolidPodLink(): JSX.Element {
   return (
     <Link
       href={url}
+      rel={"noopener noreferrer"}
+      target={"_blank"}
       title={url}
-      target="_blank"
-      rel="noopener noreferrer"
     >
       Solid Pod
     </Link>
