@@ -18,7 +18,10 @@ export default function ResultPlacesPanel(): JSX.Element {
               {result && result.places.length > 0
                 ? <ResultPlacesContent result={result} />
                 : <Alert severity={"warning"}>
-                    The result appears to be empty. Try different search parameters.
+                    {(result === undefined)
+                      ? "A communication error has occurred."
+                      : "The result appears to be empty. Try different search parameters."
+                    }
                   </Alert>
               }
             </Box>

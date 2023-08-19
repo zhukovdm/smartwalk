@@ -20,7 +20,7 @@ import {
   PlaceCategory
 } from "../../domain/types";
 
-type CollectSelectProps = {
+type CategoryFilterCollectProps = {
 
   /** Collection category. */
   label: string;
@@ -29,19 +29,20 @@ type CollectSelectProps = {
   items: string[];
 };
 
-function CollectSelect({ label, items }: CollectSelectProps): JSX.Element {
+function CategoryFilterCollect({ label, items }: CategoryFilterCollectProps): JSX.Element {
 
   return (
     <FormControl sx={{ m: 1 }}>
       <InputLabel>{label}</InputLabel>
       <Select
         multiple
+        size={"small"}
         value={items}
         inputProps={{ readOnly: true }}
         input={<OutlinedInput label={label} />}
         renderValue={(selected) => (
           <Stack direction={"row"} flexWrap={"wrap"} gap={0.2}>
-            {selected.map((v, i) => (<Chip key={i} label={v} />))}
+            {selected.map((v, i) => <Chip key={i} label={v} />)}
           </Stack>
         )}
       />
@@ -49,7 +50,10 @@ function CollectSelect({ label, items }: CollectSelectProps): JSX.Element {
   );
 }
 
-type PlaceCategoryDialogProps = {
+type CategoryFilterDialogProps = {
+
+  /** Flag showing the dialog */
+  show: boolean;
 
   /** Category to be presented. */
   category: PlaceCategory;
@@ -61,8 +65,8 @@ type PlaceCategoryDialogProps = {
 /**
  * Simplified read-only category representation.
  */
-export default function PlaceCategoryDialog(
-  { category, onHide }: PlaceCategoryDialogProps): JSX.Element {
+export default function CategoryFilterDialog(
+  { show, category, onHide }: CategoryFilterDialogProps): JSX.Element {
 
   const { keyword, filters } = category;
   const { es, bs, ns, ts, cs } = filters;
@@ -71,9 +75,9 @@ export default function PlaceCategoryDialog(
   const [esKeys, bsKeys, nsKeys, tsKeys, csKeys] = [es, bs, ns, ts, cs].map((xs) => extractKeys(xs));
 
   return (
-    <Dialog onClose={onHide} open>
+    <Dialog open={show} onClose={onHide}>
       <DialogTitle display={"flex"} justifyContent={"space-between"}>
-        <span>Place condition</span>
+        Category
         <IconButton size={"small"} onClick={onHide}>
           <Close fontSize={"small"} />
         </IconButton>
@@ -130,13 +134,13 @@ export default function PlaceCategoryDialog(
             <Stack direction={"column"} gap={1}>
               <Typography>Includes any / Excludes all</Typography>
               <Stack direction={"column"} gap={1}>
-                {csKeys.map((cat) => {
+                {csKeys.map((cat, i) => {
                   const { inc, exc } = ((cs as any)[cat]) as AttributeFilterCollect;
                   return (
-                    <Stack direction={"column"} gap={1}>
+                    <Stack key={i} direction={"column"} gap={1}>
                       <Typography>{cat}</Typography>
-                      <CollectSelect label={"Includes"} items={inc} />
-                      <CollectSelect label={"Excludes"} items={exc} />
+                      <CategoryFilterCollect label={"Includes"} items={inc} />
+                      <CategoryFilterCollect label={"Excludes"} items={exc} />
                     </Stack>
                   );
                 })}

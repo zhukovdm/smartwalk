@@ -17,9 +17,9 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import { SteadyPlaceListItem } from "../shared/_list-items";
+import { FixedPlaceListItem } from "../shared/_list-items";
 import PlacesList from "./PlacesList";
-import PlacesFilter from "./PlacesFilter";
+import CategoryFilter from "./CategoryFilter";
 import SaveRouteDialog from "./SaveRouteDialog";
 
 type ResultRoutesContentProps = {
@@ -136,24 +136,24 @@ export default function ResultRoutesContent(
         justifyContent={"center"}
       >
         {categories.map((c, i) => (
-          <PlacesFilter
+          <CategoryFilter
             key={i}
             active={false}
+            index={i}
             category={c}
-            disabled={true}
             found={true}
             onToggle={() => {}}
           />
         ))}
       </Stack>
       <Stack direction={"column"} gap={2}>
-        <SteadyPlaceListItem
+        <FixedPlaceListItem
           kind={"source"}
           label={source.name}
           onPlace={() => { map?.flyTo(source); }}
         />
         <PlacesList places={places} smarts={storedSmarts} />
-        <SteadyPlaceListItem
+        <FixedPlaceListItem
           kind={"target"}
           label={target.name}
           onPlace={() => { map?.flyTo(target); }}

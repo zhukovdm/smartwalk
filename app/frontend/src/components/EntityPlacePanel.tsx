@@ -25,7 +25,9 @@ export default function EntityPlacePanel(): JSX.Element {
           ? <Box>
               {(!!place)
                 ? <PlaceContent place={place} />
-                : <Alert severity={"warning"}>Either an entity does not exist, or a communication error occurred.</Alert>
+                : <Alert severity={"warning"}>
+                    Either an entity does not exist, or a communication error has occurred.
+                  </Alert>
               }
             </Box>
           : <Box display={"flex"} justifyContent={"center"}>

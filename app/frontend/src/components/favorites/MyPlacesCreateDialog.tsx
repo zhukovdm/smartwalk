@@ -44,9 +44,8 @@ export default function MyPlacesCreateDialog(): JSX.Element {
 
   const clickPlace = (pl: UiPlace) => {
     map?.clear();
-    map?.addCommon(pl, [], true).withDrag((point) => {
-      dispatch(setFavoriteCustomLocation(point));
-    });
+    map?.addCommon(pl, [], true)
+      .withDrag((point) => { dispatch(setFavoriteCustomLocation(point)); });
     map?.flyTo(pl);
   };
 
@@ -111,13 +110,13 @@ export default function MyPlacesCreateDialog(): JSX.Element {
         <Stack direction={"column"} gap={2} sx={{ mt: 2 }}>
           {place
             ? <RemovablePlaceListItem
-                kind={"custom"}
+                kind={"common"}
                 label={place.name}
                 onPlace={() => clickPlace(place)}
                 onDelete={deleteLocation}
               />
             : <FreePlaceListItem
-                kind={"custom"}
+                kind={"common"}
                 label={"Select point..."}
                 onPlace={addLocation}
               />

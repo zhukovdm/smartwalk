@@ -6,18 +6,18 @@ import {
   Typography
 } from "@mui/material";
 import { PlaceCategory } from "../../domain/types";
-import PlaceCategoryDialog from "./PlaceCategoryDialog";
+import CategoryFilterDialog from "./CategoryFilterDialog";
 
-type PlacesFilterProps = {
+type CategoryFilterProps = {
 
-  /** Flag is set if this condition is satisfied by some place */
+  /** Flag is set if this category is satisfied by some place */
   found: boolean;
 
   /** Indicate if the user has selected this filter */
   active: boolean;
 
-  /** Indicate if the filter is disabled. */
-  disabled: boolean;
+  /** Index of a category in the list. */
+  index: number;
 
   /** Category that forms a filter. */
   category: PlaceCategory;
@@ -27,35 +27,36 @@ type PlacesFilterProps = {
 };
 
 /**
- * Filter based on actual conditions.
+ * Filter corresponding to a passed category.
  */
-export default function PlacesFilter(
-  { found, active, disabled, category, onToggle }: PlacesFilterProps): JSX.Element {
+export default function CategoryFilter(
+  { found, active, index, category, onToggle }: CategoryFilterProps): JSX.Element {
 
-  const [condDialog, setCondDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   return (
     <Box>
       <Stack
         alignItems={"center"}
         direction={"row"}
+        gap={0.2}
         justifyContent={"center"}
       >
         <Checkbox
           checked={active}
-          disabled={disabled || !found}
+          disabled={!found}
           onChange={onToggle}
         />
         <Box
-          onClick={() => { setCondDialog(true); }}
+          onClick={() => { setShowDialog(true); }}
           sx={{ cursor: "pointer" }}
         >
           <Typography sx={{ textDecorationLine: found ? undefined : "line-through", color: found ? undefined : "grey" }}>
-            {category.keyword}
+            {`${index + 1}: ${category.keyword}`}
           </Typography>
         </Box>
       </Stack>
-      {condDialog && <PlaceCategoryDialog onHide={() => { setCondDialog(false); }} category={category} />}
+      <CategoryFilterDialog show={showDialog} onHide={() => { setShowDialog(false); }} category={category} />
     </Box>
   );
 }

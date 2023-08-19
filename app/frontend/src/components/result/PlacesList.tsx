@@ -1,36 +1,8 @@
 import { useContext } from "react";
-import { useNavigate } from "react-router-dom";
-import { IconButton, Stack } from "@mui/material";
-import { Favorite, Link } from "@mui/icons-material";
+import { Stack } from "@mui/material";
 import { AppContext } from "../../App";
 import { StoredPlace, UiPlace } from "../../domain/types";
-import { ENTITY_PLACES_ADDR } from "../../domain/routing";
-import { BusyListItem } from "../shared/_list-items";
-import { PlaceButton } from "../shared/_buttons";
-
-type ListItemLinkProps = {
-
-  /** Menu icon presented to the user. */
-  icon: JSX.Element;
-
-  /** Id known by the server. */
-  smartId: string;
-};
-
-function ListItemLink({ icon, smartId }: ListItemLinkProps): JSX.Element {
-
-  const navigate = useNavigate();
-
-  const onClick = () => {
-    navigate(`${ENTITY_PLACES_ADDR}/${smartId}`);
-  };
-
-  return (
-    <IconButton size={"small"} onClick={onClick}>
-      {icon}
-    </IconButton>
-  );
-}
+import { FixedPlaceListItem } from "../shared/_list-items";
 
 type PlacesListProps = {
 
@@ -42,7 +14,7 @@ type PlacesListProps = {
 };
 
 /**
- * List of places as per presented in the result.
+ * List of places obtained in the result (with replacement).
  */
 export default function PlacesList({ places, smarts }: PlacesListProps): JSX.Element {
 
@@ -55,17 +27,21 @@ export default function PlacesList({ places, smarts }: PlacesListProps): JSX.Ele
           const sid = place.smartId!;
           const smart = smarts.get(sid);
           return (smart)
-            ? <BusyListItem
+            ? <FixedPlaceListItem
                 key={i}
+                kind={"stored"}
                 label={smart.name}
-                l={<PlaceButton kind={"stored"} onPlace={() => { map?.flyTo(smart); }} />}
-                r={<ListItemLink icon={<Favorite />} smartId={sid} />}
+                smartId={sid}
+                title={"Fly to"}
+                onPlace={() => { map?.flyTo(smart); }}
               />
-            : <BusyListItem
+            : <FixedPlaceListItem
                 key={i}
+                kind={"common"}
                 label={place.name}
-                l={<PlaceButton kind={"tagged"} onPlace={() => { map?.flyTo(place); }} />}
-                r={<ListItemLink icon={<Link />} smartId={sid} />}
+                smartId={sid}
+                title={"Fly to"}
+                onPlace={() => { map?.flyTo(place); }}
               />
         })
       }

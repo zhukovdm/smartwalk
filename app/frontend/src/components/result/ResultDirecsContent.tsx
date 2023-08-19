@@ -17,7 +17,7 @@ import {
 } from "../../features/sharedHooks";
 import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import { SteadyPlaceListItem } from "../shared/_list-items";
+import { FixedPlaceListItem } from "../shared/_list-items";
 import SaveDirecDialog from "./SaveDirecDialog";
 
 type ResultDirecsContentProps = {
@@ -106,9 +106,9 @@ export default function ResultDirecsContent({ result }: ResultDirecsContentProps
       <Stack direction={"column"} gap={2}>
         {waypoints
           .map((waypoint, i) => (
-            <SteadyPlaceListItem  
+            <FixedPlaceListItem  
               key={i}
-              kind={isPlaceStored(waypoint, storedPlaces, storedSmarts) ? "stored" : "custom"}
+              kind={isPlaceStored(waypoint, storedPlaces, storedSmarts) ? "stored" : "common"}
               label={waypoint.name}
               onPlace={() => { map?.flyTo(waypoint); }}
             />

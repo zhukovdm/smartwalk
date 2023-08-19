@@ -1,9 +1,14 @@
 import { ReactElement } from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Link as RouterLink } from "react-router-dom";
+import { Box, Link, Stack, Typography } from "@mui/material";
 import { PlaceKind } from "./_types";
 import { DeleteButton, PlaceButton } from "./_buttons";
+import { ENTITY_PLACES_ADDR } from "../../domain/routing";
 
 type ListItemLabelProps = {
+
+  /** Link to an external entity. */
+  link?: string;
 
   /** Label presented to the user. */
   label: string;
@@ -12,14 +17,16 @@ type ListItemLabelProps = {
 /**
  * Standard list item label with centered content, and hidden overflow.
  */
-export function ListItemLabel({ label }: ListItemLabelProps): JSX.Element {
+export function ListItemLabel({ label, link }: ListItemLabelProps): JSX.Element {
   return (
     <Box
       display={"flex"}
       alignItems={"center"}
       sx={{ width: "100%", borderBottom: "1px solid lightgray", overflow: "hidden", textOverflow: "ellipsis" }}
     >
-      <Typography noWrap={true}>{label}</Typography>
+      <Typography noWrap>
+        {(!link) ? label : <Link component={RouterLink} to={link}>{label}</Link>}
+      </Typography>
     </Box>
   );
 }
@@ -59,6 +66,9 @@ type BusyListItemProps = {
   /** Label presented to the user. */
   label: string;
 
+  /** Link to an external entity. */
+  link?: string;
+
   /** An element appearing on the left. */
   l: ReactElement;
 
@@ -66,11 +76,11 @@ type BusyListItemProps = {
   r: ReactElement;
 };
 
-export function BusyListItem({ label, l, r }: BusyListItemProps): JSX.Element {
+export function BusyListItem({ label, link, l, r }: BusyListItemProps): JSX.Element {
   return (
-    <Stack direction="row" alignItems="stretch" gap={0.5}>
+    <Stack direction={"row"} alignItems={"stretch"} gap={0.5}>
       {l}
-      <ListItemLabel label={label} />
+      <ListItemLabel label={label} link={link} />
       {r}
     </Stack>
   );
@@ -83,6 +93,9 @@ type PlaceListItemProps = {
 
   /** Label on the item presented to the user. */
   label: string;
+
+  /** Identificator known to the server. */
+  smartId?: string;
 
   /** Concise action description. */
   title?: string;
@@ -101,10 +114,11 @@ export function FreePlaceListItem({ kind, label, title, onPlace }: PlaceListItem
   );
 }
 
-export function SteadyPlaceListItem({ label, ...rest }: PlaceListItemProps): JSX.Element {
+export function FixedPlaceListItem({ label, smartId, ...rest }: PlaceListItemProps): JSX.Element {
   return (
     <BusyListItem
       label={label}
+      link={(!!smartId) ? `${ENTITY_PLACES_ADDR}/${smartId}` : undefined}
       l={<PlaceButton {...rest} />}
       r={<></>}
     />

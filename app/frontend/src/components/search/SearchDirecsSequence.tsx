@@ -118,7 +118,7 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               <DragIndicator />
             </div>
             <PlaceButton
-              kind={place.placeId ? "stored" : "custom"}
+              kind={place.placeId ? "stored" : "common"}
               onPlace={() => { map?.flyTo(place); }}
             />
             <ListItemLabel label={place.name} />
@@ -192,7 +192,7 @@ export default function SearchDirecsSequence(
       {selectDialog &&
         <SelectPlaceDialog
           show={selectDialog}
-          kind={"custom"}
+          kind={"common"}
           onHide={() => { setSelectDialog(false); }}
           onSelect={(place) => { dispatch(appendSearchDirecsPlace(place)); }}
         />

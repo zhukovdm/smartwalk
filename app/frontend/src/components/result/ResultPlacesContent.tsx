@@ -11,9 +11,9 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import { SteadyPlaceListItem } from "../shared/_list-items";
+import { FixedPlaceListItem } from "../shared/_list-items";
 import PlacesList from "./PlacesList";
-import PlacesFilter from "./PlacesFilter";
+import CategoryFilter from "./CategoryFilter";
 
 type ResultPlacesContentProps = {
 
@@ -55,8 +55,9 @@ export default function ResultPlacesContent(
   useEffect(() => {
     map?.clear();
     places.forEach((place) => {
-      (storedSmarts.has(place.smartId!))
-        ? map?.addStored(place, categories)
+      const smart = storedSmarts.get(place.smartId!);
+      (!!smart)
+        ? map?.addStored(smart, categories)
         : map?.addCommon(place, categories, false);
     });
     map?.addCenter(center, [], false);
@@ -66,13 +67,16 @@ export default function ResultPlacesContent(
   return (
     <Stack direction={"column"} gap={2.7}>
       <Stack direction={"column"} gap={2}>
-        <Typography fontSize={"1.2rem"}>
-          Found <strong>{resultPlaces.length}</strong> places at a distance
-          at most <strong>{radius}</strong>&nbsp;km around the center point:
+        <Typography fontSize={"1.10rem"}>
+          Found a total of <strong>{resultPlaces.length}</strong> places
+          within a distance of at most <strong>{radius}</strong>&nbsp;km
+          around the center point:
         </Typography>
-        <SteadyPlaceListItem
-          kind={center.placeId ? "stored" : "custom"}
+        <FixedPlaceListItem
+          kind={"center"}
           label={center.name}
+          smartId={center.smartId}
+          title={"Fly to"}
           onPlace={() => { map?.flyTo(center); }}
         />
       </Stack>
@@ -86,11 +90,11 @@ export default function ResultPlacesContent(
           {categories.map((c, i) => {
             const active = filterList[i];
             return (
-              <PlacesFilter
+              <CategoryFilter
                 key={i}
                 active={active}
+                index={i}
                 category={c}
-                disabled={false}
                 found={satCategories.has(i)}
                 onToggle={() => {
                   dispatch(updateResultPlacesFilter({ filter: !active, index: i }));
@@ -98,7 +102,7 @@ export default function ResultPlacesContent(
               />
             );
           })}
-      </Stack>
+        </Stack>
       }
       <PlacesList places={places} smarts={storedSmarts} />
     </Stack>
