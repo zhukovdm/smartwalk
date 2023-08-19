@@ -38,7 +38,8 @@ type SelectPlaceDialogProps = {
 };
 
 /**
- * Component showing a dialog for selecting a place, either stored or user-defined.
+ * Component showing a dialog for selecting a place,
+ * either stored or user-defined.
  */
 export default function SelectPlaceDialog(
   { show, kind, onHide, onSelect }: SelectPlaceDialogProps): JSX.Element {
@@ -72,21 +73,21 @@ export default function SelectPlaceDialog(
   return (
     <Dialog open={show} onClose={onHide}>
       <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
-        <span>Select a point</span>
+        <span>Select point</span>
         <IconButton size={"small"} onClick={onHide}>
           <Close fontSize={"small"} />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         <Typography>
-          Click <AddPlaceButton kind={kind} size={"large"} onPlace={handleCustom} /> to select a point.
+          Click <AddPlaceButton kind={kind} size={"large"} title={"Select location"} onPlace={handleCustom} /> to select a point on the map.
         </Typography>
         <Divider>
           <Typography>OR</Typography>
         </Divider>
         <Stack direction="column" gap={2} sx={{ mt: 2 }}>
           <Typography>
-            Select a place from <b>Favorites</b>.
+            Select a place from <b>Favorites</b> and confirm.
           </Typography>
           <Autocomplete
             loading={!loaded}

@@ -65,9 +65,10 @@ type AddPlaceButtonProps = PlaceButtonProps & {
   size: "medium" | "large";
 };
 
-export function AddPlaceButton({ kind, size, onPlace }: AddPlaceButtonProps): JSX.Element {
+export function AddPlaceButton({ kind, size, title, onPlace }: AddPlaceButtonProps): JSX.Element {
   return (
     <IconWrapper
+      title={title}
       onClick={onPlace}
       icon={<AddLocation className={`${kind}-place`} fontSize={size} />}
     />

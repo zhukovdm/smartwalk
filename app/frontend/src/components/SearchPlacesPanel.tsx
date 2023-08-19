@@ -82,7 +82,7 @@ export default function SearchPlacesPanel(): JSX.Element {
             ? <FreePlaceListItem
                 kind={"center"}
                 label={"Select point..."}
-                title={"Add point"}
+                title={"Select point"}
                 onPlace={() => { setSelectDialog(true); }}
               />
             : <RemovablePlaceListItem

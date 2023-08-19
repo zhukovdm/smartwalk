@@ -90,7 +90,7 @@ export default function SearchRoutesPanel(): JSX.Element {
               ? <FreePlaceListItem
                   kind={"source"}
                   label={"Select starting point..."}
-                  title={"Add point"}
+                  title={"Select point"}
                   onPlace={() => { setSourceSelectDialog(true); }}
                 />
               : <RemovablePlaceListItem
@@ -105,7 +105,7 @@ export default function SearchRoutesPanel(): JSX.Element {
               ? <FreePlaceListItem
                   kind={"target"}
                   label={"Select destination..."}
-                  title={"Add point"}
+                  title={"Select point"}
                   onPlace={() => { setTargetSelectDialog(true); }}
                 />
               : <RemovablePlaceListItem
