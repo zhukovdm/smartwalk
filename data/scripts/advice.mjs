@@ -134,7 +134,7 @@ async function advice() {
     for (const keyword of keywords.values()) {
       await keywdColl.insertOne({
         ...keyword,
-        attributeList: [...keyword.attributeList]
+        attributeList: ["name" /* ! */, ...keyword.attributeList]
       });
     };
 
