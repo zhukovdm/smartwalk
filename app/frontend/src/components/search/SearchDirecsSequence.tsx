@@ -16,7 +16,7 @@ import { DragIndicator } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
 import { isPlaceStored } from "../../domain/functions";
-import { useAppDispatch } from "../../features/store";
+import { point2place } from "../../utils/helpers";
 import {
   appendSearchDirecsPlace,
   deleteSearchDirecsPlace,
@@ -24,7 +24,7 @@ import {
   reverseSearchDirecsWaypoints,
   updateSearchDirecsPlace
 } from "../../features/searchDirecsSlice";
-import { point2place } from "../../utils/helpers";
+import { useAppDispatch } from "../../features/storeHooks";
 import { DeleteButton, PlaceButton, SwapButton } from "../shared/_buttons";
 import { ListItemLabel } from "../shared/_list-items";
 import SelectPlaceDialog from "../shared/SelectPlaceDialog";

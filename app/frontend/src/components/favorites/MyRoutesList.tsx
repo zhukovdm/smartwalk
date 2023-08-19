@@ -12,11 +12,11 @@ import {
   SEARCH_ROUTES_ADDR,
   VIEWER_ROUTE_ADDR
 } from "../../domain/routing";
-import { useAppDispatch } from "../../features/store";
 import {
   deleteFavoriteRoute,
   updateFavoriteRoute
 } from "../../features/favoritesSlice";
+import { useAppDispatch } from "../../features/storeHooks";
 import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";

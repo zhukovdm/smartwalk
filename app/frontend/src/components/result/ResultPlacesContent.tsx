@@ -3,14 +3,14 @@ import { Stack, Typography } from "@mui/material";
 import { AppContext } from "../../App";
 import { PlacesResult } from "../../domain/types";
 import { getSatCategories } from "../../domain/functions";
+import { updateResultPlacesFilter } from "../../features/resultPlacesSlice";
 import {
   usePlace,
   usePlaces,
   useStoredPlaces,
   useStoredSmarts
-} from "../../features/hooks";
-import { useAppDispatch, useAppSelector } from "../../features/store";
-import { updateResultPlacesFilter } from "../../features/resultPlacesSlice";
+} from "../../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { SteadyPlaceListItem } from "../shared/_list-items";
 import PlacesList from "./PlacesList";
 import PlacesFilter from "./PlacesFilter";

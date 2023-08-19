@@ -8,12 +8,12 @@ import {
   SEARCH_PLACES_ADDR,
   VIEWER_PLACE_ADDR
 } from "../../domain/routing";
-import { useAppDispatch } from "../../features/store";
 import {
   updateFavoritePlace,
   deleteFavoritePlace
 } from "../../features/favoritesSlice";
 import { setViewerPlace } from "../../features/viewerSlice";
+import { useAppDispatch } from "../../features/storeHooks";
 import { PlaceButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";

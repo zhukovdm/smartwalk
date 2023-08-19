@@ -14,9 +14,9 @@ import {
   usePlaces,
   useStoredPlaces,
   useStoredSmarts
-} from "../../features/hooks";
-import { useAppDispatch, useAppSelector } from "../../features/store";
+} from "../../features/sharedHooks";
 import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { SteadyPlaceListItem } from "../shared/_list-items";
 import SaveDirecDialog from "./SaveDirecDialog";
 

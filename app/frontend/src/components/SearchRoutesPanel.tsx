@@ -10,9 +10,10 @@ import {
 import { SwapVert } from "@mui/icons-material";
 import { AppContext } from "../App";
 import { RESULT_ROUTES_ADDR } from "../domain/routing";
-import { usePlace, useStoredPlaces } from "../features/hooks";
-import { useAppDispatch, useAppSelector } from "../features/store";
+import { point2place } from "../utils/helpers";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
+import { setResultRoutes } from "../features/resultRoutesSlice";
 import {
   resetSearchRoutes,
   deleteSearchRoutesCategory,
@@ -21,18 +22,17 @@ import {
   setSearchRoutesSource,
   setSearchRoutesTarget,
 } from "../features/searchRoutesSlice";
-import { setResultRoutes } from "../features/resultRoutesSlice";
-import { point2place } from "../utils/helpers";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+import { usePlace, useStoredPlaces } from "../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../features/storeHooks";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem,
 } from "./shared/_list-items";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
-import SelectPlaceDialog from "./shared/SelectPlaceDialog";
+import BottomButtons from "./search/BottomButtons";
 import DistanceSlider from "./search/DistanceSlider";
 import KeywordsBox from "./search/KeywordsBox";
-import BottomButtons from "./search/BottomButtons";
+import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 
 export default function SearchRoutesPanel(): JSX.Element {
 

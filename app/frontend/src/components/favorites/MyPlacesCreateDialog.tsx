@@ -9,7 +9,6 @@ import {
 import { AppContext } from "../../App";
 import { UiPlace, WgsPoint } from "../../domain/types";
 import { IdGenerator, point2place } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { hidePanel, setBlock, showPanel } from "../../features/panelSlice";
 import {
   createFavoritePlace,
@@ -18,6 +17,7 @@ import {
   setFavoriteCustomName,
   setFavoriteCustomLocation
 } from "../../features/favoritesSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem

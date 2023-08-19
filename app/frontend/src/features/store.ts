@@ -1,4 +1,3 @@
-import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import panelReducer from "./panelSlice";
 import searchDirecsReducer from "./searchDirecsSlice";
@@ -30,7 +29,5 @@ export const store = configureStore({
   }
 });
 
-type DispatchFunc = () => typeof store.dispatch;
-
-export const useAppDispatch: DispatchFunc = useDispatch;
-export const useAppSelector: TypedUseSelectorHook<ReturnType<typeof store.getState>> = useSelector;
+export type StoreDispatch = () => typeof store.dispatch;
+export type StoreState = ReturnType<typeof store.getState>;

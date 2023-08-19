@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Autocomplete,
   Button,
@@ -9,9 +10,8 @@ import {
   Typography
 } from "@mui/material";
 import SolidProvider from "../../utils/solidProvider";
-import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { setDialogBlock } from "../../features/panelSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import SolidPodLink from "./SolidPodLink";
 
 type SolidLoginDialogProps = {

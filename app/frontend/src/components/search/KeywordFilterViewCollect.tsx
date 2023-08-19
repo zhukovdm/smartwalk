@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Autocomplete, Stack, TextField } from "@mui/material";
 import { KeywordFilterCollect } from "../../domain/types";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 import KeywordFilterCheckBox from "./KeywordFilterCheckBox";
 
 type CollectAutocompleteProps = {

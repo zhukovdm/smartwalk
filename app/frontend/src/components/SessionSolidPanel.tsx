@@ -1,8 +1,8 @@
 import { Alert, Box } from "@mui/material";
-import { useAppSelector } from "../features/store";
+import { useAppSelector } from "../features/storeHooks";
+import { BackCloseMenu } from "./shared/_menus";
 import SolidContent from "./session/SolidContent";
 import SolidPodLink from "./session/SolidPodLink";
-import { BackCloseMenu } from "./shared/_menus";
 
 /**
  * Panel corresponding to Solid storage provider.

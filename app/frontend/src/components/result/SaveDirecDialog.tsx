@@ -12,10 +12,10 @@ import {
 import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
 import { IdGenerator } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { createFavoriteDirec } from "../../features/favoritesSlice";
-import { updateResultDirec } from "../../features/resultDirecsSlice";
 import { setBlock } from "../../features/panelSlice";
+import { updateResultDirec } from "../../features/resultDirecsSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 
 type SaveDirecDialogProps = {
 

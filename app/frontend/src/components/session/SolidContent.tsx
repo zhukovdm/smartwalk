@@ -11,12 +11,12 @@ import {
 } from "@mui/material";
 import { AppContext } from "../../App";
 import { FAVORITES_ADDR } from "../../domain/routing";
-import { useAppDispatch, useAppSelector } from "../../features/store";
-import { activateSolid, setSolidAvailablePods } from "../../features/solidSlice";
-import { setBlock } from "../../features/panelSlice";
 import SolidStorage from "../../utils/solidStorage";
 import SolidProvider from "../../utils/solidProvider";
 import { resetFavorites } from "../../features/favoritesSlice";
+import { setBlock } from "../../features/panelSlice";
+import { activateSolid, setSolidAvailablePods } from "../../features/solidSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 
 /**
  * The content of the Solid panel upon login.

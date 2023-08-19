@@ -5,7 +5,7 @@ import {
   Typography
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 import MyDirecsList from "./MyDirecsList";
 
 export default function MyDirecsSection(): JSX.Element {

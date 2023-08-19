@@ -4,14 +4,18 @@ import {
   RESULT_DIRECS_ADDR
 } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
-import { useAppDispatch, useAppSelector } from "../features/store";
 import { setBlock } from "../features/panelSlice";
-import { resetSearchDirecs } from "../features/searchDirecsSlice";
 import { setResultDirecs } from "../features/resultDirecsSlice";
+import { resetSearchDirecs } from "../features/searchDirecsSlice";
+import {
+  usePlaces,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../features/storeHooks";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import BottomButtons from "./search/BottomButtons";
 import SearchDirecsSequence from "./search/SearchDirecsSequence";
-import { usePlaces, useStoredPlaces, useStoredSmarts } from "../features/hooks";
 
 export default function SearchDirecsPanel(): JSX.Element {
 

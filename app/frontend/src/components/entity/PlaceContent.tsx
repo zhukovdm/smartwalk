@@ -34,7 +34,7 @@ import {
   PlaceAddress
 } from "../../domain/types";
 import { point2text } from "../../utils/helpers";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 import SavePlaceDialog from "./SavePlaceDialog";
@@ -95,7 +95,9 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
 
   useEffect(() => {
     map?.clear();
-    (storedPlace) ? map?.addStored(place, []) : map?.addCommon(place, [], false);
+    (storedPlace)
+      ? map?.addStored(place, [])
+      : map?.addCommon(place, [], false);
     if (polygon) {
       map?.drawPolygon(polygon);
     }

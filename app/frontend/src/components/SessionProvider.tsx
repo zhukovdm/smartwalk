@@ -15,9 +15,8 @@ import { AppContext } from "../App";
 import { SESSION_SOLID_ADDR } from "../domain/routing";
 import LocalStorage from "../utils/localStorage";
 import SolidProvider from "../utils/solidProvider";
-import { useAppDispatch, useAppSelector } from "../features/store";
-import { showPanel } from "../features/panelSlice";
 import { resetFavorites } from "../features/favoritesSlice";
+import { showPanel } from "../features/panelSlice";
 import {
   resetSession,
   setSessionLogin,
@@ -28,6 +27,7 @@ import {
   setSolidRedirect,
   setSolidWebId
 } from "../features/solidSlice";
+import { useAppDispatch, useAppSelector } from "../features/storeHooks";
 import { SESSION_SOLID_ICON } from "./session/_icons";
 import SolidLoginDialog from "./session/SolidLoginDialog";
 

@@ -12,10 +12,10 @@ import {
 import { AppContext } from "../../App";
 import { UiRoute } from "../../domain/types";
 import { IdGenerator } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { createFavoriteRoute } from "../../features/favoritesSlice";
-import { updateResultRoute } from "../../features/resultRoutesSlice";
 import { setBlock } from "../../features/panelSlice";
+import { updateResultRoute } from "../../features/resultRoutesSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 
 type SaveRouteDialogProps = {
 

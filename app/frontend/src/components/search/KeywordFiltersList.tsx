@@ -9,7 +9,7 @@ import {
 import { ExpandMore } from "@mui/icons-material";
 import { KeywordAdviceItem } from "../../domain/types";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 import KeywordFilterViewExisten from "./KeywordFilterViewExisten";
 import KeywordFilterViewBoolean from "./KeywordFilterViewBoolean";
 import KeywordFilterViewNumeric from "./KeywordFilterViewNumeric";

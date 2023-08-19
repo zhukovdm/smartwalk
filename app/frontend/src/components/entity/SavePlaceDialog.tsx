@@ -9,13 +9,13 @@ import {
   TextField,
   Typography
 } from "@mui/material";
+import { LoadingButton } from "@mui/lab";
+import { Save } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { ExtendedPlace } from "../../domain/types";
 import { IdGenerator } from "../../utils/helpers";
-import { useAppDispatch } from "../../features/store";
 import { createFavoritePlace } from "../../features/favoritesSlice";
-import { LoadingButton } from "@mui/lab";
-import { Save } from "@mui/icons-material";
+import { useAppDispatch } from "../../features/storeHooks";
 
 type SavePlaceDialogProps = {
 

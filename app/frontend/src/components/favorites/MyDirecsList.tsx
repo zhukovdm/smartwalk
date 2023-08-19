@@ -8,12 +8,12 @@ import {
   SEARCH_DIRECS_ADDR,
   VIEWER_DIREC_ADDR
 } from "../../domain/routing";
-import { useAppDispatch } from "../../features/store";
 import {
   deleteFavoriteDirec,
   updateFavoriteDirec
 } from "../../features/favoritesSlice";
 import { setViewerDirec } from "../../features/viewerSlice";
+import { useAppDispatch } from "../../features/storeHooks";
 import { DirecButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";

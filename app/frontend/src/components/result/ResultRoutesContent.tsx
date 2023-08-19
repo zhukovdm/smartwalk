@@ -9,14 +9,14 @@ import {
 } from "@mui/material";
 import { AppContext } from "../../App";
 import { UiPlace, UiRoute } from "../../domain/types";
+import { setResultRoutesIndex } from "../../features/resultRoutesSlice";
 import {
   usePlace,
   usePlaces,
   useStoredPlaces,
   useStoredSmarts
-} from "../../features/hooks";
-import { useAppDispatch, useAppSelector } from "../../features/store";
-import { setResultRoutesIndex } from "../../features/resultRoutesSlice";
+} from "../../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { SteadyPlaceListItem } from "../shared/_list-items";
 import PlacesList from "./PlacesList";
 import PlacesFilter from "./PlacesFilter";

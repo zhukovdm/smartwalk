@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Delete } from "@mui/icons-material";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { setDialogBlock } from "../../features/panelSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { SomethingKind } from "../shared/_types";
 
 type DeleteSomethingDialogProps = {

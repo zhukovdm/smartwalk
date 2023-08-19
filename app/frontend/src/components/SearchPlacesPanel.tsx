@@ -8,19 +8,19 @@ import {
 } from "@mui/material";
 import { AppContext } from "../App";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
-import { usePlace, useStoredPlaces } from "../features/hooks";
-import { useAppDispatch, useAppSelector } from "../features/store";
+import { point2place } from "../utils/helpers";
+import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
-import { resetSearchPlaces } from "../features/searchPlacesSlice";
 import { setResultPlaces } from "../features/resultPlacesSlice";
 import {
   deleteSearchPlacesCategory,
+  resetSearchPlaces,
   setSearchPlacesCenter,
   setSearchPlacesRadius,
   updateSearchPlacesCategory
 } from "../features/searchPlacesSlice";
-import { point2place } from "../utils/helpers";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+import { usePlace, useStoredPlaces } from "../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../features/storeHooks";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import {
   FreePlaceListItem,

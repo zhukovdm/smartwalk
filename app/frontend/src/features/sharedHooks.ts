@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { StoredPlace, UiPlace } from "../domain/types";
-import { useAppSelector } from "./store";
+import { useAppSelector } from "./storeHooks";
 
 function useFavoritePlaces(f: (place: StoredPlace) => string | undefined): Map<string, StoredPlace> {
   const { places: favoritePlaces } = useAppSelector((state) => state.favorites);

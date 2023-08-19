@@ -19,8 +19,8 @@ import {
 import { AppContext } from "../../App";
 import { KeywordAdviceItem, KeywordCategory } from "../../domain/types";
 import { SmartWalkFetcher } from "../../utils/smartwalk";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { setBounds } from "../../features/panelSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import KeywordFiltersList from "./KeywordFiltersList";
 
 type CategoryDialogProps = {

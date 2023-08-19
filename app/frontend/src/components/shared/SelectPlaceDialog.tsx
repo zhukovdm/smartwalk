@@ -17,8 +17,8 @@ import { Close } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { WgsPoint, UiPlace, StoredPlace } from "../../domain/types";
 import { point2place } from "../../utils/helpers";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { hidePanel, showPanel } from "../../features/panelSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { PlaceKind } from "./_types";
 import { AddPlaceButton } from "./_buttons";
 

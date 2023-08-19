@@ -20,8 +20,8 @@ import {
   SEARCH_PLACES_ADDR,
   SEARCH_ROUTES_ADDR
 } from "../../domain/routing";
-import { useAppDispatch, useAppSelector } from "../../features/store";
 import { hidePanel } from "../../features/panelSlice";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 
 type LogoCloseMenuProps = {
 

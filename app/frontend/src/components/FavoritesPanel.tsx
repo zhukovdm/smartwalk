@@ -10,14 +10,15 @@ type FavoritesPanelProps = {
   loadedRatio: number;
 };
 
-export default function FavoritesPanel({ loaded, loadedRatio }: FavoritesPanelProps): JSX.Element {
+export default function FavoritesPanel(
+  { loaded, loadedRatio }: FavoritesPanelProps): JSX.Element {
 
   return (
     <Box>
-      <LogoCloseMenu onLogo={() => { }} />
+      <LogoCloseMenu />
       <MainMenu panel={3} />
       <Box sx={{ m: 2 }}>
-        {loaded
+        {(loaded)
           ? <Stack>
               <StorageSection />
               <MyPlacesSection />
@@ -25,7 +26,10 @@ export default function FavoritesPanel({ loaded, loadedRatio }: FavoritesPanelPr
               <MyDirecsSection />
             </Stack>
           : <Box display={"flex"} justifyContent={"center"}>
-              <CircularProgress variant={"determinate"} value={Math.floor(loadedRatio * 100.0)} />
+              <CircularProgress
+                variant={"determinate"}
+                value={Math.floor(loadedRatio * 100.0)}
+              />
             </Box>
         }
       </Box>

@@ -4,8 +4,8 @@ import { IconButton, Stack } from "@mui/material";
 import { Favorite, Link } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import { StoredPlace, UiPlace } from "../../domain/types";
-import { BusyListItem } from "../shared/_list-items";
 import { ENTITY_PLACES_ADDR } from "../../domain/routing";
+import { BusyListItem } from "../shared/_list-items";
 import { PlaceButton } from "../shared/_buttons";
 
 type ListItemLinkProps = {

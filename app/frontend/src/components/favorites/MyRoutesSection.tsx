@@ -5,7 +5,7 @@ import {
   Typography
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 import MyRoutesList from "./MyRoutesList";
 
 export default function MyRoutesSection(): JSX.Element {

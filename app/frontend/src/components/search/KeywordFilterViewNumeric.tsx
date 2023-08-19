@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 import { KeywordFilterNumeric } from "../../domain/types";
 import { camelCaseToLabel } from "../../domain/functions";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 
 type KeywordFilterViewNumericProps = {
 

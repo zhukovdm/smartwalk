@@ -1,7 +1,7 @@
 import { Search } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button } from "@mui/material";
-import { useAppSelector } from "../../features/store";
+import { useAppSelector } from "../../features/storeHooks";
 
 type BottomButtonsProps = {
 

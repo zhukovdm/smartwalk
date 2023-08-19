@@ -1,5 +1,5 @@
 import { Alert, Box } from "@mui/material";
-import { useAppSelector } from "../features/store";
+import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
 import LoadStub from "./result/LoadStub";
 import ResultDirecsContent from "./result/ResultDirecsContent";
