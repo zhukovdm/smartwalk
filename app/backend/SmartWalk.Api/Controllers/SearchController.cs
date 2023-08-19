@@ -23,9 +23,10 @@ using Direc = ShortestPath;
 public sealed class SearchController : ControllerBase
 {
     private static ProblemDetails GetProblemDetails(int status, string detail)
-    {
-        return new() { Status = status, Detail = detail };
-    }
+        => new() { Status = status, Detail = detail };
+
+    private static bool VerifyDistance(WgsPoint source, WgsPoint target)
+        => Spherical.HaversineDistance(source, target) <= 30_000;
 
     /// <summary>
     /// Check if edges define directed acyclic loop-free graph, repeated edges
@@ -52,7 +53,7 @@ public sealed class SearchController : ControllerBase
     {
         var errors = schema.Validate(query);
 
-        return errors.Count == 0
+        return (errors.Count == 0)
             ? JsonSerializer.Deserialize<T>(query)
             : throw new Exception(string.Join(", ", errors.Select((e) => e.Path + ' ' + e.Kind)));
     }
@@ -252,7 +253,14 @@ public sealed class SearchController : ControllerBase
         try
         {
             rq = DeserializeQuery<RoutesQuery>(request.query, _routesSchema);
-            if (!VerifyPrecedence(rq.precedence, rq.categories.Count)) { throw new Exception("Malformed precedence graph"); }
+
+            if (!VerifyPrecedence(rq.precedence, rq.categories.Count)) {
+                throw new Exception("Malformed precedence graph");
+            }
+
+            if (!VerifyDistance(rq.source.AsWgs(), rq.target.AsWgs())) {
+                throw new Exception("Source and target are too far from each other");
+            }
         }
         catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
 

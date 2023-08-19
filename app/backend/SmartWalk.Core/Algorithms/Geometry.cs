@@ -88,8 +88,8 @@ public static class Spherical
     /// <item>https://en.wikipedia.org/wiki/Haversine_formula#Formulation</item>
     /// </list>
     /// </summary>
-    /// <returns></returns>
-    internal static double HaversineDistance(WgsPoint p1, WgsPoint p2)
+    /// <returns>The distance in meters.</returns>
+    public static double HaversineDistance(WgsPoint p1, WgsPoint p2)
     {
         var deltaLam = DegToRad(p2.lon - p1.lon);
         var deltaPhi = DegToRad(p2.lat - p1.lat);

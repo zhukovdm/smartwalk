@@ -1,3 +1,4 @@
+import crowFlyDistance from "@turf/distance";
 import {
   BoundsAdvice,
   ExtendedPlace,
@@ -7,7 +8,8 @@ import {
   RoutesRequest,
   UiDirec,
   UiPlace,
-  UiRoute
+  UiRoute,
+  WgsPoint
 } from "../domain/types";
 
 const SMARTWALK_BASE_URL = process.env.REACT_APP_API_ADDRESS!;
@@ -105,6 +107,20 @@ export class SmartWalkFetcher {
    */
   public static async searchRoutes(request: RoutesRequest): Promise<UiRoute[]> {
     const { source, target, distance, ...rest } = request;
+
+    const toGeoJson = (point: WgsPoint) => ({
+      type: "Point",
+      coordinates: [point.lon, point.lat]
+    } as { type: "Point", coordinates: [number, number] });
+
+    const fr = toGeoJson(source.location);
+    const to = toGeoJson(target.location);
+    const cf = crowFlyDistance(fr, to, { units: "kilometers" });
+
+    if (cf > 30.0) {
+      throw Error(`Points are too far from each other (at least ${cf.toFixed(2)} km). Place them closer and repeat the request.`);
+    }
+
     const qry = { ...rest, source: source.location, target: target.location, distance: distance * 1000.0 };
     const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_ROUTES_URL + encodeURIComponent(JSON.stringify(qry)));
 
