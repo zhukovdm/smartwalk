@@ -42,15 +42,19 @@ type PlaceButtonProps = {
   /** Kind of a place presented to the user. */
   kind: PlaceKind;
 
+  /** Concise description of an action. */
+  title?: string;
+
   /** Button event handler. */
   onPlace: MouseEventHandler<Element>;
 };
 
-export function PlaceButton({ kind, onPlace }: PlaceButtonProps): JSX.Element {
+export function PlaceButton({ kind, title, onPlace }: PlaceButtonProps): JSX.Element {
   return (
     <IconWrapper
       onClick={onPlace}
-      icon={<LocationOn className={`${kind}-place`} fontSize="medium" />}
+      title={title}
+      icon={<LocationOn className={`${kind}-place`} fontSize={"medium"} />}
     />
   );
 }
@@ -84,12 +88,14 @@ export function DirecButton({ onDirec }: DirecButtonProps): JSX.Element {
 }
 
 type DeleteButtonProps = {
+  title?: string;
   onDelete: MouseEventHandler<Element>;
 };
 
-export function DeleteButton({ onDelete }: DeleteButtonProps): JSX.Element {
+export function DeleteButton({ title, onDelete }: DeleteButtonProps): JSX.Element {
   return (
     <IconWrapper
+      title={title}
       onClick={onDelete}
       icon={<DeleteOutline sx={{ color: "gray" }} />}
     />

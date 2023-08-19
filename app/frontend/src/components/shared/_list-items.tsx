@@ -14,8 +14,12 @@ type ListItemLabelProps = {
  */
 export function ListItemLabel({ label }: ListItemLabelProps): JSX.Element {
   return (
-    <Box sx={{ width: "100%", display: "flex", alignItems: "center", borderBottom: "1px solid lightgray", overflow: "hidden", textOverflow: "ellipsis" }}>
-      <Typography noWrap>{label}</Typography>
+    <Box
+      display={"flex"}
+      alignItems={"center"}
+      sx={{ width: "100%", borderBottom: "1px solid lightgray", overflow: "hidden", textOverflow: "ellipsis" }}
+    >
+      <Typography noWrap={true}>{label}</Typography>
     </Box>
   );
 }
@@ -25,7 +29,7 @@ type FreeListItemProps = {
   /** Label presented to the user. */
   label: string;
 
-  /** Element appearing on the left. */
+  /** An element appearing on the left. */
   l: ReactElement;
   
   /** Event handler upon clicking on an icon, or a label. */
@@ -37,7 +41,13 @@ type FreeListItemProps = {
  */
 function FreeListItem({ l, label, onClick }: FreeListItemProps): JSX.Element {
   return (
-    <Stack direction="row" alignItems="stretch" gap={0.5} onClick={onClick} sx={{ cursor: "pointer", color: "gray" }}>
+    <Stack
+      direction={"row"}
+      alignItems={"stretch"}
+      gap={0.5}
+      onClick={onClick}
+      sx={{ cursor: "pointer", color: "gray" }}
+    >
       {l}
       <ListItemLabel label={label} />
     </Stack>
@@ -74,16 +84,31 @@ type PlaceListItemProps = {
   /** Label on the item presented to the user. */
   label: string;
 
+  /** Concise action description. */
+  title?: string;
+
   /** Action upon clicking on the icon. */
   onPlace: React.MouseEventHandler<Element>;
 };
 
-export function FreePlaceListItem({ kind, label, onPlace }: PlaceListItemProps): JSX.Element {
-  return (<FreeListItem label={label} l={<PlaceButton kind={kind} onPlace={() => {}} />} onClick={onPlace} />);
+export function FreePlaceListItem({ kind, label, title, onPlace }: PlaceListItemProps): JSX.Element {
+  return (
+    <FreeListItem
+      label={label}
+      l={<PlaceButton kind={kind} onPlace={() => {}} title={title} />}
+      onClick={onPlace}
+    />
+  );
 }
 
 export function SteadyPlaceListItem({ label, ...rest }: PlaceListItemProps): JSX.Element {
-  return (<BusyListItem label={label} l={<PlaceButton {...rest} />} r={<></>} />);
+  return (
+    <BusyListItem
+      label={label}
+      l={<PlaceButton {...rest} />}
+      r={<></>}
+    />
+  );
 }
 
 type RemovablePlaceListItemProps = PlaceListItemProps & {
@@ -91,5 +116,11 @@ type RemovablePlaceListItemProps = PlaceListItemProps & {
 };
 
 export function RemovablePlaceListItem({ label, onDelete, ...rest }: RemovablePlaceListItemProps): JSX.Element {
-  return (<BusyListItem label={label} l={<PlaceButton {...rest} />} r={<DeleteButton onDelete={onDelete} />} />);
+  return (
+    <BusyListItem
+      label={label}
+      l={<PlaceButton {...rest} />}
+      r={<DeleteButton title={"Remove point"} onDelete={onDelete} />}
+    />
+  );
 }

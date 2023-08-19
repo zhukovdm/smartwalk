@@ -58,6 +58,7 @@ export default function SearchDirecsPanel(): JSX.Element {
         />
         <BottomButtons
           disabled={waypoints.length < 2}
+          what={"direction"}
           onClear={() => { dispatch(resetSearchDirecs()); }}
           onSearch={() => { searchAction(); }}
         />

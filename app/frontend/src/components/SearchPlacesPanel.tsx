@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   Box,
@@ -6,9 +6,7 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { AppContext } from "../App";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
-import { point2place } from "../utils/helpers";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import { setResultPlaces } from "../features/resultPlacesSlice";
@@ -28,14 +26,14 @@ import {
 } from "./shared/_list-items";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import DistanceSlider from "./search/DistanceSlider";
-import KeywordsBox from "./search/KeywordsBox";
+import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
+import { useSearchPlacesMap } from "../features/searchHooks";
 
 export default function SearchPlacesPanel(): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { map } = useContext(AppContext);
 
   const storedPlaces = useStoredPlaces();
   const {
@@ -46,20 +44,9 @@ export default function SearchPlacesPanel(): JSX.Element {
 
   const center = usePlace(storedCenter, storedPlaces, new Map());
 
+  const map = useSearchPlacesMap(center, radius);
+
   const [selectDialog, setSelectDialog] = useState(false);
-
-  useEffect(() => {
-    map?.clear();
-    const meters = radius * 1000.0;
-
-    if (center) {
-      (center.placeId)
-        ? map?.addStored(center, [])
-        : map?.addCommon(center, [], true).withDrag(pt => dispatch(setSearchPlacesCenter(point2place(pt)))).withCirc(map, meters);
-
-      map?.drawCircle(center.location, meters);
-    }
-  }, [map, navigate, dispatch, center, radius]);
 
   const searchAction = async () => {
     dispatch(setBlock(true));
@@ -91,17 +78,19 @@ export default function SearchPlacesPanel(): JSX.Element {
           <Typography>Find places around the center point:</Typography>
         </Box>
         <Box>
-          {(center)
-            ? <RemovablePlaceListItem
-                kind={center.placeId ? "stored" : "custom"}
-                label={center.name}
-                onPlace={() => { map?.flyTo(center); }}
-                onDelete={() => { dispatch(setSearchPlacesCenter(undefined)); }}
-              />
-            : <FreePlaceListItem
+          {(!center)
+            ? <FreePlaceListItem
                 kind={"center"}
                 label={"Select point..."}
+                title={"Add point"}
                 onPlace={() => { setSelectDialog(true); }}
+              />
+            : <RemovablePlaceListItem
+                kind={"center"}
+                label={center.name}
+                title={"Fly to"}
+                onPlace={() => { map?.flyTo(center); }}
+                onDelete={() => { dispatch(setSearchPlacesCenter(undefined)); }}
               />
           }
         </Box>
@@ -120,15 +109,16 @@ export default function SearchPlacesPanel(): JSX.Element {
           />
         </Box>
         <Typography>
-          Satisfying the following conditions:
+          Belonging to the following categories:
         </Typography>
-        <KeywordsBox
+        <CategoryBox
           categories={categories}
           deleteCategory={(i) => dispatch(deleteSearchPlacesCategory(i))}
           updateCategory={(category, i) => dispatch(updateSearchPlacesCategory({ category: category, i: i }))}
         />
         <BottomButtons
           disabled={!center}
+          what={"place"}
           onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
         />

@@ -2,11 +2,15 @@ import { Search } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 import { Box, Button } from "@mui/material";
 import { useAppSelector } from "../../features/storeHooks";
+import { SomethingKind } from "../shared/_types";
 
 type BottomButtonsProps = {
 
   /** Flag disabling `search` button. */
   disabled: boolean;
+
+  /** A kind of an antity. */
+  what: SomethingKind;
 
   /** Action clearing search form. */
   onClear: () => void;
@@ -18,7 +22,7 @@ type BottomButtonsProps = {
 /**
  * Standard `clear` and `search` bottom buttons.
  */
-export default function BottomButtons({ disabled, onClear, onSearch }: BottomButtonsProps): JSX.Element {
+export default function BottomButtons({ disabled, what, onClear, onSearch }: BottomButtonsProps): JSX.Element {
 
   const { block } = useAppSelector((state) => state.panel);
 
@@ -27,17 +31,19 @@ export default function BottomButtons({ disabled, onClear, onSearch }: BottomBut
       <Button
         color={"error"}
         disabled={block}
+        title={"Clear form"}
         onClick={onClear}
       >
         <span>Clear</span>
       </Button>
       <LoadingButton
-        size={"large"}
-        variant={"contained"}
-        startIcon={<Search />}
-        loadingPosition={"start"}
-        onClick={onSearch}
         loading={block}
+        loadingPosition={"start"}
+        size={"large"}
+        startIcon={<Search />}
+        title={`Search ${what}s`}
+        variant={"contained"}
+        onClick={onSearch}
         disabled={block || disabled}
       >
         <span>Search</span>

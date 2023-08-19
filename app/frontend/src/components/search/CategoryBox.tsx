@@ -1,10 +1,12 @@
-import { useContext, useEffect, useState } from "react";
+import { Fragment } from "react";
+import { useEffect, useState } from "react";
 import {
   Alert,
   Autocomplete,
   Box,
   Button,
   Chip,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -16,20 +18,17 @@ import {
   useMediaQuery,
   useTheme
 } from "@mui/material";
-import { AppContext } from "../../App";
 import { KeywordAdviceItem, KeywordCategory } from "../../domain/types";
-import { SmartWalkFetcher } from "../../utils/smartwalk";
-import { setBounds } from "../../features/panelSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useSearchBoundsAdvice,
+  useSearchKeywordsAdvice
+} from "../../features/searchHooks";
 import KeywordFiltersList from "./KeywordFiltersList";
 
 type CategoryDialogProps = {
 
   /** Action hiding condition dialog. */
   onHide: () => void;
-
-  /** A set of keywords associated with created conditions. */
-  keywords: Set<string>;
 
   /** Either new, or existing condition. */
   category?: KeywordCategory;
@@ -38,80 +37,31 @@ type CategoryDialogProps = {
   insert: (category: KeywordCategory) => void;
 };
 
-function CategoryDialog({ category, keywords, onHide, insert }: CategoryDialogProps): JSX.Element {
+function CategoryDialog({ category, onHide, insert }: CategoryDialogProps): JSX.Element {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-  const { adviceKeywords: autocs } = useContext(AppContext).smart;
-  const { bounds } = useAppSelector(state => state.panel);
-
-  const dispatch = useAppDispatch();
-
   const [input, setInput] = useState("");
   const [mount, setMount] = useState(true);
-  const [error, setError] = useState(false);
-
   const [value, setValue] = useState<KeywordAdviceItem | null>(category ?? null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const [options, setOptions] = useState<KeywordAdviceItem[]>([]);
 
-  const filters = category ? structuredClone(category.filters) : {};
+  const filters = structuredClone(category?.filters ?? {}); // clone!
+
+  useSearchBoundsAdvice();
+  const {
+    loading,
+    options
+  } = useSearchKeywordsAdvice(input, value);
 
   // hard reset of the attribute component
   useEffect(() => { if (!mount) { setMount(true); } }, [mount]);
 
-  // fetch bounds if not already present
-  useEffect(() => {
-    let ignore = false;
+  const discardAction = () => {
+    onHide();
+  };
 
-    const load = async () => {
-      try {
-        if (!bounds) {
-          const obj = await SmartWalkFetcher.adviceBounds();
-          if (obj) {
-            obj.capacity.min = Math.max(obj.capacity.min, 0);
-            obj.capacity.max = Math.min(obj.capacity.max, 500);
-  
-            obj.minimumAge.min = Math.max(obj.minimumAge.min, 0);
-            obj.minimumAge.max = Math.min(obj.minimumAge.max, 150);
-  
-            obj.rating.min = Math.max(obj.rating.min, 0);
-            obj.rating.max = Math.min(obj.rating.max, 5);
-  
-            obj.year.max = Math.min(obj.year.max, new Date().getFullYear());
-  
-            if (!ignore) {
-              dispatch(setBounds(obj));
-            }
-          }
-        }
-      }
-      catch (ex) { alert(ex); }
-    };
-
-    load();
-    return () => { ignore = true; };
-  }, [dispatch, bounds]);
-
-  // fetch autocomplete options based on the user input
-  useEffect(() => {
-    const prefix = input.toLocaleLowerCase();
-    if (!prefix.length) { setOptions(value ? [value] : []); return; }
-
-    const cached = autocs.get(prefix);
-    if (cached) { setOptions(cached); return; }
-
-    new Promise((res, _) => { res(setLoading(true)); })
-      .then(() => SmartWalkFetcher.adviceKeywords(prefix))
-      .then((items) => {
-        if (items) { autocs.set(prefix, items); setOptions(items); }
-      })
-      .finally(() => { setLoading(false); });
-  }, [input, value, autocs]);
-
-  // store selected keyword with filters
-  const confirm = () => {
+  const confirmAction = () => {
     if (value) { insert({ ...value, filters: filters }); }
     onHide();
   };
@@ -129,41 +79,60 @@ function CategoryDialog({ category, keywords, onHide, insert }: CategoryDialogPr
           options={options}
           loading={loading}
           filterOptions={(x) => x}
-          noOptionsText="No keywords"
+          noOptionsText={"No keywords found"}
           onChange={(_, v) => {
             setValue(v);
             setMount(false);
-            setError(!v || keywords.has(v.keyword));
           }}
           onInputChange={(_, v) => { setInput(v); }}
           getOptionLabel={(o) => o.keyword ?? ""}
           renderInput={(params) => (
             <TextField
               {...params}
-              error={error}
-              helperText={error ? "Keyword already appears in the box." : undefined}
               placeholder={"Start typing..."}
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <Fragment>
+                    {loading ? <CircularProgress color={"inherit"} size={20} /> : null}
+                    {params.InputProps.endAdornment}
+                  </Fragment>
+                )
+              }}
             />
           )}
+          size={"small"}
           isOptionEqualToValue={(o, v) => { return o.keyword === v.keyword }}
         />
         <DialogContentText>
-          Select (optional) attributes to customize this condition further.
+          Select (optional) attributes to customize this category further.
         </DialogContentText>
-        { (!error && mount && value)
-          ? (<KeywordFiltersList adviceItem={value} filters={filters} />)
-          : (<Alert severity="info">Attributes are keyword-specific.</Alert>)
+        {(mount && value)
+          ? <KeywordFiltersList adviceItem={value} filters={filters} />
+          : <Alert severity={"info"}>
+              Attributes are keyword-specific.
+            </Alert>
         }
       </DialogContent>
       <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button onClick={() => { onHide(); }} color="error">Discard</Button>
-        <Button onClick={confirm} color="primary" disabled={!value || error}>Confirm</Button>
+        <Button
+          color={"error"}
+          onClick={discardAction}
+        >
+          <span>Discard</span>
+        </Button>
+        <Button
+          disabled={!value}
+          onClick={confirmAction}
+        >
+          <span>Confirm</span>
+        </Button>
       </DialogActions>
     </Dialog>
   );
 }
 
-type KeywordsBoxProps = {
+type CategoryBoxProps = {
 
   /** List of already added categories. */
   categories: KeywordCategory[];
@@ -178,8 +147,8 @@ type KeywordsBoxProps = {
 /**
  * Component rendering box with removable keywords.
  */
-export default function KeywordsBox(
-  { categories, deleteCategory, updateCategory }: KeywordsBoxProps): JSX.Element {
+export default function CategoryBox(
+  { categories, deleteCategory, updateCategory }: CategoryBoxProps): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
   const [currCategory, setCurrCategory] = useState<number>(0);
@@ -192,14 +161,14 @@ export default function KeywordsBox(
   return (
     <Box>
       <Paper variant={"outlined"}>
-        <Stack direction={"row"} sx={{ flexWrap: "wrap" }}>
-          {categories.map((condition, i) => (
+        <Stack direction={"row"} flexWrap={"wrap"}>
+          {categories.map((category, i) => (
             <Chip
               key={i}
               color={"primary"}
-              variant={"outlined"}
               sx={{ m: 0.35, color: "black" }}
-              label={condition.keyword}
+              variant={"outlined"}
+              label={`${i + 1}: ${category.keyword}`}
               onClick={() => dialog(i)}
               onDelete={() => deleteCategory(i)}
             />
@@ -207,6 +176,7 @@ export default function KeywordsBox(
         </Stack>
         <Button
           size={"large"}
+          title={"Add category"}
           sx={{ width: "100%" }}
           onClick={() => { dialog(categories.length); }}
         >
@@ -217,7 +187,6 @@ export default function KeywordsBox(
         <CategoryDialog
           category={categories[currCategory]}
           onHide={() => setShowDialog(false)}
-          keywords={new Set(categories.map((v) => v.keyword))}
           insert={(category) => updateCategory(category, currCategory)}
         />
       }
