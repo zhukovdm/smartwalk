@@ -1,21 +1,21 @@
 import { useEffect, useState } from "react";
 import { Stack, TextField } from "@mui/material";
-import { KeywordFilterTextual } from "../../domain/types";
-import KeywordFilterCheckBox from "./KeywordFilterCheckBox";
+import { AttributeFilterTextual } from "../../domain/types";
+import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
-type KeywordFilterViewTextualProps = {
+type AttributeFilterViewTextualProps = {
 
-  /**  */
+  /** Label of an attribute. */
   label: string;
 
-  /**  */
-  setter: (v: KeywordFilterTextual | undefined) => void;
+  /** Callback setting new value. */
+  setter: (v: AttributeFilterTextual | undefined) => void;
 
-  /**  */
-  initial: KeywordFilterTextual | undefined;
+  /** Initial value. */
+  initial: AttributeFilterTextual | undefined;
 };
 
-export default function KeywordFilterViewTextual({ label, setter, initial }: KeywordFilterViewTextualProps) {
+export default function AttributeFilterViewTextual({ label, setter, initial }: AttributeFilterViewTextualProps) {
 
   const [check, setCheck] = useState(!!initial);
   const [value, setValue] = useState(initial ?? "");
@@ -28,7 +28,7 @@ export default function KeywordFilterViewTextual({ label, setter, initial }: Key
 
   return (
     <Stack direction={"row"} spacing={1}>
-      <KeywordFilterCheckBox
+      <AttributeFilterCheckBox
         checked={check}
         label={label}
         toggle={toggle}

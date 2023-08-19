@@ -10,30 +10,36 @@ import { ExpandMore } from "@mui/icons-material";
 import { KeywordAdviceItem } from "../../domain/types";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
 import { useAppSelector } from "../../features/storeHooks";
-import KeywordFilterViewExisten from "./KeywordFilterViewExisten";
-import KeywordFilterViewBoolean from "./KeywordFilterViewBoolean";
-import KeywordFilterViewNumeric from "./KeywordFilterViewNumeric";
-import KeywordFilterViewTextual from "./KeywordFilterViewTextual";
-import KeywordFilterViewCollect from "./KeywordFilterViewCollect";
+import AttributeFilterViewExisten from "./AttributeFilterViewExisten";
+import AttributeFilterViewBoolean from "./AttributeFilterViewBoolean";
+import AttributeFilterViewNumeric from "./AttributeFilterViewNumeric";
+import AttributeFilterViewTextual from "./AttributeFilterViewTextual";
+import AttributeFilterViewCollect from "./AttributeFilterViewCollect";
 
-type KeywordAttributeListProps = {
+type AttributeFiltersListProps = {
 
   /** Autocomplete confguration for a particular word. */
   adviceItem: KeywordAdviceItem;
 
   /** Latest known filters. */
-  filters: any; // (!)
+  filters: any; // !
 };
 
 /**
  * Renders five different types of attributes in a `type-unsafe` manner.
  */
-export default function KeywordFilterList({ adviceItem, filters }: KeywordAttributeListProps): JSX.Element {
+export default function AttributeFiltersList({ adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
 
   const expandIcon = <ExpandMore />
 
   const { bounds } = useAppSelector((state) => state.panel);
-  const { es, bs, ns, ts, cs } = KeywordAdviceAttributes.group(adviceItem.attributeList);
+  const {
+    es,
+    bs,
+    ns,
+    ts,
+    cs
+  } = KeywordAdviceAttributes.group(adviceItem.attributeList);
 
   return(
     <Box>
@@ -51,11 +57,11 @@ export default function KeywordFilterList({ adviceItem, filters }: KeywordAttrib
               spacing={1}
             >
               {es.map((e, i) => (
-                <KeywordFilterViewExisten
+                <AttributeFilterViewExisten
                   key={i}
+                  initial={(filters.es ?? {})[e]}
                   label={e}
                   setter={(v) => { filters.es = filters.es ?? {}; filters.es[e] = v; }}
-                  initial={(filters.es ?? {})[e]}
                 />
               ))}
             </Stack>
@@ -70,11 +76,12 @@ export default function KeywordFilterList({ adviceItem, filters }: KeywordAttrib
           <AccordionDetails>
             <Stack spacing={1}>
               {bs.map((b, i) => (
-                <KeywordFilterViewBoolean
+                <AttributeFilterViewBoolean
                   key={i}
+                  initial={(filters.bs ?? {})[b]}
                   label={b}
                   setter={(v) => { filters.bs = filters.bs ?? {}; filters.bs[b] = v; }}
-                  initial={(filters.bs ?? {})[b]} />
+                />
               ))}
             </Stack>
           </AccordionDetails>
@@ -87,12 +94,13 @@ export default function KeywordFilterList({ adviceItem, filters }: KeywordAttrib
           </AccordionSummary>
           <AccordionDetails>
             <Stack spacing={3}>
-              {ns.map((n, i) => (
-                <KeywordFilterViewNumeric
+              {ns.map((attr, i) => (
+                <AttributeFilterViewNumeric
                   key={i}
-                  label={n}
-                  setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[n] = v; }}
-                  initial={(filters.ns ?? {})[n]} />
+                  initial={(filters.ns ?? {})[attr]}
+                  label={attr}
+                  setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[attr] = v; }}
+                />
               ))}
             </Stack>
           </AccordionDetails>
@@ -104,13 +112,14 @@ export default function KeywordFilterList({ adviceItem, filters }: KeywordAttrib
             <Typography>Contains text</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack>
-              {ts.map((t, i) => (
-                <KeywordFilterViewTextual
+            <Stack spacing={1}>
+              {ts.map((attr, i) => (
+                <AttributeFilterViewTextual
                   key={i}
-                  label={t}
-                  setter={(v) => { filters.ts = filters.ts ?? {}; filters.ts[t] = v; }}
-                  initial={(filters.ts ?? {})[t]} />
+                  initial={(filters.ts ?? {})[attr]}
+                  label={attr}
+                  setter={(v) => { filters.ts = filters.ts ?? {}; filters.ts[attr] = v; }}
+                />
               ))}
             </Stack>
           </AccordionDetails>
@@ -122,13 +131,14 @@ export default function KeywordFilterList({ adviceItem, filters }: KeywordAttrib
             <Typography>Include any / Exclude all</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack>
-              {cs.map((c, i) => (
-                <KeywordFilterViewCollect
+            <Stack spacing={2}>
+              {cs.map((attr, i) => (
+                <AttributeFilterViewCollect
                   key={i}
-                  label={c}
-                  setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[c] = v; }}
-                  initial={(filters.cs ?? {})[c]} />
+                  initial={(filters.cs ?? {})[attr]}
+                  label={attr}
+                  setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[attr] = v; }}
+                />
               ))}
             </Stack>
           </AccordionDetails>

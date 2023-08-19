@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Autocomplete, Stack, TextField } from "@mui/material";
-import { KeywordFilterCollect } from "../../domain/types";
+import { AttributeFilterCollect } from "../../domain/types";
 import { useAppSelector } from "../../features/storeHooks";
-import KeywordFilterCheckBox from "./KeywordFilterCheckBox";
+import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 type CollectAutocompleteProps = {
 
@@ -26,30 +26,31 @@ function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompletePr
   return (
     <Autocomplete
       {...rest}
-      multiple
       fullWidth
+      multiple
       onChange={(_, v) => onChange(v)}
+      size={"small"}
       renderInput={(params) => (<TextField {...params} label={label} />)}
     />
   )
 }
 
-type KeywordFilterViewCollectProps = {
+type AttributeFilterViewCollectProps = {
 
   /** Name of a filter. */
   label: string;
 
   /** Action setting new value. */
-  setter: (v: KeywordFilterCollect | undefined) => void;
+  setter: (v: AttributeFilterCollect | undefined) => void;
 
   /** Initial value. */
-  initial: KeywordFilterCollect | undefined;
+  initial: AttributeFilterCollect | undefined;
 }
 
 /**
  * Collection-specific filter view.
  */
-export default function KeywordFilterViewCollect({ label, setter, initial }: KeywordFilterViewCollectProps): JSX.Element {
+export default function AttributeFilterViewCollect({ label, setter, initial }: AttributeFilterViewCollectProps): JSX.Element {
 
   const bound = (useAppSelector((state) => state.panel.bounds) as any)[label] as string[];
 
@@ -64,17 +65,17 @@ export default function KeywordFilterViewCollect({ label, setter, initial }: Key
   }, [check, includes, excludes, setter]);
 
   return (
-    <Stack spacing={3} direction="column">
-      <KeywordFilterCheckBox label={label} checked={check} toggle={toggle} />
+    <Stack spacing={2} direction={"column"}>
+      <AttributeFilterCheckBox label={label} checked={check} toggle={toggle} />
       <CollectAutocomplete
-        label="Includes"
+        label={"Includes"}
         value={includes}
         options={bound}
         disabled={!check}
         onChange={(v) => { setIncludes(v); }}
       />
       <CollectAutocomplete
-        label="Excludes"
+        label={"Excludes"}
         value={excludes}
         options={bound}
         disabled={!check}

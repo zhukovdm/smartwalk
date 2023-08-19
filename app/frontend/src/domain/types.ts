@@ -152,47 +152,47 @@ export type BoundsAdvice = {
 /**
  * Filter for checking attribute existence.
  */
-export type KeywordFilterExisten = { };
+export type AttributeFilterExisten = { };
 
 /**
  * Possible attributes checked for existence.
  */
-type KeywordFilterExistens = {
-  description?: KeywordFilterExisten;
-  image?: KeywordFilterExisten;
-  website?: KeywordFilterExisten;
-  address?: KeywordFilterExisten;
-  email?: KeywordFilterExisten;
-  phone?: KeywordFilterExisten;
-  socialNetworks?: KeywordFilterExisten;
-  charge?: KeywordFilterExisten;
-  openingHours?: KeywordFilterExisten;
+type AttributeFilterExistens = {
+  description?: AttributeFilterExisten;
+  image?: AttributeFilterExisten;
+  website?: AttributeFilterExisten;
+  address?: AttributeFilterExisten;
+  email?: AttributeFilterExisten;
+  phone?: AttributeFilterExisten;
+  socialNetworks?: AttributeFilterExisten;
+  charge?: AttributeFilterExisten;
+  openingHours?: AttributeFilterExisten;
 };
 
 /**
  * Filter for boolean attributes.
  */
-export type KeywordFilterBoolean = boolean;
+export type AttributeFilterBoolean = boolean;
 
 /**
  * Possible boolean attributes.
  */
-type KeywordFilterBooleans = {
-  fee?: KeywordFilterBoolean;
-  delivery?: KeywordFilterBoolean;
-  drinkingWater?: KeywordFilterBoolean;
-  internetAccess?: KeywordFilterBoolean;
-  shower?: KeywordFilterBoolean;
-  smoking?: KeywordFilterBoolean;
-  takeaway?: KeywordFilterBoolean;
-  toilets?: KeywordFilterBoolean;
-  wheelchair?: KeywordFilterBoolean;
+type AttributeFilterBooleans = {
+  fee?: AttributeFilterBoolean;
+  delivery?: AttributeFilterBoolean;
+  drinkingWater?: AttributeFilterBoolean;
+  internetAccess?: AttributeFilterBoolean;
+  shower?: AttributeFilterBoolean;
+  smoking?: AttributeFilterBoolean;
+  takeaway?: AttributeFilterBoolean;
+  toilets?: AttributeFilterBoolean;
+  wheelchair?: AttributeFilterBoolean;
 };
 
 /**
  * Filter for numeric attributes.
  */
-export type KeywordFilterNumeric = {
+export type AttributeFilterNumeric = {
   min: number;
   max: number;
 };
@@ -200,30 +200,30 @@ export type KeywordFilterNumeric = {
 /**
  * Possible numeric attributes.
  */
-type KeywordFilterNumerics = {
-  capacity?: KeywordFilterNumeric;
-  elevation?: KeywordFilterNumeric;
-  minimumAge?: KeywordFilterNumeric;
-  rating?: KeywordFilterNumeric;
-  year?: KeywordFilterNumeric;
+type AttributeFilterNumerics = {
+  capacity?: AttributeFilterNumeric;
+  elevation?: AttributeFilterNumeric;
+  minimumAge?: AttributeFilterNumeric;
+  rating?: AttributeFilterNumeric;
+  year?: AttributeFilterNumeric;
 };
 
 /**
  * Filter for textual attributes with "contains" semantics.
  */
-export type KeywordFilterTextual = string;
+export type AttributeFilterTextual = string;
 
 /**
  * Possible textual attributes.
  */
-type KeywordFilterTextuals = {
-  name?: KeywordFilterTextual;
+type AttributeFilterTextuals = {
+  name?: AttributeFilterTextual;
 };
 
 /**
  * Filter for collections with "include" and "exclude" semantics.
  */
-export type KeywordFilterCollect = {
+export type AttributeFilterCollect = {
 
   /** Include any of */
   inc: string[];
@@ -235,23 +235,23 @@ export type KeywordFilterCollect = {
 /**
  * Possible collections in the attributes.
  */
-type KeywordFilterCollects = {
-  clothes?: KeywordFilterCollect;
-  cuisine?: KeywordFilterCollect;
-  denomination?: KeywordFilterCollect;
-  payment?: KeywordFilterCollect;
-  rental?: KeywordFilterCollect;
+type AttributeFilterCollects = {
+  clothes?: AttributeFilterCollect;
+  cuisine?: AttributeFilterCollect;
+  denomination?: AttributeFilterCollect;
+  payment?: AttributeFilterCollect;
+  rental?: AttributeFilterCollect;
 };
 
 /**
- * All possible keyword filters.
+ * All possible attribute filters.
  */
-export type KeywordFilters = {
-  es?: KeywordFilterExistens;
-  bs?: KeywordFilterBooleans;
-  ns?: KeywordFilterNumerics;
-  ts?: KeywordFilterTextuals;
-  cs?: KeywordFilterCollects;
+export type AttributeFilters = {
+  es?: AttributeFilterExistens;
+  bs?: AttributeFilterBooleans;
+  ns?: AttributeFilterNumerics;
+  ts?: AttributeFilterTextuals;
+  cs?: AttributeFilterCollects;
 };
 
 /**
@@ -267,7 +267,7 @@ export type KeywordAdviceItem = {
  */
 export type PlaceCategory = {
   keyword: string;
-  filters: KeywordFilters;
+  filters: AttributeFilters;
 };
 
 /**

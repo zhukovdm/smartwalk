@@ -6,25 +6,26 @@ import {
   RadioGroup,
   Stack
 } from "@mui/material";
-import { KeywordFilterBoolean } from "../../domain/types";
-import KeywordFilterCheckBox from "./KeywordFilterCheckBox";
+import { AttributeFilterBoolean } from "../../domain/types";
+import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
-type KeywordFilterViewBooleanProps = {
+type AttributeFilterViewBooleanProps = {
 
   /** Name of a filter. */
   label: string;
 
   /** Action setting new value. */
-  setter: (v: KeywordFilterBoolean | undefined) => void;
+  setter: (v: AttributeFilterBoolean | undefined) => void;
 
   /** Initial value. */
-  initial: KeywordFilterBoolean | undefined;
+  initial: AttributeFilterBoolean | undefined;
 };
 
 /**
  * Boolean-specific filter view.
  */
-export default function KeywordFilterViewBoolean({ label, setter, initial }: KeywordFilterViewBooleanProps): JSX.Element {
+export default function AttributeFilterViewBoolean(
+  { label, setter, initial }: AttributeFilterViewBooleanProps): JSX.Element {
 
   const flag = initial === undefined;
 
@@ -41,7 +42,7 @@ export default function KeywordFilterViewBoolean({ label, setter, initial }: Key
       flexWrap={"wrap"}
       justifyContent={"space-between"}
     >
-      <KeywordFilterCheckBox
+      <AttributeFilterCheckBox
         label={label}
         checked={check}
         toggle={toggle}
@@ -52,8 +53,18 @@ export default function KeywordFilterViewBoolean({ label, setter, initial }: Key
           value={value}
           onChange={(e) => { setValue(parseInt(e.target.value)); }}
         >
-          <FormControlLabel disabled={!check} value={1} control={<Radio />} label="Yes" />
-          <FormControlLabel disabled={!check} value={0} control={<Radio />} label="No" />
+          <FormControlLabel
+            disabled={!check}
+            value={1}
+            control={<Radio />}
+            label={"Yes"}
+          />
+          <FormControlLabel
+            disabled={!check}
+            value={0}
+            control={<Radio />}
+            label={"No"}
+          />
         </RadioGroup>
       </FormControl>
     </Stack>

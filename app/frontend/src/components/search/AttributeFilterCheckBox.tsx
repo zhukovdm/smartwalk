@@ -1,7 +1,7 @@
 import { Checkbox, FormControlLabel } from "@mui/material";
 import { camelCaseToLabel } from "../../domain/functions";
 
-type KeywordFilterCheckBoxProps = {
+type AttributeFilterCheckBoxProps = {
 
   /** Filter name */
   label: string;
@@ -16,7 +16,7 @@ type KeywordFilterCheckBoxProps = {
 /**
  * Represent (un-)selected filters.
  */
-export default function KeywordFilterCheckBox({ label, toggle, checked }: KeywordFilterCheckBoxProps): JSX.Element {
+export default function AttributeFilterCheckBox({ label, toggle, checked }: AttributeFilterCheckBoxProps): JSX.Element {
   return (
     <FormControlLabel
       label={camelCaseToLabel(label)}

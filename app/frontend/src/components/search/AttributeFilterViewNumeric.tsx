@@ -6,28 +6,28 @@ import {
   Slider,
   Stack
 } from "@mui/material";
-import { KeywordFilterNumeric } from "../../domain/types";
+import { AttributeFilterNumeric } from "../../domain/types";
 import { camelCaseToLabel } from "../../domain/functions";
 import { useAppSelector } from "../../features/storeHooks";
 
-type KeywordFilterViewNumericProps = {
+type AttributeFilterViewNumericProps = {
 
   /** Name of a filter. */
   label: string;
 
   /** Value setter. */
-  setter: (v: KeywordFilterNumeric | undefined) => void;
+  setter: (v: AttributeFilterNumeric | undefined) => void;
 
   /** Initial value. */
-  initial: KeywordFilterNumeric | undefined;
+  initial: AttributeFilterNumeric | undefined;
 };
 
 /**
  * Range-based numeric filter view.
  */
-export default function KeywordFilterViewNumeric({ label, setter, initial }: KeywordFilterViewNumericProps): JSX.Element {
+export default function AttributeFilterViewNumeric({ label, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
 
-  const bound = (useAppSelector(state => state.panel.bounds) as any)[label] as KeywordFilterNumeric;
+  const bound = (useAppSelector(state => state.panel.bounds) as any)[label] as AttributeFilterNumeric;
 
   const [check, setCheck] = useState(!!initial);
   const [value, setValue] = useState(initial ? [initial.min, initial.max] : [bound.min, bound.max]);

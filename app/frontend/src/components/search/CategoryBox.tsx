@@ -23,7 +23,7 @@ import {
   useSearchBoundsAdvice,
   useSearchKeywordsAdvice
 } from "../../features/searchHooks";
-import KeywordFiltersList from "./KeywordFiltersList";
+import AttributeFiltersList from "./AttributeFiltersList";
 
 type CategoryDialogProps = {
 
@@ -108,7 +108,7 @@ function CategoryDialog({ category, onHide, insert }: CategoryDialogProps): JSX.
           Select (optional) attributes to customize this category further.
         </DialogContentText>
         {(mount && value)
-          ? <KeywordFiltersList adviceItem={value} filters={filters} />
+          ? <AttributeFiltersList adviceItem={value} filters={filters} />
           : <Alert severity={"info"}>
               Attributes are keyword-specific.
             </Alert>

@@ -14,9 +14,9 @@ import {
 } from "@mui/material";
 import { Close } from "@mui/icons-material";
 import {
-  KeywordFilterCollect,
-  KeywordFilterNumeric,
-  KeywordFilterTextual,
+  AttributeFilterCollect,
+  AttributeFilterNumeric,
+  AttributeFilterTextual,
   PlaceCategory
 } from "../../domain/types";
 
@@ -110,7 +110,7 @@ export default function PlaceCategoryDialog(
               <Typography>Numeric</Typography>
               <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
                 {nsKeys.map((n, i) => {
-                  const { min, max } = ((ns as any)[n]) as KeywordFilterNumeric;
+                  const { min, max } = ((ns as any)[n]) as AttributeFilterNumeric;
                   return <Chip key={i} label={`${min} &leq; ${n} &leq; ${max}`} variant={"outlined"} />
                 })}
               </Stack>
@@ -121,7 +121,7 @@ export default function PlaceCategoryDialog(
               <Typography>Contains</Typography>
               <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
                 {tsKeys.map((t, i) => (
-                  <Chip key={i} label={`${((ts as any)[t]) as KeywordFilterTextual} + ${t}`} variant={"outlined"} />
+                  <Chip key={i} label={`${((ts as any)[t]) as AttributeFilterTextual} + ${t}`} variant={"outlined"} />
                 ))}
               </Stack>
             </Stack>
@@ -131,12 +131,12 @@ export default function PlaceCategoryDialog(
               <Typography>Includes any / Excludes all</Typography>
               <Stack direction={"column"} gap={1}>
                 {csKeys.map((cat) => {
-                  const { inc, exc } = ((cs as any)[cat]) as KeywordFilterCollect;
+                  const { inc, exc } = ((cs as any)[cat]) as AttributeFilterCollect;
                   return (
                     <Stack direction={"column"} gap={1}>
                       <Typography>{cat}</Typography>
-                      <CollectSelect label="Includes" items={inc} />
-                      <CollectSelect label="Excludes" items={exc} />
+                      <CollectSelect label={"Includes"} items={inc} />
+                      <CollectSelect label={"Excludes"} items={exc} />
                     </Stack>
                   );
                 })}
