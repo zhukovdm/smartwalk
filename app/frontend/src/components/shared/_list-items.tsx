@@ -24,8 +24,8 @@ export function ListItemLabel({ label, link }: ListItemLabelProps): JSX.Element 
       alignItems={"center"}
       sx={{ width: "100%", borderBottom: "1px solid lightgray", overflow: "hidden", textOverflow: "ellipsis" }}
     >
-      <Typography noWrap>
-        {(!link) ? label : <Link component={RouterLink} to={link}>{label}</Link>}
+      <Typography noWrap color={(!link) ? "#656565" : "primary"}>
+        {(!link) ? label : <Link component={RouterLink} to={link} underline={"hover"} color={"inherit"}>{label}</Link>}
       </Typography>
     </Box>
   );
@@ -114,11 +114,15 @@ export function FreePlaceListItem({ kind, label, title, onPlace }: PlaceListItem
   );
 }
 
+function getSmartLink(smartId: string | undefined): string | undefined {
+  return (!!smartId) ? `${ENTITY_PLACES_ADDR}/${smartId}` : undefined;
+}
+
 export function FixedPlaceListItem({ label, smartId, ...rest }: PlaceListItemProps): JSX.Element {
   return (
     <BusyListItem
       label={label}
-      link={(!!smartId) ? `${ENTITY_PLACES_ADDR}/${smartId}` : undefined}
+      link={getSmartLink(smartId)}
       l={<PlaceButton {...rest} />}
       r={<></>}
     />
@@ -129,10 +133,11 @@ type RemovablePlaceListItemProps = PlaceListItemProps & {
   onDelete: React.MouseEventHandler<Element>;
 };
 
-export function RemovablePlaceListItem({ label, onDelete, ...rest }: RemovablePlaceListItemProps): JSX.Element {
+export function RemovablePlaceListItem({ label, smartId, onDelete, ...rest }: RemovablePlaceListItemProps): JSX.Element {
   return (
     <BusyListItem
       label={label}
+      link={getSmartLink(smartId)}
       l={<PlaceButton {...rest} />}
       r={<DeleteButton title={"Remove point"} onDelete={onDelete} />}
     />

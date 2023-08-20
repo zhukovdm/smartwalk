@@ -1,9 +1,21 @@
 import { useContext, useEffect, useMemo } from "react";
-import { Stack, Typography } from "@mui/material";
+import {
+  Box,
+  MenuItem,
+  Pagination,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  Typography
+} from "@mui/material";
 import { AppContext } from "../../App";
 import { PlacesResult } from "../../domain/types";
 import { getSatCategories } from "../../domain/functions";
-import { updateResultPlacesFilter } from "../../features/resultPlacesSlice";
+import {
+  setResultPlacesPage,
+  setResultPlacesPageSize,
+  updateResultPlacesFilter
+} from "../../features/resultPlacesSlice";
 import {
   usePlace,
   usePlaces,
@@ -21,6 +33,12 @@ type ResultPlacesContentProps = {
   result: PlacesResult;
 };
 
+function getPageCount(itemCount: number, pageSize: number): number {
+  const whole = Math.floor(itemCount / pageSize);
+  return Math.max(1, whole + ((whole * pageSize < itemCount) ? 1 : 0));
+}
+
+
 /**
  * Component presenting a result of searching places within a given circle.
  */
@@ -30,7 +48,8 @@ export default function ResultPlacesContent(
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
 
-  const { filters: filterList } = useAppSelector(state => state.resultPlaces);
+  const { page, pageSize } = useAppSelector((state) => state.resultPlaces);
+  const { filters: filterList } = useAppSelector((state) => state.resultPlaces);
 
   const storedPlaces = useStoredPlaces();
   const storedSmarts = useStoredSmarts();
@@ -45,10 +64,11 @@ export default function ResultPlacesContent(
 
   const places = usePlaces(resultPlaces, new Map(), storedSmarts)
     .map((place, i) => ({
-      ...structuredClone(place), /* ! */
-      categories: resultPlaces[i].categories
+      ...place,
+      categories: resultPlaces[i].categories // !
     }))
-    .filter((place) => (place.categories.some((c: number) => filterList[c])));
+    .filter((place) => (
+      categories.length === 0 || place.categories.some((c: number) => filterList[c])));
 
   const satCategories = useMemo(() => getSatCategories(resultPlaces), [resultPlaces]);
 
@@ -64,8 +84,16 @@ export default function ResultPlacesContent(
     map?.drawCircle(center.location, radius * 1000.0);
   }, [map, center, radius, places, storedSmarts, categories]);
 
+  const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
+    dispatch(setResultPlacesPage(value - 1));
+  }
+
+  const onRows = (event: SelectChangeEvent) => {
+    dispatch(setResultPlacesPageSize(parseInt(event.target.value)));
+  };
+
   return (
-    <Stack direction={"column"} gap={2.7}>
+    <Stack direction={"column"} gap={2.5}>
       <Stack direction={"column"} gap={2}>
         <Typography fontSize={"1.10rem"}>
           Found a total of <strong>{resultPlaces.length}</strong> places
@@ -97,6 +125,7 @@ export default function ResultPlacesContent(
                 category={c}
                 found={satCategories.has(i)}
                 onToggle={() => {
+                  dispatch(setResultPlacesPage(0));
                   dispatch(updateResultPlacesFilter({ filter: !active, index: i }));
                 }}
               />
@@ -104,7 +133,27 @@ export default function ResultPlacesContent(
           })}
         </Stack>
       }
-      <PlacesList places={places} smarts={storedSmarts} />
+      <Box display={"flex"} justifyContent={"center"}>
+        <Pagination
+          page={page + 1}
+          count={getPageCount(places.length, pageSize)}
+          onChange={onPage}
+        />
+      </Box>
+      <PlacesList
+        smarts={storedSmarts}
+        places={places.slice(page * pageSize, page * pageSize + pageSize)}
+      />
+      <Box display={"flex"} justifyContent={"right"} alignItems={"center"} gap={2}>
+        <Typography>Rows per page:</Typography>
+        <Select
+          onChange={onRows}
+          size={"small"}
+          value={pageSize.toString()}
+        >
+          {[5, 10, 20, 50].map((ps, i) => (<MenuItem key={i} value={ps.toString()}>{ps}</MenuItem>))}
+        </Select>
+      </Box>
     </Stack>
   );
 }

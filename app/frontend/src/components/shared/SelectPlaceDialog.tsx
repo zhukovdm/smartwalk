@@ -65,7 +65,7 @@ export default function SelectPlaceDialog(
   const [place, setPlace] = useState<StoredPlace | null>(null);
   const { loaded, places } = useAppSelector((state) => state.favorites);
 
-  const handleFavourites = () => {
+  const handleFavorites = () => {
     onSelect(place!);
     onHide();
   };
@@ -116,7 +116,7 @@ export default function SelectPlaceDialog(
             <Button
               color={"primary"}
               disabled={!place}
-              onClick={() => { handleFavourites(); }}
+              onClick={() => { handleFavorites(); }}
             >
               <span>Confirm</span>
             </Button>

@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Button,
-  Link,
-  Stack,
-  Typography
-} from "@mui/material";
+import { Box, Button, Stack, Typography } from "@mui/material";
 import { SwapVert } from "@mui/icons-material";
 import { RESULT_ROUTES_ADDR } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
@@ -28,9 +22,10 @@ import {
   RemovablePlaceListItem,
 } from "./shared/_list-items";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
-import BottomButtons from "./search/BottomButtons";
+import { KilometersLink } from "./search/KilometersLink";
 import DistanceSlider from "./search/DistanceSlider";
 import CategoryBox from "./search/CategoryBox";
+import BottomButtons from "./search/BottomButtons";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 
 export default function SearchRoutesPanel(): JSX.Element {
@@ -96,6 +91,7 @@ export default function SearchRoutesPanel(): JSX.Element {
               : <RemovablePlaceListItem
                   kind={"source"}
                   label={source.name}
+                  smartId={source.smartId}
                   title={"Fly to"}
                   onPlace={() => { map?.flyTo(source); }}
                   onDelete={() => { dispatch(setSearchRoutesSource(undefined)); }}
@@ -111,6 +107,7 @@ export default function SearchRoutesPanel(): JSX.Element {
               : <RemovablePlaceListItem
                   kind={"target"}
                   label={target.name}
+                  smartId={target.smartId}
                   title={"Fly to"}
                   onPlace={() => { map?.flyTo(target); }}
                   onDelete={() => { dispatch(setSearchRoutesTarget(undefined)); }}
@@ -130,7 +127,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           </Box>
         </Stack>
         <Typography>
-          With maximum walking distance (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometres" underline="hover">km</Link>):
+          With maximum walking distance (in <KilometersLink />):
         </Typography>
         <DistanceSlider
           max={30}

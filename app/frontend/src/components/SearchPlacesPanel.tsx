@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  Link,
-  Stack,
-  Typography
-} from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
-import { setResultPlaces } from "../features/resultPlacesSlice";
+import {
+  setResultPlaces,
+  setResultPlacesPage
+} from "../features/resultPlacesSlice";
 import {
   deleteSearchPlacesCategory,
   resetSearchPlaces,
@@ -19,6 +17,7 @@ import {
 } from "../features/searchPlacesSlice";
 import { usePlace, useStoredPlaces } from "../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
+import { useSearchPlacesMap } from "../features/searchHooks";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import {
   FreePlaceListItem,
@@ -26,9 +25,9 @@ import {
 } from "./shared/_list-items";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import DistanceSlider from "./search/DistanceSlider";
+import { KilometersLink } from "./search/KilometersLink";
 import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
-import { useSearchPlacesMap } from "../features/searchHooks";
 
 export default function SearchPlacesPanel(): JSX.Element {
 
@@ -57,6 +56,7 @@ export default function SearchPlacesPanel(): JSX.Element {
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters }))
       });
       dispatch(setResultPlaces(places));
+      dispatch(setResultPlacesPage(0));
       navigate(RESULT_PLACES_ADDR);
     }
     catch (ex) { alert(ex); }
@@ -88,6 +88,7 @@ export default function SearchPlacesPanel(): JSX.Element {
             : <RemovablePlaceListItem
                 kind={"center"}
                 label={center.name}
+                smartId={center.smartId}
                 title={"Fly to"}
                 onPlace={() => { map?.flyTo(center); }}
                 onDelete={() => { dispatch(setSearchPlacesCenter(undefined)); }}
@@ -96,7 +97,7 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Box>
         <Box>
           <Typography>
-            At a distance at most (in <Link href="https://en.wikipedia.org/wiki/Kilometre" rel="noopener noreferrer" target="_blank" title="kilometres" underline="hover">km</Link>):
+            At a distance at most (in <KilometersLink />):
           </Typography>
         </Box>
         <Box>
@@ -122,14 +123,12 @@ export default function SearchPlacesPanel(): JSX.Element {
           onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
         />
-        {selectDialog &&
-          <SelectPlaceDialog
-            show={selectDialog}
-            kind={"center"}
-            onHide={() => { setSelectDialog(false); }}
-            onSelect={(place) => { dispatch(setSearchPlacesCenter(place)) }}
-          />
-        }
+        <SelectPlaceDialog
+          show={selectDialog}
+          kind={"center"}
+          onHide={() => { setSelectDialog(false); }}
+          onSelect={(place) => { dispatch(setSearchPlacesCenter(place)) }}
+        />
       </Stack>
     </Box>
   );
