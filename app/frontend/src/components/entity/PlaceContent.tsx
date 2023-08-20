@@ -5,7 +5,6 @@ import {
   Button,
   Chip,
   Divider,
-  IconButton,
   Link,
   Rating,
   Stack,
@@ -21,7 +20,6 @@ import {
   OpenInNew,
   Phone,
   Pinterest,
-  Place,
   Telegram,
   Toll,
   Twitter,
@@ -35,6 +33,7 @@ import {
 } from "../../domain/types";
 import { point2text } from "../../utils/helpers";
 import { useAppSelector } from "../../features/storeHooks";
+import { PlaceButton } from "../shared/_buttons";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 import SavePlaceDialog from "./SavePlaceDialog";
@@ -101,6 +100,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
     if (polygon) {
       map?.drawPolygon(polygon);
     }
+    map?.flyTo(place);
   }, [map, place, storedPlace, polygon])
 
   const extra = [
@@ -115,7 +115,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
   const add = rating || capacity || minimumAge || arr(cuisine) || arr(clothes) || arr(denomination) || arr(payment) || arr(rental) || arr(extra);
 
   return (
-    <Stack direction={"column"} gap={2.7}>
+    <Stack direction={"column"} gap={2.5}>
       {
         /* dialog */
       }
@@ -149,9 +149,13 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           display={"flex"}
           justifyContent={"right"}
           onClick={() => { map?.flyTo(place); }}
-          sx={{ cursor: "pointer", title: "Fly to" }}
+          sx={{ cursor: "pointer"}}
         >
-          <IconButton size={"small"}><Place /></IconButton>
+          <PlaceButton
+            kind={(!storedPlace) ? "common" : "stored"}
+            title={"Fly to"}
+            onPlace={() => {}}
+          />
           <Typography fontSize={"small"}>{point2text(place.location)}</Typography>
         </Box>
       </Stack>
@@ -172,13 +176,13 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         <Stack direction={"column"} gap={1.5}>
           {address &&
             <Stack direction={"row"} columnGap={2}>
-              <Home sx={{ color: "grey" }} titleAccess={"Address"} />
+              <Home sx={{ color: "grey" }} titleAccess={"address"} />
               <Typography noWrap>{composeAddress(address)}</Typography>
             </Stack>
           }
           {website &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <OpenInNew sx={{ color: "grey" }} titleAccess={"Webpage"} />
+              <OpenInNew sx={{ color: "grey" }} titleAccess={"webpage"} />
               <Link
                 href={website}
                 rel={"noopener noreferrer"}
@@ -216,7 +220,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             </Stack>
           }
           {socialNetworks &&
-            <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
+            <Stack direction={"row"} flexWrap={"wrap"} gap={1} justifyContent={"center"}>
               {socialNetworks.facebook &&
                 <Link href={socialNetworks.facebook} rel={"noopener noreferrer"} target={"_blank"}>
                   <Facebook />
