@@ -66,6 +66,7 @@ export default function SelectPlaceDialog(
   const { loaded, places } = useAppSelector((state) => state.favorites);
 
   const handleFavorites = () => {
+    setPlace(null);
     onSelect(place!);
     onHide();
   };
