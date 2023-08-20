@@ -25,8 +25,8 @@ public sealed class SearchController : ControllerBase
     private static ProblemDetails GetProblemDetails(int status, string detail)
         => new() { Status = status, Detail = detail };
 
-    private static bool VerifyDistance(WgsPoint source, WgsPoint target)
-        => Spherical.HaversineDistance(source, target) <= 30_000;
+    private static bool VerifyDistance(WgsPoint source, WgsPoint target, double distance)
+        => Spherical.HaversineDistance(source, target) <= distance && distance <= 30_000;
 
     /// <summary>
     /// Check if edges define directed acyclic loop-free graph, repeated edges
@@ -258,8 +258,8 @@ public sealed class SearchController : ControllerBase
                 throw new Exception("Malformed precedence graph");
             }
 
-            if (!VerifyDistance(rq.source.AsWgs(), rq.target.AsWgs())) {
-                throw new Exception("Source and target are too far from each other");
+            if (!VerifyDistance(rq.source.AsWgs(), rq.target.AsWgs(), rq.distance.Value)) {
+                throw new Exception("Malformed point-distance configuration");
             }
         }
         catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
