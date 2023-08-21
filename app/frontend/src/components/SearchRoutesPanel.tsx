@@ -2,10 +2,14 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Button, Stack, Typography } from "@mui/material";
 import { SwapVert } from "@mui/icons-material";
+import { PrecedenceEdge } from "../domain/types";
 import { RESULT_ROUTES_ADDR } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
-import { setResultRoutes } from "../features/resultRoutesSlice";
+import {
+  resetResultRoutes,
+  setResultRoutes
+} from "../features/resultRoutesSlice";
 import {
   resetSearchRoutes,
   deleteSearchRoutesCategory,
@@ -16,9 +20,9 @@ import {
   deleteSearchRoutesPrecEdge,
   appendSearchRoutesPrecEdge,
 } from "../features/searchRoutesSlice";
-import { useSearchRoutesMap } from "../features/searchHooks";
 import { usePlace, useStoredPlaces } from "../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
+import { useSearchRoutesMap } from "../features/searchHooks";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem,
@@ -30,7 +34,6 @@ import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import PrecedenceBox from "./search/PrecedenceBox";
-import { PrecedenceEdge } from "../domain/types";
 
 export default function SearchRoutesPanel(): JSX.Element {
 
@@ -69,6 +72,7 @@ export default function SearchRoutesPanel(): JSX.Element {
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters })),
         precedence: precedence
       });
+      dispatch(resetResultRoutes());
       dispatch(setResultRoutes(routes));
       navigate(RESULT_ROUTES_ADDR);
     }

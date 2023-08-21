@@ -14,7 +14,7 @@ import { getSatCategories } from "../../domain/functions";
 import {
   setResultPlacesPage,
   setResultPlacesPageSize,
-  updateResultPlacesFilter
+  setResultPlacesFilter
 } from "../../features/resultPlacesSlice";
 import {
   usePlace,
@@ -126,7 +126,7 @@ export default function ResultPlacesContent(
                 found={satCategories.has(i)}
                 onToggle={() => {
                   dispatch(setResultPlacesPage(0));
-                  dispatch(updateResultPlacesFilter({ filter: !active, index: i }));
+                  dispatch(setResultPlacesFilter({ filter: !active, index: i }));
                 }}
               />
             );

@@ -5,8 +5,8 @@ import { RESULT_PLACES_ADDR } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {
-  setResultPlaces,
-  setResultPlacesPage
+  resetResultPlaces,
+  setResultPlaces
 } from "../features/resultPlacesSlice";
 import {
   deleteSearchPlacesCategory,
@@ -55,8 +55,8 @@ export default function SearchPlacesPanel(): JSX.Element {
         radius: radius,
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters }))
       });
+      dispatch(resetResultPlaces());
       dispatch(setResultPlaces(places));
-      dispatch(setResultPlacesPage(0));
       navigate(RESULT_PLACES_ADDR);
     }
     catch (ex) { alert(ex); }

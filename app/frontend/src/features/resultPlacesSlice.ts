@@ -9,21 +9,22 @@ type ResultPlacesState = {
   pageSize: number;
 };
 
-const initialState = (): ResultPlacesState => ({
+const initialState = (pageSize: number): ResultPlacesState => ({
   filters: [],
   page: 0,
-  pageSize: 10
+  pageSize: pageSize
 });
 
 export const resultPlacesSlice = createSlice({
   name: "result/places",
-  initialState: initialState(),
+  initialState: initialState(10),
   reducers: {
-    setResultPlaces: (state, action: PayloadAction<PlacesResult | undefined>) => {
+    resetResultPlaces: (state) => initialState(state.pageSize),
+    setResultPlaces: (state, action: PayloadAction<PlacesResult>) => {
       state.result = action.payload;
-      state.filters = action.payload?.categories.map(() => true) ?? [];
+      state.filters = action.payload.categories.map(() => true) ?? [];
     },
-    updateResultPlacesFilter: (state, action: PayloadAction<{ filter: boolean, index: number }>) => {
+    setResultPlacesFilter: (state, action: PayloadAction<{ filter: boolean, index: number; }>) => {
       const { filter, index } = action.payload;
       state.filters = updateItemImmutable(state.filters, filter, index);
     },
@@ -37,8 +38,9 @@ export const resultPlacesSlice = createSlice({
 });
 
 export const {
+  resetResultPlaces,
   setResultPlaces,
-  updateResultPlacesFilter,
+  setResultPlacesFilter,
   setResultPlacesPage,
   setResultPlacesPageSize
 } = resultPlacesSlice.actions;
