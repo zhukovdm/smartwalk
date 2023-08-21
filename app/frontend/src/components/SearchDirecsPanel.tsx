@@ -53,7 +53,7 @@ export default function SearchDirecsPanel(): JSX.Element {
       <MainMenu panel={2} />
       <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
         <Typography>
-          Define sequence of points (at least two), and find the fastest routes visiting them in order.
+          Define a sequence of points (at least two), and find the fastest routes visiting them in order.
         </Typography>
         <SearchDirecsSequence waypoints={waypoints} />
         <BottomButtons

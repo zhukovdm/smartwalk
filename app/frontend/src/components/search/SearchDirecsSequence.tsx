@@ -73,10 +73,14 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
         onClick={onAppend}
         sx={{ width: "100%", cursor: "pointer" }}
       >
-        <PlaceButton kind={"adding"} onPlace={() => {}} />
+        <PlaceButton
+          kind={"adding"}
+          title={"Append point"}
+          onPlace={() => { }}
+        />
         <ListItemLabel label={"Append point..."} />
       </Stack>
-      <SwapButton onSwap={onRevers} title={"Reverse"} />
+      <SwapButton title={"Reverse"} onSwap={onRevers} />
     </Stack>
   );
 }
@@ -117,6 +121,7 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               <DragIndicator />
             </div>
             <PlaceButton
+              title={"Fly to"}
               kind={place.placeId ? "stored" : "common"}
               onPlace={() => { map?.flyTo(place); }}
             />
@@ -124,7 +129,10 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               label={place.name}
               link={place.smartId ? getSmartPlaceLink(place.smartId) : undefined}
             />
-            <DeleteButton onDelete={() => { dispatch(deleteSearchDirecsPlace(index)); }} />
+            <DeleteButton
+              title={"Remove point"}
+              onDelete={() => { dispatch(deleteSearchDirecsPlace(index)); }}
+            />
           </Stack>
         </div>
       )}

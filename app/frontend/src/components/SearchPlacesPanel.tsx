@@ -75,7 +75,7 @@ export default function SearchPlacesPanel(): JSX.Element {
         sx={{ mx: 2, my: 4 }}
       >
         <Box>
-          <Typography>Find places around the center point:</Typography>
+          <Typography>Find places around a center point:</Typography>
         </Box>
         <Box>
           {(!center)

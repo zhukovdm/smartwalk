@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
-import { isPlaceStored } from "../../domain/functions";
 import {
   usePlaces,
   useStoredPlaces,
@@ -51,28 +50,28 @@ export default function ResultDirecsContent({ result }: ResultDirecsContentProps
 
   useEffect(() => {
     map?.clear();
+
     waypoints.forEach((waypoint) => {
-      (isPlaceStored(waypoint, storedPlaces, storedSmarts))
+      (!!waypoint.placeId)
         ? map?.addStored(waypoint, [])
         : map?.addCommon(waypoint, [], false);
     });
     map?.drawPolyline(path.polyline);
-  }, [map, path, waypoints, storedPlaces, storedSmarts]);
+  }, [map, path, waypoints]);
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultDirecsIndex(value - 1));
   };
 
   return (
-    <Stack direction={"column"} gap={2.7}>
-      <Box
-        display={"flex"}
-        justifyContent={"center"}
-        width={"100%"}
-      >
+    <Stack direction={"column"} gap={2.5}>
+      <Typography fontSize={"1.1rem"}>
+        Found a total of <strong>{result.length}</strong> direction{result.length > 1 ? "s" : ""}.
+      </Typography>
+      <Box display={"flex"} justifyContent={"center"}>
         <Pagination
-          count={result.length}
           page={index + 1}
+          count={result.length}
           onChange={onPage}
         />
       </Box>
@@ -99,17 +98,19 @@ export default function ResultDirecsContent({ result }: ResultDirecsContentProps
           </Box>
       }
       <Box display={"flex"} alignItems={"center"}>
-        <Typography fontSize={"1.2rem"}>
+        <Typography fontSize={"1.1rem"}>
           Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> km
         </Typography>
       </Box>
       <Stack direction={"column"} gap={2}>
         {waypoints
           .map((waypoint, i) => (
-            <FixedPlaceListItem  
+            <FixedPlaceListItem
               key={i}
-              kind={isPlaceStored(waypoint, storedPlaces, storedSmarts) ? "stored" : "common"}
+              kind={!!waypoint.placeId ? "stored" : "common"}
               label={waypoint.name}
+              smartId={waypoint.smartId}
+              title={"Fly to"}
               onPlace={() => { map?.flyTo(waypoint); }}
             />
           ))

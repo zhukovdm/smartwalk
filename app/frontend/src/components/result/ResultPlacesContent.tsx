@@ -79,7 +79,7 @@ export default function ResultPlacesContent(
 
     map?.addCenter(center, [], false);
     map?.drawCircle(center.location, radius * 1000.0);
-  }, [map, center, radius, places, storedSmarts, categories]);
+  }, [map, center, radius, places, categories]);
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultPlacesPage(value - 1));

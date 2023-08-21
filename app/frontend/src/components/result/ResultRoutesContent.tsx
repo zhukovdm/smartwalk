@@ -94,7 +94,7 @@ export default function ResultRoutesContent(
   return (
     <Stack direction={"column"} gap={2.5}>
       <Typography fontSize={"1.1rem"}>
-        Found a total of <strong>{result.length}</strong> routes with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categories.
+        Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categories.
       </Typography>
       <Box display={"flex"} justifyContent={"center"}>
         <Pagination
