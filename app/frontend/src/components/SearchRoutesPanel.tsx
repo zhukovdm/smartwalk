@@ -13,6 +13,8 @@ import {
   setSearchRoutesDistance,
   setSearchRoutesSource,
   setSearchRoutesTarget,
+  deleteSearchRoutesPrecEdge,
+  appendSearchRoutesPrecEdge,
 } from "../features/searchRoutesSlice";
 import { useSearchRoutesMap } from "../features/searchHooks";
 import { usePlace, useStoredPlaces } from "../features/sharedHooks";
@@ -27,6 +29,8 @@ import DistanceSlider from "./search/DistanceSlider";
 import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
+import PrecedenceBox from "./search/PrecedenceBox";
+import { PrecedenceEdge } from "../domain/types";
 
 export default function SearchRoutesPanel(): JSX.Element {
 
@@ -38,7 +42,8 @@ export default function SearchRoutesPanel(): JSX.Element {
     source: storedSource,
     target: storedTarget,
     distance,
-    categories
+    categories,
+    precedence
   } = useAppSelector((state) => state.searchRoutes);
 
   const source = usePlace(storedSource, storedPlaces, new Map());
@@ -143,6 +148,16 @@ export default function SearchRoutesPanel(): JSX.Element {
           categories={categories}
           deleteCategory={(i) => dispatch(deleteSearchRoutesCategory(i))}
           updateCategory={(category, i) => dispatch(updateSearchRoutesCategory({ category: category, i: i }))}
+        />
+        <Typography>
+          Categories could appear on a route in <strong>any</strong> order.
+          Add arrows to enforce an arrangement.
+        </Typography>
+        <PrecedenceBox
+          categories={categories}
+          precedence={precedence}
+          deleteEdge={(i: number) => { dispatch(deleteSearchRoutesPrecEdge(i)); }}
+          appendEdge={(e: PrecedenceEdge) => { dispatch(appendSearchRoutesPrecEdge(e)); }}
         />
         <BottomButtons
           disabled={!source || !target || !(categories.length > 0)}

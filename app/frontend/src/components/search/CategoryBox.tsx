@@ -37,7 +37,8 @@ type CategoryDialogProps = {
   insert: (category: KeywordCategory) => void;
 };
 
-function CategoryDialog({ category, onHide, insert }: CategoryDialogProps): JSX.Element {
+function CategoryDialog(
+  { category, onHide, insert }: CategoryDialogProps): JSX.Element {
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
@@ -145,7 +146,7 @@ type CategoryBoxProps = {
 };
 
 /**
- * Component rendering box with removable keywords.
+ * Component rendering box with removable categories.
  */
 export default function CategoryBox(
   { categories, deleteCategory, updateCategory }: CategoryBoxProps): JSX.Element {
@@ -166,8 +167,8 @@ export default function CategoryBox(
             <Chip
               key={i}
               color={"primary"}
-              sx={{ m: 0.35, color: "black" }}
-              variant={"outlined"}
+              sx={{ m: 0.35, fontWeight: "medium" }}
+              variant={"filled"}
               label={`${i + 1}: ${category.keyword}`}
               onClick={() => dialog(i)}
               onDelete={() => deleteCategory(i)}
@@ -176,7 +177,7 @@ export default function CategoryBox(
         </Stack>
         <Button
           size={"large"}
-          title={"Add category"}
+          title={"Open configuration dialog"}
           sx={{ width: "100%" }}
           onClick={() => { dialog(categories.length); }}
         >

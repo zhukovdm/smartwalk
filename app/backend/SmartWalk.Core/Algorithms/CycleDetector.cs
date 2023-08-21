@@ -14,7 +14,7 @@ public sealed class CycleDetector
     {
         public Color Color;
         public int Predecessor;
-        public Vertex() { Predecessor = -1; Color = Color.A; }
+        public Vertex() { Color = Color.A; Predecessor = -1; }
     }
 
     private int _cycleRef = -1;

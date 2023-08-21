@@ -27,18 +27,19 @@ export const searchRoutesSlice = createSlice({
       state.distance = action.payload;
     },
     deleteSearchRoutesCategory: (state, action: PayloadAction<number>) => {
-      state.categories = deleteItemImmutable(state.categories, action.payload);
+      const i = action.payload;
+      state.categories = deleteItemImmutable(state.categories, i);
+      state.precedence = state.precedence.filter(({ fr, to }) => fr !== i && to !== i);
     },
     updateSearchRoutesCategory: (state, action: PayloadAction<{ category: KeywordCategory; i: number; }>) => {
       const { category, i } = action.payload;
       state.categories = updateItemImmutable(state.categories, category, i);
     },
+    appendSearchRoutesPrecEdge: (state, action: PayloadAction<PrecedenceEdge>) => {
+      state.precedence.push(action.payload);
+    },
     deleteSearchRoutesPrecEdge: (state, action: PayloadAction<number>) => {
       state.precedence = deleteItemImmutable(state.precedence, action.payload);
-    },
-    updateSearchRoutesPrecEdge: (state, action: PayloadAction<{ precEdge: PrecedenceEdge; i: number; }>) => {
-      const { precEdge, i } = action.payload;
-      state.precedence = updateItemImmutable(state.precedence, precEdge, i);
     }
   }
 });
@@ -50,8 +51,8 @@ export const {
   setSearchRoutesDistance,
   deleteSearchRoutesCategory,
   updateSearchRoutesCategory,
-  deleteSearchRoutesPrecEdge,
-  updateSearchRoutesPrecEdge
+  appendSearchRoutesPrecEdge,
+  deleteSearchRoutesPrecEdge
 } = searchRoutesSlice.actions;
 
 export default searchRoutesSlice.reducer;

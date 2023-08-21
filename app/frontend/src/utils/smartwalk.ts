@@ -118,7 +118,7 @@ export class SmartWalkFetcher {
     const cf = crowFlyDistance(fr, to, { units: "kilometers" });
 
     if (cf > distance) {
-      throw Error(`Points are too far from each other (at least ${cf.toFixed(2)} km). Place them closer and repeat the request.`);
+      throw Error(`Points are too far from each other (at least ${cf.toFixed(2)} km). Move them closer, or adjust the distance slider.`);
     }
 
     const qry = { ...rest, source: source.location, target: target.location, distance: distance * 1000.0 };
