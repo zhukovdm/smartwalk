@@ -13,6 +13,7 @@ import {
   SEARCH_PLACES_ADDR,
   SEARCH_ROUTES_ADDR,
   SESSION_SOLID_ADDR,
+  VIEWER_DIREC_ADDR,
 } from "../domain/routing";
 import { showPanel } from "../features/panelSlice";
 import { useFavorites } from "../features/panelHooks";
@@ -28,6 +29,7 @@ import ResultRoutesPanel from "./ResultRoutesPanel";
 import FavoritesPanel from "./FavoritesPanel";
 import SessionProvider from "./SessionProvider";
 import SessionSolidPanel from "./SessionSolidPanel";
+import ViewerDirecPanel from "./ViewerDirecPanel";
 
 export default function PanelControl(): JSX.Element {
 
@@ -61,23 +63,45 @@ export default function PanelControl(): JSX.Element {
         PaperProps={{ sx: { width: width } }}
       >
         <Routes>
+          {
+            /* search */
+          }
           <Route path={SEARCH_ROUTES_ADDR} element={<SearchRoutesPanel />} />
           <Route path={SEARCH_PLACES_ADDR} element={<SearchPlacesPanel />} />
           <Route path={SEARCH_DIRECS_ADDR} element={<SearchDirecsPanel />} />
-          <Route
-            path={FAVORITES_ADDR}
-            element={<FavoritesPanel loaded={favoritesLoaded} loadedRatio={loadedRatio} />}
-          />
+          {
+            /* result */
+          }
           <Route path={RESULT_ROUTES_ADDR} element={<ResultRoutesPanel />} />
           <Route path={RESULT_PLACES_ADDR} element={<ResultPlacesPanel />} />
           <Route path={RESULT_DIRECS_ADDR} element={<ResultDirecsPanel />} />
+          {
+            /* entity */
+          }
           <Route
             path={ENTITY_PLACES_ADDR + "/:smartId"}
             element={<EntityPlacePanel />}
           />
+          {
+            /* viewer */
+          }
+          <Route path={VIEWER_DIREC_ADDR} element={<ViewerDirecPanel />} />
+          {
+            /* favorites */
+          }
+          <Route
+            path={FAVORITES_ADDR}
+            element={<FavoritesPanel loaded={favoritesLoaded} loadedRatio={loadedRatio} />}
+          />
+          {
+            /* session */
+          }
           <Route path={SESSION_SOLID_ADDR} element={<SessionSolidPanel />} />
+          {
+            /* ... */
+          }
           <Route path={HOME_ADDR} element={<Navigate to={SEARCH_ROUTES_ADDR} />} />
-          <Route path="*" element={<NotFoundPanel />} />
+          <Route path={"*"} element={<NotFoundPanel />} />
         </Routes>
       </Drawer>
     </HashRouter>

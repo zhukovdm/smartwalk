@@ -289,7 +289,7 @@ export type PrecedenceEdge = {
 /**
  * Simple path with geometry, distance, approximate duration.
  */
-type Path = {
+export type Path = {
   distance: number;
   duration: number;
   polyline: WgsPoint[];

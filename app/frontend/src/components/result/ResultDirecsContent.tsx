@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Box,
@@ -7,7 +7,6 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
 import {
   usePlaces,
@@ -16,8 +15,10 @@ import {
 } from "../../features/sharedHooks";
 import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import { FixedPlaceListItem } from "../shared/_list-items";
 import SaveDirecDialog from "./SaveDirecDialog";
+import { useResultDirecsMap } from "../../features/resultHooks";
+import ResultDirecsContentDistance from "./ResultDirecsContentDistance";
+import ResultDirecsContentList from "./ResultDirecsContentList";
 
 type ResultDirecsContentProps = {
 
@@ -28,36 +29,24 @@ type ResultDirecsContentProps = {
 /**
  * Component presenting the content of a direction search result.
  */
-export default function ResultDirecsContent({ result }: ResultDirecsContentProps): JSX.Element {
-
-  const { map } = useContext(AppContext);
+export default function ResultDirecsContent(
+  { result }: ResultDirecsContentProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { index } = useAppSelector((state) => state.resultDirecs);
 
   const [saveDialog, setSaveDialog] = useState(false);
 
-  const storedPlaces = useStoredPlaces();
-  const storedSmarts = useStoredSmarts();
   const {
     direcId,
     name,
     path,
-    waypoints: resultWaypoints
+    waypoints
   } = result[index];
 
-  const waypoints = usePlaces(resultWaypoints, storedPlaces, storedSmarts);
+  const places = usePlaces(waypoints, useStoredPlaces(), useStoredSmarts());
 
-  useEffect(() => {
-    map?.clear();
-
-    waypoints.forEach((waypoint) => {
-      (!!waypoint.placeId)
-        ? map?.addStored(waypoint, [])
-        : map?.addCommon(waypoint, [], false);
-    });
-    map?.drawPolyline(path.polyline);
-  }, [map, path, waypoints]);
+  const map = useResultDirecsMap(places, path);
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultDirecsIndex(value - 1));
@@ -97,25 +86,13 @@ export default function ResultDirecsContent({ result }: ResultDirecsContentProps
             {saveDialog && <SaveDirecDialog direc={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />}
           </Box>
       }
-      <Box display={"flex"} alignItems={"center"}>
-        <Typography fontSize={"1.1rem"}>
-          Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> km
-        </Typography>
-      </Box>
-      <Stack direction={"column"} gap={2}>
-        {waypoints
-          .map((waypoint, i) => (
-            <FixedPlaceListItem
-              key={i}
-              kind={!!waypoint.placeId ? "stored" : "common"}
-              label={waypoint.name}
-              smartId={waypoint.smartId}
-              title={"Fly to"}
-              onPlace={() => { map?.flyTo(waypoint); }}
-            />
-          ))
-        }
-      </Stack>
+      <ResultDirecsContentDistance
+        distance={path.distance}
+      />
+      <ResultDirecsContentList
+        map={map}
+        places={places}
+      />
     </Stack>
   );
 }
