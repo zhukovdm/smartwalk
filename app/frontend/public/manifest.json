@@ -1,10 +1,11 @@
 {
+  "id": "/smartwalk/",
   "short_name": "SmartWalk",
   "name": "SmartWalk | Explore your local area",
   "version": "1.0.0",
   "icons": [
     {
-      "src": "\/assets\/favicon\/favicon.svg",
+      "src": "assets\/favicon\/favicon.svg",
       "sizes": "any",
       "type": "image\/svg+xml"
     }
