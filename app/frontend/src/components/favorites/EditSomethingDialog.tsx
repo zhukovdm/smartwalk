@@ -15,7 +15,7 @@ import { setDialogBlock } from "../../features/panelSlice";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { SomethingKind } from "../shared/_types";
 
-type UpdateSomethingDialogProps = {
+type EditSomethingDialogProps = {
 
   /** Opens dialog window. */
   show: boolean;
@@ -29,15 +29,15 @@ type UpdateSomethingDialogProps = {
   /** Action hiding the dialog. */
   onHide: () => void;
 
-  /** Action updating `something` from the current storage. */
-  onUpdate: (name: string) => Promise<void>;
+  /** Action updating `something` in the current storage. */
+  onSave: (name: string) => Promise<void>;
 };
 
 /**
  * Dialog for updating named `something`.
  */
-export default function UpdateSomethingDialog(
-  { show, name: oldName, what, onHide, onUpdate }: UpdateSomethingDialogProps): JSX.Element {
+export default function EditSomethingDialog(
+  { show, name: oldName, what, onHide, onSave }: EditSomethingDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);
@@ -49,10 +49,10 @@ export default function UpdateSomethingDialog(
     onHide();
   };
 
-  const editAction = async () => {
+  const saveAction = async () => {
     dispatch(setDialogBlock(true));
     try {
-      await onUpdate(name);
+      await onSave(name);
       setName(name);
       onHide();
     }
@@ -90,7 +90,7 @@ export default function UpdateSomethingDialog(
           loading={dialogBlock}
           title={"Send request"}
           startIcon={<Save />}
-          onClick={() => { editAction(); }}
+          onClick={() => { saveAction(); }}
         >
           <span>Save</span>
         </LoadingButton>

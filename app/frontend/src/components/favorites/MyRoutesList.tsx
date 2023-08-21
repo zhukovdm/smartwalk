@@ -21,7 +21,7 @@ import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import UpdateSomethingDialog from "./EditSomethingDialog";
+import EditSomethingDialog from "./EditSomethingDialog";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
 import { setViewerRoute } from "../../features/viewerSlice";
 
@@ -91,7 +91,7 @@ function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps)
           <ListItemMenu
             onShow={onShow}
             showDeleteDialog={() => { setShowD(true); }}
-            showUpdateDialog={() => { setShowU(true); }}
+            showEditDialog={() => { setShowU(true); }}
           />
         }
       />
@@ -102,12 +102,12 @@ function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps)
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}
       />
-      <UpdateSomethingDialog
+      <EditSomethingDialog
         show={showU}
         name={name}
         what={"route"}
         onHide={() => { setShowU(false); }}
-        onUpdate={onUpdate}
+        onSave={onUpdate}
       />
     </Box>
   );

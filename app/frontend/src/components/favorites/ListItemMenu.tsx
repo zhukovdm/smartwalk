@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import {
   Delete,
+  Directions,
   Edit,
   Info,
   MoreVert
@@ -19,18 +20,24 @@ type ListItemMenuProps = {
   /** Redirect to the viewer. */
   onShow: () => void;
 
-  /** Shows update dialog. */
-  showUpdateDialog: () => void;
+  /** Shows edit dialog. */
+  showEditDialog: () => void;
 
   /** Shows delete dialog. */
   showDeleteDialog: () => void;
+
+  /** Shows append dialog. */
+  showAppendDialog?: () => void;
+
+  /** Shows modify dialog. */
+  showModifyDialog?: () => void;
 };
 
 /**
  * `Something`-specific menu in the storage list of `something`.
  */
 export default function ListItemMenu(
-  { onShow, showDeleteDialog, showUpdateDialog }: ListItemMenuProps): JSX.Element {
+  { onShow, showEditDialog, showDeleteDialog, showAppendDialog, showModifyDialog }: ListItemMenuProps): JSX.Element {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
@@ -63,13 +70,33 @@ export default function ListItemMenu(
           <Typography>View</Typography>
         </MenuItem>
         <MenuItem
-          onClick={() => { showUpdateDialog(); closeMenuAction(); }}
+          onClick={() => { showEditDialog(); closeMenuAction(); }}
         >
           <ListItemIcon>
             <Edit fontSize={"small"} />
           </ListItemIcon>
           <Typography>Edit</Typography>
         </MenuItem>
+        {!!showAppendDialog &&
+          <MenuItem
+            onClick={() => { showAppendDialog(); closeMenuAction(); }}
+          >
+            <ListItemIcon>
+              <Directions fontSize={"small"} />
+            </ListItemIcon>
+            <Typography>Append</Typography>
+          </MenuItem>
+        }
+        {!!showModifyDialog &&
+          <MenuItem
+            onClick={() => { showModifyDialog(); closeMenuAction(); }}
+          >
+            <ListItemIcon>
+              <Directions fontSize={"small"} />
+            </ListItemIcon>
+            <Typography>Modify</Typography>
+          </MenuItem>
+        }
         <MenuItem
           onClick={() => { showDeleteDialog(); closeMenuAction(); }}
         >

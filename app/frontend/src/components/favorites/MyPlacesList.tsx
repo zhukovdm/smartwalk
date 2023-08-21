@@ -17,7 +17,7 @@ import { useAppDispatch } from "../../features/storeHooks";
 import { PlaceButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
-import UpdateSomethingDialog from "./EditSomethingDialog";
+import EditSomethingDialog from "./EditSomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 
@@ -75,7 +75,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
           <ListItemMenu
             onShow={onShow}
             showDeleteDialog={() => { setShowD(true); }}
-            showUpdateDialog={() => { setShowU(true); }}
+            showEditDialog={() => { setShowU(true); }}
           />
         }
       />
@@ -86,12 +86,12 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}
       />
-      <UpdateSomethingDialog
+      <EditSomethingDialog
         show={showU}
         name={place.name}
         what={"place"}
         onHide={() => { setShowU(false); }}
-        onUpdate={onUpdate}
+        onSave={onUpdate}
       />
     </Box>
   );

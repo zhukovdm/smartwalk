@@ -12,11 +12,16 @@ import {
   deleteFavoriteDirec,
   updateFavoriteDirec
 } from "../../features/favoritesSlice";
+import {
+  appendSearchDirecsPlace,
+  resetSearchDirecs
+} from "../../features/searchDirecsSlice";
 import { setViewerDirec } from "../../features/viewerSlice";
 import { usePlaces, useStoredPlaces } from "../../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { DirecButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
+import ModifySomethingDialog from "../shared/ModifySomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import EditSomethingDialog from "./EditSomethingDialog";
@@ -43,8 +48,9 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
   const { name, path, waypoints } = direc;
   const places = usePlaces(waypoints, storedPlaces, new Map());
 
-  const [showU, setShowU] = useState(false);
   const [showD, setShowD] = useState(false);
+  const [showE, setShowE] = useState(false);
+  const [showM, setShowM] = useState(false);
 
   const onDirec = () => {
     map?.clear();
@@ -62,10 +68,18 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
     navigate(VIEWER_DIREC_ADDR);
   };
 
-  const onUpdate = async (name: string): Promise<void> => {
+  const onSave = async (name: string): Promise<void> => {
     const d = { ...direc, name: name };
     await storage.updateDirec(d);
     dispatch(updateFavoriteDirec({ direc: d, index: index }));
+  };
+
+  const onModify = (): void => {
+    dispatch(resetSearchDirecs());
+    places.forEach((place) => {
+      dispatch(appendSearchDirecsPlace(place));
+    });
+    navigate(SEARCH_DIRECS_ADDR);
   };
 
   const onDelete = async (): Promise<void> => {
@@ -81,10 +95,24 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
         r={
           <ListItemMenu
             onShow={onShow}
+            showEditDialog={() => { setShowE(true); }}
             showDeleteDialog={() => { setShowD(true); }}
-            showUpdateDialog={() => { setShowU(true); }}
+            showModifyDialog={() => { setShowM(true); }}
           />
         }
+      />
+      <EditSomethingDialog
+        show={showE}
+        name={name}
+        what={"direction"}
+        onHide={() => { setShowE(false); }}
+        onSave={onSave}
+      />
+      <ModifySomethingDialog
+        show={showM}
+        what={"direction"}
+        onHide={() => { setShowM(false); }}
+        onModify={onModify}
       />
       <DeleteSomethingDialog
         show={showD}
@@ -92,13 +120,6 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
         what={"direction"}
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}
-      />
-      <EditSomethingDialog
-        show={showU}
-        name={name}
-        what={"direction"}
-        onHide={() => { setShowU(false); }}
-        onUpdate={onUpdate}
       />
     </Box>
   );
