@@ -16,6 +16,7 @@ export const resultDirecsSlice = createSlice({
   name: "result/direcs",
   initialState: initialState(),
   reducers: {
+    resetResultDirecs: () => initialState(),
     setResultDirecs: (state, action: PayloadAction<UiDirec[]>) => {
       state.result = action.payload;
     },
@@ -30,6 +31,7 @@ export const resultDirecsSlice = createSlice({
 });
 
 export const {
+  resetResultDirecs,
   setResultDirecs,
   setResultDirecsIndex,
   updateResultDirec,

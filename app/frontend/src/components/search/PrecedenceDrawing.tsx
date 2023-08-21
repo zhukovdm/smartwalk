@@ -67,6 +67,7 @@ export default function PrecedenceDrawing(
     <Paper
       ref={visRef}
       sx={{ height: "300px", width: "100%" }}
+      variant={"outlined"}
     />
   );
 }

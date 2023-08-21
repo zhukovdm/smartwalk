@@ -5,7 +5,10 @@ import {
 } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
-import { setResultDirecs } from "../features/resultDirecsSlice";
+import {
+  resetResultDirecs,
+  setResultDirecs
+} from "../features/resultDirecsSlice";
 import { resetSearchDirecs } from "../features/searchDirecsSlice";
 import {
   usePlaces,
@@ -33,7 +36,9 @@ export default function SearchDirecsPanel(): JSX.Element {
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      dispatch(setResultDirecs(await SmartWalkFetcher.searchDirecs(waypoints)));
+      const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
+      dispatch(resetResultDirecs());
+      dispatch(setResultDirecs(direcs));
       navigate(RESULT_DIRECS_ADDR);
     }
     catch (ex) { alert(ex); }
@@ -48,14 +53,9 @@ export default function SearchDirecsPanel(): JSX.Element {
       <MainMenu panel={2} />
       <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
         <Typography>
-          Define sequence of points (at least two), and find the fastest routes
-          visiting them in order.
+          Define sequence of points (at least two), and find the fastest routes visiting them in order.
         </Typography>
-        <SearchDirecsSequence
-          waypoints={waypoints}
-          storedPlaces={storedPlaces}
-          storedSmarts={storedSmarts}
-        />
+        <SearchDirecsSequence waypoints={waypoints} />
         <BottomButtons
           disabled={waypoints.length < 2}
           what={"direction"}

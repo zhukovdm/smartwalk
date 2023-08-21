@@ -4,12 +4,13 @@ import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { IMap } from "../domain/interfaces";
 import { point2place } from "../utils/helpers";
 import { SmartWalkFetcher } from "../utils/smartwalk";
+import { setBounds } from "./panelSlice";
+import { updateSearchDirecsPlace } from "./searchDirecsSlice";
 import { setSearchPlacesCenter } from "./searchPlacesSlice";
 import {
   setSearchRoutesSource,
   setSearchRoutesTarget
 } from "./searchRoutesSlice";
-import { setBounds } from "./panelSlice";
 import { useAppDispatch, useAppSelector } from "./storeHooks";
 
 export function useSearchBoundsAdvice(): void {
@@ -87,8 +88,22 @@ export function useSearchKeywordsAdvice(
   return { loading, options };
 }
 
-export function useSearchPlacesMap(
-  center: UiPlace | undefined, radius: number): IMap | undefined {
+export function useSearchDirecsMap(waypoints: UiPlace[]): void {
+
+  const dispatch = useAppDispatch();
+  const { map } = useContext(AppContext);
+
+  useEffect(() => {
+    map?.clear();
+    waypoints.forEach((waypoint, i) => {
+      (!!waypoint.placeId)
+        ? map?.addStored(waypoint, [])
+        : map?.addCommon(waypoint, [], true).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
+    });
+  }, [map, dispatch, waypoints]);
+}
+
+export function useSearchPlacesMap(center: UiPlace | undefined, radius: number): IMap | undefined {
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
@@ -109,8 +124,7 @@ export function useSearchPlacesMap(
   return map;
 }
 
-export function useSearchRoutesMap(
-  source: UiPlace | undefined, target: UiPlace | undefined): IMap | undefined {
+export function useSearchRoutesMap(source: UiPlace | undefined, target: UiPlace | undefined): IMap | undefined {
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);

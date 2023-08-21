@@ -1,9 +1,9 @@
 import { ReactElement } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Box, Link, Stack, Typography } from "@mui/material";
+import { getSmartPlaceLink } from "../../domain/functions";
 import { PlaceKind } from "./_types";
 import { DeleteButton, PlaceButton } from "./_buttons";
-import { ENTITY_PLACES_ADDR } from "../../domain/routing";
 
 type ListItemLabelProps = {
 
@@ -114,15 +114,11 @@ export function FreePlaceListItem({ kind, label, title, onPlace }: PlaceListItem
   );
 }
 
-function getSmartLink(smartId: string | undefined): string | undefined {
-  return (!!smartId) ? `${ENTITY_PLACES_ADDR}/${smartId}` : undefined;
-}
-
 export function FixedPlaceListItem({ label, smartId, ...rest }: PlaceListItemProps): JSX.Element {
   return (
     <BusyListItem
       label={label}
-      link={getSmartLink(smartId)}
+      link={getSmartPlaceLink(smartId)}
       l={<PlaceButton {...rest} />}
       r={<></>}
     />
@@ -137,7 +133,7 @@ export function RemovablePlaceListItem({ label, smartId, onDelete, ...rest }: Re
   return (
     <BusyListItem
       label={label}
-      link={getSmartLink(smartId)}
+      link={getSmartPlaceLink(smartId)}
       l={<PlaceButton {...rest} />}
       r={<DeleteButton title={"Remove point"} onDelete={onDelete} />}
     />

@@ -1,4 +1,5 @@
 import { UiPlace } from "./types";
+import { ENTITY_PLACES_ADDR } from "./routing";
 
 /**
  * Convert `aB` to `a b`.
@@ -21,4 +22,8 @@ export function isPlaceStored(place: UiPlace, storedPlaces: Map<string, UiPlace>
   const pid = place.placeId;
   const sid = place.smartId;
   return (!!pid && storedPlaces.has(pid)) || (!!sid && storedSmarts.has(sid));
+}
+
+export function getSmartPlaceLink(smartId: string | undefined): string | undefined {
+  return (!!smartId) ? `${ENTITY_PLACES_ADDR}/${smartId}` : undefined;
 }
