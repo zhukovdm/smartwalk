@@ -5,9 +5,9 @@
   "version": "1.0.0",
   "icons": [
     {
-      "src": "assets\/favicon\/favicon.svg",
+      "src": "assets/favicon/favicon.svg",
       "sizes": "any",
-      "type": "image\/svg+xml"
+      "type": "image/svg+xml"
     }
   ],
   "start_url": ".",
