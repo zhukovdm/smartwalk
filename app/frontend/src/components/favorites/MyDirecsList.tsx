@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 import { Directions } from "@mui/icons-material";
@@ -13,12 +13,13 @@ import {
   updateFavoriteDirec
 } from "../../features/favoritesSlice";
 import { setViewerDirec } from "../../features/viewerSlice";
-import { useAppDispatch } from "../../features/storeHooks";
+import { usePlaces, useStoredPlaces } from "../../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { DirecButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import UpdateSomethingDialog from "./UpdateSomethingDialog";
+import EditSomethingDialog from "./EditSomethingDialog";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
 
 type MyDirecsListItemProps = {
@@ -40,21 +41,20 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
   const { map, storage } = useContext(AppContext);
 
   const { name, path, waypoints } = direc;
+  const places = usePlaces(waypoints, storedPlaces, new Map());
 
   const [showU, setShowU] = useState(false);
   const [showD, setShowD] = useState(false);
 
   const onDirec = () => {
     map?.clear();
-    waypoints.forEach((place) => {
-      !!place.placeId && !!storedPlaces.has(place.placeId)
-        ? map?.addStored(storedPlaces.get(place.placeId)!, [])
+    places.forEach((place) => {
+      (!!place.placeId)
+        ? map?.addStored(place, [])
         : map?.addCommon(place, [], false);
     });
     map?.drawPolyline(path.polyline);
-
-    const fst = waypoints[0];
-    map?.flyTo(!!fst.placeId ? (storedPlaces.get(fst.placeId) ?? fst) : fst);
+    map?.flyTo(places[0]);
   };
 
   const onShow = () => {
@@ -77,7 +77,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
     <Box>
       <BusyListItem
         label={name}
-        l={<DirecButton onDirec={onDirec} />}
+        l={<DirecButton title={"Draw"} onDirec={onDirec} />}
         r={
           <ListItemMenu
             onShow={onShow}
@@ -93,7 +93,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}
       />
-      <UpdateSomethingDialog
+      <EditSomethingDialog
         show={showU}
         name={name}
         what={"direction"}
@@ -104,23 +104,13 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
   );
 }
 
-type MyDirecsListProps = {
-
-  /** List of all stored directions. */
-  direcs: StoredDirec[];
-
-  /** * List of all stored places. */
-  places: StoredPlace[];
-};
-
 /**
  * Component presenting passed list of stored directions.
  */
-export default function MyDirecsList({ direcs, places }: MyDirecsListProps): JSX.Element {
+export default function MyDirecsList(): JSX.Element {
 
-  const storedPlaces = useMemo(() => (
-    places.reduce((acc, place) => acc.set(place.placeId, place), new Map<string, StoredPlace>())
-  ), [places]);
+  const storedPlaces = useStoredPlaces();
+  const { direcs } = useAppSelector((state) => state.favorites);
 
   return (
     <Box>

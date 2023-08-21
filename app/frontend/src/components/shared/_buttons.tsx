@@ -76,14 +76,18 @@ export function AddPlaceButton({ kind, size, title, onPlace }: AddPlaceButtonPro
 }
 
 type DirecButtonProps = {
+
+  title?: string;
+
   onDirec: MouseEventHandler<Element>;
 };
 
-export function DirecButton({ onDirec }: DirecButtonProps): JSX.Element {
+export function DirecButton({ title, onDirec }: DirecButtonProps): JSX.Element {
   return (
     <IconWrapper
+      title={title}
       onClick={onDirec}
-      icon={<Directions className="stored-direc" fontSize="medium" />}
+      icon={<Directions className={"stored-direc"} fontSize={"medium"} />}
     />
   );
 }
