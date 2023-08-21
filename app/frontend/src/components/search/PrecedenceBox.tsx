@@ -93,7 +93,7 @@ export default function PrecedenceBox(
     const cycle = new CycleDetector(categories.length, [...precedence, edge!]).cycle();
 
     if (cycle !== undefined) {
-      alert(`Detected cycle ${cycle.slice().map((v) => v + 1).join(" → ")}, try another arrow.`);
+      alert(`Cycle ${cycle.slice().map((v) => v + 1).join(" → ")} detected, try another arrow.`);
       return;
     }
 
@@ -152,7 +152,7 @@ export default function PrecedenceBox(
             </Stack>
             <Stack gap={1}>
               <Typography fontSize={"small"}>
-                Symbol &rarr; means relation <strong>&quot;before&quot;</strong>. Given categories &#123;&nbsp;1,&nbsp;2,&nbsp;3&nbsp;&#125; and only arrow 1&nbsp;&rarr;&nbsp;2, the following orders are valid:
+                Symbol &rarr; means relation <strong>&quot;before&quot;</strong>. Given categories &#123;1,&nbsp;2,&nbsp;3&#125; and only arrow 1&nbsp;&rarr;&nbsp;2, the following orders are valid:
               </Typography>
               <Stack
                 direction={"row"}
