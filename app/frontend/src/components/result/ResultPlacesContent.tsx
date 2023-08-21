@@ -63,10 +63,6 @@ export default function ResultPlacesContent(
   const center = usePlace(resultCenter, storedPlaces, new Map())!;
 
   const places = usePlaces(resultPlaces, new Map(), storedSmarts)
-    .map((place, i) => ({
-      ...place,
-      categories: resultPlaces[i].categories // !
-    }))
     .filter((place) => (
       categories.length === 0 || place.categories.some((c: number) => filterList[c])));
 
@@ -74,12 +70,13 @@ export default function ResultPlacesContent(
 
   useEffect(() => {
     map?.clear();
+
     places.forEach((place) => {
-      const smart = storedSmarts.get(place.smartId!);
-      (!!smart)
-        ? map?.addStored(smart, categories)
+      (!!place.placeId)
+        ? map?.addStored(place, categories)
         : map?.addCommon(place, categories, false);
     });
+
     map?.addCenter(center, [], false);
     map?.drawCircle(center.location, radius * 1000.0);
   }, [map, center, radius, places, storedSmarts, categories]);
@@ -96,9 +93,7 @@ export default function ResultPlacesContent(
     <Stack direction={"column"} gap={2.5}>
       <Stack direction={"column"} gap={2}>
         <Typography fontSize={"1.10rem"}>
-          Found a total of <strong>{resultPlaces.length}</strong> places
-          within a distance of at most <strong>{radius}</strong>&nbsp;km
-          around the center point:
+          Found a total of <strong>{resultPlaces.length}</strong> place{resultPlaces.length > 1 ? "s" : ""} within a distance of at most <strong>{radius}</strong>&nbsp;km around the center point:
         </Typography>
         <FixedPlaceListItem
           kind={"center"}
@@ -140,11 +135,13 @@ export default function ResultPlacesContent(
           onChange={onPage}
         />
       </Box>
-      <PlacesList
-        smarts={storedSmarts}
-        places={places.slice(page * pageSize, page * pageSize + pageSize)}
-      />
-      <Box display={"flex"} justifyContent={"right"} alignItems={"center"} gap={2}>
+      <PlacesList places={places.slice(page * pageSize, page * pageSize + pageSize)} />
+      <Box
+        alignItems={"center"}
+        display={"flex"}
+        gap={2}
+        justifyContent={"right"}
+      >
         <Typography>Rows per page:</Typography>
         <Select
           onChange={onRows}

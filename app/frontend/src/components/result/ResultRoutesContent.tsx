@@ -9,7 +9,10 @@ import {
 } from "@mui/material";
 import { AppContext } from "../../App";
 import { UiPlace, UiRoute } from "../../domain/types";
-import { setResultRoutesIndex } from "../../features/resultRoutesSlice";
+import {
+  setResultRoutesFilter,
+  setResultRoutesIndex
+} from "../../features/resultRoutesSlice";
 import {
   usePlace,
   usePlaces,
@@ -24,9 +27,7 @@ import SaveRouteDialog from "./SaveRouteDialog";
 
 type ResultRoutesContentProps = {
 
-  /**
-   * **Non-empty** list of routes.
-   */
+  /** **Non-empty** list of routes.*/
   result: UiRoute[];
 };
 
@@ -39,7 +40,8 @@ export default function ResultRoutesContent(
   const { map } = useContext(AppContext);
 
   const dispatch = useAppDispatch();
-  const { index } = useAppSelector(state => state.resultRoutes);
+  const { index } = useAppSelector((state) => state.resultRoutes);
+  const { filters: filterList } = useAppSelector((state) => state.resultRoutes);
 
   const [saveDialog, setSaveDialog] = useState(false);
 
@@ -61,10 +63,8 @@ export default function ResultRoutesContent(
   const target = usePlace(resultTarget, storedPlaces, new Map())!;
 
   const places = usePlaces(resultPlaces, new Map(), storedSmarts)
-    .map((place, i) => ({
-      ...structuredClone(place), /* ! */
-      categories: resultPlaces[i].categories
-    }));
+    .filter((place) => (
+      place.categories.some((c: number) => filterList[c])));
 
   useEffect(() => {
     map?.clear();
@@ -72,12 +72,15 @@ export default function ResultRoutesContent(
     const ps = places
       .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>());
 
-    waypoints.forEach((waypoint) => {
-      const place = ps.get(waypoint)!;
-      (storedSmarts.has(place.smartId!))
-        ? map?.addStored(place, categories)
-        : map?.addCommon(place, categories, false);
-    });
+    waypoints
+      .map((waypoint) => ps.get(waypoint))
+      .filter((place) => !!place)
+      .map((place) => place as UiPlace)
+      .forEach((place) => {
+        (!!place.placeId)
+          ? map?.addStored(place, categories)
+          : map?.addCommon(place, categories, false);
+      });
 
     map?.addSource(source, [], false);
     map?.addTarget(target, [], false);
@@ -89,16 +92,15 @@ export default function ResultRoutesContent(
   };
 
   return (
-    <Stack direction={"column"} gap={2.7}>
-      <Box
-        display={"flex"}
-        justifyContent={"center"}
-        width={"100%"}
-      >
+    <Stack direction={"column"} gap={2.5}>
+      <Typography fontSize={"1.1rem"}>
+        Found a total of <strong>{result.length}</strong> routes with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categories.
+      </Typography>
+      <Box display={"flex"} justifyContent={"center"}>
         <Pagination
+          page={index + 1}
           count={result.length}
           onChange={onPage}
-          page={index + 1}
         />
       </Box>
       {(routeId)
@@ -125,26 +127,31 @@ export default function ResultRoutesContent(
           </Box>
       }
       <Box display={"flex"} alignItems={"center"}>
-        <Typography fontSize={"1.2rem"}>
-          Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> / {distance} km
+        <Typography fontSize={"1.1rem"}>
+          Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> km
         </Typography>
       </Box>
       <Stack
         direction={"row"}
         flexWrap={"wrap"}
-        gap={2}
         justifyContent={"center"}
+        spacing={2}
       >
-        {categories.map((c, i) => (
-          <CategoryFilter
-            key={i}
-            active={false}
-            index={i}
-            category={c}
-            found={true}
-            onToggle={() => {}}
-          />
-        ))}
+        {categories.map((c, i) => {
+          const active = filterList[i];
+          return (
+            <CategoryFilter
+              key={i}
+              active={active}
+              index={i}
+              category={c}
+              found={true}
+              onToggle={() => {
+                dispatch(setResultRoutesFilter({ filter: !active, index: i }));
+              }}
+            />
+          );
+        })}
       </Stack>
       <Stack direction={"column"} gap={2}>
         <FixedPlaceListItem
@@ -152,7 +159,7 @@ export default function ResultRoutesContent(
           label={source.name}
           onPlace={() => { map?.flyTo(source); }}
         />
-        <PlacesList places={places} smarts={storedSmarts} />
+        {filterList.some((f) => f) && <PlacesList places={places} />}
         <FixedPlaceListItem
           kind={"target"}
           label={target.name}

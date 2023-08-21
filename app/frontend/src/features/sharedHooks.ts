@@ -19,18 +19,30 @@ export function useStoredSmarts(): Map<string, StoredPlace> {
   return useFavoritePlaces((place: StoredPlace) => place.smartId);
 }
 
-function getPlace(placeId: string | undefined, smartId: string | undefined, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): UiPlace | undefined {
-  return storedPlaces.get(placeId ?? "") ?? storedSmarts.get(smartId ?? "");
+/**
+ * @returns True place representation (with proper `name` and `categories`).
+ */
+function mergePlace(place: UiPlace | undefined, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): UiPlace | undefined {
+  if (!place) { return place; }
+
+  const f = (xid: string | undefined, place: UiPlace, store: Map<string, UiPlace>) => {
+    return (!!xid && store.has(xid))
+      ? { ...store.get(xid)!, categories: place.categories }
+      : undefined;
+  };
+
+  const storedPlace = f(place.placeId, place, storedPlaces);
+  const storedSmart = f(place.smartId, place, storedSmarts);
+
+  return storedPlace ?? storedSmart ?? place;
 }
 
 export function usePlace(place: UiPlace | undefined, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): UiPlace | undefined {
-  return useMemo(() => (
-    getPlace(place?.placeId, place?.smartId, storedPlaces, storedSmarts) ?? place
-  ), [place, storedPlaces, storedSmarts]);
+  return useMemo(() => (mergePlace(place, storedPlaces, storedSmarts)), [place, storedPlaces, storedSmarts]);
 }
 
 export function usePlaces(places: UiPlace[], storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): UiPlace[] {
   return useMemo(() => (
-    places.map((place) => (getPlace(place.placeId, place.smartId, storedPlaces, storedSmarts) ?? place))
+    places.map((place) => (mergePlace(place, storedPlaces, storedSmarts)!))
   ), [places, storedPlaces, storedSmarts]);
 }

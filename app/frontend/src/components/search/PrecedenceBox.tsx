@@ -93,7 +93,7 @@ export default function PrecedenceBox(
     const cycle = new CycleDetector(categories.length, [...precedence, edge!]).cycle();
 
     if (cycle !== undefined) {
-      alert(`Detected cycle ${cycle.slice().map((v) => v + 1).join(" → ")}, try different arrow.`);
+      alert(`Detected cycle ${cycle.slice().map((v) => v + 1).join(" → ")}, try another arrow.`);
       return;
     }
 
@@ -150,19 +150,19 @@ export default function PrecedenceBox(
                 onSelect={(i: number) => { setEdgeTo(i); }}
               />
             </Stack>
-            <Typography fontSize={"small"}>
-              Symbol &rarr; means relation <strong>before</strong>. Given
-              categories &#123;&nbsp;1,&nbsp;2,&nbsp;3&nbsp;&#125; and only
-              arrow 1&nbsp;&rarr;&nbsp;2, the following orders are valid:
-            </Typography>
-            <Stack
-              direction={"row"}
-              justifyContent={"space-evenly"}
-              fontSize={"small"}
-            >
-              <Typography fontSize={"inherit"}>1&nbsp;&rarr;&nbsp;2&nbsp;&rarr;&nbsp;3</Typography>
-              <Typography fontSize={"inherit"}>1&nbsp;&rarr;&nbsp;3&nbsp;&rarr;&nbsp;2</Typography>
-              <Typography fontSize={"inherit"}>3&nbsp;&rarr;&nbsp;1&nbsp;&rarr;&nbsp;2</Typography>
+            <Stack gap={1}>
+              <Typography fontSize={"small"}>
+                Symbol &rarr; means relation <strong>&quot;before&quot;</strong>. Given categories &#123;&nbsp;1,&nbsp;2,&nbsp;3&nbsp;&#125; and only arrow 1&nbsp;&rarr;&nbsp;2, the following orders are valid:
+              </Typography>
+              <Stack
+                direction={"row"}
+                justifyContent={"space-evenly"}
+                fontSize={"small"}
+              >
+                <Typography fontSize={"inherit"}>3&nbsp;&rarr;&nbsp;1&nbsp;&rarr;&nbsp;2</Typography>
+                <Typography fontSize={"inherit"}>1&nbsp;&rarr;&nbsp;3&nbsp;&rarr;&nbsp;2</Typography>
+                <Typography fontSize={"inherit"}>1&nbsp;&rarr;&nbsp;2&nbsp;&rarr;&nbsp;3</Typography>
+              </Stack>
             </Stack>
           </Stack>
         </DialogContent>
