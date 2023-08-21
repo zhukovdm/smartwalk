@@ -8,14 +8,17 @@ import {
   SEARCH_PLACES_ADDR,
   VIEWER_PLACE_ADDR
 } from "../../domain/routing";
+import { getSmartPlaceLink } from "../../domain/functions";
 import {
   updateFavoritePlace,
   deleteFavoritePlace
 } from "../../features/favoritesSlice";
+import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
 import { setViewerPlace } from "../../features/viewerSlice";
-import { useAppDispatch } from "../../features/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { PlaceButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
+import AppendPlaceDialog from "./AppendPlaceDialog";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
 import EditSomethingDialog from "./EditSomethingDialog";
 import ListItemMenu from "./ListItemMenu";
@@ -36,8 +39,9 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
   const dispatch = useAppDispatch();
   const { map, storage } = useContext(AppContext);
 
+  const [showA, setShowA] = useState(false);
   const [showD, setShowD] = useState(false);
-  const [showU, setShowU] = useState(false);
+  const [showE, setShowE] = useState(false);
 
   const onPlace = () => {
     map?.clear();
@@ -50,34 +54,54 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
     navigate(VIEWER_PLACE_ADDR);
   };
 
-  const onUpdate = async (name: string): Promise<void> => {
-    const pl = { ...place, name: name };
-    await storage.updatePlace(pl);
-    dispatch(updateFavoritePlace({ place: pl, index: index }));
+  const onSave = async (name: string): Promise<void> => {
+    const p = { ...place, name: name };
+    await storage.updatePlace(p);
+    dispatch(updateFavoritePlace({ place: p, index: index }));
   };
+
+  const onAppend = (): void => {
+    dispatch(appendSearchDirecsPlace(place));
+  }
 
   const onDelete = async (): Promise<void> => {
     await storage.deletePlace(place.placeId);
     dispatch(deleteFavoritePlace(index));
+    map?.clear();
   };
 
   return (
     <Box>
       <BusyListItem
         label={place.name}
+        link={getSmartPlaceLink(place.smartId)}
         l={
           <PlaceButton
             kind={"stored"}
             onPlace={onPlace}
+            title={"Draw"}
           />
         }
         r={
           <ListItemMenu
             onShow={onShow}
+            showEditDialog={() => { setShowE(true); }}
+            showAppendDialog={() => { setShowA(true); }}
             showDeleteDialog={() => { setShowD(true); }}
-            showEditDialog={() => { setShowU(true); }}
           />
         }
+      />
+      <EditSomethingDialog
+        show={showE}
+        name={place.name}
+        what={"place"}
+        onHide={() => { setShowE(false); }}
+        onSave={onSave}
+      />
+      <AppendPlaceDialog
+        show={showA}
+        onHide={() => { setShowA(false); }}
+        onAppend={onAppend}
       />
       <DeleteSomethingDialog
         show={showD}
@@ -86,27 +110,16 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}
       />
-      <EditSomethingDialog
-        show={showU}
-        name={place.name}
-        what={"place"}
-        onHide={() => { setShowU(false); }}
-        onSave={onUpdate}
-      />
     </Box>
   );
 }
 
-type MyPlacesListProps = {
-
-  /** List of favorite places available in the storage. */
-  places: StoredPlace[];
-};
-
 /**
  * Component presenting list of passed places.
  */
-export default function MyPlacesList({ places }: MyPlacesListProps): JSX.Element {
+export default function MyPlacesList(): JSX.Element {
+
+  const { places } = useAppSelector((state) => state.favorites);
 
   return (
     <Box>

@@ -85,6 +85,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
   const onDelete = async (): Promise<void> => {
     await storage.deleteDirec(direc.direcId);
     dispatch(deleteFavoriteDirec(index));
+    map?.clear();
   };
 
   return (
