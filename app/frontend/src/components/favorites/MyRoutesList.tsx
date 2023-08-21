@@ -21,7 +21,7 @@ import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import UpdateSomethingDialog from "./UpdateSomethingDialog";
+import UpdateSomethingDialog from "./EditSomethingDialog";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
 import { setViewerRoute } from "../../features/viewerSlice";
 

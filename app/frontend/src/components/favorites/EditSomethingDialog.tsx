@@ -1,8 +1,8 @@
 import { useState } from "react";
 import {
-  Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Stack,
@@ -36,63 +36,65 @@ type UpdateSomethingDialogProps = {
 /**
  * Dialog for updating named `something`.
  */
-export default function UpdateSomethingDialog({ name: oldName, what, onHide, onUpdate }: UpdateSomethingDialogProps): JSX.Element {
+export default function UpdateSomethingDialog(
+  { show, name: oldName, what, onHide, onUpdate }: UpdateSomethingDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
-  const { dialogBlock } = useAppSelector(state => state.panel);
+  const { dialogBlock } = useAppSelector((state) => state.panel);
 
   const [name, setName] = useState(oldName);
 
-  const cancelAction = async () => {
+  const discardAction = async () => {
     setName(oldName);
     onHide();
   };
 
-  const updateAction = async () => {
+  const editAction = async () => {
     dispatch(setDialogBlock(true));
     try {
       await onUpdate(name);
+      setName(name);
       onHide();
     }
     catch (ex) { alert(ex); }
-    finally { dispatch(setDialogBlock(false)); }
+    finally {
+      dispatch(setDialogBlock(false));
+    }
   };
 
   return (
-    <Dialog open>
-      <DialogTitle>Update {what}</DialogTitle>
+    <Dialog open={show}>
+      <DialogTitle>Edit {what}</DialogTitle>
       <DialogContent>
-        <Stack direction={"column"} gap={2}>
+        <Stack direction={"column"} gap={2} minWidth={"300px"}>
           <Typography>Enter new name:</Typography>
           <TextField
             fullWidth
+            size={"small"}
             value={name}
             onChange={(e) => { setName(e.target.value); }}
           />
-          <Box
-            display={"flex"}
-            justifyContent={"space-between"}
-            sx={{ minWidth: "300px" }}
-          >
-            <Button
-              color={"error"}
-              disabled={dialogBlock}
-              onClick={() => { cancelAction(); }}
-            >
-              <span>Cancel</span>
-            </Button>
-            <LoadingButton
-              disabled={!(name.trim().length > 0)}
-              loading={dialogBlock}
-              startIcon={<Save />}
-              variant={"contained"}
-              onClick={() => { updateAction(); }}
-            >
-              <span>Update</span>
-            </LoadingButton>
-          </Box>
         </Stack>
       </DialogContent>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          color={"error"}
+          disabled={dialogBlock}
+          onClick={() => { discardAction(); }}
+          title={"Close dialog"}
+        >
+          <span>Discard</span>
+        </Button>
+        <LoadingButton
+          disabled={!(name.trim().length > 0)}
+          loading={dialogBlock}
+          title={"Send request"}
+          startIcon={<Save />}
+          onClick={() => { editAction(); }}
+        >
+          <span>Save</span>
+        </LoadingButton>
+      </DialogActions>
     </Dialog>
   );
 }

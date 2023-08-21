@@ -17,7 +17,7 @@ import { useAppDispatch } from "../../features/storeHooks";
 import { PlaceButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
-import UpdateSomethingDialog from "./UpdateSomethingDialog";
+import UpdateSomethingDialog from "./EditSomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 

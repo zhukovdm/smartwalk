@@ -1,7 +1,7 @@
 import {
-  Box,
   Button,
   Dialog,
+  DialogActions,
   DialogContent,
   DialogTitle,
   Stack,
@@ -47,37 +47,39 @@ export default function DeleteSomethingDialog(
       onHide();
     }
     catch (ex) { alert(ex); }
-    finally { dispatch(setDialogBlock(false)); }
+    finally {
+      dispatch(setDialogBlock(false));
+    }
   };
 
   return (
     <Dialog open={show}>
       <DialogTitle>Delete {what}</DialogTitle>
       <DialogContent>
-        <Stack direction={"column"} gap={2}>
+        <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            You are about to delete <strong>{name}</strong>.
-            Please confirm the action.
+            You are about to delete <strong>{name}</strong>. Please confirm the action.
           </Typography>
-          <Box display={"flex"} justifyContent={"space-between"}>
-            <Button
-              disabled={dialogBlock}
-              onClick={onHide}
-            >
-              <span>Cancel</span>
-            </Button>
-            <LoadingButton
-              color={"error"}
-              loading={dialogBlock}
-              startIcon={<Delete />}
-              variant={"contained"}
-              onClick={() => { deleteAction(); }}
-            >
-              <span>Delete</span>
-            </LoadingButton>
-          </Box>
         </Stack>
       </DialogContent>
+      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Button
+          disabled={dialogBlock}
+          onClick={onHide}
+          title={"Close dialog"}
+        >
+          <span>Cancel</span>
+        </Button>
+        <LoadingButton
+          color={"error"}
+          loading={dialogBlock}
+          title={"Send request"}
+          startIcon={<Delete />}
+          onClick={() => { deleteAction(); }}
+        >
+          <span>Delete</span>
+        </LoadingButton>
+      </DialogActions>
     </Dialog>
   );
 }
