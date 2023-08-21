@@ -12,12 +12,14 @@ import {
   Select,
   SelectChangeEvent,
   Stack,
-  Typography
+  Typography,
+  useMediaQuery,
+  useTheme
 } from "@mui/material";
-import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
-import PrecedenceDrawing from "../shared/PrecedenceDrawing";
-import { CycleDetector } from "../../domain/cycle-detector";
 import { East } from "@mui/icons-material";
+import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
+import { CycleDetector } from "../../domain/cycle-detector";
+import PrecedenceDrawing from "./PrecedenceDrawing";
 
 type PrecedenceSelectorProps = {
 
@@ -67,6 +69,8 @@ type PrecedenceBoxProps = {
 
 export default function PrecedenceBox(
   { categories, precedence, deleteEdge, appendEdge }: PrecedenceBoxProps): JSX.Element {
+
+  const fullScreen = useMediaQuery(useTheme().breakpoints.down("sm"));
 
   const [showDialog, setShowDialog] = useState(false);
   const [edgeFr, setEdgeFr] = useState<number | undefined>(undefined);
@@ -121,20 +125,10 @@ export default function PrecedenceBox(
           <span>Add arrow</span>
         </Button>
       </Paper>
-      <Dialog open={showDialog}>
+      <Dialog open={showDialog} fullScreen={fullScreen}>
         <DialogTitle>Add arrow</DialogTitle>
         <DialogContent>
-          <Stack mt={0.5} gap={2} maxWidth={"380px"}>
-            <Typography>
-              Symbol &rarr; means relation <strong>before</strong>. Given
-              &#123; 1, 2, 3 &#125; and only arrow 1 &rarr; 2, the following
-              orders are valid:
-            </Typography>
-            <Stack mb={0.5} direction={"row"} justifyContent={"space-evenly"}>
-              <Typography>1 &rarr; 2 &rarr; 3</Typography>
-              <Typography>1 &rarr; 3 &rarr; 2</Typography>
-              <Typography>3 &rarr; 1 &rarr; 2</Typography>
-            </Stack>
+          <Stack mt={0.5} gap={2} maxWidth={"360px"}>
             <PrecedenceDrawing
               edge={edge}
               categories={categories}
@@ -155,6 +149,20 @@ export default function PrecedenceBox(
                 categories={categories}
                 onSelect={(i: number) => { setEdgeTo(i); }}
               />
+            </Stack>
+            <Typography fontSize={"small"}>
+              Symbol &rarr; means relation <strong>before</strong>. Given
+              categories &#123;&nbsp;1,&nbsp;2,&nbsp;3&nbsp;&#125; and only
+              arrow 1&nbsp;&rarr;&nbsp;2, the following orders are valid:
+            </Typography>
+            <Stack
+              direction={"row"}
+              justifyContent={"space-evenly"}
+              fontSize={"small"}
+            >
+              <Typography fontSize={"inherit"}>1&nbsp;&rarr;&nbsp;2&nbsp;&rarr;&nbsp;3</Typography>
+              <Typography fontSize={"inherit"}>1&nbsp;&rarr;&nbsp;3&nbsp;&rarr;&nbsp;2</Typography>
+              <Typography fontSize={"inherit"}>3&nbsp;&rarr;&nbsp;1&nbsp;&rarr;&nbsp;2</Typography>
             </Stack>
           </Stack>
         </DialogContent>

@@ -151,7 +151,7 @@ export default function SearchRoutesPanel(): JSX.Element {
         />
         <Typography>
           Categories could appear on a route in <strong>any</strong> order.
-          Add arrows to enforce an arrangement.
+          Add arrows to impose an arrangement.
         </Typography>
         <PrecedenceBox
           categories={categories}

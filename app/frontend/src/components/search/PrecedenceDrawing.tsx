@@ -22,14 +22,22 @@ export default function PrecedenceDrawing(
     const nodes: Node[] = categories.map((c, i) => (
       {
         id: i,
-        label: `${i + 1}: ${c.keyword}`
+        label: `${i + 1}: ${c.keyword}`,
+        color: "#1976d2",
+        font: {
+          face: "Roboto"
+        }
       }
     ));
 
-    const edges: Edge[] = precedence.map(({ fr, to }) => ({ from: fr, to: to }));
+    const edges: Edge[] = precedence.map(({ fr, to }) => ({
+      from: fr, to: to, color: { color: "black" }
+    }));
 
     if (edge) {
-      edges.push({ from: edge.fr, to: edge.to, color: { color: "red" } });
+      edges.push({
+        from: edge.fr, to: edge.to, color: { color: "red" }
+      });
     }
 
     const options: Options = {

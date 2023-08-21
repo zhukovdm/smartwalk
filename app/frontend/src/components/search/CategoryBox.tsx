@@ -40,8 +40,7 @@ type CategoryDialogProps = {
 function CategoryDialog(
   { category, onHide, insert }: CategoryDialogProps): JSX.Element {
 
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down("sm"));
+  const fullScreen = useMediaQuery(useTheme().breakpoints.down("sm"));
 
   const [input, setInput] = useState("");
   const [mount, setMount] = useState(true);
