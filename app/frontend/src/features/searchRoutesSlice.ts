@@ -29,7 +29,7 @@ export const searchRoutesSlice = createSlice({
     deleteSearchRoutesCategory: (state, action: PayloadAction<number>) => {
       const i = action.payload;
       state.categories = deleteItemImmutable(state.categories, i);
-      state.precedence = state.precedence.filter(({ fr, to }) => fr !== i && to !== i);
+      state.precedence = [];
     },
     updateSearchRoutesCategory: (state, action: PayloadAction<{ category: KeywordCategory; i: number; }>) => {
       const { category, i } = action.payload;

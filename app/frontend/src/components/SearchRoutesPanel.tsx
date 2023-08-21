@@ -67,7 +67,7 @@ export default function SearchRoutesPanel(): JSX.Element {
         target: target!,
         distance: distance,
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters })),
-        precedence: []
+        precedence: precedence
       });
       dispatch(setResultRoutes(routes));
       navigate(RESULT_ROUTES_ADDR);
