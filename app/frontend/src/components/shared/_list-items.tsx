@@ -22,10 +22,15 @@ export function ListItemLabel({ label, link }: ListItemLabelProps): JSX.Element 
     <Box
       display={"flex"}
       alignItems={"center"}
-      sx={{ width: "100%", borderBottom: "1px solid lightgray", overflow: "hidden", textOverflow: "ellipsis" }}
+      sx={{
+        width: "100%",
+        borderBottom: "1px solid lightgray",
+        overflow: "hidden",
+        textOverflow: "ellipsis"
+      }}
     >
-      <Typography noWrap color={(!link) ? "#656565" : "primary"}>
-        {(!link) ? label : <Link component={RouterLink} to={link} underline={"hover"} color={"inherit"}>{label}</Link>}
+      <Typography noWrap>
+        {(!link) ? label : <Link component={RouterLink} to={link} underline={"hover"}>{label}</Link>}
       </Typography>
     </Box>
   );
@@ -78,7 +83,11 @@ type BusyListItemProps = {
 
 export function BusyListItem({ label, link, l, r }: BusyListItemProps): JSX.Element {
   return (
-    <Stack direction={"row"} alignItems={"stretch"} gap={0.5}>
+    <Stack
+      direction={"row"}
+      alignItems={"stretch"}
+      gap={0.5}
+    >
       {l}
       <ListItemLabel label={label} link={link} />
       {r}

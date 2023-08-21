@@ -5,12 +5,12 @@ import {
   Typography
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { useAppSelector } from "../../features/storeHooks";
 import MyDirecsList from "./MyDirecsList";
 
+/**
+ * Collapsible section with list of directions available in the storage.
+ */
 export default function MyDirecsSection(): JSX.Element {
-
-  const { direcs, places } = useAppSelector((state) => state.favorites);
 
   return (
     <Accordion defaultExpanded>
@@ -18,7 +18,7 @@ export default function MyDirecsSection(): JSX.Element {
         <Typography>My Directions</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyDirecsList direcs={direcs} places={places} />
+        <MyDirecsList />
       </AccordionDetails>
     </Accordion>
   );

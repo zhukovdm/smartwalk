@@ -46,6 +46,7 @@ export default function ListItemMenu(
     <Box>
       <IconButton
         size={"small"}
+        title={"Show menu"}
         onClick={clickMenuAction}
       >
         <MoreVert />

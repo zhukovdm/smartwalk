@@ -22,7 +22,7 @@ export default function MyPlacesSection(): JSX.Element {
         <Typography>My Places</Typography>
       </AccordionSummary>
       <AccordionDetails>
-          <MyPlacesList places={places} />
+        <MyPlacesList places={places} />
         <MyPlacesCreateDialog />
       </AccordionDetails>
     </Accordion>

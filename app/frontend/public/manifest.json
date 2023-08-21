@@ -2,6 +2,7 @@
   "id": "/smartwalk/",
   "short_name": "SmartWalk",
   "name": "SmartWalk | Explore your local area",
+  "description": "Web application for keyword-aware walking route search",
   "version": "1.0.0",
   "icons": [
     {
