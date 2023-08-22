@@ -68,7 +68,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
     navigate(VIEWER_DIREC_ADDR);
   };
 
-  const onSave = async (name: string): Promise<void> => {
+  const onEdit = async (name: string): Promise<void> => {
     const d = { ...direc, name: name };
     await storage.updateDirec(d);
     dispatch(updateFavoriteDirec({ direc: d, index: index }));
@@ -112,7 +112,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
         name={name}
         what={"direction"}
         onHide={() => { setShowE(false); }}
-        onSave={onSave}
+        onSave={onEdit}
       />
       <ModifySomethingDialog
         show={showM}
@@ -132,7 +132,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
 }
 
 /**
- * Component presenting passed list of stored directions.
+ * Component presenting the list of stored directions.
  */
 export default function MyDirecsList(): JSX.Element {
 
@@ -143,7 +143,14 @@ export default function MyDirecsList(): JSX.Element {
     <Box>
       {direcs.length > 0
         ? <Stack direction={"column"} gap={2} sx={{ mb: 2 }}>
-            {direcs.map((d, i) => <MyDirecsListItem key={i} index={i} direc={d} storedPlaces={storedPlaces} />)}
+            {direcs.map((d, i) => (
+              <MyDirecsListItem
+                key={i}
+                index={i}
+                direc={d}
+                storedPlaces={storedPlaces}
+              />
+            ))}
           </Stack>
         : <FavoriteStub
             what={"direction"}

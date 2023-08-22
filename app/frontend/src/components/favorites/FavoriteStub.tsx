@@ -32,7 +32,7 @@ export default function FavoriteStub({ what, icon, link }: FavoriteStubProps): J
     <Stack direction={"column"} gap={1}>
       <Box display={"flex"} justifyContent={"center"}>
         <IconButton
-          title={`Search ${what}`}
+          title={`Search ${what}s`}
           onClick={() => { navigate(link); }}
         >
           {icon({ fontSize: 50, color: "grey" })}

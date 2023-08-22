@@ -25,14 +25,18 @@ function IconWrapper({ icon, title, onClick }: IconWrapperProps): JSX.Element {
 }
 
 type RouteButtonProps = {
+
+  title?: string;
+
   onRoute: MouseEventHandler<Element>;
 };
 
-export function RouteButton({ onRoute }: RouteButtonProps): JSX.Element {
+export function RouteButton({ title, onRoute }: RouteButtonProps): JSX.Element {
   return (
     <IconWrapper
+      title={title}
       onClick={onRoute}
-      icon={<Route className="stored-route" fontSize="medium" />}
+      icon={<Route className={"stored-route"} fontSize={"medium"} />}
     />
   );
 }

@@ -3,12 +3,12 @@ import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 import { Place } from "@mui/icons-material";
 import { AppContext } from "../../App";
-import { StoredPlace } from "../../domain/types";
+import { getSmartPlaceLink } from "../../domain/functions";
 import {
   SEARCH_PLACES_ADDR,
   VIEWER_PLACE_ADDR
 } from "../../domain/routing";
-import { getSmartPlaceLink } from "../../domain/functions";
+import { StoredPlace } from "../../domain/types";
 import {
   updateFavoritePlace,
   deleteFavoritePlace

@@ -1,29 +1,38 @@
-import { useContext, useMemo, useState } from "react";
+import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Box, Stack } from "@mui/material";
 import { Route } from "@mui/icons-material";
 import { AppContext } from "../../App";
 import {
-  Place,
-  StoredPlace,
-  StoredRoute
-} from "../../domain/types";
-import {
+  SEARCH_DIRECS_ADDR,
   SEARCH_ROUTES_ADDR,
   VIEWER_ROUTE_ADDR
 } from "../../domain/routing";
 import {
+  StoredPlace,
+  StoredRoute,
+  UiPlace
+} from "../../domain/types";
+import {
   deleteFavoriteRoute,
   updateFavoriteRoute
 } from "../../features/favoritesSlice";
-import { useAppDispatch } from "../../features/storeHooks";
+import { appendSearchDirecsPlace, resetSearchDirecs } from "../../features/searchDirecsSlice";
+import { setViewerRoute } from "../../features/viewerSlice";
+import {
+  usePlace,
+  usePlaces,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../../features/sharedHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import EditSomethingDialog from "./EditSomethingDialog";
 import DeleteSomethingDialog from "./DeleteSomethingDialog";
-import { setViewerRoute } from "../../features/viewerSlice";
+import ModifySomethingDialog from "../shared/ModifySomethingDialog";
 
 type MyRoutesListItemProps = {
 
@@ -33,33 +42,49 @@ type MyRoutesListItemProps = {
   /** Route in consideration. */
   route: StoredRoute;
 
+  /** All stored `places` (to draw pins). */
+  storedPlaces: Map<string, StoredPlace>;
+
   /** All stored `smarts` (to draw pins). */
   storedSmarts: Map<string, StoredPlace>;
 };
 
-function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps): JSX.Element {
+function MyRoutesListItem({ index, route, storedPlaces, storedSmarts }: MyRoutesListItemProps): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map, storage } = useContext(AppContext);
 
-  const { name, source, target, path, waypoints, categories } = route;
+  const {
+    name,
+    source: routeSource,
+    target: routeTarget,
+    places: routePlaces,
+    path,
+    waypoints,
+    categories
+  } = route;
 
-  const routeSmarts = useMemo(() => (
-    route.places.reduce((acc, place) => (acc.set(place.smartId, place)), new Map<string, Place>())
-  ), [route]);
+  const source = usePlace(routeSource, storedPlaces, new Map())!;
+  const target = usePlace(routeTarget, storedPlaces, new Map())!;
+  const places = usePlaces(routePlaces, new Map(), storedSmarts)
+    .reduce((acc, place) => acc.set(place.smartId!, place), new Map<string, UiPlace>());
 
-  const [showU, setShowU] = useState(false);
   const [showD, setShowD] = useState(false);
+  const [showE, setShowE] = useState(false);
+  const [showM, setShowM] = useState(false);
 
   const onRoute = () => {
     map?.clear();
-    waypoints.forEach((waypoint) => {
-      const smart = storedSmarts.get(waypoint);
-      smart
-        ? map?.addStored(smart, categories)
-        : map?.addCommon(routeSmarts.get(waypoint)!, categories, false);
-    });
+
+    waypoints
+      .map((waypoint) => places.get(waypoint)!)
+      .forEach((place) => {
+        (!!place.placeId)
+          ? map?.addStored(place, categories)
+          : map?.addCommon(place, categories, false);
+      });
+
     map?.addSource(source, [], false);
     map?.addTarget(target, [], false);
     map?.drawPolyline(path.polyline);
@@ -71,29 +96,59 @@ function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps)
     navigate(VIEWER_ROUTE_ADDR);
   };
 
-  const onUpdate = async (name: string): Promise<void> => {
+  const onEdit = async (name: string): Promise<void> => {
     const r = { ...route, name: name };
     await storage.updateRoute(r);
     dispatch(updateFavoriteRoute({ route: r, index: index }));
   };
 
+  const onModify = (): void => {
+    dispatch(resetSearchDirecs());
+    dispatch(appendSearchDirecsPlace(source));
+    waypoints.forEach((waypoint) => {
+      dispatch(appendSearchDirecsPlace(places.get(waypoint)!));
+    });
+    dispatch(appendSearchDirecsPlace(target));
+    navigate(SEARCH_DIRECS_ADDR);
+  };
+
   const onDelete = async (): Promise<void> => {
     await storage.deleteRoute(route.routeId);
     dispatch(deleteFavoriteRoute(index));
+    map?.clear();
   };
 
   return (
     <Box>
       <BusyListItem
         label={name}
-        l={<RouteButton onRoute={onRoute} />}
+        l={
+          <RouteButton
+            title={"Draw route"}
+            onRoute={onRoute}
+          />
+        }
         r={
           <ListItemMenu
             onShow={onShow}
+            showEditDialog={() => { setShowE(true); }}
             showDeleteDialog={() => { setShowD(true); }}
-            showEditDialog={() => { setShowU(true); }}
+            showModifyDialog={() => { setShowM(true); }}
           />
         }
+      />
+      <EditSomethingDialog
+        show={showE}
+        name={name}
+        what={"route"}
+        onHide={() => { setShowE(false); }}
+        onSave={onEdit}
+      />
+      <ModifySomethingDialog
+        show={showM}
+        what={"direction"}
+        onHide={() => { setShowM(false); }}
+        onModify={onModify}
       />
       <DeleteSomethingDialog
         show={showD}
@@ -102,40 +157,33 @@ function MyRoutesListItem({ index, route, storedSmarts }: MyRoutesListItemProps)
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}
       />
-      <EditSomethingDialog
-        show={showU}
-        name={name}
-        what={"route"}
-        onHide={() => { setShowU(false); }}
-        onSave={onUpdate}
-      />
     </Box>
   );
 }
 
-type MyRoutesListProps = {
-
-  /** List of stored routes. */
-  routes: StoredRoute[];
-
-  /** List of all stored places (to draw pins). */
-  places: StoredPlace[];
-};
-
 /**
- * Component presenting the list of passed routes.
+ * Component presenting the list of stored routes.
  */
-export default function MyRoutesList({ routes, places }: MyRoutesListProps): JSX.Element {
+export default function MyRoutesList(): JSX.Element {
 
-  const storedSmarts = useMemo(() => (
-    places.reduce((acc, place) => (place.smartId ? acc.set(place.smartId, place) : acc), new Map<string, StoredPlace>())
-  ), [places]);
+  const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
+
+  const { routes } = useAppSelector((state) => state.favorites);
 
   return (
     <Box>
       {routes.length > 0
         ? <Stack direction={"column"} gap={2} sx={{ mb: 2 }}>
-            {routes.map((r, i) => <MyRoutesListItem key={i} index={i} route={r} storedSmarts={storedSmarts} />)}
+            {routes.map((r, i) => (
+              <MyRoutesListItem
+                key={i}
+                index={i}
+                route={r}
+                storedPlaces={storedPlaces}
+                storedSmarts={storedSmarts}
+              />
+            ))}
           </Stack>
         : <FavoriteStub
             what={"route"}

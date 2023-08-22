@@ -4,11 +4,11 @@ import {
   AccordionSummary,
   Typography
 } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
-import MyPlacesList from "./MyPlacesList";
-import MyPlacesCreateDialog from "./MyPlacesCreateDialog";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { toggleFavoritePlacesExpanded } from "../../features/favoritesSlice";
+import ExpandSectionIcon from "../shared/ExpandSectionIcon";
+import MyPlacesList from "./MyPlacesList";
+import MyPlacesCreateDialog from "./MyPlacesCreateDialog";
 
 /**
  * Collapsible section with list of places available in the storage.
@@ -23,7 +23,9 @@ export default function MyPlacesSection(): JSX.Element {
       expanded={placesExpanded}
       onChange={() => { dispatch(toggleFavoritePlacesExpanded()); }}
     >
-      <AccordionSummary expandIcon={<ExpandMore />}>
+      <AccordionSummary
+        expandIcon={<ExpandSectionIcon expanded={placesExpanded} />}
+      >
         <Typography>My Places</Typography>
       </AccordionSummary>
       <AccordionDetails>

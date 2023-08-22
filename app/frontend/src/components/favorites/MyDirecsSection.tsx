@@ -4,10 +4,10 @@ import {
   AccordionSummary,
   Typography
 } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
-import MyDirecsList from "./MyDirecsList";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { toggleFavoriteDirecsExpanded } from "../../features/favoritesSlice";
+import ExpandSectionIcon from "../shared/ExpandSectionIcon";
+import MyDirecsList from "./MyDirecsList";
 
 /**
  * Collapsible section with list of directions available in the storage.
@@ -22,7 +22,9 @@ export default function MyDirecsSection(): JSX.Element {
       expanded={direcsExpanded}
       onChange={() => { dispatch(toggleFavoriteDirecsExpanded()); }}
     >
-      <AccordionSummary expandIcon={<ExpandMore />}>
+      <AccordionSummary
+        expandIcon={<ExpandSectionIcon expanded={direcsExpanded} />}
+      >
         <Typography>My Directions</Typography>
       </AccordionSummary>
       <AccordionDetails>
