@@ -92,9 +92,9 @@ public static class SearchService
                 })
                 .WithMergedCategories();
 
-                var routeWaypoints = trimmedSeq.Aggregate(new List<string>(), (acc, sp) =>
+                var routeWaypoints = trimmedSeq.Aggregate(new List<Waypoint>(), (acc, sp) =>
                 {
-                    acc.Add(places[sp.idx].smartId);
+                    acc.Add(new(places[sp.idx].smartId, sp.cat));
                     return acc;
                 });
 

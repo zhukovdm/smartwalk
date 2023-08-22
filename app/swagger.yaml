@@ -594,7 +594,7 @@ components:
         waypoints:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/Waypoint'
           description: "Ordered sequence of visited waypoints, each represented by the\r\ncorresponding smartId."
       additionalProperties: false
     ShortestPath:
@@ -621,6 +621,20 @@ components:
           items:
             $ref: '#/components/schemas/WgsPoint'
           description: Ordered sequence of points representing connected linestring.
+      additionalProperties: false
+    Waypoint:
+      required:
+        - category
+        - smartId
+      type: object
+      properties:
+        smartId:
+          type: string
+          example: 64c91f8359914b93b23b01d9
+        category:
+          type: integer
+          format: int32
+          example: 0
       additionalProperties: false
     WgsPoint:
       required:

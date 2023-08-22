@@ -20,6 +20,19 @@ public sealed class PrecedenceEdge
     public PrecedenceEdge(int fr, int to) { this.fr = fr; this.to = to; }
 }
 
+public sealed class Waypoint
+{
+    /// <example>64c91f8359914b93b23b01d9</example>
+    [Required]
+    public string smartId { get; }
+
+    /// <example>0</example>
+    [Required]
+    public int category { get; }
+
+    public Waypoint(string smartId, int category) { this.smartId = smartId; this.category = category; }
+}
+
 public sealed class Route
 {
     /// <summary>
@@ -39,5 +52,5 @@ public sealed class Route
     /// corresponding smartId.
     /// </summary>
     [Required]
-    public List<string> waypoints { get; init; }
+    public List<Waypoint> waypoints { get; init; }
 }
