@@ -14,8 +14,6 @@ import MyPlacesCreateDialog from "./MyPlacesCreateDialog";
  */
 export default function MyPlacesSection(): JSX.Element {
 
-  const { places } = useAppSelector((state) => state.favorites);
-
   return (
     <Accordion defaultExpanded>
       <AccordionSummary expandIcon={<ExpandMore />}>
