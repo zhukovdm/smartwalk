@@ -3,7 +3,6 @@ import {
   Alert,
   Box,
   Button,
-  Chip,
   Divider,
   Link,
   Rating,
@@ -31,12 +30,12 @@ import {
   ExtendedPlace,
   PlaceAddress
 } from "../../domain/types";
-import { point2text } from "../../utils/helpers";
 import { useAppSelector } from "../../features/storeHooks";
-import { PlaceButton } from "../shared/_buttons";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 import SavePlaceDialog from "./SavePlaceDialog";
+import PlaceLocation from "./PlaceLocation";
+import PlaceKeywords from "./PlaceKeywords";
 
 type PlaceContentProps = {
 
@@ -144,31 +143,13 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
       <Stack direction={"column"} gap={1}>
         <Typography fontSize={"large"}>{place.name}</Typography>
         <Divider sx={{ background: "lightgrey" }} />
-        <Box
-          alignItems={"center"}
-          display={"flex"}
-          justifyContent={"right"}
-          onClick={() => { map?.flyTo(place); }}
-          sx={{ cursor: "pointer"}}
-        >
-          <PlaceButton
-            kind={(!storedPlace) ? "common" : "stored"}
-            title={"Fly to"}
-            onPlace={() => {}}
-          />
-          <Typography fontSize={"small"}>{point2text(place.location)}</Typography>
-        </Box>
+        <PlaceLocation
+          map={map}
+          place={place}
+          isStored={!!storedPlace}
+        />
       </Stack>
-      <Stack
-        direction={"row"}
-        flexWrap={"wrap"}
-        justifyContent={"center"}
-        gap={1}
-      >
-        {place.keywords.map((k, i) => (
-          <Chip key={i} label={k} color={"primary"} variant={"outlined"} sx={{ color: "black" }} />
-        ))}
-      </Stack>
+      <PlaceKeywords keywords={place.keywords} />
       {
         /* contacts */
       }

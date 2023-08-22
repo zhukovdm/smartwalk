@@ -14,6 +14,7 @@ import {
   SEARCH_ROUTES_ADDR,
   SESSION_SOLID_ADDR,
   VIEWER_DIREC_ADDR,
+  VIEWER_PLACE_ADDR
 } from "../domain/routing";
 import { showPanel } from "../features/panelSlice";
 import { useFavorites } from "../features/panelHooks";
@@ -30,6 +31,7 @@ import FavoritesPanel from "./FavoritesPanel";
 import SessionProvider from "./SessionProvider";
 import SessionSolidPanel from "./SessionSolidPanel";
 import ViewerDirecPanel from "./ViewerDirecPanel";
+import ViewerPlacePanel from "./ViewerPlacePanel";
 
 export default function PanelControl(): JSX.Element {
 
@@ -86,6 +88,7 @@ export default function PanelControl(): JSX.Element {
             /* viewer */
           }
           <Route path={VIEWER_DIREC_ADDR} element={<ViewerDirecPanel />} />
+          <Route path={VIEWER_PLACE_ADDR} element={<ViewerPlacePanel />} />
           {
             /* favorites */
           }
