@@ -34,6 +34,11 @@ internal static class ShortestPathFetcher
         public List<Route> routes { get; init; }
     }
 
+    private sealed class PathComparer : IComparer<ShortestPath>
+    {
+        public int Compare(ShortestPath l, ShortestPath r) => l.distance.CompareTo(r.distance);
+    }
+
     /// <summary>
     /// Request the traversal and the distance of the shortest path from an OSRM instance.
     /// <list>
@@ -52,7 +57,7 @@ internal static class ShortestPathFetcher
         var ans = JsonSerializer.Deserialize<Answer>(res);
         if (ans.code != "Ok") { return new(); }
 
-        var routes = ans.routes.Select(r => new ShortestPath()
+        var paths = ans.routes.Select(r => new ShortestPath()
         {
             distance = r.distance,
             duration = r.duration,
@@ -61,6 +66,7 @@ internal static class ShortestPathFetcher
                 .ToList()
         }).ToList();
 
-        return routes;
+        paths.Sort(new PathComparer());
+        return paths;
     }
 }

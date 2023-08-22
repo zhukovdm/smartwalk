@@ -13,7 +13,7 @@ internal static class QueryConstructor
     /// Query fetching the <b>fastest</b> route connecting waypoints in a given order.
     /// </summary>
     public static string Route(string addr, List<WgsPoint> waypoints)
-        => addr + "/route/v1/foot/" + Chain(waypoints) + "?geometries=geojson&skip_waypoints=true";
+        => addr + "/route/v1/foot/" + Chain(waypoints) + "?alternatives=true&geometries=geojson&skip_waypoints=true";
 
     /// <summary>
     /// Query fetching matrix with durations of the <b>fastest</b> routes between all pairs of waypoints.
