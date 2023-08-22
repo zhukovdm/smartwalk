@@ -92,7 +92,12 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
     <Box>
       <BusyListItem
         label={name}
-        l={<DirecButton title={"Draw"} onDirec={onDirec} />}
+        l={
+          <DirecButton
+            title={"Draw direction"}
+            onDirec={onDirec}
+          />
+        }
         r={
           <ListItemMenu
             onShow={onShow}

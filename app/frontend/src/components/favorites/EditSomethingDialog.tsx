@@ -52,8 +52,8 @@ export default function EditSomethingDialog(
   const saveAction = async () => {
     dispatch(setDialogBlock(true));
     try {
-      await onSave(name);
-      setName(name);
+      await onSave(name.trim());
+      setName(name.trim());
       onHide();
     }
     catch (ex) { alert(ex); }

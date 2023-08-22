@@ -117,7 +117,7 @@ export function SwapButton({ title, onSwap }: SwapButtonProps): JSX.Element {
     <IconWrapper
       title={title}
       onClick={onSwap}
-      icon={<SwapVert sx={{ color: "gray" }} />}
+      icon={<SwapVert color={"primary"} />}
     />
   );
 }

@@ -33,7 +33,7 @@ export default function AppendPlaceDialog(
   />
 
   return (
-    <Dialog open={show}>
+    <Dialog open={show} onClose={onHide}>
       <DialogTitle>Append place</DialogTitle>
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>

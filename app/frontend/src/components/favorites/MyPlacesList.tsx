@@ -79,7 +79,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
           <PlaceButton
             kind={"stored"}
             onPlace={onPlace}
-            title={"Draw"}
+            title={"Draw point"}
           />
         }
         r={

@@ -112,11 +112,13 @@ export default function MyPlacesCreateDialog(): JSX.Element {
             ? <RemovablePlaceListItem
                 kind={"common"}
                 label={place.name}
+                title={"Draw point"}
                 onPlace={() => clickPlace(place)}
                 onDelete={deleteLocation}
               />
             : <FreePlaceListItem
                 kind={"common"}
+                title={"Select point"}
                 label={"Select point..."}
                 onPlace={addLocation}
               />
@@ -141,7 +143,6 @@ export default function MyPlacesCreateDialog(): JSX.Element {
               disabled={block || !place || !(name.trim().length > 0)}
               loading={loading}
               startIcon={<Save />}
-              variant={"contained"}
               onClick={createPlace}
             >
               <span>Create</span>

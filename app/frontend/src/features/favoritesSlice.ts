@@ -12,16 +12,22 @@ type FavoritesState = {
   name: string;
   location?: WgsPoint;
   direcs: StoredDirec[];
+  direcsExpanded: boolean;
   places: StoredPlace[];
+  placesExpanded: boolean;
   routes: StoredRoute[];
+  routesExpanded: boolean;
 };
 
 const initialState = (): FavoritesState => ({
   loaded: false,
   name: "",
   direcs: [],
+  direcsExpanded: true,
   places: [],
-  routes: []
+  placesExpanded: true,
+  routes: [],
+  routesExpanded: true
 });
 
 export const favoritesSlice = createSlice({
@@ -66,6 +72,9 @@ export const favoritesSlice = createSlice({
     deleteFavoriteDirec: (state, action: PayloadAction<number>) => {
       state.direcs = deleteItemImmutable(state.direcs, action.payload);
     },
+    toggleFavoriteDirecsExpanded: (state) => {
+      state.direcsExpanded = !state.direcsExpanded;
+    },
 
     // places
 
@@ -82,6 +91,9 @@ export const favoritesSlice = createSlice({
     deleteFavoritePlace: (state, action: PayloadAction<number>) => {
       state.places = deleteItemImmutable(state.places, action.payload);
     },
+    toggleFavoritePlacesExpanded: (state) => {
+      state.placesExpanded = !state.placesExpanded;
+    },
 
     // routes
 
@@ -97,6 +109,9 @@ export const favoritesSlice = createSlice({
     },
     deleteFavoriteRoute: (state, action: PayloadAction<number>) => {
       state.routes = deleteItemImmutable(state.routes, action.payload);
+    },
+    toggleFavoriteRoutesExpanded: (state) => {
+      state.routesExpanded = !state.routesExpanded;
     }
   }
 });
@@ -119,6 +134,7 @@ export const {
   createFavoriteDirec,
   updateFavoriteDirec,
   deleteFavoriteDirec,
+  toggleFavoriteDirecsExpanded,
 
   // places
 
@@ -126,6 +142,7 @@ export const {
   createFavoritePlace,
   updateFavoritePlace,
   deleteFavoritePlace,
+  toggleFavoritePlacesExpanded,
 
   // routes
 
@@ -133,6 +150,7 @@ export const {
   createFavoriteRoute,
   updateFavoriteRoute,
   deleteFavoriteRoute,
+  toggleFavoriteRoutesExpanded
 } = favoritesSlice.actions;
 
 export default favoritesSlice.reducer;
