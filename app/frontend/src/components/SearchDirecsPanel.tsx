@@ -3,7 +3,8 @@ import { Box, Stack, Typography } from "@mui/material";
 import {
   RESULT_DIRECS_ADDR
 } from "../domain/routing";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+// import { SmartWalkFetcher } from "../utils/smartwalk";
+import { OsrmProjectFetcher } from "../utils/osrm-project";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultDirecs,
@@ -36,7 +37,9 @@ export default function SearchDirecsPanel(): JSX.Element {
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
+      // const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
+      const direcs = await OsrmProjectFetcher.searchDirecs(waypoints);
+
       dispatch(resetResultDirecs());
       dispatch(setResultDirecs(direcs));
       navigate(RESULT_DIRECS_ADDR);

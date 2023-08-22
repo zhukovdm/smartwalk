@@ -45,17 +45,17 @@ export class SmartWalkFetcher {
   private static async fetch(url: string): Promise<any> {
     const content = "application/json";
 
-    const rs = await fetch(url, {
+    const res = await fetch(url, {
       method: "GET",
       headers: { "Accept": content }
     });
 
-    switch (rs.status) {
-      case 200: return rs.json();
+    switch (res.status) {
+      case 200: return res.json();
       case 404: return undefined;
     //case 400:
     //case 500:
-      default: throw new Error(`${rs.statusText} (status code ${rs.status}).`);
+      default: throw new Error(`${res.statusText} (status code ${res.status}).`);
     }
   }
 
@@ -85,7 +85,7 @@ export class SmartWalkFetcher {
    * Fetch walking path visiting a sequence of locations in a given order.
    */
   public static async searchDirecs(waypoints: UiPlace[]): Promise<UiDirec[]> {
-    const qry = { waypoints: waypoints.map((l) => l.location) };
+    const qry = { waypoints: waypoints.map((w) => w.location) };
     const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_DIRECS_URL + encodeURIComponent(JSON.stringify(qry)));
 
     return jsn.map((direc: any) => ({ name: "", path: { ...direc, distance: direc.distance / 1000.0 }, waypoints: waypoints }));
