@@ -5,7 +5,6 @@ import {
   Typography
 } from "@mui/material";
 import { ExpandMore } from "@mui/icons-material";
-import { useAppSelector } from "../../features/storeHooks";
 import MyPlacesList from "./MyPlacesList";
 import MyPlacesCreateDialog from "./MyPlacesCreateDialog";
 

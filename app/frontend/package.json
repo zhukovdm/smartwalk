@@ -29,6 +29,7 @@
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^18.0.10",
     "@types/vis": "^4.21.24",
+    "axios": "^1.4.0",
     "leaflet": "^1.9.3",
     "leaflet.locatecontrol": "^0.79.0",
     "mui-image": "^1.0.7",

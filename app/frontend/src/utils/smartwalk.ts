@@ -1,3 +1,4 @@
+import axios from "axios";
 import crowFlyDistance from "@turf/distance";
 import {
   BoundsAdvice,
@@ -43,15 +44,15 @@ export class SmartWalkFetcher {
    * @param url endpoint url with a query string
    */
   private static async fetch(url: string): Promise<any> {
-    const content = "application/json";
+    const content = "application/json; charset=utf-8";
 
-    const res = await fetch(url, {
+    const res = await axios.get(url, {
       method: "GET",
       headers: { "Accept": content }
     });
 
     switch (res.status) {
-      case 200: return res.json();
+      case 200: return res.data;
       case 404: return undefined;
     //case 400:
     //case 500:
@@ -86,9 +87,17 @@ export class SmartWalkFetcher {
    */
   public static async searchDirecs(waypoints: UiPlace[]): Promise<UiDirec[]> {
     const qry = { waypoints: waypoints.map((w) => w.location) };
-    const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_DIRECS_URL + encodeURIComponent(JSON.stringify(qry)));
+    const jsn = await SmartWalkFetcher
+      .fetch(SMARTWALK_SEARCH_DIRECS_URL + encodeURIComponent(JSON.stringify(qry)));
 
-    return jsn.map((direc: any) => ({ name: "", path: { ...direc, distance: direc.distance / 1000.0 }, waypoints: waypoints }));
+    return jsn.map((direc: any) => ({
+      name: "",
+      path: {
+        ...direc,
+        distance: direc.distance / 1000.0
+      },
+      waypoints: waypoints
+    }));
   }
 
   /**
@@ -97,7 +106,8 @@ export class SmartWalkFetcher {
   public static async searchPlaces(request: PlacesRequest): Promise<PlacesResult> {
     const { center, radius, ...rest } = request;
     const qry = { ...rest, center: center.location, radius: radius * 1000.0 };
-    const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_PLACES_URL + encodeURIComponent(JSON.stringify(qry)));
+    const jsn = await SmartWalkFetcher
+      .fetch(SMARTWALK_SEARCH_PLACES_URL + encodeURIComponent(JSON.stringify(qry)));
 
     return { ...request, places: jsn };
   }
@@ -121,8 +131,15 @@ export class SmartWalkFetcher {
       throw Error(`Points are too far from each other (at least ${cf.toFixed(2)} km). Move them closer, or adjust the distance slider.`);
     }
 
-    const qry = { ...rest, source: source.location, target: target.location, distance: distance * 1000.0 };
-    const jsn = await SmartWalkFetcher.fetch(SMARTWALK_SEARCH_ROUTES_URL + encodeURIComponent(JSON.stringify(qry)));
+    const qry = {
+      ...rest,
+      source: source.location,
+      target: target.location,
+      distance: distance * 1000.0
+    };
+
+    const jsn = await SmartWalkFetcher
+      .fetch(SMARTWALK_SEARCH_ROUTES_URL + encodeURIComponent(JSON.stringify(qry)));
 
     return jsn.map((route: any) => {
       route.path.distance /= 1000.0;
