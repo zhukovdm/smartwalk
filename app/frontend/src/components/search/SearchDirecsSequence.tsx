@@ -60,18 +60,17 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
 
   return (
     <Stack
-      color={"gray"}
       direction={"row"}
       gap={0.5}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <DragIndicator />
+        <DragIndicator className={"adding-place"} />
       </div>
       <Stack
         direction={"row"}
         gap={0.5}
         onClick={onAppend}
-        sx={{ width: "100%", cursor: "pointer" }}
+        sx={{ width: "100%", color: "#595959", cursor: "pointer" }}
       >
         <PlaceButton
           kind={"adding"}
@@ -118,7 +117,10 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               style={{ display: "flex", alignItems: "center" }}
               {...provided.dragHandleProps}
             >
-              <DragIndicator />
+              <DragIndicator
+                className={"adding-place"}
+                titleAccess={"Drag"}
+              />
             </div>
             <PlaceButton
               title={"Fly to"}
