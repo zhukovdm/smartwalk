@@ -3,8 +3,8 @@ export type PlaceKind
   | "common"
   | "source"
   | "target"
-  | "adding"
   | "center"
+  | "action"
   ;
 
 export type SomethingKind = "direction" | "place" | "route";

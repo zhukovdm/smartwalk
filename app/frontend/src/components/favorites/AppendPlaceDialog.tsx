@@ -28,7 +28,7 @@ export default function AppendPlaceDialog(
 
   const icon = <Directions
     fontSize={"small"}
-    className={"stored-direc"}
+    className={"action-place"}
     sx={{ verticalAlign: "middle" }}
   />
 
@@ -38,7 +38,7 @@ export default function AppendPlaceDialog(
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            The action will <strong>append</strong> the point to the {icon} sequence.
+            This action will <strong>append</strong> the point to the {icon} sequence.
           </Typography>
         </Stack>
       </DialogContent>

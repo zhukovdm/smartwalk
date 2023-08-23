@@ -30,7 +30,7 @@ export default function ModifySomethingDialog(
 
   const icon = <Directions
     fontSize={"small"}
-    className={"stored-direc"}
+    className={"action-place"}
     sx={{ verticalAlign: "middle" }}
   />
 
@@ -40,7 +40,7 @@ export default function ModifySomethingDialog(
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            The action will <strong>replace</strong> points in the {icon} search panel and <strong>navigate</strong> you there.
+            This action will <strong>replace</strong> points in the {icon} search panel and <strong>navigate</strong> you there.
           </Typography>
         </Stack>
       </DialogContent>

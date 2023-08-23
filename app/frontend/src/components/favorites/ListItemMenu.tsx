@@ -56,7 +56,7 @@ export default function ListItemMenu(
         title={"Show menu"}
         onClick={clickMenuAction}
       >
-        <MoreVert />
+        <MoreVert className={"action-place"} />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -65,7 +65,7 @@ export default function ListItemMenu(
       >
         <MenuItem onClick={onShow}>
           <ListItemIcon>
-            <Info fontSize={"small"} />
+            <Info className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>View</Typography>
         </MenuItem>
@@ -73,7 +73,7 @@ export default function ListItemMenu(
           onClick={() => { showEditDialog(); closeMenuAction(); }}
         >
           <ListItemIcon>
-            <Edit fontSize={"small"} />
+            <Edit className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>Edit</Typography>
         </MenuItem>
@@ -82,7 +82,7 @@ export default function ListItemMenu(
             onClick={() => { showAppendDialog(); closeMenuAction(); }}
           >
             <ListItemIcon>
-              <Directions fontSize={"small"} />
+              <Directions className={"action-place"} fontSize={"small"} />
             </ListItemIcon>
             <Typography>Append</Typography>
           </MenuItem>
@@ -92,7 +92,7 @@ export default function ListItemMenu(
             onClick={() => { showModifyDialog(); closeMenuAction(); }}
           >
             <ListItemIcon>
-              <Directions fontSize={"small"} />
+              <Directions className={"action-place"} fontSize={"small"} />
             </ListItemIcon>
             <Typography>Modify</Typography>
           </MenuItem>
@@ -101,7 +101,7 @@ export default function ListItemMenu(
           onClick={() => { showDeleteDialog(); closeMenuAction(); }}
         >
           <ListItemIcon>
-            <Delete fontSize={"small"} />
+            <Delete className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>Delete</Typography>
         </MenuItem>

@@ -106,7 +106,7 @@ export function DeleteButton({ title, onDelete }: DeleteButtonProps): JSX.Elemen
     <IconWrapper
       title={title}
       onClick={onDelete}
-      icon={<DeleteOutline sx={{ color: "gray" }} />}
+      icon={<DeleteOutline className={"action-place"} />}
     />
   );
 }
