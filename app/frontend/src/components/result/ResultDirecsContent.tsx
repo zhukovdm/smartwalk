@@ -15,10 +15,10 @@ import {
 } from "../../features/sharedHooks";
 import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import SaveDirecDialog from "./SaveDirecDialog";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import TraversableDistance from "./TraversableDistance";
-import ResultDirecsContentList from "./ResultDirecsContentList";
+import TraversableDistance from "../shared/TraversableDistance";
+import ResultDirecsContentList from "../shared/ResultDirecsContentList";
+import SaveDirecDialog from "./SaveDirecDialog";
 
 type ResultDirecsContentProps = {
 
@@ -35,7 +35,8 @@ export default function ResultDirecsContent(
   const dispatch = useAppDispatch();
   const { index } = useAppSelector((state) => state.resultDirecs);
 
-  const [saveDialog, setSaveDialog] = useState(false);
+  // const [showM, setShowM] = useState(false);
+  const [showS, setShowS] = useState(false);
 
   const {
     direcId,
@@ -76,14 +77,14 @@ export default function ResultDirecsContent(
                 <Button
                   color={"inherit"}
                   size={"small"}
-                  onClick={() => { setSaveDialog(true); }}
+                  onClick={() => { setShowS(true); }}
                 >
                   <span>Save</span>
                 </Button>}
             >
               Would you like to save this direction?
             </Alert>
-            {saveDialog && (<SaveDirecDialog direc={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />)}
+            {showS && (<SaveDirecDialog direc={result[index]} index={index} onHide={() => { setShowS(false); }} />)}
           </Box>
       }
       <TraversableDistance distance={path.distance} />

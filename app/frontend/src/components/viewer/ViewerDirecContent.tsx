@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Stack } from "@mui/material";
 import { StoredDirec } from "../../domain/types";
 import {
@@ -6,9 +7,9 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import ResultDirecsContentList from "../result/ResultDirecsContentList";
-import TraversableHeader from "../result/TraversableHeader";
-import TraversableDistance from "../result/TraversableDistance";
+import ResultDirecsContentList from "../shared/ResultDirecsContentList";
+import TraversableHeader from "../shared/TraversableHeader";
+import TraversableDistance from "../shared/TraversableDistance";
 
 type ViewerDirecContentProps = {
   direc: StoredDirec;
@@ -24,8 +25,11 @@ export default function ViewerDirecContent(
   } = direc;
 
   const places = usePlaces(waypoints, useStoredPlaces(), useStoredSmarts());
+  const source = places[0];
 
   const map = useResultDirecsMap(places, path);
+
+  useEffect(() => { map?.flyTo(source); }, [map, source]);
 
   return (
     <Stack gap={2.5}>

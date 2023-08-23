@@ -8,9 +8,9 @@ import {
 } from "@mui/material";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
-import PlaceLocation from "../entity/PlaceLocation";
 import { getSmartPlaceLink } from "../../domain/functions";
-import PlaceKeywords from "../entity/PlaceKeywords";
+import PlaceKeywords from "../shared/PlaceKeywords";
+import PlaceLocation from "../shared/PlaceLocation";
 
 type ViewerPlaceContentProps = {
   place: UiPlace;

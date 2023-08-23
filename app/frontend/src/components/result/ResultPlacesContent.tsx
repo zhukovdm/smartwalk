@@ -22,10 +22,13 @@ import {
   useStoredPlaces,
   useStoredSmarts
 } from "../../features/sharedHooks";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { FixedPlaceListItem } from "../shared/_list-items";
-import PlacesList from "./PlacesList";
-import CategoryFilter from "./CategoryFilter";
+import PlacesList from "../shared/PlacesList";
+import CategoryFilter from "../shared/CategoryFilter";
 
 type ResultPlacesContentProps = {
 

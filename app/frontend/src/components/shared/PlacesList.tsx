@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import { UiPlace } from "../../domain/types";
-import { FixedPlaceListItem } from "../shared/_list-items";
+import { FixedPlaceListItem } from "./_list-items";
 import { IMap } from "../../domain/interfaces";
 
 type PlacesListProps = {

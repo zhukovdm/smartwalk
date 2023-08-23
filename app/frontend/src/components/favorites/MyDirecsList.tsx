@@ -28,8 +28,8 @@ import { BusyListItem } from "../shared/_list-items";
 import ModifySomethingDialog from "../shared/ModifySomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import EditSomethingDialog from "./EditSomethingDialog";
-import DeleteSomethingDialog from "./DeleteSomethingDialog";
+import EditSomethingDialog from "./SomethingEditDialog";
+import DeleteSomethingDialog from "./SomethingDeleteDialog";
 
 type MyDirecsListItemProps = {
 

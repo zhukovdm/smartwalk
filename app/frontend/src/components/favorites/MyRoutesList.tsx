@@ -28,14 +28,17 @@ import {
   useStoredPlaces,
   useStoredSmarts
 } from "../../features/sharedHooks";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
+import ModifySomethingDialog from "../shared/ModifySomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import EditSomethingDialog from "./EditSomethingDialog";
-import DeleteSomethingDialog from "./DeleteSomethingDialog";
-import ModifySomethingDialog from "../shared/ModifySomethingDialog";
+import EditSomethingDialog from "./SomethingEditDialog";
+import DeleteSomethingDialog from "./SomethingDeleteDialog";
 
 type MyRoutesListItemProps = {
 

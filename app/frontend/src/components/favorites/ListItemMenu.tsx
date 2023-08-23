@@ -52,16 +52,16 @@ export default function ListItemMenu(
   return (
     <Box>
       <IconButton
+        onClick={clickMenuAction}
         size={"small"}
         title={"Show menu"}
-        onClick={clickMenuAction}
       >
         <MoreVert className={"action-place"} />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
-        open={!!anchorEl}
         onClose={closeMenuAction}
+        open={!!anchorEl}
       >
         <MenuItem onClick={onShow}>
           <ListItemIcon>

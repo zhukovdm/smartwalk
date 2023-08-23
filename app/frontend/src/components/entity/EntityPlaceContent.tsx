@@ -1,8 +1,6 @@
 import { useContext, useEffect, useMemo, useState } from "react";
 import {
   Alert,
-  Box,
-  Button,
   Divider,
   Link,
   Rating,
@@ -30,12 +28,24 @@ import {
   ExtendedPlace,
   PlaceAddress
 } from "../../domain/types";
-import { useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
+import {
+  createFavoritePlace
+} from "../../features/favoritesSlice";
+import {
+  appendSearchDirecsPlace
+} from "../../features/searchDirecsSlice";
+import { IdGenerator } from "../../utils/helpers";
+import SomethingActionMenu from "../shared/SomethingActionMenu";
+import SaveSomethingDialog from "../shared/SomethingSaveDialog";
+import PlaceLocation from "../shared/PlaceLocation";
+import PlaceKeywords from "../shared/PlaceKeywords";
+import AppendPlaceDialog from "../shared/PlaceAppendDialog";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
-import SavePlaceDialog from "./SavePlaceDialog";
-import PlaceLocation from "./PlaceLocation";
-import PlaceKeywords from "./PlaceKeywords";
 
 type PlaceContentProps = {
 
@@ -48,10 +58,13 @@ type PlaceContentProps = {
  */
 export default function PlaceContent({ place }: PlaceContentProps): JSX.Element {
 
-  const { map } = useContext(AppContext);
+  const { map, storage } = useContext(AppContext);
+
+  const dispatch = useAppDispatch();
   const { places } = useAppSelector((state) => state.favorites);
 
-  const [showDialog, setShowDialog] = useState(false);
+  const [showA, setShowA] = useState(false);
+  const [showS, setShowS] = useState(false);
 
   const {
     polygon,
@@ -113,30 +126,37 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
 
   const add = rating || capacity || minimumAge || arr(cuisine) || arr(clothes) || arr(denomination) || arr(payment) || arr(rental) || arr(extra);
 
+  const onSave = async (name: string) => {
+
+    const p = {
+      name: name,
+      location: place.location,
+      keywords: place.keywords,
+      categories: []
+    };
+    const s = {
+      ...p,
+      smartId: place.smartId,
+      placeId: IdGenerator.generateId(p)
+    };
+    await storage.createPlace(s);
+    dispatch(createFavoritePlace(s));
+  };
+
+  const onAppend = () => {
+    const { smartId, name, location, keywords } = place;
+    const p = storedPlace ?? {
+      smartId: smartId,
+      name: name,
+      location: location,
+      keywords: keywords,
+      categories: []
+    };
+    dispatch(appendSearchDirecsPlace(p));
+  };
+
   return (
     <Stack direction={"column"} gap={2.5}>
-      {
-        /* dialog */
-      }
-      {(storedPlace)
-        ? <Alert severity={"success"}>
-            Saved as <strong>{storedPlace.name}</strong>.
-          </Alert>
-        : <Box>
-            <Alert
-              icon={false}
-              severity={"info"}
-              action={<Button color={"inherit"} size={"small"} onClick={() => { setShowDialog(true); }} title={"Save place"}>Save</Button>}
-            >
-              Would you like to save this place?
-            </Alert>
-            <SavePlaceDialog
-              show={showDialog}
-              place={place}
-              onHide={() => { setShowDialog(false); }}
-            />
-          </Box>
-      }
       {
         /* header */
       }
@@ -155,6 +175,46 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         />
       </Stack>
       <PlaceKeywords keywords={place.keywords} />
+      {
+        /* actions */
+      }
+      {(!!storedPlace)
+        ? <Alert
+            icon={false}
+            severity={"success"}
+            action={
+              <SomethingActionMenu
+                showAppendDialog={() => { setShowA(true); }}
+              />
+            }
+          >
+            Saved as <strong>{storedPlace.name}</strong>.
+          </Alert>
+        : <Alert
+            icon={false}
+            severity={"info"}
+            action={
+              <SomethingActionMenu
+                showSaveDialog={() => { setShowS(true); }}
+                showAppendDialog={() => { setShowA(true); }}
+              />
+            }
+          >
+            This place is not in your Favorites yet.
+          </Alert>
+      }
+      <SaveSomethingDialog
+        name={place.name}
+        show={showS}
+        what={"place"}
+        onHide={() => { setShowS(false); }}
+        onSave={onSave}
+      />
+      <AppendPlaceDialog
+        show={showA}
+        onHide={() => { setShowA(false); }}
+        onAppend={onAppend}
+      />
       {
         /* contacts */
       }

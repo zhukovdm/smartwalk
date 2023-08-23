@@ -18,7 +18,11 @@ type IconWrapperProps = {
 
 function IconWrapper({ icon, title, onClick }: IconWrapperProps): JSX.Element {
   return (
-    <IconButton onClick={onClick} size="small" title={title}>
+    <IconButton
+      title={title}
+      size={"small"}
+      onClick={onClick}
+    >
       {icon}
     </IconButton>
   );
@@ -36,7 +40,12 @@ export function RouteButton({ title, onRoute }: RouteButtonProps): JSX.Element {
     <IconWrapper
       title={title}
       onClick={onRoute}
-      icon={<Route className={"stored-route"} fontSize={"medium"} />}
+      icon={
+        <Route
+          fontSize={"medium"}
+          className={"stored-route"}
+        />
+      }
     />
   );
 }
@@ -58,7 +67,12 @@ export function PlaceButton({ kind, title, onPlace }: PlaceButtonProps): JSX.Ele
     <IconWrapper
       onClick={onPlace}
       title={title}
-      icon={<LocationOn className={`${kind}-place`} fontSize={"medium"} />}
+      icon={
+        <LocationOn
+          fontSize={"medium"}
+          className={`${kind}-place`}
+        />
+      }
     />
   );
 }
@@ -74,7 +88,12 @@ export function AddPlaceButton({ kind, size, title, onPlace }: AddPlaceButtonPro
     <IconWrapper
       title={title}
       onClick={onPlace}
-      icon={<AddLocation className={`${kind}-place`} fontSize={size} />}
+      icon={
+        <AddLocation
+          fontSize={size}
+          className={`${kind}-place`}
+        />
+      }
     />
   );
 }
@@ -91,7 +110,12 @@ export function DirecButton({ title, onDirec }: DirecButtonProps): JSX.Element {
     <IconWrapper
       title={title}
       onClick={onDirec}
-      icon={<Directions className={"stored-direc"} fontSize={"medium"} />}
+      icon={
+        <Directions
+          fontSize={"medium"}
+          className={"stored-direc"}
+        />
+      }
     />
   );
 }

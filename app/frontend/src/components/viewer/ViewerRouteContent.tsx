@@ -1,12 +1,13 @@
+import { useEffect } from "react";
 import { Stack } from "@mui/material";
 import { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
 import { useAppDispatch } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
-import TraversableHeader from "../result/TraversableHeader";
-import TraversableDistance from "../result/TraversableDistance";
-import RouteCategoryFilters from "../result/RouteCategoryFilters";
-import RouteContentList from "../result/RouteContentList";
+import TraversableHeader from "../shared/TraversableHeader";
+import TraversableDistance from "../shared/TraversableDistance";
+import RouteCategoryFilters from "../shared/RouteCategoryFilters";
+import RouteContentList from "../shared/RouteContentList";
 
 type ViewerRouteContentProps = {
   route: StoredRoute;
@@ -30,6 +31,9 @@ export default function ViewerRouteContent(
     target,
     places
   } = useResultRoute(route, filterList);
+
+  // eslint-disable-next-line
+  useEffect(() => { map?.flyTo(source); }, []);
 
   return (
     <Stack gap={2.5}>

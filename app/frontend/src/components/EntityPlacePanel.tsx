@@ -3,7 +3,7 @@ import { Alert, Box, CircularProgress } from "@mui/material";
 import { useSmartPlace } from "../features/entityHooks";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
-import PlaceContent from "./entity/PlaceContent";
+import PlaceContent from "./entity/EntityPlaceContent";
 
 /**
  * Panel presenting a place, with menu, and content.

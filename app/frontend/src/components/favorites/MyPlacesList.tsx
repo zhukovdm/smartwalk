@@ -13,14 +13,19 @@ import {
   updateFavoritePlace,
   deleteFavoritePlace
 } from "../../features/favoritesSlice";
-import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
+import {
+  appendSearchDirecsPlace
+} from "../../features/searchDirecsSlice";
 import { setViewerPlace } from "../../features/viewerSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { PlaceButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
-import AppendPlaceDialog from "./AppendPlaceDialog";
-import DeleteSomethingDialog from "./DeleteSomethingDialog";
-import EditSomethingDialog from "./EditSomethingDialog";
+import AppendPlaceDialog from "../shared/PlaceAppendDialog";
+import DeleteSomethingDialog from "./SomethingDeleteDialog";
+import EditSomethingDialog from "./SomethingEditDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 

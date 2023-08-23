@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
-import { PlaceButton } from "../shared/_buttons";
+import { PlaceButton } from "./_buttons";
 import { point2text } from "../../utils/helpers";
 
 type PlaceLocationProps = {

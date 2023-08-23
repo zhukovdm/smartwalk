@@ -1,27 +1,27 @@
 import { useState } from "react";
 import {
-  Button,
   Dialog,
-  DialogActions,
   DialogContent,
   DialogTitle,
   Stack,
   TextField,
   Typography
 } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Save } from "@mui/icons-material";
 import { setDialogBlock } from "../../features/panelSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { SomethingKind } from "../shared/_types";
+import SaveSomethingDialogActions from "../shared/SomethingSaveDialogActions";
 
 type EditSomethingDialogProps = {
 
-  /** Opens dialog window. */
-  show: boolean;
-
   /** Old name of `something`. */
   name: string;
+
+  /** Opens dialog window. */
+  show: boolean;
 
   /** A kind of `something`. */
   what: SomethingKind;
@@ -29,15 +29,15 @@ type EditSomethingDialogProps = {
   /** Action hiding the dialog. */
   onHide: () => void;
 
-  /** Action updating `something` in the current storage. */
+  /** Action saving modified `something`. */
   onSave: (name: string) => Promise<void>;
 };
 
 /**
- * Dialog for updating named `something`.
+ * Dialog for editing and saving edited `something`.
  */
 export default function EditSomethingDialog(
-  { show, name: oldName, what, onHide, onSave }: EditSomethingDialogProps): JSX.Element {
+  { name: oldName, show, what, onHide, onSave }: EditSomethingDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);
@@ -52,8 +52,9 @@ export default function EditSomethingDialog(
   const saveAction = async () => {
     dispatch(setDialogBlock(true));
     try {
-      await onSave(name.trim());
-      setName(name.trim());
+      const newName = name.trim();
+      await onSave(newName);
+      setName(newName);
       onHide();
     }
     catch (ex) { alert(ex); }
@@ -80,25 +81,12 @@ export default function EditSomethingDialog(
           />
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Button
-          color={"error"}
-          disabled={dialogBlock}
-          onClick={() => { discardAction(); }}
-          title={"Close dialog"}
-        >
-          <span>Discard</span>
-        </Button>
-        <LoadingButton
-          disabled={!(name.trim().length > 0)}
-          loading={dialogBlock}
-          title={"Send request"}
-          startIcon={<Save />}
-          onClick={() => { saveAction(); }}
-        >
-          <span>Save</span>
-        </LoadingButton>
-      </DialogActions>
+      <SaveSomethingDialogActions
+        disableSave={!(name.trim().length > 0)}
+        loadingSave={dialogBlock}
+        discardAction={() => { discardAction(); }}
+        saveAction={() => { saveAction(); }}
+      />
     </Dialog>
   );
 }

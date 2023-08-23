@@ -12,12 +12,15 @@ import {
   toggleResultRoutesFilter,
   setResultRoutesIndex
 } from "../../features/resultRoutesSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
+import TraversableDistance from "../shared/TraversableDistance";
+import RouteCategoryFilters from "../shared/RouteCategoryFilters";
+import RouteContentList from "../shared/RouteContentList";
 import SaveRouteDialog from "./SaveRouteDialog";
-import TraversableDistance from "./TraversableDistance";
-import RouteCategoryFilters from "./RouteCategoryFilters";
-import RouteContentList from "./RouteContentList";
 
 type ResultRoutesContentProps = {
 
