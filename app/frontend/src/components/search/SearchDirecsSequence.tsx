@@ -120,6 +120,7 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               <DragIndicator
                 className={"adding-place"}
                 titleAccess={"Drag"}
+                sx={{ cursor: "grab" }}
               />
             </div>
             <PlaceButton
