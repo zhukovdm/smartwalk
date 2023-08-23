@@ -6,8 +6,9 @@
   "version": "1.0.0",
   "icons": [
     {
-      "src": "assets/favicon/favicon.svg",
+      "purpose": "any maskable",
       "sizes": "any",
+      "src": "assets/favicon/favicon.svg",
       "type": "image/svg+xml"
     }
   ],

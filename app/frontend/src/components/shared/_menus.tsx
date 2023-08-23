@@ -46,7 +46,10 @@ export function LogoCloseMenu({ onLogo: _ }: LogoCloseMenuProps): JSX.Element {
         size={"small"}
         onClick={() => { dispatch(hidePanel()); }}
       >
-        <Close fontSize={"medium"} />
+        <Close
+          fontSize={"medium"}
+          titleAccess={"Hide panel"}
+        />
       </IconButton>
     </Box>
   );
@@ -74,8 +77,14 @@ export function BackCloseMenu(): JSX.Element {
           Back
         </Button>
       </Box>
-      <IconButton size={"small"} onClick={() => { dispatch(hidePanel()); }}>
-        <Close fontSize={"medium"} />
+      <IconButton
+        size={"small"}
+        onClick={() => { dispatch(hidePanel()); }}
+      >
+        <Close
+          fontSize={"medium"}
+          titleAccess={"Hide panel"}
+        />
       </IconButton>
     </Box>
   );
