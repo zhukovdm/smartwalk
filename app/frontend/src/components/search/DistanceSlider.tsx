@@ -29,6 +29,7 @@ export default function DistanceSlider({ seq, distance, dispatch, ...rest }: Dis
       <Box sx={{ width: "94%" }}>
         <Slider
           {...rest}
+          aria-label={"Maximum walking distance"}
           min={0}
           marks={marks}
           value={distance}

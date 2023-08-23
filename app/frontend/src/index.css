@@ -33,5 +33,5 @@ html, body, #root, #map {
 .center-place,
 .stored-direc,
 .stored-route {
-  color: #797979;
+  color: #797979; /* #595959 */
 }

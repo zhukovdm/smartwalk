@@ -58,7 +58,7 @@ function FreeListItem({ l, label, onClick }: FreeListItemProps): JSX.Element {
       alignItems={"stretch"}
       gap={0.5}
       onClick={onClick}
-      sx={{ cursor: "pointer", color: "gray" }}
+      sx={{ cursor: "pointer", color: "#595959" }}
     >
       {l}
       <ListItemLabel label={label} />
