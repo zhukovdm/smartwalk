@@ -141,7 +141,12 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         /* header */
       }
       <Stack direction={"column"} gap={1}>
-        <Typography fontSize={"large"}>{place.name}</Typography>
+        <Typography
+          fontSize={"1.25rem"}
+          fontWeight={"medium"}
+        >
+          {place.name}
+        </Typography>
         <Divider sx={{ background: "lightgrey" }} />
         <PlaceLocation
           map={map}

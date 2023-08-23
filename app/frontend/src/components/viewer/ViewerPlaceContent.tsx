@@ -30,7 +30,10 @@ export default function ViewerPlaceContent(
   return (
     <Stack gap={2.5}>
       <Stack gap={1}>
-        <Typography fontSize={"large"}>
+        <Typography
+          fontSize={"1.25rem"}
+          fontWeight={"medium"}
+        >
           {!place.smartId ? place.name : <Link component={RouterLink} to={getSmartPlaceLink(place.smartId)!} underline={"hover"}>{place.name}</Link>}
         </Typography>
         <Divider sx={{ background: "lightgray" }} />

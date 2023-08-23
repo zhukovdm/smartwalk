@@ -21,7 +21,13 @@ export default function MapControl(): JSX.Element {
   const att = "&copy; <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\" rel=\"noopener noreferrer\">OpenStreetMap</a> | <a href=\"https://zhukovdm.github.io/smartwalk-docs/\" target=\"_blank\" rel=\"noopener noreferrer\">SmartWalk Docs</a>";
 
   return (
-    <MapContainer id={"map"} center={cnt} scrollWheelZoom={true} zoom={11} zoomControl={false}>
+    <MapContainer
+      id={"map"}
+      center={cnt}
+      scrollWheelZoom={true}
+      zoom={11}
+      zoomControl={false}
+    >
       <TileLayer url={url} attribution={att} />
       <MapExtractor />
     </MapContainer>

@@ -15,18 +15,25 @@ export default function PlaceLocation(
 
   return (
     <Box
-      alignItems={"center"}
       display={"flex"}
-      justifyContent={"right"}
-      onClick={() => { map?.flyTo(place); }}
-      sx={{ cursor: "pointer"}}
+      justifyContent={"space-between"}
     >
-      <PlaceButton
-        kind={isStored ? "stored" : "common"}
-        title={"Fly to"}
-        onPlace={() => {}}
-      />
-      <Typography fontSize={"small"}>{point2text(place.location)}</Typography>
+      <Box></Box>
+      <Box
+        alignItems={"center"}
+        display={"flex"}
+        onClick={() => { map?.flyTo(place); }}
+        sx={{ cursor: "pointer" }}
+      >
+        <PlaceButton
+          kind={isStored ? "stored" : "common"}
+          title={"Fly to"}
+          onPlace={() => {}}
+        />
+        <Typography fontSize={"small"}>
+          {point2text(place.location)}
+        </Typography>
+      </Box>
     </Box>
   );
 }
