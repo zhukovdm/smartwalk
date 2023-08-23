@@ -66,7 +66,11 @@ export default function EditSomethingDialog(
     <Dialog open={show}>
       <DialogTitle>Edit {what}</DialogTitle>
       <DialogContent>
-        <Stack direction={"column"} gap={2} minWidth={"300px"}>
+        <Stack
+          direction={"column"}
+          gap={2}
+          sx={{ width: "300px", maxWidth: "100%" }}
+        >
           <Typography>Enter new name:</Typography>
           <TextField
             fullWidth
