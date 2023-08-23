@@ -1,10 +1,11 @@
-import { useContext } from "react";
 import { Stack } from "@mui/material";
-import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
 import { FixedPlaceListItem } from "../shared/_list-items";
+import { IMap } from "../../domain/interfaces";
 
 type PlacesListProps = {
+
+  map: IMap | undefined;
 
   /** List of places. */
   places: UiPlace[];
@@ -13,9 +14,7 @@ type PlacesListProps = {
 /**
  * List of places obtained in the result (with replacement).
  */
-export default function PlacesList({ places }: PlacesListProps): JSX.Element {
-
-  const { map } = useContext(AppContext);
+export default function PlacesList({ map, places }: PlacesListProps): JSX.Element {
 
   return (
     <Stack direction={"column"} gap={2}>

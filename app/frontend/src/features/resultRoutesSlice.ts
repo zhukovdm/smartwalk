@@ -3,15 +3,15 @@ import { UiRoute } from "../domain/types";
 import { updateItemImmutable } from "./immutable";
 
 type ResultRoutesState = {
-  filters: boolean[];
   index: number;
   result: UiRoute[];
+  resultFilters: boolean[];
 };
 
 const initialState = (): ResultRoutesState => ({
-  filters: [],
   index: 0,
   result: [],
+  resultFilters: []
 });
 
 export const resultRoutesSlice = createSlice({
@@ -22,15 +22,15 @@ export const resultRoutesSlice = createSlice({
     setResultRoutes: (state, action: PayloadAction<UiRoute[]>) => {
       const r = action.payload;
       state.result = r;
-      state.filters = (r.length > 0) ? r[0].categories.map(() => true) : [];
+      state.resultFilters = r[0]?.categories.map(() => true) ?? [];
     },
     updateResultRoute: (state, action: PayloadAction<{ route: UiRoute, index: number }>) => {
       const { route, index } = action.payload;
       state.result = updateItemImmutable(state.result, route, index);
     },
-    setResultRoutesFilter: (state, action: PayloadAction<{ filter: boolean; index: number; }>) => {
-      const { filter, index } = action.payload;
-      state.filters = updateItemImmutable(state.filters, filter, index);
+    toggleResultRoutesFilter: (state, action: PayloadAction<number>) => {
+      const i = action.payload;
+      state.resultFilters = updateItemImmutable(state.resultFilters, !state.resultFilters[i], i);
     },
     setResultRoutesIndex: (state, action: PayloadAction<number>) => {
       state.index = action.payload;
@@ -42,7 +42,7 @@ export const {
   resetResultRoutes,
   setResultRoutes,
   updateResultRoute,
-  setResultRoutesFilter,
+  toggleResultRoutesFilter,
   setResultRoutesIndex
 } = resultRoutesSlice.actions;
 

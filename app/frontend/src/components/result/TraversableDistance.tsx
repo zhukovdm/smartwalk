@@ -1,11 +1,11 @@
 import { Typography } from "@mui/material";
 
-type ResultDirecsContentDistanceProps = {
+type TraversableDistanceProps = {
   distance: number;
 }
 
-export default function ResultDirecsContentDistance(
-  { distance }: ResultDirecsContentDistanceProps): JSX.Element {
+export default function TraversableDistance(
+  { distance }: TraversableDistanceProps): JSX.Element {
 
   return (
     <Typography fontSize={"1.1rem"}>

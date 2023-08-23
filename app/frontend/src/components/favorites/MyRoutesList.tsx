@@ -17,7 +17,10 @@ import {
   deleteFavoriteRoute,
   updateFavoriteRoute
 } from "../../features/favoritesSlice";
-import { appendSearchDirecsPlace, resetSearchDirecs } from "../../features/searchDirecsSlice";
+import {
+  appendSearchDirecsPlace,
+  resetSearchDirecs
+} from "../../features/searchDirecsSlice";
 import { setViewerRoute } from "../../features/viewerSlice";
 import {
   usePlace,
@@ -49,7 +52,8 @@ type MyRoutesListItemProps = {
   storedSmarts: Map<string, StoredPlace>;
 };
 
-function MyRoutesListItem({ index, route, storedPlaces, storedSmarts }: MyRoutesListItemProps): JSX.Element {
+function MyRoutesListItem(
+  { index, route, storedPlaces, storedSmarts }: MyRoutesListItemProps): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -67,8 +71,7 @@ function MyRoutesListItem({ index, route, storedPlaces, storedSmarts }: MyRoutes
 
   const source = usePlace(routeSource, storedPlaces, new Map())!;
   const target = usePlace(routeTarget, storedPlaces, new Map())!;
-  const places = usePlaces(routePlaces, new Map(), storedSmarts)
-    .reduce((acc, place) => acc.set(place.smartId!, place), new Map<string, UiPlace>());
+  const places = usePlaces(routePlaces, new Map(), storedSmarts);
 
   const [showD, setShowD] = useState(false);
   const [showE, setShowE] = useState(false);
@@ -77,8 +80,7 @@ function MyRoutesListItem({ index, route, storedPlaces, storedSmarts }: MyRoutes
   const onRoute = () => {
     map?.clear();
 
-    waypoints
-      .map((waypoint) => places.get(waypoint)!)
+    places
       .forEach((place) => {
         (!!place.placeId)
           ? map?.addStored(place, categories)
@@ -105,9 +107,15 @@ function MyRoutesListItem({ index, route, storedPlaces, storedSmarts }: MyRoutes
   const onModify = (): void => {
     dispatch(resetSearchDirecs());
     dispatch(appendSearchDirecsPlace(source));
+
+    const placesMap = places
+      .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>())
+
     waypoints.forEach((waypoint) => {
-      dispatch(appendSearchDirecsPlace(places.get(waypoint)!));
+      const place = placesMap.get(waypoint.smartId)!;
+      dispatch(appendSearchDirecsPlace({ ...place, categories: [] }));
     });
+
     dispatch(appendSearchDirecsPlace(target));
     navigate(SEARCH_DIRECS_ADDR);
   };

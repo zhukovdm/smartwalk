@@ -1,8 +1,4 @@
-import {
-  Divider,
-  Stack,
-  Typography
-} from "@mui/material";
+import { Stack } from "@mui/material";
 import { StoredDirec } from "../../domain/types";
 import {
   usePlaces,
@@ -10,8 +6,9 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import ResultDirecsContentDistance from "../result/ResultDirecsContentDistance";
 import ResultDirecsContentList from "../result/ResultDirecsContentList";
+import TraversableHeader from "../result/TraversableHeader";
+import TraversableDistance from "../result/TraversableDistance";
 
 type ViewerDirecContentProps = {
   direc: StoredDirec;
@@ -32,11 +29,8 @@ export default function ViewerDirecContent(
 
   return (
     <Stack gap={2.5}>
-      <Stack gap={1}>
-        <Typography fontSize={"large"}>{name}</Typography>
-        <Divider sx={{ background: "lightgrey" }} />
-      </Stack>
-      <ResultDirecsContentDistance
+      <TraversableHeader name={name} />
+      <TraversableDistance
         distance={path.distance}
       />
       <ResultDirecsContentList

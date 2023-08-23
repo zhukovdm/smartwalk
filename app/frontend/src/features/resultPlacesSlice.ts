@@ -24,9 +24,9 @@ export const resultPlacesSlice = createSlice({
       state.result = action.payload;
       state.filters = action.payload.categories.map(() => true) ?? [];
     },
-    setResultPlacesFilter: (state, action: PayloadAction<{ filter: boolean, index: number; }>) => {
-      const { filter, index } = action.payload;
-      state.filters = updateItemImmutable(state.filters, filter, index);
+    toggleResultPlacesFilter: (state, action: PayloadAction<number>) => {
+      const i = action.payload;
+      state.filters = updateItemImmutable(state.filters, !state.filters[i], i);
     },
     setResultPlacesPage: (state, action: PayloadAction<number>) => {
       state.page = action.payload;
@@ -40,7 +40,7 @@ export const resultPlacesSlice = createSlice({
 export const {
   resetResultPlaces,
   setResultPlaces,
-  setResultPlacesFilter,
+  toggleResultPlacesFilter,
   setResultPlacesPage,
   setResultPlacesPageSize
 } = resultPlacesSlice.actions;

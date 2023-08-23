@@ -17,7 +17,11 @@ import {
   resetSearchDirecs
 } from "../../features/searchDirecsSlice";
 import { setViewerDirec } from "../../features/viewerSlice";
-import { usePlaces, useStoredPlaces } from "../../features/sharedHooks";
+import {
+  usePlaces,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { DirecButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
@@ -37,16 +41,20 @@ type MyDirecsListItemProps = {
 
   /** All stored `places` (to draw pins). */
   storedPlaces: Map<string, StoredPlace>;
+
+  /** All stored `places` (to draw pins). */
+  storedSmarts: Map<string, StoredPlace>;
 };
 
-function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps): JSX.Element {
+function MyDirecsListItem(
+  { index, direc, storedPlaces, storedSmarts }: MyDirecsListItemProps): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map, storage } = useContext(AppContext);
 
   const { name, path, waypoints } = direc;
-  const places = usePlaces(waypoints, storedPlaces, new Map());
+  const places = usePlaces(waypoints, storedPlaces, storedSmarts);
 
   const [showD, setShowD] = useState(false);
   const [showE, setShowE] = useState(false);
@@ -137,6 +145,7 @@ function MyDirecsListItem({ index, direc, storedPlaces }: MyDirecsListItemProps)
 export default function MyDirecsList(): JSX.Element {
 
   const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
   const { direcs } = useAppSelector((state) => state.favorites);
 
   return (
@@ -149,6 +158,7 @@ export default function MyDirecsList(): JSX.Element {
                 index={i}
                 direc={d}
                 storedPlaces={storedPlaces}
+                storedSmarts={storedSmarts}
               />
             ))}
           </Stack>

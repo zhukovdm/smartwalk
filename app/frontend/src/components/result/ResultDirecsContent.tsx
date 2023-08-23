@@ -17,7 +17,7 @@ import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import SaveDirecDialog from "./SaveDirecDialog";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import ResultDirecsContentDistance from "./ResultDirecsContentDistance";
+import TraversableDistance from "./TraversableDistance";
 import ResultDirecsContentList from "./ResultDirecsContentList";
 
 type ResultDirecsContentProps = {
@@ -83,12 +83,10 @@ export default function ResultDirecsContent(
             >
               Would you like to save this direction?
             </Alert>
-            {saveDialog && <SaveDirecDialog direc={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />}
+            {saveDialog && (<SaveDirecDialog direc={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />)}
           </Box>
       }
-      <ResultDirecsContentDistance
-        distance={path.distance}
-      />
+      <TraversableDistance distance={path.distance} />
       <ResultDirecsContentList
         map={map}
         places={places}

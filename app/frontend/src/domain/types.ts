@@ -340,6 +340,11 @@ export type PlacesResult = PlacesRequest & {
   places: Place[];
 };
 
+type Waypoint = {
+  smartId: string;
+  category: number;
+};
+
 /**
  * Routes request.
  */
@@ -372,8 +377,8 @@ type RouteAttributes = RoutesRequest & {
   /** Places lying on the path. */
   places: Place[];
 
-  /** Ordered list of smartId identifiers. */
-  waypoints: string[];
+  /** Ordered list of smartId identifiers and satisfied category. */
+  waypoints: Waypoint[];
 };
 
 export type UiRoute = RouteAttributes & {

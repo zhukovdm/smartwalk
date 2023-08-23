@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
   Box,
@@ -7,23 +7,17 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { AppContext } from "../../App";
-import { UiPlace, UiRoute } from "../../domain/types";
+import { UiRoute } from "../../domain/types";
 import {
-  setResultRoutesFilter,
+  toggleResultRoutesFilter,
   setResultRoutesIndex
 } from "../../features/resultRoutesSlice";
-import {
-  usePlace,
-  usePlaces,
-  useStoredPlaces,
-  useStoredSmarts
-} from "../../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import { FixedPlaceListItem } from "../shared/_list-items";
-import PlacesList from "./PlacesList";
-import CategoryFilter from "./CategoryFilter";
+import { useResultRoute } from "../../features/resultHooks";
 import SaveRouteDialog from "./SaveRouteDialog";
+import TraversableDistance from "./TraversableDistance";
+import RouteCategoryFilters from "./RouteCategoryFilters";
+import RouteContentList from "./RouteContentList";
 
 type ResultRoutesContentProps = {
 
@@ -37,55 +31,28 @@ type ResultRoutesContentProps = {
 export default function ResultRoutesContent(
   { result }: ResultRoutesContentProps): JSX.Element {
 
-  const { map } = useContext(AppContext);
-
   const dispatch = useAppDispatch();
   const { index } = useAppSelector((state) => state.resultRoutes);
-  const { filters: filterList } = useAppSelector((state) => state.resultRoutes);
+  const {
+    resultFilters: filterList
+  } = useAppSelector((state) => state.resultRoutes);
 
   const [saveDialog, setSaveDialog] = useState(false);
 
-  const storedPlaces = useStoredPlaces();
-  const storedSmarts = useStoredSmarts();
   const {
     routeId,
-    source: resultSource,
-    target: resultTarget,
     distance,
     categories,
     name,
-    path,
-    places: resultPlaces,
-    waypoints // true route sequence!
+    path
   } = result[index];
 
-  const source = usePlace(resultSource, storedPlaces, new Map())!;
-  const target = usePlace(resultTarget, storedPlaces, new Map())!;
-
-  const places = usePlaces(resultPlaces, new Map(), storedSmarts)
-    .filter((place) => (
-      place.categories.some((c: number) => filterList[c])));
-
-  useEffect(() => {
-    map?.clear();
-
-    const ps = places
-      .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>());
-
-    waypoints
-      .map((waypoint) => ps.get(waypoint))
-      .filter((place) => !!place)
-      .map((place) => place as UiPlace)
-      .forEach((place) => {
-        (!!place.placeId)
-          ? map?.addStored(place, categories)
-          : map?.addCommon(place, categories, false);
-      });
-
-    map?.addSource(source, [], false);
-    map?.addTarget(target, [], false);
-    map?.drawPolyline(path.polyline);
-  }, [map, waypoints, source, target, path, places, storedSmarts, categories]);
+  const {
+    map,
+    source,
+    target,
+    places
+  } = useResultRoute(result[index], filterList);
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultRoutesIndex(value - 1));
@@ -126,46 +93,21 @@ export default function ResultRoutesContent(
             {saveDialog && <SaveRouteDialog route={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />}
           </Box>
       }
-      <Box display={"flex"} alignItems={"center"}>
-        <Typography fontSize={"1.1rem"}>
-          Distance:&nbsp;&nbsp;&nbsp;<strong>{Number(path.distance.toFixed(2))}</strong> km
-        </Typography>
-      </Box>
-      <Stack
-        direction={"row"}
-        flexWrap={"wrap"}
-        justifyContent={"center"}
-        spacing={2}
-      >
-        {categories.map((c, i) => {
-          const active = filterList[i];
-          return (
-            <CategoryFilter
-              key={i}
-              active={active}
-              index={i}
-              category={c}
-              found={true}
-              onToggle={() => {
-                dispatch(setResultRoutesFilter({ filter: !active, index: i }));
-              }}
-            />
-          );
-        })}
-      </Stack>
-      <Stack direction={"column"} gap={2}>
-        <FixedPlaceListItem
-          kind={"source"}
-          label={source.name}
-          onPlace={() => { map?.flyTo(source); }}
-        />
-        {filterList.some((f) => f) && <PlacesList places={places} />}
-        <FixedPlaceListItem
-          kind={"target"}
-          label={target.name}
-          onPlace={() => { map?.flyTo(target); }}
-        />
-      </Stack>
+      <TraversableDistance distance={path.distance} />
+      <RouteCategoryFilters
+        categories={categories}
+        filterList={filterList}
+        onToggle={(index: number) => {
+          dispatch(toggleResultRoutesFilter(index));
+        }}
+      />
+      <RouteContentList
+        map={map}
+        source={source}
+        target={target}
+        places={places}
+        filterList={filterList}
+      />
     </Stack>
   );
 }

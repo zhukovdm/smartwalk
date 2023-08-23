@@ -14,7 +14,7 @@ import { getSatCategories } from "../../domain/functions";
 import {
   setResultPlacesPage,
   setResultPlacesPageSize,
-  setResultPlacesFilter
+  toggleResultPlacesFilter
 } from "../../features/resultPlacesSlice";
 import {
   usePlace,
@@ -121,7 +121,7 @@ export default function ResultPlacesContent(
                 found={satCategories.has(i)}
                 onToggle={() => {
                   dispatch(setResultPlacesPage(0));
-                  dispatch(setResultPlacesFilter({ filter: !active, index: i }));
+                  dispatch(toggleResultPlacesFilter(i));
                 }}
               />
             );
@@ -135,7 +135,10 @@ export default function ResultPlacesContent(
           onChange={onPage}
         />
       </Box>
-      <PlacesList places={places.slice(page * pageSize, page * pageSize + pageSize)} />
+      <PlacesList
+        map={map}
+        places={places.slice(page * pageSize, page * pageSize + pageSize)}
+      />
       <Box
         alignItems={"center"}
         display={"flex"}
@@ -148,7 +151,11 @@ export default function ResultPlacesContent(
           size={"small"}
           value={pageSize.toString()}
         >
-          {[5, 10, 20, 50].map((ps, i) => (<MenuItem key={i} value={ps.toString()}>{ps}</MenuItem>))}
+          {[5, 10, 20, 50].map((ps, i) => (
+            <MenuItem
+              key={i}
+              value={ps.toString()}>{ps}</MenuItem>
+          ))}
         </Select>
       </Box>
     </Stack>
