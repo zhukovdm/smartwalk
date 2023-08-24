@@ -7,7 +7,7 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import ResultDirecsContentList from "../shared/ResultDirecsContentList";
+import DirecContentList from "../shared/DirecContentList";
 import TraversableHeader from "../shared/TraversableHeader";
 import TraversableDistance from "../shared/TraversableDistance";
 
@@ -29,7 +29,8 @@ export default function ViewerDirecContent(
 
   const map = useResultDirecsMap(places, path);
 
-  useEffect(() => { map?.flyTo(source); }, [map, source]);
+  // eslint-disable-next-line
+  useEffect(() => { map?.flyTo(source); }, []);
 
   return (
     <Stack gap={2.5}>
@@ -37,7 +38,7 @@ export default function ViewerDirecContent(
       <TraversableDistance
         distance={path.distance}
       />
-      <ResultDirecsContentList
+      <DirecContentList
         map={map}
         places={places}
       />

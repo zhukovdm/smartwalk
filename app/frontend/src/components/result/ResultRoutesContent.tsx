@@ -1,26 +1,37 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
   Alert,
   Box,
-  Button,
   Pagination,
   Stack,
   Typography
 } from "@mui/material";
-import { UiRoute } from "../../domain/types";
+import { AppContext } from "../../App";
+import { UiPlace, UiRoute } from "../../domain/types";
+import { SEARCH_DIRECS_ADDR } from "../../domain/routing";
 import {
   toggleResultRoutesFilter,
-  setResultRoutesIndex
+  setResultRoutesIndex,
+  updateResultRoute
 } from "../../features/resultRoutesSlice";
+import { createFavoriteRoute } from "../../features/favoritesSlice";
+import {
+  appendSearchDirecsPlace,
+  resetSearchDirecs
+} from "../../features/searchDirecsSlice";
 import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
+import { IdGenerator } from "../../utils/helpers";
+import RouteContentList from "../shared/RouteContentList";
 import TraversableDistance from "../shared/TraversableDistance";
 import RouteCategoryFilters from "../shared/RouteCategoryFilters";
-import RouteContentList from "../shared/RouteContentList";
-import SaveRouteDialog from "./SaveRouteDialog";
+import SomethingActionMenu from "../shared/SomethingActionMenu";
+import SomethingSaveDialog from "../shared/SomethingSaveDialog";
+import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 
 type ResultRoutesContentProps = {
 
@@ -34,21 +45,31 @@ type ResultRoutesContentProps = {
 export default function ResultRoutesContent(
   { result }: ResultRoutesContentProps): JSX.Element {
 
+  const { storage } = useContext(AppContext);
+
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { index } = useAppSelector((state) => state.resultRoutes);
   const {
     resultFilters: filterList
   } = useAppSelector((state) => state.resultRoutes);
 
-  const [saveDialog, setSaveDialog] = useState(false);
+  const [showM, setShowM] = useState(false);
+  const [showS, setShowS] = useState(false);
+
+  const route = result[index];
 
   const {
     routeId,
+    name,
+    path,
+    source: routeSource,
+    target: routeTarget,
+    places: routePlaces,
     distance,
     categories,
-    name,
-    path
-  } = result[index];
+    waypoints
+  } = route;
 
   const {
     map,
@@ -56,6 +77,33 @@ export default function ResultRoutesContent(
     target,
     places
   } = useResultRoute(result[index], filterList);
+
+  const onSave = async (name: string) => {
+    const r = { ...route, name: name };
+    const s = {
+      ...r,
+      routeId: IdGenerator.generateId(r)
+    };
+    await storage.createRoute(s);
+    dispatch(createFavoriteRoute(s));
+    dispatch(updateResultRoute({ route: s, index: index }));
+  };
+
+  const onModify = () => {
+    dispatch(resetSearchDirecs());
+    dispatch(appendSearchDirecsPlace(routeSource));
+
+    const placesMap = routePlaces
+      .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>())
+
+    waypoints.forEach((waypoint) => {
+      const place = placesMap.get(waypoint.smartId)!;
+      dispatch(appendSearchDirecsPlace({ ...place, categories: [] }));
+    });
+
+    dispatch(appendSearchDirecsPlace(routeTarget));
+    navigate(SEARCH_DIRECS_ADDR);
+  };
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultRoutesIndex(value - 1));
@@ -74,28 +122,43 @@ export default function ResultRoutesContent(
         />
       </Box>
       {(routeId)
-        ? <Alert severity={"success"}>
+        ? <Alert
+            icon={false}
+            severity={"success"}
+            action={
+              <SomethingActionMenu
+                showModifyDialog={() => { setShowM(true); }}
+              />
+            }
+          >
             Saved as <strong>{name}</strong>.
           </Alert>
-        : <Box>
-            <Alert
-              icon={false}
-              severity={"info"}
-              action={
-                <Button
-                  color={"inherit"}
-                  size={"small"}
-                  onClick={() => { setSaveDialog(true); }}
-                >
-                  <span>Save</span>
-                </Button>
-              }
-            >
-              Would you like to save this route?
-            </Alert>
-            {saveDialog && <SaveRouteDialog route={result[index]} index={index} onHide={() => { setSaveDialog(false); }} />}
-          </Box>
+        : <Alert
+            icon={false}
+            severity={"info"}
+            action={
+              <SomethingActionMenu
+                showSaveDialog={() => { setShowS(true); }}
+                showModifyDialog={() => { setShowM(true); }}
+              />
+            }
+          >
+            This route is not in your Favorites yet.
+          </Alert>
       }
+      <SomethingSaveDialog
+        name={name}
+        show={showS}
+        what={"route"}
+        onHide={() => { setShowS(false); }}
+        onSave={onSave}
+      />
+      <SomethingModifyDialog
+        show={showM}
+        what={"route"}
+        onHide={() => { setShowM(false); }}
+        onModify={onModify}
+      />
       <TraversableDistance distance={path.distance} />
       <RouteCategoryFilters
         categories={categories}

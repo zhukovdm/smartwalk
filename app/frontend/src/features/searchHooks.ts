@@ -98,7 +98,7 @@ export function useSearchDirecsMap(waypoints: UiPlace[]): void {
     waypoints.forEach((waypoint, i) => {
       (!!waypoint.placeId)
         ? map?.addStored(waypoint, [])
-        : map?.addCommon(waypoint, [], true).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
+        : map?.addCommon(waypoint, [], !waypoint.smartId).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
     });
   }, [map, dispatch, waypoints]);
 }

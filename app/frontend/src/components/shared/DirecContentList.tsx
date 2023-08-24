@@ -3,13 +3,13 @@ import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { FixedPlaceListItem } from "./_list-items";
 
-type ResultDirecsContentListProps = {
+type DirecContentListProps = {
   map: IMap | undefined;
   places: UiPlace[];
 };
 
-export default function ResultDirecsContentList(
-  { map, places }: ResultDirecsContentListProps): JSX.Element {
+export default function DirecContentList(
+  { map, places }: DirecContentListProps): JSX.Element {
 
   return (
     <Stack gap={2}>

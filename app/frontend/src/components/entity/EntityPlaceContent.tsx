@@ -127,7 +127,6 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
   const add = rating || capacity || minimumAge || arr(cuisine) || arr(clothes) || arr(denomination) || arr(payment) || arr(rental) || arr(extra);
 
   const onSave = async (name: string) => {
-
     const p = {
       name: name,
       location: place.location,

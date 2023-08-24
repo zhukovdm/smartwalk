@@ -22,14 +22,17 @@ import {
   useStoredPlaces,
   useStoredSmarts
 } from "../../features/sharedHooks";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { DirecButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
-import ModifySomethingDialog from "../shared/ModifySomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import EditSomethingDialog from "./SomethingEditDialog";
-import DeleteSomethingDialog from "./SomethingDeleteDialog";
+import SomethingEditDialog from "./SomethingEditDialog";
+import SomethingDeleteDialog from "./SomethingDeleteDialog";
+import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 
 type MyDirecsListItemProps = {
 
@@ -84,8 +87,8 @@ function MyDirecsListItem(
 
   const onModify = (): void => {
     dispatch(resetSearchDirecs());
-    places.forEach((place) => {
-      dispatch(appendSearchDirecsPlace(place));
+    waypoints.forEach((waypoint) => {
+      dispatch(appendSearchDirecsPlace(waypoint));
     });
     navigate(SEARCH_DIRECS_ADDR);
   };
@@ -115,20 +118,20 @@ function MyDirecsListItem(
           />
         }
       />
-      <EditSomethingDialog
+      <SomethingEditDialog
         show={showE}
         name={name}
         what={"direction"}
         onHide={() => { setShowE(false); }}
         onSave={onEdit}
       />
-      <ModifySomethingDialog
+      <SomethingModifyDialog
         show={showM}
         what={"direction"}
         onHide={() => { setShowM(false); }}
         onModify={onModify}
       />
-      <DeleteSomethingDialog
+      <SomethingDeleteDialog
         show={showD}
         name={name}
         what={"direction"}

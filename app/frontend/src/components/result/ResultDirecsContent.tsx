@@ -1,28 +1,37 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import {
   Alert,
   Box,
-  Button,
   Pagination,
   Stack,
   Typography
 } from "@mui/material";
+import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
+import {
+  setResultDirecsIndex,
+  updateResultDirec
+} from "../../features/resultDirecsSlice";
+import { createFavoriteDirec } from "../../features/favoritesSlice";
 import {
   usePlaces,
   useStoredPlaces,
   useStoredSmarts
 } from "../../features/sharedHooks";
-import { setResultDirecsIndex } from "../../features/resultDirecsSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
+import { IdGenerator } from "../../utils/helpers";
+import DirecContentList from "../shared/DirecContentList";
 import TraversableDistance from "../shared/TraversableDistance";
-import ResultDirecsContentList from "../shared/ResultDirecsContentList";
-import SaveDirecDialog from "./SaveDirecDialog";
+import SomethingActionMenu from "../shared/SomethingActionMenu";
+import SomethingSaveDialog from "../shared/SomethingSaveDialog";
 
 type ResultDirecsContentProps = {
 
-  /** Direction object. */
+  /** **Non-empty** list of directions. */
   result: UiDirec[];
 };
 
@@ -32,22 +41,36 @@ type ResultDirecsContentProps = {
 export default function ResultDirecsContent(
   { result }: ResultDirecsContentProps): JSX.Element {
 
+  const { storage } = useContext(AppContext);
+  
   const dispatch = useAppDispatch();
   const { index } = useAppSelector((state) => state.resultDirecs);
 
-  // const [showM, setShowM] = useState(false);
   const [showS, setShowS] = useState(false);
+
+  const direc = result[index];
 
   const {
     direcId,
     name,
     path,
     waypoints
-  } = result[index];
+  } = direc;
 
   const places = usePlaces(waypoints, useStoredPlaces(), useStoredSmarts());
 
   const map = useResultDirecsMap(places, path);
+
+  const onSave = async (name: string) => {
+    const d = { ...direc, name: name };
+    const s = {
+      ...d,
+      direcId: IdGenerator.generateId(d)
+    };
+    await storage.createDirec(s);
+    dispatch(createFavoriteDirec(s));
+    dispatch(updateResultDirec({ direc: s, index: index }));
+  };
 
   const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultDirecsIndex(value - 1));
@@ -65,30 +88,35 @@ export default function ResultDirecsContent(
           onChange={onPage}
         />
       </Box>
-      {(direcId)
-        ? <Alert severity={"success"}>
+      {(!!direcId)
+        ? <Alert
+            icon={false}
+            severity={"success"}
+            action={<SomethingActionMenu />}
+          >
             Saved as <strong>{name}</strong>.
           </Alert>
-        : <Box>
-            <Alert
-              icon={false}
-              severity={"info"}
-              action={
-                <Button
-                  color={"inherit"}
-                  size={"small"}
-                  onClick={() => { setShowS(true); }}
-                >
-                  <span>Save</span>
-                </Button>}
-            >
-              Would you like to save this direction?
-            </Alert>
-            {showS && (<SaveDirecDialog direc={result[index]} index={index} onHide={() => { setShowS(false); }} />)}
-          </Box>
+        : <Alert
+            icon={false}
+            severity={"info"}
+            action={
+              <SomethingActionMenu
+                showSaveDialog={() => { setShowS(true); }}
+              />
+            }
+          >
+            This direction is not in your Favorites yet.
+          </Alert>
       }
+      <SomethingSaveDialog
+        name={name}
+        show={showS}
+        what={"direction"}
+        onHide={() => { setShowS(false); }}
+        onSave={onSave}
+      />
       <TraversableDistance distance={path.distance} />
-      <ResultDirecsContentList
+      <DirecContentList
         map={map}
         places={places}
       />

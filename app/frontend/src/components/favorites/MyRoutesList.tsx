@@ -34,11 +34,11 @@ import {
 } from "../../features/storeHooks";
 import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
-import ModifySomethingDialog from "../shared/ModifySomethingDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
-import EditSomethingDialog from "./SomethingEditDialog";
-import DeleteSomethingDialog from "./SomethingDeleteDialog";
+import SomethingEditDialog from "./SomethingEditDialog";
+import SomethingDeleteDialog from "./SomethingDeleteDialog";
+import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 
 type MyRoutesListItemProps = {
 
@@ -109,17 +109,17 @@ function MyRoutesListItem(
 
   const onModify = (): void => {
     dispatch(resetSearchDirecs());
-    dispatch(appendSearchDirecsPlace(source));
+    dispatch(appendSearchDirecsPlace(routeSource));
 
-    const placesMap = places
-      .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>())
+    const placesMap = routePlaces
+      .reduce((acc, place) => (acc.set(place.smartId, place)), new Map<string, UiPlace>())
 
     waypoints.forEach((waypoint) => {
       const place = placesMap.get(waypoint.smartId)!;
       dispatch(appendSearchDirecsPlace({ ...place, categories: [] }));
     });
 
-    dispatch(appendSearchDirecsPlace(target));
+    dispatch(appendSearchDirecsPlace(routeTarget));
     navigate(SEARCH_DIRECS_ADDR);
   };
 
@@ -148,20 +148,20 @@ function MyRoutesListItem(
           />
         }
       />
-      <EditSomethingDialog
+      <SomethingEditDialog
         show={showE}
         name={name}
         what={"route"}
         onHide={() => { setShowE(false); }}
         onSave={onEdit}
       />
-      <ModifySomethingDialog
+      <SomethingModifyDialog
         show={showM}
-        what={"direction"}
+        what={"route"}
         onHide={() => { setShowM(false); }}
         onModify={onModify}
       />
-      <DeleteSomethingDialog
+      <SomethingDeleteDialog
         show={showD}
         name={name}
         what={"route"}

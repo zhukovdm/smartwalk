@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Directions } from "@mui/icons-material";
 
-type ModifySomethingDialogProps = {
+type SomethingModifyDialogProps = {
 
   show: boolean;
 
@@ -20,8 +20,8 @@ type ModifySomethingDialogProps = {
   onModify: () => void;
 };
 
-export default function ModifySomethingDialog(
-  { show, what, onHide, onModify }: ModifySomethingDialogProps): JSX.Element {
+export default function SomethingModifyDialog(
+  { show, what, onHide, onModify }: SomethingModifyDialogProps): JSX.Element {
 
   const confirmAction = async () => {
     onModify();
