@@ -1,5 +1,7 @@
 import { useParams } from "react-router-dom";
-import { Alert, Box, CircularProgress } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import CircularProgress from "@mui/material/CircularProgress";
 import { useSmartPlace } from "../features/entityHooks";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";

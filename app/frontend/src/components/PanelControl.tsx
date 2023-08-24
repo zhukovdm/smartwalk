@@ -1,7 +1,10 @@
 import { useEffect } from "react";
 import { HashRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Menu } from "@mui/icons-material";
-import { Box, Drawer, Fab, useMediaQuery } from "@mui/material";
+import Box from "@mui/material/Box";
+import Drawer from "@mui/material/Drawer";
+import Fab from "@mui/material/Fab";
+import useMediaQuery from "@mui/material/useMediaQuery";
 import {
   ENTITY_PLACES_ADDR,
   FAVORITES_ADDR,

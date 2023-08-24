@@ -1,27 +1,23 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import {
-  Alert,
-  Divider,
-  Link,
-  Rating,
-  Stack,
-  Typography
-} from "@mui/material";
-import {
-  AccessTime,
-  Facebook,
-  Home,
-  Instagram,
-  LinkedIn,
-  Mail,
-  OpenInNew,
-  Phone,
-  Pinterest,
-  Telegram,
-  Toll,
-  Twitter,
-  YouTube
-} from "@mui/icons-material";
+import Alert from "@mui/material/Alert";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
+import Rating from "@mui/material/Rating";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import AccessTime from "@mui/icons-material/AccessTime";
+import Facebook from "@mui/icons-material/Facebook";
+import Home from "@mui/icons-material/Home";
+import Instagram from "@mui/icons-material/Instagram";
+import LinkedIn from "@mui/icons-material/LinkedIn";
+import Mail from "@mui/icons-material/Mail";
+import OpenInNew from "@mui/icons-material/OpenInNew";
+import Phone from "@mui/icons-material/Phone";
+import Pinterest from "@mui/icons-material/Pinterest";
+import Telegram from "@mui/icons-material/Telegram";
+import Toll from "@mui/icons-material/Toll";
+import Twitter from "@mui/icons-material/Twitter";
+import YouTube from "@mui/icons-material/YouTube";
 import Image from "mui-image";
 import { AppContext } from "../../App";
 import {

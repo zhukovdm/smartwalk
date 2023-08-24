@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Button, Stack, Typography } from "@mui/material";
-import { SwapVert } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import SwapVert from "@mui/icons-material/SwapVert";
 import { PrecedenceEdge } from "../domain/types";
 import { RESULT_ROUTES_ADDR } from "../domain/routing";
 import { SmartWalkFetcher } from "../utils/smartwalk";
@@ -21,18 +24,21 @@ import {
   appendSearchRoutesPrecEdge,
 } from "../features/searchRoutesSlice";
 import { usePlace, useStoredPlaces } from "../features/sharedHooks";
-import { useAppDispatch, useAppSelector } from "../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../features/storeHooks";
 import { useSearchRoutesMap } from "../features/searchHooks";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem,
 } from "./shared/_list-items";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
+import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import { KilometersLink } from "./search/KilometersLink";
 import DistanceSlider from "./search/DistanceSlider";
 import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
-import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import PrecedenceBox from "./search/PrecedenceBox";
 
 export default function SearchRoutesPanel(): JSX.Element {
@@ -125,7 +131,6 @@ export default function SearchRoutesPanel(): JSX.Element {
           </Stack>
           <Box display={"flex"} justifyContent={"center"}>
             <Button
-              size={"small"}
               startIcon={<SwapVert />}
               title={"Swap points"}
               onClick={() => { swapAction(); }}

@@ -1,9 +1,9 @@
-import { Alert, Box } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
 import LoadStub from "./result/LoadStub";
 import ResultRoutesContent from "./result/ResultRoutesContent";
-
 
 export default function ResultRoutesPanel(): JSX.Element {
 

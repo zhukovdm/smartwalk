@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { Alert, Box } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import { SEARCH_ROUTES_ADDR } from "../domain/routing";
 import { LogoCloseMenu } from "./shared/_menus";
 
