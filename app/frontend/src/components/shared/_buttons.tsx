@@ -1,5 +1,5 @@
 import { MouseEventHandler, ReactElement } from "react";
-import { IconButton } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
 import {
   AddLocation,
   DeleteOutline,
@@ -11,14 +11,16 @@ import {
 import { PlaceKind } from "./_types";
 
 type IconWrapperProps = {
+  disabled?: boolean;
   icon: ReactElement;
   title?: string;
   onClick?: MouseEventHandler<Element>;
 };
 
-function IconWrapper({ icon, title, onClick }: IconWrapperProps): JSX.Element {
+function IconWrapper({ disabled, icon, title, onClick }: IconWrapperProps): JSX.Element {
   return (
     <IconButton
+      disabled={disabled}
       title={title}
       size={"small"}
       onClick={onClick}
@@ -79,21 +81,21 @@ export function PlaceButton({ kind, title, onPlace }: PlaceButtonProps): JSX.Ele
 
 type AddPlaceButtonProps = PlaceButtonProps & {
 
-  /** Size of an icon. */
-  size: "medium" | "large";
+  disabled: boolean;
 };
 
-export function AddPlaceButton({ kind, size, title, onPlace }: AddPlaceButtonProps): JSX.Element {
+export function AddPlaceButton({ disabled, kind, title, onPlace }: AddPlaceButtonProps): JSX.Element {
   return (
     <IconWrapper
-      title={title}
-      onClick={onPlace}
+      disabled={disabled}
       icon={
         <AddLocation
-          fontSize={size}
+          fontSize={"large"}
           className={`${kind}-place`}
         />
       }
+      title={title}
+      onClick={onPlace}
     />
   );
 }

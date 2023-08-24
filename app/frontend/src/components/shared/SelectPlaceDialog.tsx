@@ -1,24 +1,29 @@
 import { Fragment, useContext, useState } from "react";
-import {
-  Autocomplete,
-  Box,
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  IconButton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Close from "@mui/icons-material/Close";
 import { AppContext } from "../../App";
 import { WgsPoint, UiPlace, StoredPlace } from "../../domain/types";
 import { point2place } from "../../utils/helpers";
-import { hidePanel, showPanel } from "../../features/panelSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  hidePanel,
+  setDialogBlock,
+  showPanel
+} from "../../features/panelSlice";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import { PlaceKind } from "./_types";
 import { AddPlaceButton } from "./_buttons";
 
@@ -47,16 +52,20 @@ export default function SelectPlaceDialog(
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
 
+  const { dialogBlock } = useAppSelector((state) => state.panel);
+
   // custom place
 
   const callback = (point: WgsPoint) => {
     onSelect(point2place(point));
     dispatch(showPanel());
+    dispatch(setDialogBlock(false));
   };
 
   const handleCustom = () => {
     onHide();
     dispatch(hidePanel());
+    dispatch(setDialogBlock(true));
     map?.captureLocation(callback);
   };
 
@@ -75,13 +84,17 @@ export default function SelectPlaceDialog(
     <Dialog open={show} onClose={onHide}>
       <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
         <span>Select point</span>
-        <IconButton size={"small"} onClick={onHide}>
+        <IconButton
+          size={"small"}
+          title={"Hide dialog"}
+          onClick={onHide}
+        >
           <Close fontSize={"small"} />
         </IconButton>
       </DialogTitle>
       <DialogContent>
         <Typography>
-          Click <AddPlaceButton kind={kind} size={"large"} title={"Select location"} onPlace={handleCustom} /> to select a point on the map.
+          Click <AddPlaceButton disabled={dialogBlock} kind={kind} title={"Select location"} onPlace={handleCustom} /> to select a point on the map.
         </Typography>
         <Divider>
           <Typography>OR</Typography>
@@ -117,6 +130,7 @@ export default function SelectPlaceDialog(
             <Button
               color={"primary"}
               disabled={!place}
+              title={"Confirm"}
               onClick={() => { handleFavorites(); }}
             >
               <span>Confirm</span>
