@@ -142,6 +142,7 @@ export default function MyPlacesCreateDialog(): JSX.Element {
             <LoadingButton
               disabled={block || !place || !(name.trim().length > 0)}
               loading={loading}
+              loadingPosition={"start"}
               startIcon={<Save />}
               onClick={createPlace}
             >

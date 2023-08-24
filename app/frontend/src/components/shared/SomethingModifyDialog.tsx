@@ -7,7 +7,7 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { Directions } from "@mui/icons-material";
+import DirectionsIcon from "@mui/icons-material/Directions";
 
 type SomethingModifyDialogProps = {
 
@@ -28,23 +28,19 @@ export default function SomethingModifyDialog(
     onHide();
   };
 
-  const icon = <Directions
-    fontSize={"small"}
-    className={"action-place"}
-    sx={{ verticalAlign: "middle" }}
-  />
-
   return (
     <Dialog open={show}>
       <DialogTitle>Modify {what}</DialogTitle>
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            This action will <strong>replace</strong> points in the {icon} search panel and <strong>navigate</strong> you there.
+            This action will <strong>replace</strong> points in the {<DirectionsIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} />} search panel and <strong>navigate</strong> you there.
           </Typography>
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
+      <DialogActions
+        sx={{ display: "flex", justifyContent: "space-between" }}
+      >
         <Button
           color={"error"}
           onClick={onHide}

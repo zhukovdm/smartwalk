@@ -22,14 +22,14 @@ export default class LocalStorage implements IStorage {
     return (e.target as IDBOpenDBRequest).result;
   }
 
-  private mock?: IStorage = new InmemStorage();
+  private fallback?: IStorage = new InmemStorage();
 
   public mem(): boolean {
-    return !!this.mock;
+    return !!this.fallback;
   }
 
   public loc(): boolean {
-    return !this.mock;
+    return !this.fallback;
   }
 
   public rem(): boolean {
@@ -48,7 +48,7 @@ export default class LocalStorage implements IStorage {
 
     return new Promise((res, rej) => {
       request.onsuccess = () => {
-        this.mock = undefined; res();
+        this.fallback = undefined; res();
       };
       request.onerror = () => {
         rej();
@@ -81,17 +81,17 @@ export default class LocalStorage implements IStorage {
   }
 
   public createDirec(direc: StoredDirec): Promise<void> {
-    return this.mock?.createDirec(direc)
+    return this.fallback?.createDirec(direc)
       ?? LocalStorage.createT(LocalStorage.direcs, direc, direc.direcId);
   }
 
   public createPlace(place: StoredPlace): Promise<void> {
-    return this.mock?.createPlace(place)
+    return this.fallback?.createPlace(place)
       ?? LocalStorage.createT(LocalStorage.places, place, place.placeId);
   }
 
   public createRoute(route: StoredRoute): Promise<void> {
-    return this.mock?.createRoute(route)
+    return this.fallback?.createRoute(route)
       ?? LocalStorage.createT(LocalStorage.routes, route, route.routeId);
   }
 
@@ -120,17 +120,17 @@ export default class LocalStorage implements IStorage {
   }
 
   public getDirecIdentifiers(): Promise<string[]> {
-    return this.mock?.getDirecIdentifiers()
+    return this.fallback?.getDirecIdentifiers()
       ?? LocalStorage.getTIdentifiers(LocalStorage.direcs);
   }
 
   public getPlaceIdentifiers(): Promise<string[]> {
-    return this.mock?.getPlaceIdentifiers()
+    return this.fallback?.getPlaceIdentifiers()
       ?? LocalStorage.getTIdentifiers(LocalStorage.places);
   }
 
   public getRouteIdentifiers(): Promise<string[]> {
-    return this.mock?.getRouteIdentifiers()
+    return this.fallback?.getRouteIdentifiers()
       ?? LocalStorage.getTIdentifiers(LocalStorage.routes);
   }
 
@@ -159,17 +159,17 @@ export default class LocalStorage implements IStorage {
   }
 
   public getDirec(direcId: string): Promise<StoredDirec | undefined> {
-    return this.mock?.getDirec(direcId)
+    return this.fallback?.getDirec(direcId)
       ?? LocalStorage.getT(LocalStorage.direcs, direcId);
   }
 
   public getPlace(placeId: string): Promise<StoredPlace | undefined> {
-    return this.mock?.getPlace(placeId)
+    return this.fallback?.getPlace(placeId)
       ?? LocalStorage.getT(LocalStorage.places, placeId);
   }
 
   public getRoute(routeId: string): Promise<StoredRoute | undefined> {
-    return this.mock?.getRoute(routeId)
+    return this.fallback?.getRoute(routeId)
       ?? LocalStorage.getT(LocalStorage.routes, routeId);
   }
 
@@ -198,17 +198,17 @@ export default class LocalStorage implements IStorage {
   }
 
   public updateDirec(direc: StoredDirec): Promise<void> {
-    return this.mock?.updateDirec(direc)
+    return this.fallback?.updateDirec(direc)
       ?? LocalStorage.updateT(LocalStorage.direcs, direc, direc.direcId);
   }
 
   public updatePlace(place: StoredPlace): Promise<void> {
-    return this.mock?.updatePlace(place)
+    return this.fallback?.updatePlace(place)
       ?? LocalStorage.updateT(LocalStorage.places, place, place.placeId);
   }
 
   public updateRoute(route: StoredRoute): Promise<void> {
-    return this.mock?.updateRoute(route)
+    return this.fallback?.updateRoute(route)
       ?? LocalStorage.updateT(LocalStorage.routes, route, route.routeId);
   }
 
@@ -237,17 +237,17 @@ export default class LocalStorage implements IStorage {
   }
 
   public deleteDirec(direcId: string): Promise<void> {
-    return this.mock?.deleteDirec(direcId)
+    return this.fallback?.deleteDirec(direcId)
       ?? LocalStorage.deleteT(LocalStorage.direcs, direcId);
   }
 
   public deletePlace(placeId: string): Promise<void> {
-    return this.mock?.deletePlace(placeId)
+    return this.fallback?.deletePlace(placeId)
       ?? LocalStorage.deleteT(LocalStorage.places, placeId);
   }
 
   public deleteRoute(routeId: string): Promise<void> {
-    return this.mock?.deleteRoute(routeId)
+    return this.fallback?.deleteRoute(routeId)
       ?? LocalStorage.deleteT(LocalStorage.routes, routeId);
   }
 }

@@ -1,22 +1,30 @@
 import { Fragment, useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Autocomplete,
-  Button,
-  CircularProgress,
-  Link,
-  Stack,
-  TextField,
-  Typography
-} from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import LogoutIcon from "@mui/icons-material/Logout";
 import { AppContext } from "../../App";
 import { FAVORITES_ADDR } from "../../domain/routing";
+import { resetFavorites } from "../../features/favoritesSlice";
+import { setBlock, setDialogBlock } from "../../features/panelSlice";
+import {
+  activateSolid,
+  setSolidAvailablePods,
+  setSolidSelectedPod
+} from "../../features/solidSlice";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import SolidStorage from "../../utils/solidStorage";
 import SolidProvider from "../../utils/solidProvider";
-import { resetFavorites } from "../../features/favoritesSlice";
-import { setBlock } from "../../features/panelSlice";
-import { activateSolid, setSolidAvailablePods } from "../../features/solidSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import { LoadingButton } from "@mui/lab";
 
 /**
  * The content of the Solid panel upon login.
@@ -26,14 +34,17 @@ export default function SolidContent(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const context = useContext(AppContext);
-  const { block } = useAppSelector((state) => state.panel);
+  const {
+    block,
+    dialogBlock
+  } = useAppSelector((state) => state.panel);
 
   const {
     activated,
     availablePods,
     selectedPod,
     webId
-  } = useAppSelector(state => state.solid);
+  } = useAppSelector((state) => state.solid);
 
   useEffect(() => {
     const load = async () => {
@@ -51,15 +62,29 @@ export default function SolidContent(): JSX.Element {
   const [pod, setPod] = useState<string | null>(selectedPod);
 
   const activateAction = async (): Promise<void> => {
-    dispatch(setBlock(true));
+    dispatch(setDialogBlock(true));
     try {
       const p = pod!;
       const s = new SolidStorage(p);
 
       await s.init();
       context.storage = s;
+
       dispatch(activateSolid());
       dispatch(resetFavorites());
+      dispatch(setSolidSelectedPod(p));
+      navigate(FAVORITES_ADDR);
+    }
+    catch (ex) { alert(ex); }
+    finally {
+      dispatch(setDialogBlock(false));
+    }
+  };
+
+  const logoutAction = async (): Promise<void> => {
+    dispatch(setBlock(true));
+    try {
+      await SolidProvider.logout();
       navigate(FAVORITES_ADDR);
     }
     catch (ex) { alert(ex); }
@@ -77,8 +102,9 @@ export default function SolidContent(): JSX.Element {
             href={webId}
             rel={"noopener noreferrer"}
             target={"_blank"}
-            title={webId}
+            title={"Solid Web Identity"}
             underline={"hover"}
+            noWrap={true}
           >
             {webId}
           </Link>
@@ -86,14 +112,14 @@ export default function SolidContent(): JSX.Element {
       </Stack>
       <Stack direction={"column"} gap={2}>
         <Typography>
-          Select a pod that will be used to store data:
+          Select a pod that will act as a storage:
         </Typography>
         <Autocomplete
           size={"small"}
           value={pod}
           loading={!availablePods}
           options={availablePods ?? []}
-          disabled={block || !!selectedPod}
+          disabled={block || dialogBlock || !!selectedPod}
           onChange={(_, v) => { setPod(v); }}
           getOptionLabel={(option) => option ?? ""}
           isOptionEqualToValue={(option, value) => option === value}
@@ -116,27 +142,33 @@ export default function SolidContent(): JSX.Element {
       </Stack>
       <Stack gap={1}>
         <Typography>
-          Download<sup> *</sup> your data from the selected pod:
+          Activate the selected Pod and redirect to <FavoriteIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} titleAccess={"Favorites"} />:
         </Typography>
         <Stack direction={"row"} justifyContent={"center"}>
-          <Button disabled={block || !pod || !!selectedPod || activated} onClick={activateAction}>
-            Activate
+          <Button
+            disabled={block || dialogBlock || !!selectedPod || !pod || activated}
+            onClick={activateAction}
+            title={"Activate and redirect to Favorites"}
+          >
+            <span>Activate</span>
           </Button>
         </Stack>
         <Typography fontSize={"small"}>
-          After activation only data from your Solid Pod will appear in
-          <strong>Favorites</strong>. Data from your local storage will be
-          available upon logout. Local and remote storages are not synchronized.
+          After activating, only data from your Solid Pod will appear in Favorites. Local storage will be available immediately upon logout. Storages are not synchronized.
         </Typography>
       </Stack>
       <Stack direction={"row"} justifyContent={"center"}>
-        <Button
-          disabled={block}
+        <LoadingButton
+          disabled={dialogBlock}
+          loading={block}
+          loadingPosition={"start"}
+          startIcon={<LogoutIcon />}
           color={"error"}
-          onClick={() => { SolidProvider.logout(); }}
+          onClick={logoutAction}
+          title={"Log out from your Solid Web Identity"}
         >
-          Log out
-        </Button>
+          <span>Logout</span>
+        </LoadingButton>
       </Stack>
     </Stack>
   );

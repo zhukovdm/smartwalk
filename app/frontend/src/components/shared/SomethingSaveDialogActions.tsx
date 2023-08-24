@@ -31,6 +31,7 @@ export default function SaveSomethingDialogActions(
       <LoadingButton
         disabled={disableSave}
         loading={loadingSave}
+        loadingPosition={"start"}
         title={"Send request"}
         startIcon={<Save />}
         onClick={saveAction}

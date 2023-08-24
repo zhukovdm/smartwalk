@@ -76,6 +76,7 @@ export default function DeleteSomethingDialog(
         <LoadingButton
           color={"error"}
           loading={dialogBlock}
+          loadingPosition={"start"}
           title={"Send request"}
           startIcon={<Delete />}
           onClick={() => { deleteAction(); }}

@@ -1,20 +1,27 @@
-import { useState } from "react";
-import {
-  Autocomplete,
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  TextField,
-  Typography
-} from "@mui/material";
-import SolidProvider from "../../utils/solidProvider";
+import { useEffect, useState } from "react";
+import Autocomplete from "@mui/material/Autocomplete";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import Person from "@mui/icons-material/Person";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { setDialogBlock } from "../../features/panelSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
+import SolidProvider from "../../utils/solidProvider";
 import SolidPodLink from "./SolidPodLink";
 
 type SolidLoginDialogProps = {
+
+  /**  */
+  show: boolean;
 
   /** Action hiding dialog. */
   onHide: () => void;
@@ -23,7 +30,8 @@ type SolidLoginDialogProps = {
 /**
  * Dialog allowing to select a Solid Pod provider and log in against it.
  */
-export default function SolidLoginDialog({ onHide }: SolidLoginDialogProps): JSX.Element {
+export default function SolidLoginDialog(
+  { show, onHide }: SolidLoginDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);
@@ -31,17 +39,29 @@ export default function SolidLoginDialog({ onHide }: SolidLoginDialogProps): JSX
   const https = "https://";
   const [provider, setProvider] = useState(https);
 
+  useEffect(() => { if (!show) { setProvider(https); } }, [show]);
+
+  const isLink = (link: string) => {
+    try {
+      new URL(link);
+      return true;
+    }
+    catch (_) { return false; }
+  };
+
   const loginAction = async () => {
     dispatch(setDialogBlock(true));
     try {
       await SolidProvider.login(provider);
     }
     catch (ex) { alert(ex); }
-    finally { dispatch(setDialogBlock(false)); }
+    finally {
+      dispatch(setDialogBlock(false));
+    }
   };
 
   return (
-    <Dialog open>
+    <Dialog open={show}>
       <DialogTitle>Solid login</DialogTitle>
       <DialogContent>
         <Stack gap={2}>
@@ -51,29 +71,36 @@ export default function SolidLoginDialog({ onHide }: SolidLoginDialogProps): JSX
           <Autocomplete
             freeSolo
             size={"small"}
-            value={provider}
             disabled={dialogBlock}
+            value={provider}
+            onInputChange={(_, v) => { setProvider(v); }}
             options={SolidProvider.getIdProviders()}
-            onChange={(_, v) => { setProvider(v ?? ""); }}
             renderInput={(params) => (<TextField {...params} />)}
           />
-          <Stack direction={"row"} justifyContent={"space-between"}>
-            <Button
-              disabled={dialogBlock}
-              onClick={onHide}
-              color={"secondary"}
-            >
-              <span>Cancel</span>
-            </Button>
-            <Button
-              disabled={dialogBlock || !(provider.length > 0)}
-              onClick={loginAction}
-            >
-              <span>Login</span>
-            </Button>
-          </Stack>
         </Stack>
       </DialogContent>
+      <DialogActions
+        sx={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <Button
+          color={"error"}
+          disabled={dialogBlock}
+          onClick={onHide}
+          title={"Hide dialog"}
+        >
+          <span>Discard</span>
+        </Button>
+        <LoadingButton
+          disabled={!isLink(provider)}
+          loading={dialogBlock}
+          loadingPosition={"start"}
+          onClick={loginAction}
+          startIcon={<Person />}
+          title={"Send request"}
+        >
+          <span>Login</span>
+        </LoadingButton>
+      </DialogActions>
     </Dialog>
   );
 }

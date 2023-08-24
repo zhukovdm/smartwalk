@@ -1,4 +1,4 @@
-import { Link } from "@mui/material";
+import Link from "@mui/material/Link";
 
 /**
  * Standard link referring to the `Solid project / Get a pod`.
