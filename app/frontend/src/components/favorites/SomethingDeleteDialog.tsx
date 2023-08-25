@@ -1,14 +1,12 @@
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Stack,
-  Typography
-} from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Delete } from "@mui/icons-material";
+import Button from "@mui/material/Button";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { setDialogBlock } from "../../features/panelSlice";
 import {
   useAppDispatch,
@@ -78,7 +76,7 @@ export default function DeleteSomethingDialog(
           loading={dialogBlock}
           loadingPosition={"start"}
           title={"Send request"}
-          startIcon={<Delete />}
+          startIcon={<DeleteIcon />}
           onClick={() => { deleteAction(); }}
         >
           <span>Delete</span>

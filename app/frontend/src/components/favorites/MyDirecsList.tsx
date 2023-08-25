@@ -29,11 +29,11 @@ import {
 } from "../../features/storeHooks";
 import { DirecButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
+import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import SomethingEditDialog from "./SomethingEditDialog";
 import SomethingDeleteDialog from "./SomethingDeleteDialog";
-import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 
 type MyDirecsListItemProps = {
 

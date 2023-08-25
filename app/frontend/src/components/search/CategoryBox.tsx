@@ -1,24 +1,25 @@
 import { Fragment } from "react";
 import { useEffect, useState } from "react";
+import Alert from "@mui/material/Alert";
+import Autocomplete from "@mui/material/Autocomplete";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Paper from "@mui/material/Paper";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
 import {
-  Alert,
-  Autocomplete,
-  Box,
-  Button,
-  Chip,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Paper,
-  Stack,
-  TextField,
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
-import { KeywordAdviceItem, KeywordCategory } from "../../domain/types";
+  KeywordAdviceItem,
+  KeywordCategory
+} from "../../domain/types";
 import {
   useSearchBoundsAdvice,
   useSearchKeywordsAdvice

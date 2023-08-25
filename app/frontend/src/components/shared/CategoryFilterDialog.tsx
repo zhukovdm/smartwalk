@@ -1,18 +1,16 @@
-import {
-  Chip,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  IconButton,
-  InputLabel,
-  OutlinedInput,
-  Select,
-  Stack,
-  TextField,
-  Typography
-} from "@mui/material";
-import { Close } from "@mui/icons-material";
+import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import FormControl from "@mui/material/FormControl";
+import IconButton from "@mui/material/IconButton";
+import InputLabel from "@mui/material/InputLabel";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import CloseIcon from "@mui/icons-material/Close";
 import {
   AttributeFilterCollect,
   AttributeFilterNumeric,
@@ -87,7 +85,7 @@ export default function CategoryFilterDialog(
       >
         <span>Category</span>
         <IconButton size={"small"} title={"Hide dialog"} onClick={onHide}>
-          <Close fontSize={"small"} />
+          <CloseIcon fontSize={"small"} />
         </IconButton>
       </DialogTitle>
       <DialogContent>

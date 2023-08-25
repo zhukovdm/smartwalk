@@ -1,19 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import {
-  ArrowBack,
-  Close,
-  Directions,
-  Favorite,
-  Place,
-  Route
-} from "@mui/icons-material";
-import {
-  BottomNavigation,
-  BottomNavigationAction,
-  Box,
-  Button,
-  IconButton
-} from "@mui/material";
+import BottomNavigation from "@mui/material/BottomNavigation";
+import BottomNavigationAction from "@mui/material/BottomNavigationAction";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import CloseIcon from "@mui/icons-material/Close";
+import DirectionsIcon from "@mui/icons-material/Directions";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import PlaceIcon from "@mui/icons-material/Place";
+import RouteIcon from "@mui/icons-material/Route";
 import {
   FAVORITES_ADDR,
   SEARCH_DIRECS_ADDR,
@@ -21,7 +17,10 @@ import {
   SEARCH_ROUTES_ADDR
 } from "../../domain/routing";
 import { hidePanel } from "../../features/panelSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 
 type LogoCloseMenuProps = {
 
@@ -48,7 +47,7 @@ export function LogoCloseMenu({ onLogo: _ }: LogoCloseMenuProps): JSX.Element {
         title={"Hide panel"}
         onClick={() => { dispatch(hidePanel()); }}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
     </Box>
   );
@@ -70,7 +69,7 @@ export function BackCloseMenu(): JSX.Element {
     >
       <Box>
         <Button
-          startIcon={<ArrowBack />}
+          startIcon={<ArrowBackIcon />}
           onClick={() => { navigate(-1); }}
         >
           Back
@@ -82,7 +81,7 @@ export function BackCloseMenu(): JSX.Element {
         title={"Hide panel"}
         onClick={() => { dispatch(hidePanel()); }}
       >
-        <Close />
+        <CloseIcon />
       </IconButton>
     </Box>
   );
@@ -108,25 +107,25 @@ export function MainMenu({ panel }: MainMenuProps): JSX.Element {
       <BottomNavigation showLabels={true} value={panel}>
         <BottomNavigationAction
           label={"Routes"}
-          icon={<Route />}
+          icon={<RouteIcon />}
           disabled={block}
           onClick={() => { navigate(SEARCH_ROUTES_ADDR); }}
         />
         <BottomNavigationAction
           label={"Places"}
-          icon={<Place />}
+          icon={<PlaceIcon />}
           disabled={block}
           onClick={() => { navigate(SEARCH_PLACES_ADDR); }}
         />
         <BottomNavigationAction
           label={"Directions"}
-          icon={<Directions />}
+          icon={<DirectionsIcon />}
           disabled={block}
           onClick={() => { navigate(SEARCH_DIRECS_ADDR); }}
         />
         <BottomNavigationAction
           label={"Favorites"}
-          icon={<Favorite />}
+          icon={<FavoriteIcon />}
           disabled={block}
           onClick={() => { navigate(FAVORITES_ADDR); }}
         />

@@ -1,14 +1,17 @@
 import { useEffect, useRef } from "react";
-import { Paper } from "@mui/material";
+import Paper from "@mui/material/Paper";
 import { Edge, Network, Node, Options } from "vis-network";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
 
 type PrecedenceDrawingProps = {
 
+  /** Configured categories */
   categories: PlaceCategory[];
 
+  /** Confirmed edges */
   precedence: PrecedenceEdge[];
 
+  /** New `red` edge */
   edge?: PrecedenceEdge;
 };
 

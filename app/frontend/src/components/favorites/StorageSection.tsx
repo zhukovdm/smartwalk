@@ -1,5 +1,6 @@
 import { useContext } from "react";
-import { Alert, Box } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import { AppContext } from "../../App";
 
 export default function StorageSection(): JSX.Element {

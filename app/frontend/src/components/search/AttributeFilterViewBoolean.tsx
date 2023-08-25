@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import {
-  FormControl,
-  FormControlLabel,
-  Radio,
-  RadioGroup,
-  Stack
-} from "@mui/material";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import Stack from "@mui/material/Stack";
 import { AttributeFilterBoolean } from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 

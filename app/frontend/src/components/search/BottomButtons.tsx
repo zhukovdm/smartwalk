@@ -1,6 +1,7 @@
-import { Search } from "@mui/icons-material";
-import { LoadingButton } from "@mui/lab";
-import { Box, Button } from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SearchIcon from "@mui/icons-material/Search";
 import { useAppSelector } from "../../features/storeHooks";
 
 type BottomButtonsProps = {
@@ -36,7 +37,7 @@ export default function BottomButtons(
         loading={block}
         loadingPosition={"start"}
         size={"large"}
-        startIcon={<Search />}
+        startIcon={<SearchIcon />}
         variant={"contained"}
         onClick={onSearch}
         disabled={block || disabled}

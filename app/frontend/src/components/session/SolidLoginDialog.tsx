@@ -8,8 +8,8 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import Person from "@mui/icons-material/Person";
 import LoadingButton from "@mui/lab/LoadingButton";
+import PersonIcon from "@mui/icons-material/Person";
 import { setDialogBlock } from "../../features/panelSlice";
 import {
   useAppDispatch,
@@ -96,7 +96,7 @@ export default function SolidLoginDialog(
           loading={dialogBlock}
           loadingPosition={"start"}
           onClick={loginAction}
-          startIcon={<Person />}
+          startIcon={<PersonIcon />}
         >
           <span>Login</span>
         </LoadingButton>

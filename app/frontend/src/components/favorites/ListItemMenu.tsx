@@ -13,8 +13,10 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type ListItemMenuProps = {
 
+  /** Object kind. */
   what: "place" | "route" | "direc"
 
+  /** Index in the list of similar objects. */
   index: number;
 
   /** Redirect to the viewer. */

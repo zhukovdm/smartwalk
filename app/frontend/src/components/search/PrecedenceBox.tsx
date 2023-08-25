@@ -1,30 +1,29 @@
 import { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  Chip,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  MenuItem,
-  Paper,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from "@mui/material";
-import { East } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
+import MenuItem from "@mui/material/MenuItem";
+import Paper from "@mui/material/Paper";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { useTheme } from "@mui/material/styles";
+import EastIcon from "@mui/icons-material/East";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
 import { CycleDetector } from "../../domain/cycle-detector";
 import PrecedenceDrawing from "./PrecedenceDrawing";
 
 type PrecedenceSelectorProps = {
 
+  /** Configured categories */
   categories: PlaceCategory[];
 
+  /** Callback for a selected option. */
   onSelect: (i: number) => void;
 };
 
@@ -55,16 +54,16 @@ function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): 
 
 type PrecedenceBoxProps = {
 
-  /**  */
+  /** Configured categories */
   categories: PlaceCategory[];
 
-  /**  */
+  /** Confirmed edges */
   precedence: PrecedenceEdge[];
 
-  /**  */
+  /** Callback deleting an edge */
   deleteEdge: (i: number) => void;
 
-  /**  */
+  /** Callback appending an edge */
   appendEdge: (e: PrecedenceEdge) => void;
 };
 
@@ -144,7 +143,7 @@ export default function PrecedenceBox(
                 categories={categories}
                 onSelect={(i: number) => { setEdgeFr(i); }}
               />
-              <East titleAccess={"before"} />
+              <EastIcon titleAccess={"before"} />
               <PrecedenceSelector
                 categories={categories}
                 onSelect={(i: number) => { setEdgeTo(i); }}

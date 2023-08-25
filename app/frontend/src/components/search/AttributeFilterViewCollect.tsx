@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
-import { Autocomplete, Stack, TextField } from "@mui/material";
+import Autocomplete from "@mui/material/Autocomplete";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import { AttributeFilterCollect } from "../../domain/types";
 import { useAppSelector } from "../../features/storeHooks";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";

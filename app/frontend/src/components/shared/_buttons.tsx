@@ -1,19 +1,25 @@
 import { MouseEventHandler, ReactElement } from "react";
 import IconButton from "@mui/material/IconButton";
-import {
-  AddLocation,
-  DeleteOutline,
-  Directions,
-  LocationOn,
-  Route,
-  SwapVert
-} from "@mui/icons-material";
+import AddLocationIcon from "@mui/icons-material/AddLocation";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
+import DirectionsIcon from "@mui/icons-material/Directions";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import RouteIcon from "@mui/icons-material/Route";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 import { PlaceKind } from "./_types";
 
 type IconWrapperProps = {
+
+  /** Disable component */
   disabled?: boolean;
+
+  /** Icon show in the button */
   icon: ReactElement;
+
+  /** Human-readable title */
   title?: string;
+
+  /** Button callback */
   onClick?: MouseEventHandler<Element>;
 };
 
@@ -32,8 +38,10 @@ function IconWrapper({ disabled, icon, title, onClick }: IconWrapperProps): JSX.
 
 type RouteButtonProps = {
 
+  /** Human-readable title */
   title?: string;
 
+  /** Button callback */
   onRoute: MouseEventHandler<Element>;
 };
 
@@ -43,7 +51,7 @@ export function RouteButton({ title, onRoute }: RouteButtonProps): JSX.Element {
       title={title}
       onClick={onRoute}
       icon={
-        <Route
+        <RouteIcon
           fontSize={"medium"}
           className={"stored-route"}
         />
@@ -54,13 +62,13 @@ export function RouteButton({ title, onRoute }: RouteButtonProps): JSX.Element {
 
 type PlaceButtonProps = {
 
-  /** Kind of a place presented to the user. */
+  /** Kind of a place presented to the user */
   kind: PlaceKind;
 
-  /** Concise description of an action. */
+  /** Concise description of an action */
   title?: string;
 
-  /** Button event handler. */
+  /** Button callback */
   onPlace: MouseEventHandler<Element>;
 };
 
@@ -70,7 +78,7 @@ export function PlaceButton({ kind, title, onPlace }: PlaceButtonProps): JSX.Ele
       onClick={onPlace}
       title={title}
       icon={
-        <LocationOn
+        <LocationOnIcon
           fontSize={"medium"}
           className={`${kind}-place`}
         />
@@ -81,6 +89,7 @@ export function PlaceButton({ kind, title, onPlace }: PlaceButtonProps): JSX.Ele
 
 type AddPlaceButtonProps = PlaceButtonProps & {
 
+  /** Disable component. */
   disabled: boolean;
 };
 
@@ -89,7 +98,7 @@ export function AddPlaceButton({ disabled, kind, title, onPlace }: AddPlaceButto
     <IconWrapper
       disabled={disabled}
       icon={
-        <AddLocation
+        <AddLocationIcon
           fontSize={"large"}
           className={`${kind}-place`}
         />
@@ -102,8 +111,10 @@ export function AddPlaceButton({ disabled, kind, title, onPlace }: AddPlaceButto
 
 type DirecButtonProps = {
 
+  /** Human-readable title */
   title?: string;
 
+  /** Button callback */
   onDirec: MouseEventHandler<Element>;
 };
 
@@ -113,7 +124,7 @@ export function DirecButton({ title, onDirec }: DirecButtonProps): JSX.Element {
       title={title}
       onClick={onDirec}
       icon={
-        <Directions
+        <DirectionsIcon
           fontSize={"medium"}
           className={"stored-direc"}
         />
@@ -123,7 +134,11 @@ export function DirecButton({ title, onDirec }: DirecButtonProps): JSX.Element {
 }
 
 type DeleteButtonProps = {
+
+  /** Human-readable title */
   title?: string;
+
+  /** Button callback */
   onDelete: MouseEventHandler<Element>;
 };
 
@@ -132,13 +147,17 @@ export function DeleteButton({ title, onDelete }: DeleteButtonProps): JSX.Elemen
     <IconWrapper
       title={title}
       onClick={onDelete}
-      icon={<DeleteOutline className={"action-place"} />}
+      icon={<DeleteOutlineIcon className={"action-place"} />}
     />
   );
 }
 
 type SwapButtonProps = {
+
+  /** Human-readable title */
   title?: string;
+
+  /** Button callback */
   onSwap: MouseEventHandler<Element>;
 };
 
@@ -147,7 +166,7 @@ export function SwapButton({ title, onSwap }: SwapButtonProps): JSX.Element {
     <IconWrapper
       title={title}
       onClick={onSwap}
-      icon={<SwapVert color={"primary"} />}
+      icon={<SwapVertIcon color={"primary"} />}
     />
   );
 }

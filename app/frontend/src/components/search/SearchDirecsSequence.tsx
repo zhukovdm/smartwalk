@@ -11,11 +11,12 @@ import {
   DroppableProps,
   DropResult,
 } from "react-beautiful-dnd";
-import { Box, Stack } from "@mui/material";
-import { DragIndicator } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { AppContext } from "../../App";
-import { UiPlace } from "../../domain/types";
 import { getSmartPlaceLink } from "../../domain/functions";
+import { UiPlace } from "../../domain/types";
 import {
   appendSearchDirecsPlace,
   deleteSearchDirecsPlace,
@@ -64,7 +65,7 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
       gap={0.5}
     >
       <div style={{ display: "flex", alignItems: "center" }}>
-        <DragIndicator className={"action-place"} />
+        <DragIndicatorIcon className={"action-place"} />
       </div>
       <Stack
         direction={"row"}
@@ -121,7 +122,7 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               style={{ display: "flex", alignItems: "center" }}
               {...provided.dragHandleProps}
             >
-              <DragIndicator className={"action-place"} />
+              <DragIndicatorIcon className={"action-place"} />
             </div>
             <PlaceButton
               title={"Fly to"}

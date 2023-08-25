@@ -1,15 +1,19 @@
 import { useContext, useMemo, useState } from "react";
-import {
-  Box,
-  Button,
-  Stack,
-  TextField,
-  Typography
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import SaveIcon from "@mui/icons-material/Save";
+import LoadingButton from "@mui/lab/LoadingButton";
 import { AppContext } from "../../App";
 import { UiPlace, WgsPoint } from "../../domain/types";
 import { IdGenerator, point2place } from "../../utils/helpers";
-import { hidePanel, setBlock, showPanel } from "../../features/panelSlice";
+import {
+  hidePanel,
+  setBlock,
+  showPanel
+} from "../../features/panelSlice";
 import {
   createFavoritePlace,
   deleteFavoriteCustomLocation,
@@ -17,13 +21,14 @@ import {
   setFavoriteCustomName,
   setFavoriteCustomLocation
 } from "../../features/favoritesSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem
 } from "../shared/_list-items";
-import { LoadingButton } from "@mui/lab";
-import { Save } from "@mui/icons-material";
 
 /**
  * Dialog with the user enabling to create custom place (named location).
@@ -143,7 +148,7 @@ export default function MyPlacesCreateDialog(): JSX.Element {
               disabled={block || !place || !(name.trim().length > 0)}
               loading={loading}
               loadingPosition={"start"}
-              startIcon={<Save />}
+              startIcon={<SaveIcon />}
               onClick={createPlace}
             >
               <span>Create</span>

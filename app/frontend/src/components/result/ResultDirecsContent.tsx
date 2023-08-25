@@ -1,11 +1,9 @@
 import { useContext, useState } from "react";
-import {
-  Alert,
-  Box,
-  Pagination,
-  Stack,
-  Typography
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
 import {

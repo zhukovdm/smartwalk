@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Stack } from "@mui/material";
-import { Place } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import PlaceIcon from "@mui/icons-material/Place";
 import { AppContext } from "../../App";
 import { getSmartPlaceLink } from "../../domain/functions";
 import {
@@ -137,7 +138,7 @@ export default function MyPlacesList(): JSX.Element {
         : <FavoriteStub
             what={"place"}
             link={SEARCH_PLACES_ADDR}
-            icon={(sx) => <Place sx={sx} />}
+            icon={(sx) => <PlaceIcon sx={sx} />}
           />
       }
     </Box>

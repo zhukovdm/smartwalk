@@ -1,12 +1,10 @@
 import { useState } from "react";
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Box,
-  Stack,
-  Typography
-} from "@mui/material";
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { KeywordAdviceItem } from "../../domain/types";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
 import { useAppSelector } from "../../features/storeHooks";

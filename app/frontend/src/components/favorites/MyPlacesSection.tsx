@@ -1,11 +1,14 @@
+import Accordion from "@mui/material/Accordion";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import Typography from "@mui/material/Typography";
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Typography
-} from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
-import { toggleFavoritePlacesExpanded } from "../../features/favoritesSlice";
+  useAppDispatch,
+  useAppSelector
+} from "../../features/storeHooks";
+import {
+  toggleFavoritePlacesExpanded
+} from "../../features/favoritesSlice";
 import ExpandSectionIcon from "../shared/ExpandSectionIcon";
 import MyPlacesList from "./MyPlacesList";
 import MyPlacesCreateDialog from "./MyPlacesCreateDialog";

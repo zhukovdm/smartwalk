@@ -1,10 +1,8 @@
 import { useState } from "react";
-import {
-  Box,
-  Checkbox,
-  Stack,
-  Typography
-} from "@mui/material";
+import Box from "@mui/material/Box";
+import Checkbox from "@mui/material/Checkbox";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { PlaceCategory } from "../../domain/types";
 import CategoryFilterDialog from "./CategoryFilterDialog";
 

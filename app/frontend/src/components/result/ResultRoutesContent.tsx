@@ -1,12 +1,10 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Alert,
-  Box,
-  Pagination,
-  Stack,
-  Typography
-} from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiPlace, UiRoute } from "../../domain/types";
 import { SEARCH_DIRECS_ADDR } from "../../domain/routing";

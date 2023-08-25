@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Stack } from "@mui/material";
-import { Route } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import RouteIcon from "@mui/icons-material/Route";
 import { AppContext } from "../../App";
 import {
   SEARCH_DIRECS_ADDR,
@@ -34,11 +35,11 @@ import {
 } from "../../features/storeHooks";
 import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
+import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import SomethingEditDialog from "./SomethingEditDialog";
 import SomethingDeleteDialog from "./SomethingDeleteDialog";
-import SomethingModifyDialog from "../shared/SomethingModifyDialog";
 
 type MyRoutesListItemProps = {
 
@@ -201,7 +202,7 @@ export default function MyRoutesList(): JSX.Element {
         : <FavoriteStub
             what={"route"}
             link={SEARCH_ROUTES_ADDR}
-            icon={(sx) => <Route sx={sx} />}
+            icon={(sx) => <RouteIcon sx={sx} />}
           />
       }
     </Box>

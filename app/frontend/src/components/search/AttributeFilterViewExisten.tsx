@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { FormGroup } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup";
 import { AttributeFilterExisten } from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 

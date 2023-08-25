@@ -7,6 +7,7 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import LoadingButton from "@mui/lab/LoadingButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { AppContext } from "../../App";
 import { FAVORITES_ADDR } from "../../domain/routing";
@@ -23,7 +24,6 @@ import {
 } from "../../features/storeHooks";
 import SolidStorage from "../../utils/solidStorage";
 import SolidProvider from "../../utils/solidProvider";
-import { LoadingButton } from "@mui/lab";
 
 /**
  * The content of the Solid panel upon login.
