@@ -1,19 +1,15 @@
 import { useState } from "react";
-import {
-  Box,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Typography
-} from "@mui/material";
-import {
-  Delete,
-  Directions,
-  Edit,
-  Info,
-  MoreVert
-} from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import DeleteIcon from "@mui/icons-material/Delete";
+import DirectionsIcon from "@mui/icons-material/Directions";
+import EditIcon from "@mui/icons-material/Edit";
+import InfoIcon from "@mui/icons-material/Info";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type ListItemMenuProps = {
 
@@ -68,7 +64,7 @@ export default function ListItemMenu(
         aria-expanded={open}
         aria-controls={open ? mid : undefined}
       >
-        <MoreVert className={"action-place"} />
+        <MoreVertIcon className={"action-place"} />
       </IconButton>
       <Menu
         id={mid}
@@ -79,7 +75,7 @@ export default function ListItemMenu(
       >
         <MenuItem onClick={onShow}>
           <ListItemIcon>
-            <Info className={"action-place"} fontSize={"small"} />
+            <InfoIcon className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>View</Typography>
         </MenuItem>
@@ -87,7 +83,7 @@ export default function ListItemMenu(
           onClick={() => { showEditDialog(); closeMenuAction(); }}
         >
           <ListItemIcon>
-            <Edit className={"action-place"} fontSize={"small"} />
+            <EditIcon className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>Edit</Typography>
         </MenuItem>
@@ -96,7 +92,7 @@ export default function ListItemMenu(
             onClick={() => { showAppendDialog(); closeMenuAction(); }}
           >
             <ListItemIcon>
-              <Directions className={"action-place"} fontSize={"small"} />
+              <DirectionsIcon className={"action-place"} fontSize={"small"} />
             </ListItemIcon>
             <Typography>Append</Typography>
           </MenuItem>
@@ -106,7 +102,7 @@ export default function ListItemMenu(
             onClick={() => { showModifyDialog(); closeMenuAction(); }}
           >
             <ListItemIcon>
-              <Directions className={"action-place"} fontSize={"small"} />
+              <DirectionsIcon className={"action-place"} fontSize={"small"} />
             </ListItemIcon>
             <Typography>Modify</Typography>
           </MenuItem>
@@ -115,7 +111,7 @@ export default function ListItemMenu(
           onClick={() => { showDeleteDialog(); closeMenuAction(); }}
         >
           <ListItemIcon>
-            <Delete className={"action-place"} fontSize={"small"} />
+            <DeleteIcon className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>Delete</Typography>
         </MenuItem>

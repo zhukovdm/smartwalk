@@ -1,7 +1,8 @@
 import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Box, Stack } from "@mui/material";
-import { Directions } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
+import DirectionsIcon from "@mui/icons-material/Directions";
 import { AppContext } from "../../App";
 import { StoredDirec, StoredPlace } from "../../domain/types";
 import {
@@ -170,7 +171,7 @@ export default function MyDirecsList(): JSX.Element {
         : <FavoriteStub
             what={"direction"}
             link={SEARCH_DIRECS_ADDR}
-            icon={(sx) => <Directions sx={sx} />}
+            icon={(sx) => <DirectionsIcon sx={sx} />}
           />
       }
     </Box>

@@ -2,7 +2,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
-import LoadStub from "./result/LoadStub";
+import LoadingStub from "./shared/LoadingStub";
 import ViewerDirecContent from "./viewer/ViewerDirecContent";
 
 export default function ViewerDirecPanel(): JSX.Element {
@@ -23,7 +23,7 @@ export default function ViewerDirecPanel(): JSX.Element {
                   </Alert>
               }
             </Box>
-          : <LoadStub />
+          : <LoadingStub />
         }
       </Box>
     </Box>

@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import { useSmartPlace } from "../features/entityHooks";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
 import PlaceContent from "./entity/EntityPlaceContent";
+import LoadingStub from "./shared/LoadingStub";
 
 /**
  * Panel presenting a place, with menu, and content.
@@ -32,9 +32,7 @@ export default function EntityPlacePanel(): JSX.Element {
                   </Alert>
               }
             </Box>
-          : <Box display={"flex"} justifyContent={"center"}>
-              <CircularProgress />
-            </Box>
+          : <LoadingStub />
         }
       </Box>
     </Box>

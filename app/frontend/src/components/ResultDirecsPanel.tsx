@@ -2,7 +2,7 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
-import LoadStub from "./result/LoadStub";
+import LoadingStub from "./shared/LoadingStub";
 import ResultDirecsContent from "./result/ResultDirecsContent";
 
 export default function ResultDirecsPanel(): JSX.Element {
@@ -16,14 +16,14 @@ export default function ResultDirecsPanel(): JSX.Element {
       <Box sx={{ mx: 2, my: 4 }}>
         {loaded
           ? <Box>
-              {result
+              {result.length > 0
                 ? <ResultDirecsContent result={result} />
-                : <Alert>
+                : <Alert severity={"warning"}>
                     The result appears to be empty. Try different search parameters.
                   </Alert>
               }
             </Box>
-          : <LoadStub />
+          : <LoadingStub />
         }
       </Box>
     </Box>

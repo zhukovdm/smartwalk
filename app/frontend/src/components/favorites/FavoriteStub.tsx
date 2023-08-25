@@ -1,12 +1,10 @@
 import { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Box,
-  IconButton,
-  Stack,
-  SxProps,
-  Typography
-} from "@mui/material";
+import { SxProps } from "@mui/system";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { SomethingKind } from "../shared/_types";
 
 type FavoriteStubProps = {

@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
-import CircularProgress from "@mui/material/CircularProgress";
 import Stack from "@mui/material/Stack";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
+import LoadingStubWithLabel from "./shared/LoadingStubWithLabel";
 import StorageSection from "./favorites/StorageSection";
 import MyDirecsSection from "./favorites/MyDirecsSection";
 import MyPlacesSection from "./favorites/MyPlacesSection";
@@ -27,12 +27,7 @@ export default function FavoritesPanel(
               <MyRoutesSection />
               <MyDirecsSection />
             </Stack>
-          : <Box display={"flex"} justifyContent={"center"}>
-              <CircularProgress
-                variant={"determinate"}
-                value={Math.floor(loadedRatio * 100.0)}
-              />
-            </Box>
+          : <LoadingStubWithLabel progress={Math.floor(loadedRatio * 100.0)} />
         }
       </Box>
     </Box>
