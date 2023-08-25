@@ -5,19 +5,19 @@ import Link from "@mui/material/Link";
 import Rating from "@mui/material/Rating";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import AccessTime from "@mui/icons-material/AccessTime";
-import Facebook from "@mui/icons-material/Facebook";
-import Home from "@mui/icons-material/Home";
-import Instagram from "@mui/icons-material/Instagram";
-import LinkedIn from "@mui/icons-material/LinkedIn";
-import Mail from "@mui/icons-material/Mail";
-import OpenInNew from "@mui/icons-material/OpenInNew";
-import Phone from "@mui/icons-material/Phone";
-import Pinterest from "@mui/icons-material/Pinterest";
-import Telegram from "@mui/icons-material/Telegram";
-import Toll from "@mui/icons-material/Toll";
-import Twitter from "@mui/icons-material/Twitter";
-import YouTube from "@mui/icons-material/YouTube";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import HomeIcon from "@mui/icons-material/Home";
+import InstagramIcon from "@mui/icons-material/Instagram";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import MailIcon from "@mui/icons-material/Mail";
+import OpenInNewIcon from "@mui/icons-material/OpenInNew";
+import PhoneIcon from "@mui/icons-material/Phone";
+import PinterestIcon from "@mui/icons-material/Pinterest";
+import TelegramIcon from "@mui/icons-material/Telegram";
+import TollIcon from "@mui/icons-material/Toll";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import YouTubeIcon from "@mui/icons-material/YouTube";
 import Image from "mui-image";
 import { AppContext } from "../../App";
 import {
@@ -217,13 +217,13 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         <Stack direction={"column"} gap={1.5}>
           {address &&
             <Stack direction={"row"} columnGap={2}>
-              <Home sx={{ color: "grey" }} titleAccess={"address"} />
+              <HomeIcon sx={{ color: "grey" }} titleAccess={"address"} />
               <Typography noWrap>{composeAddress(address)}</Typography>
             </Stack>
           }
           {website &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <OpenInNew sx={{ color: "grey" }} titleAccess={"webpage"} />
+              <OpenInNewIcon sx={{ color: "grey" }} titleAccess={"webpage"} />
               <Link
                 href={website}
                 rel={"noopener noreferrer"}
@@ -236,7 +236,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           }
           {phone &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <Phone sx={{ color: "grey" }} titleAccess={"phone number"} />
+              <PhoneIcon sx={{ color: "grey" }} titleAccess={"phone number"} />
               <Link
                 href={`tel:${phone}`}
                 rel={"noopener noreferrer"}
@@ -249,7 +249,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           }
           {email &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <Mail sx={{ color: "grey" }} titleAccess={"email"} />
+              <MailIcon sx={{ color: "grey" }} titleAccess={"email"} />
               <Link
                 href={`mailto:${email}`}
                 rel={"noopener noreferrer"}
@@ -264,44 +264,44 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             <Stack direction={"row"} flexWrap={"wrap"} gap={1} justifyContent={"center"}>
               {socialNetworks.facebook &&
                 <Link href={socialNetworks.facebook} rel={"noopener noreferrer"} target={"_blank"}>
-                  <Facebook />
+                  <FacebookIcon />
                 </Link>
               }
               {socialNetworks.instagram &&
                 <Link href={socialNetworks.instagram} rel={"noopener noreferrer"} target={"_blank"}>
-                  <Instagram />
+                  <InstagramIcon />
                 </Link>
               }
               {socialNetworks.linkedin &&
                 <Link href={socialNetworks.linkedin} rel={"noopener noreferrer"} target={"_blank"}>
-                  <LinkedIn />
+                  <LinkedInIcon />
                 </Link>
               }
               {socialNetworks.pinterest &&
                 <Link href={socialNetworks.pinterest} rel={"noopener noreferrer"} target={"_blank"}>
-                  <Pinterest />
+                  <PinterestIcon />
                 </Link>
               }
               {socialNetworks.telegram &&
                 <Link href={socialNetworks.telegram} rel={"noopener noreferrer"} target={"_blank"}>
-                  <Telegram />
+                  <TelegramIcon />
                 </Link>
               }
               {socialNetworks.twitter &&
                 <Link href={socialNetworks.twitter} rel={"noopener noreferrer"} target={"_blank"}>
-                  <Twitter />
+                  <TwitterIcon />
                 </Link>
               }
               {socialNetworks.youtube &&
                 <Link href={socialNetworks.youtube} rel={"noopener noreferrer"} target={"_blank"}>
-                  <YouTube />
+                  <YouTubeIcon />
                 </Link>
               }
             </Stack>
           }
           {arr(openingHours) &&
             <Stack direction={"row"} columnGap={2}>
-              <AccessTime sx={{ color: "grey" }} titleAccess={"opening hours"} />
+              <AccessTimeIcon sx={{ color: "grey" }} titleAccess={"opening hours"} />
               <Stack direction={"column"} rowGap={1}>
                 {openingHours!.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
@@ -309,7 +309,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           }
           {arr(charge) &&
             <Stack direction="row" columnGap={2}>
-              <Toll sx={{ color: "grey" }} titleAccess={"toll"} />
+              <TollIcon sx={{ color: "grey" }} titleAccess={"toll"} />
               <Stack direction="column" rowGap={1}>
                 {charge!.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>

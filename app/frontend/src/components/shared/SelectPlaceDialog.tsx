@@ -81,8 +81,15 @@ export default function SelectPlaceDialog(
   };
 
   return (
-    <Dialog open={show} onClose={onHide}>
-      <DialogTitle sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Dialog
+      aria-label={"Select point"}
+      open={show}
+      onClose={onHide}
+    >
+      <DialogTitle
+        aria-label={"Select point"}
+        sx={{ display: "flex", justifyContent: "space-between" }}
+      >
         <span>Select point</span>
         <IconButton
           size={"small"}
@@ -113,6 +120,7 @@ export default function SelectPlaceDialog(
             renderInput={(params) => (
               <TextField
                 {...params}
+                label={"Place"}
                 InputProps={{
                   ...params.InputProps,
                   endAdornment: (
@@ -130,7 +138,6 @@ export default function SelectPlaceDialog(
             <Button
               color={"primary"}
               disabled={!place}
-              title={"Confirm"}
               onClick={() => { handleFavorites(); }}
             >
               <span>Confirm</span>

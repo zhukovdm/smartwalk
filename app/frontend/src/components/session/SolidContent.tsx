@@ -112,7 +112,7 @@ export default function SolidContent(): JSX.Element {
       </Stack>
       <Stack direction={"column"} gap={2}>
         <Typography>
-          Select a pod that will act as a storage:
+          Select a Pod that should act as a storage:
         </Typography>
         <Autocomplete
           size={"small"}
@@ -142,7 +142,7 @@ export default function SolidContent(): JSX.Element {
       </Stack>
       <Stack gap={1}>
         <Typography>
-          Activate the selected Pod and redirect to <FavoriteIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} titleAccess={"Favorites"} />:
+          Activate the Pod and redirect to <FavoriteIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} titleAccess={"Favorites"} />:
         </Typography>
         <Stack direction={"row"} justifyContent={"center"}>
           <Button
@@ -154,7 +154,7 @@ export default function SolidContent(): JSX.Element {
           </Button>
         </Stack>
         <Typography fontSize={"small"}>
-          After activating, only data from your Solid Pod will appear in Favorites. Local storage will be available immediately upon logout. Storages are not synchronized.
+          After activating, only data from your Solid Pod will appear in Favorites. Local storage will be available immediately upon logout. Storages are not synced.
         </Typography>
       </Stack>
       <Stack direction={"row"} justifyContent={"center"}>

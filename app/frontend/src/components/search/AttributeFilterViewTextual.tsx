@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { Stack, TextField } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import TextField from "@mui/material/TextField";
 import { AttributeFilterTextual } from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
@@ -15,7 +16,8 @@ type AttributeFilterViewTextualProps = {
   initial: AttributeFilterTextual | undefined;
 };
 
-export default function AttributeFilterViewTextual({ label, setter, initial }: AttributeFilterViewTextualProps) {
+export default function AttributeFilterViewTextual(
+  { label, setter, initial }: AttributeFilterViewTextualProps) {
 
   const [check, setCheck] = useState(!!initial);
   const [value, setValue] = useState(initial ?? "");
@@ -27,7 +29,7 @@ export default function AttributeFilterViewTextual({ label, setter, initial }: A
   }, [check, value, setter]);
 
   return (
-    <Stack direction={"row"} spacing={1}>
+    <Stack direction={"row"} spacing={4}>
       <AttributeFilterCheckBox
         checked={check}
         label={label}
@@ -39,6 +41,7 @@ export default function AttributeFilterViewTextual({ label, setter, initial }: A
         onChange={(e) => { setValue(e.target.value); }}
         size={"small"}
         value={value}
+        label={"Text"}
       />
     </Stack>
   );

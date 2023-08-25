@@ -27,7 +27,7 @@ type AttributeFilterViewNumericProps = {
  */
 export default function AttributeFilterViewNumeric({ label, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
 
-  const bound = (useAppSelector(state => state.panel.bounds) as any)[label] as AttributeFilterNumeric;
+  const bound = (useAppSelector((state) => state.panel.bounds) as any)[label] as AttributeFilterNumeric;
 
   const [check, setCheck] = useState(!!initial);
   const [value, setValue] = useState(initial ? [initial.min, initial.max] : [bound.min, bound.max]);
@@ -54,6 +54,7 @@ export default function AttributeFilterViewNumeric({ label, setter, initial }: A
           value={value}
           disabled={!check}
           onChange={change}
+          getAriaLabel={(i) => `${i === 0 ? "Lower" : "Upper"} bound`}
           sx={{ width: "94%" }}
           valueLabelDisplay={"auto"}
         />

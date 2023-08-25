@@ -100,7 +100,7 @@ export default function SearchRoutesPanel(): JSX.Element {
               ? <FreePlaceListItem
                   kind={"source"}
                   label={"Select starting point..."}
-                  title={"Select point"}
+                  title={"Select starting point"}
                   onPlace={() => { setSourceSelectDialog(true); }}
                 />
               : <RemovablePlaceListItem
@@ -116,7 +116,7 @@ export default function SearchRoutesPanel(): JSX.Element {
               ? <FreePlaceListItem
                   kind={"target"}
                   label={"Select destination..."}
-                  title={"Select point"}
+                  title={"Select destination"}
                   onPlace={() => { setTargetSelectDialog(true); }}
                 />
               : <RemovablePlaceListItem
@@ -129,10 +129,12 @@ export default function SearchRoutesPanel(): JSX.Element {
                 />
             }
           </Stack>
-          <Box display={"flex"} justifyContent={"center"}>
+          <Box
+            display={"flex"}
+            justifyContent={"center"}
+          >
             <Button
               startIcon={<SwapVert />}
-              title={"Swap points"}
               onClick={() => { swapAction(); }}
               sx={{ mt: 1, textTransform: "none" }}
             >
@@ -141,7 +143,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           </Box>
         </Stack>
         <Typography>
-          With maximum walking distance (in <KilometersLink />):
+          With walking distance of at most (in <KilometersLink />):
         </Typography>
         <DistanceSlider
           max={30}
@@ -149,6 +151,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           step={0.2}
           distance={distance}
           dispatch={(value) => { dispatch(setSearchRoutesDistance(value)); }}
+          ariaLabel={"Maximum walking distance of a route"}
         />
         <Typography>
           Visit places from the following categories:
@@ -169,7 +172,6 @@ export default function SearchRoutesPanel(): JSX.Element {
         />
         <BottomButtons
           disabled={!source || !target || !(categories.length > 0)}
-          what={"route"}
           onClear={() => { dispatch(resetSearchRoutes()); }}
           onSearch={() => { searchAction(); }}
         />

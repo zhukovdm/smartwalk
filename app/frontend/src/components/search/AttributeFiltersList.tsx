@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Accordion,
   AccordionDetails,
@@ -6,10 +7,10 @@ import {
   Stack,
   Typography
 } from "@mui/material";
-import { ExpandMore } from "@mui/icons-material";
 import { KeywordAdviceItem } from "../../domain/types";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
 import { useAppSelector } from "../../features/storeHooks";
+import ExpandSectionIcon from "../shared/ExpandSectionIcon";
 import AttributeFilterViewExisten from "./AttributeFilterViewExisten";
 import AttributeFilterViewBoolean from "./AttributeFilterViewBoolean";
 import AttributeFilterViewNumeric from "./AttributeFilterViewNumeric";
@@ -30,8 +31,6 @@ type AttributeFiltersListProps = {
  */
 export default function AttributeFiltersList({ adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
 
-  const expandIcon = <ExpandMore />
-
   const { bounds } = useAppSelector((state) => state.panel);
   const {
     es,
@@ -41,11 +40,24 @@ export default function AttributeFiltersList({ adviceItem, filters }: AttributeF
     cs
   } = KeywordAdviceAttributes.group(adviceItem.attributeList);
 
+  const [esExpanded, setEsExpanded] = useState(true);
+  const [bsExpanded, setBsExpanded] = useState(true);
+  const [nsExpanded, setNsExpanded] = useState(true);
+  const [tsExpanded, setTsExpanded] = useState(true);
+  const [csExpanded, setCsExpanded] = useState(true);
+
   return(
     <Box>
       {(es.length > 0) &&
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={expandIcon}>
+        <Accordion
+          expanded={esExpanded}
+          onChange={(_, v) => { setEsExpanded(v); }}
+        >
+          <AccordionSummary
+            id={"search-es-attributes-head"}
+            aria-controls={"search-es-attributes-cont"}
+            expandIcon={<ExpandSectionIcon expanded={esExpanded} />}
+          >
             <Typography>Should have</Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -69,8 +81,15 @@ export default function AttributeFiltersList({ adviceItem, filters }: AttributeF
         </Accordion>
       }
       {(bs.length > 0) &&
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={expandIcon}>
+        <Accordion
+          expanded={bsExpanded}
+          onChange={(_, v) => { setBsExpanded(v); }}
+        >
+          <AccordionSummary
+            id={"search-bs-attributes-head"}
+            aria-controls={"search-bs-attributes-cont"}
+            expandIcon={<ExpandSectionIcon expanded={bsExpanded} />}
+          >
             <Typography>Yes / No</Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -88,8 +107,15 @@ export default function AttributeFiltersList({ adviceItem, filters }: AttributeF
         </Accordion>
       }
       {(ns.length > 0 && bounds) &&
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={expandIcon}>
+        <Accordion
+          expanded={nsExpanded}
+          onChange={(_, v) => { setNsExpanded(v); }}
+        >
+          <AccordionSummary
+            id={"search-ns-attributes-head"}
+            aria-controls={"search-ns-attributes-cont"}
+            expandIcon={<ExpandSectionIcon expanded={nsExpanded} />}
+          >
             <Typography>Numeric</Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -107,8 +133,15 @@ export default function AttributeFiltersList({ adviceItem, filters }: AttributeF
         </Accordion>
       }
       {(ts.length > 0) &&
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={expandIcon}>
+        <Accordion
+          expanded={tsExpanded}
+          onChange={(_, v) => { setTsExpanded(v); }}
+        >
+          <AccordionSummary
+            id={"search-ts-attributes-head"}
+            aria-controls={"search-ts-attributes-cont"}
+            expandIcon={<ExpandSectionIcon expanded={tsExpanded} />}
+          >
             <Typography>Contains text</Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -126,8 +159,15 @@ export default function AttributeFiltersList({ adviceItem, filters }: AttributeF
         </Accordion>
       }
       {(cs.length > 0 && bounds) &&
-        <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={expandIcon}>
+        <Accordion
+          expanded={csExpanded}
+          onChange={(_, v) => { setCsExpanded(v); }}
+        >
+          <AccordionSummary
+            id={"search-cs-attributes-head"}
+            aria-controls={"search-cs-attributes-cont"}
+            expandIcon={<ExpandSectionIcon expanded={csExpanded} />}
+          >
             <Typography>Include any / Exclude all</Typography>
           </AccordionSummary>
           <AccordionDetails>

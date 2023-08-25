@@ -40,6 +40,7 @@ function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): 
 
   return (
     <Select
+      aria-label={"Category"}
       fullWidth
       onChange={handleChange}
       size={"small"}
@@ -120,7 +121,6 @@ export default function PrecedenceBox(
           size={"large"}
           onClick={() => { setShowDialog(true); }}
           sx={{ width: "100%" }}
-          title={"Open configuration dialog"}
         >
           <span>Add arrow</span>
         </Button>
@@ -144,7 +144,7 @@ export default function PrecedenceBox(
                 categories={categories}
                 onSelect={(i: number) => { setEdgeFr(i); }}
               />
-              <East />
+              <East titleAccess={"before"} />
               <PrecedenceSelector
                 categories={categories}
                 onSelect={(i: number) => { setEdgeTo(i); }}

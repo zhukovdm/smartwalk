@@ -77,14 +77,14 @@ export default function SearchPlacesPanel(): JSX.Element {
         sx={{ mx: 2, my: 4 }}
       >
         <Box>
-          <Typography>Find places around a center point:</Typography>
+          <Typography>Find places around the center point:</Typography>
         </Box>
         <Box>
           {(!center)
             ? <FreePlaceListItem
                 kind={"center"}
-                label={"Select point..."}
-                title={"Select point"}
+                label={"Select center point..."}
+                title={"Select center point"}
                 onPlace={() => { setSelectDialog(true); }}
               />
             : <RemovablePlaceListItem
@@ -99,7 +99,7 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Box>
         <Box>
           <Typography>
-            At a distance at most (in <KilometersLink />):
+            Within a crow-fly distance of at most (in <KilometersLink />):
           </Typography>
         </Box>
         <Box>
@@ -109,6 +109,7 @@ export default function SearchPlacesPanel(): JSX.Element {
             step={0.1}
             distance={radius}
             dispatch={(value) => { dispatch(setSearchPlacesRadius(value)); }}
+            ariaLabel={"Maximum crow-fly distance from the center point"}
           />
         </Box>
         <Typography>
@@ -121,7 +122,6 @@ export default function SearchPlacesPanel(): JSX.Element {
         />
         <BottomButtons
           disabled={!center}
-          what={"place"}
           onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
         />

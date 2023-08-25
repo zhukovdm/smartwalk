@@ -1,6 +1,9 @@
 import { ReactElement } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import { Box, Link, Stack, Typography } from "@mui/material";
+import Box from "@mui/material/Box";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { getSmartPlaceLink } from "../../domain/functions";
 import { PlaceKind } from "./_types";
 import { DeleteButton, PlaceButton } from "./_buttons";

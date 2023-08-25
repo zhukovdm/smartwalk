@@ -89,6 +89,7 @@ function CategoryDialog(
           renderInput={(params) => (
             <TextField
               {...params}
+              label={"Keyword"}
               placeholder={"Start typing..."}
               InputProps={{
                 ...params.InputProps,
@@ -105,7 +106,7 @@ function CategoryDialog(
           isOptionEqualToValue={(o, v) => { return o.keyword === v.keyword }}
         />
         <DialogContentText>
-          Select (optional) attributes to customize this category further.
+          Configure attributes to customize this category (optional).
         </DialogContentText>
         {(mount && value)
           ? <AttributeFiltersList adviceItem={value} filters={filters} />
@@ -175,9 +176,8 @@ export default function CategoryBox(
           ))}
         </Stack>
         <Button
-          size={"large"}
-          title={"Open configuration dialog"}
           sx={{ width: "100%" }}
+          size={"large"}
           onClick={() => { dialog(categories.length); }}
         >
           <span>Add category</span>

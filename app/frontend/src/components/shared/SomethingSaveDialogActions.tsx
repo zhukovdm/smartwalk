@@ -1,18 +1,26 @@
-import { Button, DialogActions } from "@mui/material";
-import { LoadingButton } from "@mui/lab";
-import { Save } from "@mui/icons-material";
+import Button from "@mui/material/Button";
+import DialogActions from "@mui/material/DialogActions";
+import LoadingButton from "@mui/lab/LoadingButton";
+import SaveIcon from "@mui/icons-material/Save";
 
 type SaveSomethingDialogActionsProps = {
 
+  /** Flag preventing erroneous save. */
   disableSave: boolean;
 
+  /** Flag indicating save in progress. */
   loadingSave: boolean;
 
+  /** Cleanup on discard. */
   discardAction: () => void;
 
+  /** Save procedure. */
   saveAction: () => void;
 };
 
+/**
+ * Actions for `places`, `routes`, and `directions` save dialog.
+ */
 export default function SaveSomethingDialogActions(
   { disableSave, loadingSave, saveAction, discardAction }: SaveSomethingDialogActionsProps): JSX.Element {
 
@@ -24,7 +32,6 @@ export default function SaveSomethingDialogActions(
         color={"error"}
         disabled={loadingSave}
         onClick={discardAction}
-        title={"Close dialog"}
       >
         <span>Discard</span>
       </Button>
@@ -32,8 +39,7 @@ export default function SaveSomethingDialogActions(
         disabled={disableSave}
         loading={loadingSave}
         loadingPosition={"start"}
-        title={"Send request"}
-        startIcon={<Save />}
+        startIcon={<SaveIcon />}
         onClick={saveAction}
       >
         <span>Save</span>

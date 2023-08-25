@@ -43,13 +43,12 @@ export function LogoCloseMenu({ onLogo: _ }: LogoCloseMenuProps): JSX.Element {
       sx={{ mx: 2, my: 2 }}
     >
       <IconButton
+        aria-label={"Hide panel"}
         size={"small"}
+        title={"Hide panel"}
         onClick={() => { dispatch(hidePanel()); }}
       >
-        <Close
-          fontSize={"medium"}
-          titleAccess={"Hide panel"}
-        />
+        <Close />
       </IconButton>
     </Box>
   );
@@ -78,13 +77,12 @@ export function BackCloseMenu(): JSX.Element {
         </Button>
       </Box>
       <IconButton
+        aria-label={"Hide panel"}
         size={"small"}
+        title={"Hide panel"}
         onClick={() => { dispatch(hidePanel()); }}
       >
-        <Close
-          fontSize={"medium"}
-          titleAccess={"Hide panel"}
-        />
+        <Close />
       </IconButton>
     </Box>
   );

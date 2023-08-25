@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
 import { useAppDispatch } from "../../features/storeHooks";

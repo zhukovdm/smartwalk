@@ -124,11 +124,11 @@ export default function MyPlacesCreateDialog(): JSX.Element {
               />
           }
           <TextField
+            label={"Name"}
             required
             fullWidth
             size={"small"}
             value={name}
-            placeholder={"Enter name..."}
             onChange={(e) => dispatch(setFavoriteCustomName(e.target.value))}
           />
           <Box display={"flex"} justifyContent={"space-evenly"}>

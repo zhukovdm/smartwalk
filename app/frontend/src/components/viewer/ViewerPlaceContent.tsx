@@ -1,11 +1,9 @@
 import { useContext, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
-import {
-  Divider,
-  Link,
-  Stack,
-  Typography
-} from "@mui/material";
+import Divider from "@mui/material/Divider";
+import Link from "@mui/material/Link";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
 import { getSmartPlaceLink } from "../../domain/functions";

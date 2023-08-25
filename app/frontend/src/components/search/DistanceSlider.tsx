@@ -16,12 +16,15 @@ type DistanceSliderProps = {
 
   /** Action setting new value. */
   dispatch: (value: number) => void;
+
+  /** Slider label */
+  ariaLabel: string;
 };
 
 /**
  * Standard distance slider.
  */
-export default function DistanceSlider({ seq, distance, dispatch, ...rest }: DistanceSliderProps): JSX.Element {
+export default function DistanceSlider({ seq, distance, dispatch, ariaLabel, ...rest }: DistanceSliderProps): JSX.Element {
   const marks = seq.map(m => { return { value: m, label: m }; });
 
   return (
@@ -29,7 +32,7 @@ export default function DistanceSlider({ seq, distance, dispatch, ...rest }: Dis
       <Box sx={{ width: "94%" }}>
         <Slider
           {...rest}
-          aria-label={"Maximum walking distance"}
+          aria-label={ariaLabel}
           min={0}
           marks={marks}
           value={distance}
