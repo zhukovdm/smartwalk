@@ -24,6 +24,8 @@ export default function MyPlacesSection(): JSX.Element {
       onChange={() => { dispatch(toggleFavoritePlacesExpanded()); }}
     >
       <AccordionSummary
+        id={"favorites-my-places-head"}
+        aria-controls={"favorites-my-places-cont"}
         expandIcon={<ExpandSectionIcon expanded={placesExpanded} />}
       >
         <Typography>My Places</Typography>

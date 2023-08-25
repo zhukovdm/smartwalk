@@ -75,10 +75,18 @@ export default function CategoryFilterDialog(
   const [esKeys, bsKeys, nsKeys, tsKeys, csKeys] = [es, bs, ns, ts, cs].map((xs) => extractKeys(xs));
 
   return (
-    <Dialog open={show} onClose={onHide}>
-      <DialogTitle display={"flex"} justifyContent={"space-between"}>
-        Category
-        <IconButton size={"small"} onClick={onHide}>
+    <Dialog
+      aria-label={"Category"}
+      open={show}
+      onClose={onHide}
+    >
+      <DialogTitle
+        aria-label={"Category"}
+        display={"flex"}
+        justifyContent={"space-between"}
+      >
+        <span>Category</span>
+        <IconButton size={"small"} title={"Hide dialog"} onClick={onHide}>
           <Close fontSize={"small"} />
         </IconButton>
       </DialogTitle>

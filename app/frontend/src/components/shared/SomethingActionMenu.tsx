@@ -23,6 +23,10 @@ export default function SomethingActionMenu(
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
+  const open = Boolean(anchorEl);
+  const rid = `result-action-menu-button`;
+  const mid = `result-action-menu`;
+
   const clickMenuAction = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
   };
@@ -34,18 +38,23 @@ export default function SomethingActionMenu(
   return (
     <Box>
       <IconButton
-        aria-label={"Show menu"}
-        color={"inherit"}
+        id={rid}
         onClick={clickMenuAction}
+        color={"inherit"}
         size={"small"}
-        title={"Show menu"}
+        title={"Menu"}
+        aria-haspopup={"listbox"}
+        aria-expanded={open}
+        aria-controls={open ? mid : undefined}
       >
         <MoreVert fontSize={"small"} />
       </IconButton>
       <Menu
+        id={mid}
+        aria-labelledby={rid}
+        open={open}
         anchorEl={anchorEl}
         onClose={closeMenuAction}
-        open={!!anchorEl}
       >
         <MenuItem
           disabled={!showSaveDialog}

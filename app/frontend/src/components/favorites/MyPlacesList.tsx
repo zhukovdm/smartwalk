@@ -89,6 +89,8 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
         }
         r={
           <ListItemMenu
+            what={"place"}
+            index={index}
             onShow={onShow}
             showEditDialog={() => { setShowE(true); }}
             showAppendDialog={() => { setShowA(true); }}

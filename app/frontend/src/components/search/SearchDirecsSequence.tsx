@@ -107,20 +107,21 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
   return (
     <Draggable draggableId={`place-${index}`} index={index}>
       {(provided) => (
-        <div ref={provided.innerRef} {...provided.draggableProps}>
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+        >
           <Stack
             direction={"row"}
             gap={0.5}
             paddingBottom={2}
           >
             <div
+              title={"Drag"}
               style={{ display: "flex", alignItems: "center" }}
               {...provided.dragHandleProps}
             >
-              <DragIndicator
-                className={"action-place"}
-                titleAccess={"Drag"}
-              />
+              <DragIndicator className={"action-place"} />
             </div>
             <PlaceButton
               title={"Fly to"}

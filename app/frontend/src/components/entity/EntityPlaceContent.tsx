@@ -217,13 +217,13 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         <Stack direction={"column"} gap={1.5}>
           {address &&
             <Stack direction={"row"} columnGap={2}>
-              <HomeIcon sx={{ color: "grey" }} titleAccess={"address"} />
+              <HomeIcon className={"entity-place"} titleAccess={"address"} />
               <Typography noWrap>{composeAddress(address)}</Typography>
             </Stack>
           }
           {website &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <OpenInNewIcon sx={{ color: "grey" }} titleAccess={"webpage"} />
+              <OpenInNewIcon className={"entity-place"} titleAccess={"webpage"} />
               <Link
                 href={website}
                 rel={"noopener noreferrer"}
@@ -236,7 +236,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           }
           {phone &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <PhoneIcon sx={{ color: "grey" }} titleAccess={"phone number"} />
+              <PhoneIcon className={"entity-place"} titleAccess={"phone number"} />
               <Link
                 href={`tel:${phone}`}
                 rel={"noopener noreferrer"}
@@ -249,7 +249,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           }
           {email &&
             <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <MailIcon sx={{ color: "grey" }} titleAccess={"email"} />
+              <MailIcon className={"entity-place"} titleAccess={"email"} />
               <Link
                 href={`mailto:${email}`}
                 rel={"noopener noreferrer"}
@@ -261,47 +261,112 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             </Stack>
           }
           {socialNetworks &&
-            <Stack direction={"row"} flexWrap={"wrap"} gap={1} justifyContent={"center"}>
+            <Stack
+              direction={"row"}
+              flexWrap={"wrap"}
+              gap={1}
+              justifyContent={"center"}
+              alignItems={"center"}
+            >
               {socialNetworks.facebook &&
-                <Link href={socialNetworks.facebook} rel={"noopener noreferrer"} target={"_blank"}>
-                  <FacebookIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.facebook}
+                  aria-label={socialNetworks.facebook}
+                >
+                  <FacebookIcon
+                    aria-hidden={true}
+                    titleAccess={"Facebook profile"}
+                  />
                 </Link>
               }
               {socialNetworks.instagram &&
-                <Link href={socialNetworks.instagram} rel={"noopener noreferrer"} target={"_blank"}>
-                  <InstagramIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.instagram}
+                  aria-label={socialNetworks.instagram}
+                >
+                  <InstagramIcon
+                    aria-hidden={true}
+                    titleAccess={"Instagram profile"}
+                  />
                 </Link>
               }
               {socialNetworks.linkedin &&
-                <Link href={socialNetworks.linkedin} rel={"noopener noreferrer"} target={"_blank"}>
-                  <LinkedInIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.linkedin}
+                  aria-label={socialNetworks.linkedin}
+                >
+                  <LinkedInIcon
+                    aria-hidden={true}
+                    titleAccess={"LinkedIn profile"}
+                  />
                 </Link>
               }
               {socialNetworks.pinterest &&
-                <Link href={socialNetworks.pinterest} rel={"noopener noreferrer"} target={"_blank"}>
-                  <PinterestIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.pinterest}
+                  aria-label={socialNetworks.pinterest}
+                >
+                  <PinterestIcon
+                    aria-hidden={true}
+                    titleAccess={"Pinterest profile"}
+                  />
                 </Link>
               }
               {socialNetworks.telegram &&
-                <Link href={socialNetworks.telegram} rel={"noopener noreferrer"} target={"_blank"}>
-                  <TelegramIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.telegram}
+                  aria-label={socialNetworks.telegram}
+                >
+                  <TelegramIcon
+                    aria-hidden={true}
+                    titleAccess={"Telegram profile"}
+                  />
                 </Link>
               }
               {socialNetworks.twitter &&
-                <Link href={socialNetworks.twitter} rel={"noopener noreferrer"} target={"_blank"}>
-                  <TwitterIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.twitter}
+                  aria-label={socialNetworks.twitter}
+                >
+                  <TwitterIcon
+                    aria-hidden={true}
+                    titleAccess={"Twitter profile"}
+                  />
                 </Link>
               }
               {socialNetworks.youtube &&
-                <Link href={socialNetworks.youtube} rel={"noopener noreferrer"} target={"_blank"}>
-                  <YouTubeIcon />
+                <Link
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  href={socialNetworks.youtube}
+                  aria-label={socialNetworks.youtube}
+                >
+                  <YouTubeIcon
+                    aria-hidden={true}
+                    titleAccess={"YouTube profile"}
+                  />
                 </Link>
               }
             </Stack>
           }
           {arr(openingHours) &&
             <Stack direction={"row"} columnGap={2}>
-              <AccessTimeIcon sx={{ color: "grey" }} titleAccess={"opening hours"} />
+              <AccessTimeIcon
+                className={"entity-place"}
+                titleAccess={"opening hours"}
+              />
               <Stack direction={"column"} rowGap={1}>
                 {openingHours!.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
@@ -309,7 +374,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           }
           {arr(charge) &&
             <Stack direction="row" columnGap={2}>
-              <TollIcon sx={{ color: "grey" }} titleAccess={"toll"} />
+              <TollIcon
+                className={"entity-place"}
+                titleAccess={"toll"}
+              />
               <Stack direction="column" rowGap={1}>
                 {charge!.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
@@ -318,17 +386,25 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         </Stack>
       }
       {(image) &&
-        <Link href={image} rel={"noopener noreferrer"} target={"_blank"}>
+        <Link
+          href={image}
+          rel={"noopener noreferrer"}
+          target={"_blank"}
+          aria-label={"image as an external resource"}
+        >
           <Image
             fit={"contain"}
             showLoading={true}
             src={image}
             style={{ maxHeight: "300px" }}
+            alt={"image loaded at the link"}
           />
         </Link>
       }
       {(description) &&
-        <Typography>{description}</Typography>
+        <Typography aria-label={"Description"}>
+          {description}
+        </Typography>
       }
       {(add) && 
         <Divider sx={{ background: "lightgrey" }} />

@@ -17,6 +17,10 @@ import {
 
 type ListItemMenuProps = {
 
+  what: "place" | "route" | "direc"
+
+  index: number;
+
   /** Redirect to the viewer. */
   onShow: () => void;
 
@@ -37,9 +41,13 @@ type ListItemMenuProps = {
  * `Something`-specific menu in the storage list of `something`.
  */
 export default function ListItemMenu(
-  { onShow, showEditDialog, showDeleteDialog, showAppendDialog, showModifyDialog }: ListItemMenuProps): JSX.Element {
+  { what, index, onShow, showEditDialog, showDeleteDialog, showAppendDialog, showModifyDialog }: ListItemMenuProps): JSX.Element {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+
+  const open = Boolean(anchorEl);
+  const bid = `favorites-my-${what}-menu-button-${index}`;
+  const mid = `favorites-my-${what}-menu-${index}`;
 
   const clickMenuAction = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -52,16 +60,22 @@ export default function ListItemMenu(
   return (
     <Box>
       <IconButton
+        id={bid}
         onClick={clickMenuAction}
         size={"small"}
-        title={"Show menu"}
+        title={"Menu"}
+        aria-haspopup={"listbox"}
+        aria-expanded={open}
+        aria-controls={open ? mid : undefined}
       >
         <MoreVert className={"action-place"} />
       </IconButton>
       <Menu
+        id={mid}
+        aria-labelledby={bid}
+        open={open}
         anchorEl={anchorEl}
         onClose={closeMenuAction}
-        open={!!anchorEl}
       >
         <MenuItem onClick={onShow}>
           <ListItemIcon>

@@ -7,6 +7,8 @@ import {
   Stack,
   Typography
 } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 import DirectionsIcon from "@mui/icons-material/Directions";
 
 type SomethingModifyDialogProps = {
@@ -29,8 +31,24 @@ export default function SomethingModifyDialog(
   };
 
   return (
-    <Dialog open={show}>
-      <DialogTitle>Modify {what}</DialogTitle>
+    <Dialog
+      aria-label={`Modify ${what}`}
+      open={show}
+      onClose={onHide}
+    >
+      <DialogTitle
+        aria-label={`Modify ${what}`}
+        sx={{ display: "flex", justifyContent: "space-between" }}
+      >
+        <span>Modify {what}</span>
+        <IconButton
+          size={"small"}
+          title={"Hide dialog"}
+          onClick={onHide}
+        >
+          <CloseIcon fontSize={"small"} />
+        </IconButton>
+      </DialogTitle>
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
@@ -44,12 +62,10 @@ export default function SomethingModifyDialog(
         <Button
           color={"error"}
           onClick={onHide}
-          title={"Close dialog"}
         >
           <span>Cancel</span>
         </Button>
         <Button
-          title={"Replace points"}
           onClick={() => { confirmAction(); }}
         >
           <span>Confirm</span>

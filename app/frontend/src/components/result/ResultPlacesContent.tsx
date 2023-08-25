@@ -1,13 +1,11 @@
 import { useContext, useEffect, useMemo } from "react";
-import {
-  Box,
-  MenuItem,
-  Pagination,
-  Select,
-  SelectChangeEvent,
-  Stack,
-  Typography
-} from "@mui/material";
+import { SelectChangeEvent } from "@mui/material";
+import Box from "@mui/material/Box";
+import MenuItem from "@mui/material/MenuItem";
+import Pagination from "@mui/material/Pagination";
+import Select from "@mui/material/Select";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { PlacesResult } from "../../domain/types";
 import { getSatCategories } from "../../domain/functions";
@@ -150,6 +148,7 @@ export default function ResultPlacesContent(
       >
         <Typography>Rows per page:</Typography>
         <Select
+          aria-label={"Rows per page"}
           onChange={onRows}
           size={"small"}
           value={pageSize.toString()}
@@ -157,7 +156,9 @@ export default function ResultPlacesContent(
           {[5, 10, 20, 50].map((ps, i) => (
             <MenuItem
               key={i}
-              value={ps.toString()}>{ps}</MenuItem>
+              value={ps.toString()}>
+              {ps}
+            </MenuItem>
           ))}
         </Select>
       </Box>

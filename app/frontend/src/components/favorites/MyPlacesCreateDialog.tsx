@@ -118,8 +118,8 @@ export default function MyPlacesCreateDialog(): JSX.Element {
               />
             : <FreePlaceListItem
                 kind={"common"}
-                title={"Select point"}
-                label={"Select point..."}
+                title={"Select location"}
+                label={"Select location..."}
                 onPlace={addLocation}
               />
           }

@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { FixedPlaceListItem } from "./_list-items";
@@ -18,6 +18,7 @@ export default function RouteContentList(
   return (
     <Stack gap={2}>
       <FixedPlaceListItem
+        title={"Fly to"}
         kind={"source"}
         label={source.name}
         onPlace={() => { map?.flyTo(source); }}
@@ -29,6 +30,7 @@ export default function RouteContentList(
         />
       )}
       <FixedPlaceListItem
+        title={"Fly to"}
         kind={"target"}
         label={target.name}
         onPlace={() => { map?.flyTo(target); }}

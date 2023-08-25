@@ -1,10 +1,12 @@
-import { Stack, Typography } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 
 type ExtraArrayProps = {
 
   /** Array of values associated with the label. */
   array: string[];
 
+  /** Label for an array. */
   label: "clothes" | "cuisine" | "denomination" | "payment" | "rental";
 };
 

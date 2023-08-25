@@ -33,6 +33,7 @@ export default function CategoryFilter(
   { found, active, index, category, onToggle }: CategoryFilterProps): JSX.Element {
 
   const [showDialog, setShowDialog] = useState(false);
+  const label = `${active ? "Hide" : "Show"} "${category.keyword}" items`;
 
   return (
     <Box>
@@ -43,15 +44,19 @@ export default function CategoryFilter(
         justifyContent={"center"}
       >
         <Checkbox
-          checked={active}
+          inputProps={{ "aria-label": label }}
+          title={label}
           disabled={!found}
+          checked={active}
           onChange={onToggle}
         />
         <Box
           onClick={() => { setShowDialog(true); }}
           sx={{ cursor: "pointer" }}
         >
-          <Typography sx={{ textDecorationLine: found ? undefined : "line-through", color: found ? undefined : "grey" }}>
+          <Typography
+            sx={{ textDecorationLine: found ? undefined : "line-through", color: found ? undefined : "grey" }}
+          >
             {`${index + 1}: ${category.keyword}`}
           </Typography>
         </Box>

@@ -141,6 +141,8 @@ function MyRoutesListItem(
         }
         r={
           <ListItemMenu
+            what={"route"}
+            index={index}
             onShow={onShow}
             showEditDialog={() => { setShowE(true); }}
             showDeleteDialog={() => { setShowD(true); }}

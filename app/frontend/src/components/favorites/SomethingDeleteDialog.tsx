@@ -56,7 +56,7 @@ export default function DeleteSomethingDialog(
   };
 
   return (
-    <Dialog open={show} onClose={onHide}>
+    <Dialog open={show}>
       <DialogTitle>Delete {what}</DialogTitle>
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>

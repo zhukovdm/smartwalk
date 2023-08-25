@@ -72,8 +72,10 @@ export default function EditSomethingDialog(
           gap={2}
           sx={{ width: "300px", maxWidth: "100%" }}
         >
-          <Typography>Enter new name:</Typography>
+          <Typography>Modify data items, and press Save.</Typography>
           <TextField
+            label={"Name"}
+            required={true}
             fullWidth
             size={"small"}
             value={name}

@@ -72,8 +72,10 @@ export default function SaveSomethingDialog(
           gap={2}
           sx={{ width: "320px", maxWidth: "100%" }}
         >
-          <Typography>Enter a name:</Typography>
+          <Typography>Fill in / modify data items, and press Save.</Typography>
           <TextField
+            required
+            label={"Name"}
             fullWidth
             size={"small"}
             value={name}

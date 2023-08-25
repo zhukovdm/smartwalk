@@ -111,6 +111,8 @@ function MyDirecsListItem(
         }
         r={
           <ListItemMenu
+            what={"direc"}
+            index={index}
             onShow={onShow}
             showEditDialog={() => { setShowE(true); }}
             showDeleteDialog={() => { setShowD(true); }}
