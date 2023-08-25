@@ -20,7 +20,7 @@ import SolidPodLink from "./SolidPodLink";
 
 type SolidLoginDialogProps = {
 
-  /**  */
+  /** Show/hide dialog. */
   show: boolean;
 
   /** Action hiding dialog. */
@@ -75,7 +75,9 @@ export default function SolidLoginDialog(
             value={provider}
             onInputChange={(_, v) => { setProvider(v); }}
             options={SolidProvider.getIdProviders()}
-            renderInput={(params) => (<TextField {...params} />)}
+            renderInput={(params) => (
+              <TextField {...params} label={"Url"} />
+            )}
           />
         </Stack>
       </DialogContent>
@@ -86,7 +88,6 @@ export default function SolidLoginDialog(
           color={"error"}
           disabled={dialogBlock}
           onClick={onHide}
-          title={"Hide dialog"}
         >
           <span>Discard</span>
         </Button>
@@ -96,7 +97,6 @@ export default function SolidLoginDialog(
           loadingPosition={"start"}
           onClick={loginAction}
           startIcon={<Person />}
-          title={"Send request"}
         >
           <span>Login</span>
         </LoadingButton>

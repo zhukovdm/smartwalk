@@ -7,7 +7,6 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { AppContext } from "../../App";
 import { FAVORITES_ADDR } from "../../domain/routing";
@@ -102,7 +101,7 @@ export default function SolidContent(): JSX.Element {
             href={webId}
             rel={"noopener noreferrer"}
             target={"_blank"}
-            title={"Solid Web Identity"}
+            title={"Web Identity"}
             underline={"hover"}
             noWrap={true}
           >
@@ -126,6 +125,7 @@ export default function SolidContent(): JSX.Element {
           renderInput={(params) => (
             <TextField
               {...params}
+              label={"Pod Id"}
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
@@ -142,13 +142,12 @@ export default function SolidContent(): JSX.Element {
       </Stack>
       <Stack gap={1}>
         <Typography>
-          Activate the Pod and redirect to <FavoriteIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} titleAccess={"Favorites"} />:
+          Activate selection and redirect to Favorites.
         </Typography>
         <Stack direction={"row"} justifyContent={"center"}>
           <Button
             disabled={block || dialogBlock || !!selectedPod || !pod || activated}
             onClick={activateAction}
-            title={"Activate and redirect to Favorites"}
           >
             <span>Activate</span>
           </Button>
@@ -165,7 +164,6 @@ export default function SolidContent(): JSX.Element {
           startIcon={<LogoutIcon />}
           color={"error"}
           onClick={logoutAction}
-          title={"Log out from your Solid Web Identity"}
         >
           <span>Logout</span>
         </LoadingButton>

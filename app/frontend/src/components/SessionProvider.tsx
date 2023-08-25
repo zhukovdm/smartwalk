@@ -56,6 +56,7 @@ export default function SessionProvider():JSX.Element {
   // menu
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = Boolean(anchorEl);
 
   const clickMenuAction = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -108,6 +109,9 @@ export default function SessionProvider():JSX.Element {
     }
   };
 
+  const bid = `session-provider-menu-button`;
+  const mid = `session-provider-menu`;
+
   return (
     <Box
       sx={{ position: "absolute", top: "10px", right: "10px", zIndex: 1000 }}
@@ -115,16 +119,22 @@ export default function SessionProvider():JSX.Element {
       {!login
         ? <Box>
             <SessionButton
+              aria-label={"Session selector"}
+              id={bid}
+              onClick={clickMenuAction}
               variant={"outlined"}
               color={"primary"}
-              title={"Log in to a remote storage."}
-              onClick={clickMenuAction}
+              aria-haspopup={"listbox"}
+              aria-expanded={open}
+              aria-controls={open ? mid : undefined}
             >
               Log in
             </SessionButton>
             <Menu
+              id={mid}
+              aria-labelledby={bid}
+              open={open}
               anchorEl={anchorEl}
-              open={!!anchorEl}
               onClose={closeMenuAction}
             >
               <MenuItem
