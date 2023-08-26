@@ -12,7 +12,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { SomethingKind } from "../shared/_types";
+import { SomethingKind } from "../_shared/_types";
 
 type DeleteSomethingDialogProps = {
 

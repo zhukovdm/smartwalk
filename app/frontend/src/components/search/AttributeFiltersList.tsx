@@ -10,7 +10,7 @@ import {
   KeywordAdviceItem
 } from "../../domain/types";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
-import ExpandSectionIcon from "../shared/ExpandSectionIcon";
+import ExpandSectionIcon from "../_shared/ExpandSectionIcon";
 import AttributeFilterViewExisten from "./AttributeFilterViewExisten";
 import AttributeFilterViewBoolean from "./AttributeFilterViewBoolean";
 import AttributeFilterViewNumeric from "./AttributeFilterViewNumeric";

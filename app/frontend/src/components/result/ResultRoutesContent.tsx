@@ -24,12 +24,12 @@ import {
 } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
 import { IdGenerator } from "../../utils/helpers";
-import RouteContentList from "../shared/RouteContentList";
-import TraversableDistance from "../shared/TraversableDistance";
-import RouteCategoryFilters from "../shared/RouteCategoryFilters";
-import SomethingActionMenu from "../shared/SomethingActionMenu";
-import SomethingSaveDialog from "../shared/SomethingSaveDialog";
-import TraversableModifyDialog from "../shared/TraversableModifyDialog";
+import RouteContentList from "../_shared/RouteContentList";
+import TraversableDistance from "../_shared/TraversableDistance";
+import RouteCategoryFilters from "../_shared/RouteCategoryFilters";
+import SomethingActionMenu from "../_shared/SomethingActionMenu";
+import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
+import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
 
 type ResultRoutesContentProps = {
 

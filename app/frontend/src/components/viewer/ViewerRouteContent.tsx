@@ -4,10 +4,10 @@ import { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
 import { useAppDispatch } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
-import TraversableHeader from "../shared/TraversableHeader";
-import TraversableDistance from "../shared/TraversableDistance";
-import RouteCategoryFilters from "../shared/RouteCategoryFilters";
-import RouteContentList from "../shared/RouteContentList";
+import TraversableHeader from "../_shared/TraversableHeader";
+import TraversableDistance from "../_shared/TraversableDistance";
+import RouteCategoryFilters from "../_shared/RouteCategoryFilters";
+import RouteContentList from "../_shared/RouteContentList";
 
 type ViewerRouteContentProps = {
 

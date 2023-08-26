@@ -35,11 +35,11 @@ import {
   appendSearchDirecsPlace
 } from "../../features/searchDirecsSlice";
 import { IdGenerator } from "../../utils/helpers";
-import SomethingActionMenu from "../shared/SomethingActionMenu";
-import SaveSomethingDialog from "../shared/SomethingSaveDialog";
-import PlaceLocation from "../shared/PlaceLocation";
-import PlaceKeywords from "../shared/PlaceKeywords";
-import AppendPlaceDialog from "../shared/PlaceAppendDialog";
+import SomethingActionMenu from "../_shared/SomethingActionMenu";
+import SaveSomethingDialog from "../_shared/SomethingSaveDialog";
+import PlaceLocation from "../_shared/PlaceLocation";
+import PlaceKeywords from "../_shared/PlaceKeywords";
+import AppendPlaceDialog from "../_shared/PlaceAppendDialog";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 

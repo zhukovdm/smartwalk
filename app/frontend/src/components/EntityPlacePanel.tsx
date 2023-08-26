@@ -3,9 +3,9 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useSmartPlace } from "../features/entityHooks";
 import { useAppSelector } from "../features/storeHooks";
-import { BackCloseMenu } from "./shared/_menus";
+import { BackCloseMenu } from "./_shared/_menus";
 import PlaceContent from "./entity/EntityPlaceContent";
-import LoadingStub from "./shared/LoadingStub";
+import LoadingStub from "./_shared/LoadingStub";
 
 /**
  * Panel presenting a place, with menu, and content.

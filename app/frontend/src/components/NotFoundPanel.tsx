@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { SEARCH_ROUTES_ADDR } from "../domain/routing";
-import { LogoCloseMenu } from "./shared/_menus";
+import { LogoCloseMenu } from "./_shared/_menus";
 
 /**
  * Panel shown for all unknown URLs.

@@ -22,10 +22,10 @@ import {
 } from "../../features/storeHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
 import { IdGenerator } from "../../utils/helpers";
-import DirecContentList from "../shared/DirecContentList";
-import TraversableDistance from "../shared/TraversableDistance";
-import SomethingActionMenu from "../shared/SomethingActionMenu";
-import SomethingSaveDialog from "../shared/SomethingSaveDialog";
+import DirecContentList from "../_shared/DirecContentList";
+import TraversableDistance from "../_shared/TraversableDistance";
+import SomethingActionMenu from "../_shared/SomethingActionMenu";
+import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 
 type ResultDirecsContentProps = {
 

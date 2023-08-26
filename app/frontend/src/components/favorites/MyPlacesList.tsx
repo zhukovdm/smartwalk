@@ -22,9 +22,9 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { PlaceButton } from "../shared/_buttons";
-import { BusyListItem } from "../shared/_list-items";
-import AppendPlaceDialog from "../shared/PlaceAppendDialog";
+import { PlaceButton } from "../_shared/_buttons";
+import { BusyListItem } from "../_shared/_list-items";
+import AppendPlaceDialog from "../_shared/PlaceAppendDialog";
 import DeleteSomethingDialog from "./SomethingDeleteDialog";
 import EditSomethingDialog from "./SomethingEditDialog";
 import ListItemMenu from "./ListItemMenu";

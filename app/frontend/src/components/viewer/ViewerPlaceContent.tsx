@@ -7,8 +7,8 @@ import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
 import { getSmartPlaceLink } from "../../domain/functions";
-import PlaceKeywords from "../shared/PlaceKeywords";
-import PlaceLocation from "../shared/PlaceLocation";
+import PlaceKeywords from "../_shared/PlaceKeywords";
+import PlaceLocation from "../_shared/PlaceLocation";
 
 type ViewerPlaceContentProps = {
 

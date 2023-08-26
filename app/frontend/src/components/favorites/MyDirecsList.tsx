@@ -27,9 +27,9 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { DirecButton } from "../shared/_buttons";
-import { BusyListItem } from "../shared/_list-items";
-import TraversableModifyDialog from "../shared/TraversableModifyDialog";
+import { DirecButton } from "../_shared/_buttons";
+import { BusyListItem } from "../_shared/_list-items";
+import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import SomethingEditDialog from "./SomethingEditDialog";

@@ -10,8 +10,8 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { SomethingKind } from "../shared/_types";
-import SaveSomethingDialogActions from "../shared/SomethingSaveDialogActions";
+import { SomethingKind } from "../_shared/_types";
+import SaveSomethingDialogActions from "../_shared/SomethingSaveDialogActions";
 
 type EditSomethingDialogProps = {
 

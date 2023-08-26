@@ -20,12 +20,12 @@ import {
 import { usePlace, useStoredPlaces } from "../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
 import { useSearchPlacesMap } from "../features/searchHooks";
-import { LogoCloseMenu, MainMenu } from "./shared/_menus";
+import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem
-} from "./shared/_list-items";
-import SelectPlaceDialog from "./shared/SelectPlaceDialog";
+} from "./_shared/_list-items";
+import SelectPlaceDialog from "./_shared/SelectPlaceDialog";
 import DistanceSlider from "./search/DistanceSlider";
 import KilometersLink from "./search/KilometersLink";
 import CategoryBox from "./search/CategoryBox";

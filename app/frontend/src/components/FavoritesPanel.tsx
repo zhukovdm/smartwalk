@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { LogoCloseMenu, MainMenu } from "./shared/_menus";
-import LoadingStubWithLabel from "./shared/LoadingStubWithLabel";
+import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
+import LoadingStubWithLabel from "./_shared/LoadingStubWithLabel";
 import StorageSection from "./favorites/StorageSection";
 import MyDirecsSection from "./favorites/MyDirecsSection";
 import MyPlacesSection from "./favorites/MyPlacesSection";

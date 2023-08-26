@@ -4,7 +4,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { toggleFavoriteDirecsExpanded } from "../../features/favoritesSlice";
-import ExpandSectionIcon from "../shared/ExpandSectionIcon";
+import ExpandSectionIcon from "../_shared/ExpandSectionIcon";
 import MyDirecsList from "./MyDirecsList";
 
 /**

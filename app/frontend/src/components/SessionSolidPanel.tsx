@@ -1,7 +1,7 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
-import { BackCloseMenu } from "./shared/_menus";
+import { BackCloseMenu } from "./_shared/_menus";
 import SolidContent from "./session/SolidContent";
 import SolidPodLink from "./session/SolidPodLink";
 

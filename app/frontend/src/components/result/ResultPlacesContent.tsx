@@ -23,9 +23,9 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { FixedPlaceListItem } from "../shared/_list-items";
-import PlacesList from "../shared/PlacesList";
-import CategoryFilter from "../shared/CategoryFilter";
+import { FixedPlaceListItem } from "../_shared/_list-items";
+import PlacesList from "../_shared/PlacesList";
+import CategoryFilter from "../_shared/CategoryFilter";
 
 type ResultPlacesContentProps = {
 

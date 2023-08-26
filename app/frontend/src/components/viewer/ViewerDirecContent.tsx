@@ -7,9 +7,9 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import DirecContentList from "../shared/DirecContentList";
-import TraversableHeader from "../shared/TraversableHeader";
-import TraversableDistance from "../shared/TraversableDistance";
+import DirecContentList from "../_shared/DirecContentList";
+import TraversableHeader from "../_shared/TraversableHeader";
+import TraversableDistance from "../_shared/TraversableDistance";
 
 type ViewerDirecContentProps = {
 

@@ -25,9 +25,9 @@ import {
 } from "../../features/searchDirecsSlice";
 import { useAppDispatch } from "../../features/storeHooks";
 import { useSearchDirecsMap } from "../../features/searchHooks";
-import { DeleteButton, PlaceButton, SwapButton } from "../shared/_buttons";
-import { ListItemLabel } from "../shared/_list-items";
-import SelectPlaceDialog from "../shared/SelectPlaceDialog";
+import { DeleteButton, PlaceButton, SwapButton } from "../_shared/_buttons";
+import { ListItemLabel } from "../_shared/_list-items";
+import SelectPlaceDialog from "../_shared/SelectPlaceDialog";
 
 /**
  * Hot fix for TypeScript strict mode support.

@@ -9,7 +9,7 @@ import {
 import {
   toggleFavoriteRoutesExpanded
 } from "../../features/favoritesSlice";
-import ExpandSectionIcon from "../shared/ExpandSectionIcon";
+import ExpandSectionIcon from "../_shared/ExpandSectionIcon";
 import MyRoutesList from "./MyRoutesList";
 
 /**

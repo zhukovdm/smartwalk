@@ -19,7 +19,7 @@ import {
   useStoredSmarts
 } from "../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
-import { LogoCloseMenu, MainMenu } from "./shared/_menus";
+import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
 import BottomButtons from "./search/BottomButtons";
 import SearchDirecsSequence from "./search/SearchDirecsSequence";
 

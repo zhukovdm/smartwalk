@@ -32,9 +32,9 @@ import { useSearchRoutesMap } from "../features/searchHooks";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem,
-} from "./shared/_list-items";
-import { LogoCloseMenu, MainMenu } from "./shared/_menus";
-import SelectPlaceDialog from "./shared/SelectPlaceDialog";
+} from "./_shared/_list-items";
+import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
+import SelectPlaceDialog from "./_shared/SelectPlaceDialog";
 import KilometersLink from "./search/KilometersLink";
 import DistanceSlider from "./search/DistanceSlider";
 import CategoryBox from "./search/CategoryBox";
