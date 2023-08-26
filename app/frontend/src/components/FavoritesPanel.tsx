@@ -34,7 +34,7 @@ export default function FavoritesPanel(
               <MyRoutesSection />
               <MyDirecsSection />
             </Stack>
-          : <LoadingStubWithLabel progress={loadedRatio < 1 ? Math.floor(loadedRatio * 100.0) : 0} />
+          : <LoadingStubWithLabel progress={loadedRatio < 1.0 ? Math.floor(loadedRatio * 100.0) : 0.0} />
         }
       </Box>
     </Box>

@@ -66,10 +66,12 @@ export function BackCloseMenu(): JSX.Element {
       display={"flex"}
       justifyContent={"space-between"}
       sx={{ mx: 2, my: 2 }}
+      alignItems={"center"}
     >
       <Box>
         <Button
           startIcon={<ArrowBackIcon />}
+          size={"small"}
           onClick={() => { navigate(-1); }}
         >
           Back

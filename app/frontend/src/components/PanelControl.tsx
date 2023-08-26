@@ -74,8 +74,8 @@ export default function PanelControl(): JSX.Element {
       <SessionProvider />
       <Drawer
         open={show}
-        variant={"persistent"}
         PaperProps={{ sx: { width: width } }}
+        variant={"persistent"}
       >
         <Routes>
           {

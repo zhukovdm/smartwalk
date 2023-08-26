@@ -88,7 +88,7 @@ export default function SelectPlaceDialog(
     >
       <DialogTitle
         aria-label={"Select point"}
-        sx={{ display: "flex", justifyContent: "space-between" }}
+        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
         <span>Select point</span>
         <IconButton

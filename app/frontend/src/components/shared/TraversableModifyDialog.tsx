@@ -44,7 +44,7 @@ export default function TraversableModifyDialog(
     >
       <DialogTitle
         aria-label={`Modify ${what}`}
-        sx={{ display: "flex", justifyContent: "space-between" }}
+        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
         <span>Modify {what}</span>
         <IconButton

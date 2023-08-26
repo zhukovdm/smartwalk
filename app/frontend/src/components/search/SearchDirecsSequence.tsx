@@ -78,10 +78,10 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
       >
         <PlaceButton
           kind={"action"}
-          title={"Append point"}
+          title={"Select waypoint"}
           onPlace={() => { }}
         />
-        <ListItemLabel label={"Append point..."} />
+        <ListItemLabel label={"Select waypoint..."} />
       </Stack>
       <SwapButton title={"Reverse"} onSwap={onRevers} />
     </Stack>

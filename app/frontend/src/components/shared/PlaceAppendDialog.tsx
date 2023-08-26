@@ -40,7 +40,7 @@ export default function AppendPlaceDialog(
     >
       <DialogTitle
         aria-label={"Append place"}
-        sx={{ display: "flex", justifyContent: "space-between" }}
+        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
       >
         <span>Append place</span>
         <IconButton
