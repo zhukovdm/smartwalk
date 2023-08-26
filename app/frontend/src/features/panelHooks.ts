@@ -1,7 +1,14 @@
 import { useContext, useEffect, useState } from "react";
-import { StoredDirec, StoredPlace, StoredRoute } from "../domain/types";
 import { AppContext } from "../App";
-import { useAppDispatch, useAppSelector } from "./storeHooks";
+import {
+  StoredDirec,
+  StoredPlace,
+  StoredRoute
+} from "../domain/types";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "./storeHooks";
 import {
   setFavoriteDirecs,
   setFavoritePlaces,
@@ -9,6 +16,10 @@ import {
   setFavoritesLoaded
 } from "./favoritesSlice";
 
+/**
+ * Load the entire collection of Favorites from the current storage to the
+ * application state.
+ */
 export function useFavorites() {
 
   const { storage } = useContext(AppContext);

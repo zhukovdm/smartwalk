@@ -12,18 +12,27 @@ export function camelCaseToLabel(token: string): string {
   return res.join("");
 }
 
+/**
+ * @returns Category identifiers satisfied by the set of places
+ */
 export function getSatCategories(places: UiPlace[]): Set<number> {
   return places
     .map((place) => place.categories).flat()
     .reduce((acc, cat) => acc.add(cat), new Set<number>());
 }
 
+/**
+ * Detect whether a place has a familiar identifier (either placeId or smartId).
+ */
 export function isPlaceStored(place: UiPlace, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): boolean {
   const pid = place.placeId;
   const sid = place.smartId;
   return (!!pid && storedPlaces.has(pid)) || (!!sid && storedSmarts.has(sid));
 }
 
+/**
+ * Construct url for a Smart place.
+ */
 export function getSmartPlaceLink(smartId: string | undefined): string | undefined {
   return (!!smartId) ? `${ENTITY_PLACES_ADDR}/${smartId}` : undefined;
 }

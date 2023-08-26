@@ -2,7 +2,7 @@ import { IStorage } from "../domain/interfaces";
 import { StoredDirec, StoredPlace, StoredRoute } from "../domain/types";
 
 /**
- * Wrapper over standard kv-collection.
+ * Storage wrapper over standard kv-collection.
  */
 export default class InmemStorage implements IStorage {
 

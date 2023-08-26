@@ -1,5 +1,8 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { deleteItemImmutable, updateItemImmutable } from "./immutable";
+import {
+  deleteItemImmutable,
+  updateItemImmutable
+} from "./immutable";
 import {
   StoredDirec,
   StoredPlace,

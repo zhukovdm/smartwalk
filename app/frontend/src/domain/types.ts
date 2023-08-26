@@ -16,9 +16,17 @@ export type WgsPoint = {
  * Every point-like object has these attributes.
  */
 type PlaceAttributes = {
+
+  /** User-defined or server-defined name */
   name: string;
+
+  /** Geo reference */
   location: WgsPoint;
+
+  /** List of distinct keywords */
   keywords: string[];
+
+  /** Cat identifiers that are satisfied by the place */
   categories: number[];
 };
 
@@ -26,6 +34,8 @@ type PlaceAttributes = {
  * Standard server-defined place representation.
  */
 export type Place = PlaceAttributes & {
+
+  /** Server-defined identifier */
   smartId: string;
 };
 
@@ -33,7 +43,11 @@ export type Place = PlaceAttributes & {
  * Place as per represented in the user interface.
  */
 export type UiPlace = PlaceAttributes & {
+
+  /** Identifier computed locally */
   placeId?: string;
+
+  /** Server-defined identifier */
   smartId?: string;
 };
 
@@ -41,19 +55,35 @@ export type UiPlace = PlaceAttributes & {
  * Place as per stored in the IStorage.
  */
 export type StoredPlace = PlaceAttributes & {
+
+  /** Identifier computed locally */
   placeId: string;
+
+  /** Server-defined identifier */
   smartId?: string;
 };
 
 /**
- * Place external links with owl:sameAs semantics.
+ * Place external links with `owl:sameAs` semantic.
  */
 type PlaceLinked = {
+
+  /**  */
   dbpedia?: string;
+
+  /**  */
   geonames?: string;
+
+  /**  */
   mapycz?: string;
+
+  /**  */
   osm?: string;
+
+  /**  */
   wikidata?: string;
+
+  /**  */
   yago?: string;
 };
 
@@ -61,11 +91,23 @@ type PlaceLinked = {
  * Place address object.
  */
 export type PlaceAddress = {
+
+  /**  */
   country?: string;
+
+  /**  */
   settlement?: string;
+
+  /**  */
   district?: string;
+
+  /**  */
   place?: string;
+
+  /**  */
   house?: string;
+
+  /**  */
   postalCode?: string;
 };
 
@@ -73,12 +115,26 @@ export type PlaceAddress = {
  * Place social networks object.
  */
 export type PlaceSocialNetworks = {
+
+  /**  */
   facebook?: string;
+
+  /** instagram profile */
   instagram?: string;
+
+  /**  */
   linkedin?: string;
+
+  /** */
   pinterest?: string;
+
+  /**  */
   telegram?: string;
+
+  /**  */
   twitter?: string;
+
+  /**  */
   youtube?: string;
 };
 
@@ -121,7 +177,11 @@ type EntityAttributes = {
  * Place representation with links and attributes.
  */
 export type ExtendedPlace = Place & {
+
+  /** external identifiers */
   linked: PlaceLinked;
+
+  /** additional attributes */
   attributes: EntityAttributes;
 };
 
@@ -129,7 +189,11 @@ export type ExtendedPlace = Place & {
  * Bounds for numeric attributes.
  */
 type BoundNumeric = {
+
+  /** lower bound */
   min: number;
+
+  /** upper bound */
   max: number;
 };
 
@@ -137,15 +201,35 @@ type BoundNumeric = {
  * Current bounds limiting user input fields.
  */
 export type BoundsAdvice = {
+
+  /**  */
   capacity: BoundNumeric;
+
+  /**  */
   elevation: BoundNumeric;
+
+  /**  */
   minimumAge: BoundNumeric;
+
+  /**  */
   rating: BoundNumeric;
+
+  /**  */
   year: BoundNumeric;
+
+  /**  */
   clothes: string[];
+
+  /**  */
   cuisine: string[];
+
+  /**  */
   denomination: string[];
+
+  /**  */
   payment: string[];
+
+  /**  */
   rental: string[];
 };
 

@@ -11,6 +11,9 @@ type Vertex = {
   predecessor: number;
 };
 
+/**
+ * Detect cycles in a directed graph (standard 3-color recursive procedure).
+ */
 export class CycleDetector {
 
   static getArrayBase(order: number) {
