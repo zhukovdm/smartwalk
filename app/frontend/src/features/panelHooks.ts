@@ -55,7 +55,9 @@ export function useFavorites() {
             if (direc) {
               direcs.push(direc);
             };
-            setLoadedRatio(++cur / tot);
+            if (!ignore) {
+              setLoadedRatio((++cur) / tot);
+            }
           }
 
           for (const pid of pids) {
@@ -63,7 +65,9 @@ export function useFavorites() {
             if (place) {
               places.push(place);
             }
-            setLoadedRatio(++cur / tot);
+            if (!ignore) {
+              setLoadedRatio((++cur) / tot);
+            }
           }
 
           for (const rid of rids) {
@@ -71,7 +75,9 @@ export function useFavorites() {
             if (route) {
               routes.push(route);
             }
-            setLoadedRatio(++cur / tot);
+            if (!ignore) {
+              setLoadedRatio((++cur) / tot);
+            }
           }
 
           if (!ignore) {
