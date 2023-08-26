@@ -1,17 +1,15 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
-import { BoundsAdvice } from "../domain/types";
 
 type PanelState = {
   show: boolean;
-  block: boolean;
   dialogBlock: boolean;
-  bounds?: BoundsAdvice;
+  block: boolean;
 };
 
 const initialState = (): PanelState => ({
   show: false,
-  block: false,
-  dialogBlock: false
+  dialogBlock: false,
+  block: false
 });
 
 export const panelSlice = createSlice({
@@ -29,9 +27,6 @@ export const panelSlice = createSlice({
     },
     setDialogBlock: (state, action: PayloadAction<boolean>) => {
       state.dialogBlock = action.payload;
-    },
-    setBounds: (state, action: PayloadAction<BoundsAdvice>) => {
-      state.bounds = action.payload;
     }
   }
 });
@@ -39,9 +34,8 @@ export const panelSlice = createSlice({
 export const {
   showPanel,
   hidePanel,
-  setBlock,
   setDialogBlock,
-  setBounds
+  setBlock
 } = panelSlice.actions;
 
 export default panelSlice.reducer;

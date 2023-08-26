@@ -7,106 +7,106 @@ public sealed class AttributeFilterExisten { }
 
 public sealed class AttributeFilterExistens
 {
-    public AttributeFilterExisten description { get; set; }
+    public AttributeFilterExisten description { get; init; }
 
-    public AttributeFilterExisten image { get; set; }
+    public AttributeFilterExisten image { get; init; }
 
-    public AttributeFilterExisten website { get; set; }
+    public AttributeFilterExisten website { get; init; }
 
-    public AttributeFilterExisten address { get; set; }
+    public AttributeFilterExisten address { get; init; }
 
-    public AttributeFilterExisten email { get; set; }
+    public AttributeFilterExisten email { get; init; }
 
-    public AttributeFilterExisten phone { get; set; }
+    public AttributeFilterExisten phone { get; init; }
 
-    public AttributeFilterExisten socialNetworks { get; set; }
+    public AttributeFilterExisten socialNetworks { get; init; }
 
-    public AttributeFilterExisten charge { get; set; }
+    public AttributeFilterExisten charge { get; init; }
 
-    public AttributeFilterExisten openingHours { get; set; }
+    public AttributeFilterExisten openingHours { get; init; }
 }
 
 public sealed class AttributeFilterBooleans
 {
-    public bool? fee { get; set; }
+    public bool? fee { get; init; }
 
-    public bool? delivery { get; set; }
+    public bool? delivery { get; init; }
 
-    public bool? drinkingWater { get; set; }
+    public bool? drinkingWater { get; init; }
 
-    public bool? internetAccess { get; set; }
+    public bool? internetAccess { get; init; }
 
-    public bool? shower { get; set; }
+    public bool? shower { get; init; }
 
-    public bool? smoking { get; set; }
+    public bool? smoking { get; init; }
 
-    public bool? takeaway { get; set; }
+    public bool? takeaway { get; init; }
 
-    public bool? toilets { get; set; }
+    public bool? toilets { get; init; }
 
-    public bool? wheelchair { get; set; }
+    public bool? wheelchair { get; init; }
 }
 
 public sealed class AttributeFilterNumeric
 {
     [Required]
-    public double? min { get; set; }
+    public double? min { get; init; }
 
     [Required]
-    public double? max { get; set; }
+    public double? max { get; init; }
 }
 
 public sealed class AttributeFilterNumerics
 {
-    public AttributeFilterNumeric capacity { get; set; }
+    public AttributeFilterNumeric capacity { get; init; }
 
-    public AttributeFilterNumeric elevation { get; set; }
+    public AttributeFilterNumeric elevation { get; init; }
 
-    public AttributeFilterNumeric minimumAge { get; set; }
+    public AttributeFilterNumeric minimumAge { get; init; }
 
-    public AttributeFilterNumeric rating { get; set; }
+    public AttributeFilterNumeric rating { get; init; }
 
-    public AttributeFilterNumeric year { get; set; }
+    public AttributeFilterNumeric year { get; init; }
 }
 
 public sealed class AttributeFilterTextuals
 {
-    public string name { get; set; }
+    public string name { get; init; }
 }
 
 public sealed class AttributeFilterCollect
 {
     [Required]
-    public SortedSet<string> inc { get; set; }
+    public SortedSet<string> inc { get; init; }
 
     [Required]
-    public SortedSet<string> exc { get; set; }
+    public SortedSet<string> exc { get; init; }
 }
 
 public sealed class AttributeFilterCollects
 {
-    public AttributeFilterCollect clothes { get; set; }
+    public AttributeFilterCollect clothes { get; init; }
 
-    public AttributeFilterCollect cuisine { get; set; }
+    public AttributeFilterCollect cuisine { get; init; }
 
-    public AttributeFilterCollect denomination { get; set; }
+    public AttributeFilterCollect denomination { get; init; }
 
-    public AttributeFilterCollect payment { get; set; }
+    public AttributeFilterCollect payment { get; init; }
 
-    public AttributeFilterCollect rental { get; set; }
+    public AttributeFilterCollect rental { get; init; }
 }
 
 public sealed class AttributeFilters
 {
-    public AttributeFilterExistens es { get; set; }
+    public AttributeFilterExistens es { get; init; }
 
-    public AttributeFilterBooleans bs { get; set; }
+    public AttributeFilterBooleans bs { get; init; }
 
-    public AttributeFilterNumerics ns { get; set; }
+    public AttributeFilterNumerics ns { get; init; }
 
-    public AttributeFilterTextuals ts { get; set; }
+    public AttributeFilterTextuals ts { get; init; }
 
-    public AttributeFilterCollects cs { get; set; }
+    public AttributeFilterCollects cs { get; init; }
 }
 
 public sealed class Category
@@ -115,11 +115,11 @@ public sealed class Category
     /// Consider places identified as <c>keyword</c>.
     /// </summary>
     [Required]
-    public string keyword { get; set; }
+    public string keyword { get; init; }
 
     /// <summary>
     /// Additional attribute filters introduced by the user.
     /// </summary>
     [Required]
-    public AttributeFilters filters { get; set; }
+    public AttributeFilters filters { get; init; }
 }

@@ -7,8 +7,6 @@ namespace SmartWalk.Service;
 
 public static class AdviceService
 {
-    public static BoundsAdvice GetBounds(BoundsAdvice bounds) => bounds;
-
     /// <summary>
     /// Get a list of autocomplete items.
     /// </summary>

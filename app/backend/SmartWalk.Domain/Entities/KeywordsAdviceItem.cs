@@ -1,15 +1,70 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
+
+using CollectBound = System.Collections.Generic.List<string>;
 
 namespace SmartWalk.Domain.Entities;
+
+public sealed class NumericBound
+{
+    [Required]
+    public double min { get; init; }
+
+    [Required]
+    public double max { get; init; }
+}
+
+[BsonIgnoreExtraElements]
+public sealed class Bounds
+{
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NumericBound capacity { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NumericBound elevation { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NumericBound minimumAge { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NumericBound rating { get; init; }
+
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public NumericBound year { get; init; }
+
+    /// <example>["men"]</example>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CollectBound clothes { get; init; }
+
+    /// <example>["czech"]</example>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CollectBound cuisine { get; init; }
+
+    /// <example>["catholic"]</example>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CollectBound denomination { get; init; }
+
+    /// <example>["cash"]</example>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CollectBound payment { get; init; }
+
+    /// <example>["bike"]</example>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public CollectBound rental { get; init; }
+}
 
 public class KeywordsAdviceItem
 {
     /// <example>museum</example>
     [Required]
-    public string keyword { get; set; }
+    public string keyword { get; init; }
 
-    /// <example>["openingHours"]</example>
+    /// <example>["name", "openingHours"]</example>
     [Required]
-    public List<string> attributeList { get; set; }
+    public List<string> attributeList { get; init; }
+
+    [Required]
+    public Bounds bounds { get; init; }
 }

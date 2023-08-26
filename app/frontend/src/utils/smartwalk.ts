@@ -1,7 +1,6 @@
 import axios from "axios";
 import crowFlyDistance from "@turf/distance";
 import {
-  BoundsAdvice,
   ExtendedPlace,
   KeywordAdviceItem,
   PlacesRequest,
@@ -18,7 +17,6 @@ const SMARTWALK_BASE_URL = process.env.REACT_APP_API_ADDRESS!;
 // advice service
 
 const SMARTWALK_ADVICE_URL = SMARTWALK_BASE_URL + "/advice";
-const SMARTWALK_ADVICE_BOUNDS_URL = SMARTWALK_ADVICE_URL + "/bounds";
 const SMARTWALK_ADVICE_KEYWORDS_URL = SMARTWALK_ADVICE_URL + "/keywords?";
 
 // entity service
@@ -58,13 +56,6 @@ export class SmartWalkFetcher {
     //case 500:
       default: throw new Error(`${res.statusText} (status code ${res.status}).`);
     }
-  }
-
-  /**
-   * Fetch latest attribute bounds.
-   */
-  public static adviceBounds(): Promise<BoundsAdvice> {
-    return SmartWalkFetcher.fetch(SMARTWALK_ADVICE_BOUNDS_URL);
   }
 
   /**

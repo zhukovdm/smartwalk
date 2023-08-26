@@ -186,54 +186,6 @@ export type ExtendedPlace = Place & {
 };
 
 /**
- * Bounds for numeric attributes.
- */
-type BoundNumeric = {
-
-  /** lower bound */
-  min: number;
-
-  /** upper bound */
-  max: number;
-};
-
-/**
- * Current bounds limiting user input fields.
- */
-export type BoundsAdvice = {
-
-  /**  */
-  capacity: BoundNumeric;
-
-  /**  */
-  elevation: BoundNumeric;
-
-  /**  */
-  minimumAge: BoundNumeric;
-
-  /**  */
-  rating: BoundNumeric;
-
-  /**  */
-  year: BoundNumeric;
-
-  /**  */
-  clothes: string[];
-
-  /**  */
-  cuisine: string[];
-
-  /**  */
-  denomination: string[];
-
-  /**  */
-  payment: string[];
-
-  /**  */
-  rental: string[];
-};
-
-/**
  * Filter for checking attribute existence.
  */
 export type AttributeFilterExisten = { };
@@ -331,35 +283,104 @@ type AttributeFilterCollects = {
  * All possible attribute filters.
  */
 export type AttributeFilters = {
+
+  /**  */
   es?: AttributeFilterExistens;
+
+  /**  */
   bs?: AttributeFilterBooleans;
+
+  /**  */
   ns?: AttributeFilterNumerics;
+
+  /**  */
   ts?: AttributeFilterTextuals;
+
+  /**  */
   cs?: AttributeFilterCollects;
+};
+
+/**
+ * Bounds for numeric attributes.
+ */
+type BoundNumeric = {
+
+  /** lower bound */
+  min: number;
+
+  /** upper bound */
+  max: number;
+};
+
+/**
+ * Current bounds limiting user input fields.
+ */
+export type Bounds = {
+
+  /**  */
+  capacity: BoundNumeric;
+
+  /**  */
+  elevation: BoundNumeric;
+
+  /**  */
+  minimumAge: BoundNumeric;
+
+  /**  */
+  rating: BoundNumeric;
+
+  /**  */
+  year: BoundNumeric;
+
+  /**  */
+  clothes: string[];
+
+  /**  */
+  cuisine: string[];
+
+  /**  */
+  denomination: string[];
+
+  /**  */
+  payment: string[];
+
+  /**  */
+  rental: string[];
 };
 
 /**
  * Keyword and keyword-specific attributes.
  */
 export type KeywordAdviceItem = {
+
+  /**  */
   keyword: string;
+
+  /**  */
   attributeList: string[];
+
+  /**  */
+  bounds: Bounds;
 };
 
 /**
  * Category enabling a place to be found.
  */
 export type PlaceCategory = {
+
+  /**  */
   keyword: string;
+
+  /**  */
   filters: AttributeFilters;
 };
+
+
 
 /**
  * User-defined category restricting search.
  */
-export type KeywordCategory = PlaceCategory & {
-  attributeList: string[];
-};
+export type KeywordCategory = PlaceCategory & KeywordAdviceItem;
 
 export type PrecedenceEdge = {
 
@@ -374,8 +395,14 @@ export type PrecedenceEdge = {
  * Simple path with geometry, distance, approximate duration.
  */
 export type Path = {
+
+  /**  */
   distance: number;
+
+  /**  */
   duration: number;
+
+  /**  */
   polyline: WgsPoint[];
 };
 
@@ -383,8 +410,14 @@ export type Path = {
  * Any result upon direction request, known or new.
  */
 export type DirecAttributes = {
+
+  /**  */
   name: string;
+
+  /**  */
   path: Path;
+
+  /**  */
   waypoints: UiPlace[];
 };
 
@@ -392,6 +425,8 @@ export type DirecAttributes = {
  * Direction in the user interface, either stored or not.
  */
 export type UiDirec = DirecAttributes & {
+
+  /** Id generated locally */
   direcId?: string;
 };
 
@@ -399,6 +434,8 @@ export type UiDirec = DirecAttributes & {
  * Direction result as per stored in the IStorage.
  */
 export type StoredDirec = DirecAttributes & {
+
+  /** Id generated locally */
   direcId: string;
 };
 
@@ -421,11 +458,17 @@ export type PlacesRequest = {
  * Places result as per presented to the user.
  */
 export type PlacesResult = PlacesRequest & {
+
+  /** List of found places */
   places: Place[];
 };
 
 type Waypoint = {
+
+  /**  */
   smartId: string;
+
+  /**  */
   category: number;
 };
 
@@ -466,9 +509,13 @@ type RouteAttributes = RoutesRequest & {
 };
 
 export type UiRoute = RouteAttributes & {
+
+  /** Id generated locally */
   routeId?:string
 };
 
 export type StoredRoute = RouteAttributes & {
+
+  /** Id generated locally */
   routeId: string;
 };

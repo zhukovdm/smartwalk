@@ -6,12 +6,14 @@ import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import { camelCaseToLabel } from "../../domain/functions";
 import { AttributeFilterNumeric } from "../../domain/types";
-import { useAppSelector } from "../../features/storeHooks";
 
 type AttributeFilterViewNumericProps = {
 
   /** Name of a filter. */
   label: string;
+
+  /** Numeric lower and upper bounds */
+  bound: AttributeFilterNumeric;
 
   /** Value setter. */
   setter: (v: AttributeFilterNumeric | undefined) => void;
@@ -24,9 +26,7 @@ type AttributeFilterViewNumericProps = {
  * Range-based numeric filter view.
  */
 export default function AttributeFilterViewNumeric(
-  { label, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
-
-  const bound = (useAppSelector((state) => state.panel.bounds) as any)[label] as AttributeFilterNumeric;
+  { label, bound, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
 
   const [check, setCheck] = useState(!!initial);
   const [value, setValue] = useState(initial ? [initial.min, initial.max] : [bound.min, bound.max]);

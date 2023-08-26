@@ -49,7 +49,6 @@ public class Program
         {
             return new()
             {
-                BoundsAdvice = AdvicerFactory.GetBounds(),
                 KeywordsAdvicer = AdvicerFactory.GetKeywordsAdvicer()
             };
         });

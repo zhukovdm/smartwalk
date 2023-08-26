@@ -4,18 +4,6 @@ info:
   description: Web application for keyword-aware walking route search
   version: 1.0.0
 paths:
-  /api/advice/bounds:
-    get:
-      tags:
-        - Advice
-      operationId: AdviseBounds
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/BoundsAdvice'
   /api/advice/keywords:
     get:
       tags:
@@ -175,18 +163,7 @@ paths:
           description: Server Error
 components:
   schemas:
-    BoundsAdvice:
-      required:
-        - capacity
-        - clothes
-        - cuisine
-        - denomination
-        - elevation
-        - minimumAge
-        - payment
-        - rating
-        - rental
-        - year
+    Bounds:
       type: object
       properties:
         capacity:
@@ -203,22 +180,37 @@ components:
           type: array
           items:
             type: string
+          nullable: true
+          example:
+            - men
         cuisine:
           type: array
           items:
             type: string
+          nullable: true
+          example:
+            - czech
         denomination:
           type: array
           items:
             type: string
+          nullable: true
+          example:
+            - catholic
         payment:
           type: array
           items:
             type: string
+          nullable: true
+          example:
+            - cash
         rental:
           type: array
           items:
             type: string
+          nullable: true
+          example:
+            - bike
       additionalProperties: false
     ExtendedPlace:
       required:
@@ -262,6 +254,7 @@ components:
     KeywordsAdviceItem:
       required:
         - attributeList
+        - bounds
         - keyword
       type: object
       properties:
@@ -273,7 +266,10 @@ components:
           items:
             type: string
           example:
+            - name
             - openingHours
+        bounds:
+          $ref: '#/components/schemas/Bounds'
       additionalProperties: false
     NumericBound:
       required:

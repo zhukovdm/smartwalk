@@ -124,7 +124,7 @@ export default function SolidContent(): JSX.Element {
           renderInput={(params) => (
             <TextField
               {...params}
-              label={"Pod Id"}
+              label={"PodId"}
               required
               InputProps={{
                 ...params.InputProps,

@@ -1,8 +1,6 @@
 import consola from "consola";
 import {
-  dropBoundsCollection,
   dropKeywordCollection,
-  getBoundsCollection,
   getClient,
   getKeywordCollection,
   getPlaceCollection
@@ -13,48 +11,56 @@ import {
  * @param {*} doc document that is currently considered.
  * @param {*} keywords map for keeping extracted keyword counts.
  */
-function extractKeywords(doc, keywords) {
+function extract(doc, keywords) {
 
-  const base = (word) => ({ keyword: word, count: 0, attributeList: new Set() });
-
-  doc.keywords.forEach(word => {
-    if (!keywords.has(word)) { keywords.set(word, base(word)); }
-    const item = keywords.get(word);
-
-    ++item.count;
-    Object.keys(doc.attributes).forEach(key => item.attributeList.add(key));
+  const base = (word) => ({
+    keyword: word,
+    count: 0,
+    attributeList: new Set().add("name"),
+    bounds: {}
   });
-}
 
-/**
- * Extract values that can appear in collections, such as `cuisine`.
- * @param {*} doc document that is currently considered.
- * @param {*} collect objects storing values.
- * @param {*} func appender for a possible new value.
- */
-function extractCollects(doc, collect, func) {
+  doc.keywords.forEach((word) => {
 
-  const base = (word) => ({ label: word, count: 0 });
+    if (!keywords.has(word)) {
+      keywords.set(word, base(word));
+    }
 
-  func(doc)?.forEach(word => {
-    if (!collect.has(word)) { collect.set(word, base(word)); }
-    ++collect.get(word).count;
+    const obj = keywords.get(word);
+    const bnd = obj.bounds;
+
+    // count
+
+    ++obj.count;
+
+    // attributes
+
+    Object.keys(doc.attributes)
+      .forEach((key) => obj.attributeList.add(key));
+
+    // numerics
+
+    ["capacity", "elevation", "minimumAge", "rating", "year"].forEach((item) => {
+      const num = doc.attributes[item];
+
+      if (num !== undefined) {
+        bnd[item] = bnd[item] ?? { min: Number.MAX_VALUE, max: Number.MIN_VALUE };
+        bnd[item].min = Math.min(bnd[item].min, num);
+        bnd[item].max = Math.max(bnd[item].max, num);
+      }
+    });
+
+    // collections
+
+    ["clothes", "cuisine", "denomination", "payment", "rental"].forEach((item) => {
+      const col = doc.attributes[item];
+
+      if (col !== undefined) {
+        bnd[item] = bnd[item] ?? new Set();
+        col.forEach((atom) => { bnd[item].add(atom); })
+      }
+    });
   });
-}
-
-/**
- * Extract limits of the numeric attributes, such as `rating`.
- * @param {*} doc document that is currently considered.
- * @param {*} numeric objects storing limits.
- * @param {*} func setter for a possible new value.
- */
-function extractNumerics(doc, numeric, func) {
-  const val = func(doc);
-
-  if (val) {
-    numeric.min = Math.min(numeric.min, val);
-    numeric.max = Math.max(numeric.max, val);
-  }
 }
 
 /**
@@ -66,58 +72,24 @@ async function advice() {
   const client = getClient();
 
   try {
-    await dropBoundsCollection(client);
-  } catch (ex) { logger.error(`Bounds collection: ${ex?.message}`); }
-
-  try {
     await dropKeywordCollection(client);
   } catch (ex) { logger.error(`Keyword collection: ${ex?.message}`); }
 
-  const boundColl = getBoundsCollection(client);
   const keywdColl = getKeywordCollection(client);
   const placeColl = getPlaceCollection(client);
 
   let cnt = 0, tot = 0;
 
-  const arr = (n) => Array.apply(null, Array(n));
-
   try {
-    const [
-      keywords,
-      clothes,
-      cuisine,
-      denomination,
-      payment,
-      rental
-    ] = arr(6).map(() => new Map());
-
-    const [
-      capacity,
-      elevation,
-      minimumAge,
-      rating,
-      year
-    ] = arr(5).map(() => ({ min: Number.MAX_SAFE_INTEGER, max: Number.MIN_SAFE_INTEGER }));
+    const keywords = new Map();
 
     logger.info(`Collecting information about stored documents.`);
     let gc = placeColl.find();
 
+    // extract
+
     while (await gc.hasNext()) {
-      let doc = await gc.next();
-
-      extractKeywords(doc, keywords);
-
-      extractNumerics(doc, capacity, (doc) => doc.attributes.capacity);
-      extractNumerics(doc, elevation, (doc) => doc.attributes.elevation);
-      extractNumerics(doc, minimumAge, (doc) => doc.attributes.minimumAge);
-      extractNumerics(doc, rating, (doc) => doc.attributes.rating);
-      extractNumerics(doc, year, (doc) => doc.attributes.year);
-
-      extractCollects(doc, clothes, (doc) => doc.attributes.clothes);
-      extractCollects(doc, cuisine, (doc) => doc.attributes.cuisine);
-      extractCollects(doc, denomination, (doc) => doc.attributes.denomination);
-      extractCollects(doc, payment, (doc) => doc.attributes.payment);
-      extractCollects(doc, rental, (doc) => doc.attributes.rental);
+      extract(await gc.next(), keywords);
 
       if (++cnt >= 1000) {
         tot += cnt; cnt = 0;
@@ -129,36 +101,35 @@ async function advice() {
 
     await gc.close();
 
-    // insert keywords
+    // insert
+
+    const set2arr = (set) => set ? [...set].sort() : undefined;
 
     for (const keyword of keywords.values()) {
+      const bnd = keyword.bounds;
+
       await keywdColl.insertOne({
         ...keyword,
-        attributeList: ["name" /* ! */, ...keyword.attributeList]
+        attributeList: set2arr(keyword.attributeList /* non-empty */),
+        bounds: {
+          ...keyword.bounds,
+          clothes: set2arr(bnd.clotnes),
+          cuisine: set2arr(bnd.cuisine),
+          denomination: set2arr(bnd.denomination),
+          payment: set2arr(bnd.payment),
+          rental: set2arr(bnd.rental)
+        }
+      }, {
+        ignoreUndefined: true
       });
     };
-
-    // insert bounds
-
-    const map2arr = (m) => [...m.keys()].map(key => m.get(key).label);
-
-    await boundColl.insertOne({
-      capacity: capacity,
-      elevation: elevation,
-      minimumAge: minimumAge,
-      rating: rating,
-      year: year,
-      clothes: map2arr(clothes),
-      cuisine: map2arr(cuisine),
-      denomination: map2arr(denomination),
-      payment: map2arr(payment),
-      rental: map2arr(rental)
-    });
 
     logger.info(`Advice has been completed.`);
   }
   catch (ex) { logger.error(ex); }
-  finally { await client.close(); }
+  finally {
+    await client.close();
+  }
 }
 
 advice();

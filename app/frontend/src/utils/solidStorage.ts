@@ -30,7 +30,7 @@ export default class SolidStorage implements IStorage {
 
   // http
 
-  private static readonly content = "application/json";
+  private static readonly content = "application/json; charset=utf-8";
 
   // url
 

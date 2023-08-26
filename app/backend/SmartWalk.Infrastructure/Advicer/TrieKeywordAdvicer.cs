@@ -12,13 +12,13 @@ using Trie = PruningRadixTrie.PruningRadixTrie;
 internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
 {
     private readonly Trie _trie = new();
-    private readonly Dictionary<string, List<string>> _attributeLists = new();
+    private readonly Dictionary<string, KeywordsAdviceItem> _items = new();
 
     private TrieKeywordsAdvicer() { }
 
-    private void Add(string term, List<string> attributeList, long freq)
+    private void Add(string term, KeywordsAdviceItem attributeList, long freq)
     {
-        _attributeLists[term] = attributeList;
+        _items[term] = attributeList;
         _trie.AddTerm(term, freq);
     }
 
@@ -26,8 +26,7 @@ internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
     {
         var result = _trie
             .GetTopkTermsForPrefix(prefix, count, out _)
-            .Select((pair) => new KeywordsAdviceItem() {
-                keyword = pair.term, attributeList = _attributeLists[pair.term] })
+            .Select((pair) => _items[pair.term])
             .ToList();
 
         return Task.FromResult(result);
@@ -45,7 +44,16 @@ internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
 
         foreach (var item in items)
         {
-            advicer.Add(item.keyword, item.attributeList, item.count);
+            advicer.Add(
+                item.keyword,
+                new()
+                {
+                    keyword = item.keyword,
+                    attributeList = item.attributeList,
+                    bounds = item.bounds
+                },
+                item.count
+            );
         }
         return advicer;
     }

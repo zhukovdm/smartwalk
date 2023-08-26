@@ -15,7 +15,7 @@ import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import EastIcon from "@mui/icons-material/East";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
-import { CycleDetector } from "../../domain/cycle-detector";
+import { CycleDetector } from "../../domain/cycleDetector";
 import PrecedenceDrawing from "./PrecedenceDrawing";
 
 type PrecedenceSelectorProps = {

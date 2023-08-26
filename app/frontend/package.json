@@ -58,8 +58,8 @@
     "tests": "react-scripts test",
     "eject": "react-scripts eject",
     "style": "npx eslint src/**/*.ts src/**/*.tsx",
-    "deploy": "gh-pages -d build",
-    "predeploy": "npm run build"
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "eslintConfig": {
     "extends": [

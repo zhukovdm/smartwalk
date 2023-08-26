@@ -4,53 +4,13 @@ import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { IMap } from "../domain/interfaces";
 import { point2place } from "../utils/helpers";
 import { SmartWalkFetcher } from "../utils/smartwalk";
-import { setBounds } from "./panelSlice";
 import { updateSearchDirecsPlace } from "./searchDirecsSlice";
 import { setSearchPlacesCenter } from "./searchPlacesSlice";
 import {
   setSearchRoutesSource,
   setSearchRoutesTarget
 } from "./searchRoutesSlice";
-import { useAppDispatch, useAppSelector } from "./storeHooks";
-
-export function useSearchBoundsAdvice(): void {
-
-  const dispatch = useAppDispatch();
-  const { bounds } = useAppSelector((state) => state.panel);
-
-  useEffect(() => {
-    let ignore = false;
-
-    const load = async () => {
-      try {
-        if (!bounds) {
-          const obj = await SmartWalkFetcher.adviceBounds();
-          if (obj) {
-            obj.capacity.min = Math.max(obj.capacity.min, 0);
-            obj.capacity.max = Math.min(obj.capacity.max, 500);
-  
-            obj.minimumAge.min = Math.max(obj.minimumAge.min, 0);
-            obj.minimumAge.max = Math.min(obj.minimumAge.max, 150);
-  
-            obj.rating.min = Math.max(obj.rating.min, 0);
-            obj.rating.max = Math.min(obj.rating.max, 5);
-  
-            obj.year.max = Math.min(
-              obj.year.max, new Date().getFullYear());
-  
-            if (!ignore) {
-              dispatch(setBounds(obj));
-            }
-          }
-        }
-      }
-      catch (ex) { alert(ex); }
-    };
-
-    load();
-    return () => { ignore = true; };
-  }, [dispatch, bounds]);
-}
+import { useAppDispatch } from "./storeHooks";
 
 export function useSearchKeywordsAdvice(
   input: string, value: KeywordAdviceItem | null): { loading: boolean; options: KeywordAdviceItem[] } {
@@ -71,6 +31,35 @@ export function useSearchKeywordsAdvice(
       setLoading(true);
       try {
         const items = await SmartWalkFetcher.adviceKeywords(prefix);
+
+        items.forEach((item) => {
+          const {
+            capacity,
+            minimumAge,
+            rating,
+            year
+          } = item.bounds;
+
+          if (!!capacity) {
+            capacity.min = Math.max(capacity.min, 0);
+            capacity.max = Math.min(capacity.max, 300);
+          }
+
+          if (!!minimumAge) {
+            minimumAge.min = Math.max(minimumAge.min, 0);
+            minimumAge.max = Math.min(minimumAge.max, 150);
+          }
+
+          if (!!rating) {
+            rating.min = Math.max(rating.min, 0);
+            rating.max = Math.min(rating.max, 5);
+          }
+
+          if (!!year) {
+            year.max = Math.min(year.max, new Date().getFullYear());
+          }
+        });
+
         if (items.length > 0) {
           adviceKeywords.set(prefix, items);
           setOptions(items);

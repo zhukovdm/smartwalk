@@ -5,9 +5,11 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { KeywordAdviceItem } from "../../domain/types";
+import {
+  AttributeFilterNumeric,
+  KeywordAdviceItem
+} from "../../domain/types";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
-import { useAppSelector } from "../../features/storeHooks";
 import ExpandSectionIcon from "../shared/ExpandSectionIcon";
 import AttributeFilterViewExisten from "./AttributeFilterViewExisten";
 import AttributeFilterViewBoolean from "./AttributeFilterViewBoolean";
@@ -30,7 +32,6 @@ type AttributeFiltersListProps = {
 export default function AttributeFiltersList(
   { adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
 
-  const { bounds } = useAppSelector((state) => state.panel);
   const {
     es,
     bs,
@@ -105,7 +106,7 @@ export default function AttributeFiltersList(
           </AccordionDetails>
         </Accordion>
       }
-      {(ns.length > 0 && bounds) &&
+      {(ns.length > 0) &&
         <Accordion
           expanded={nsExpanded}
           onChange={(_, v) => { setNsExpanded(v); }}
@@ -122,6 +123,7 @@ export default function AttributeFiltersList(
               {ns.map((attr, i) => (
                 <AttributeFilterViewNumeric
                   key={i}
+                  bound={(adviceItem.bounds as any)[attr] as AttributeFilterNumeric}
                   initial={(filters.ns ?? {})[attr]}
                   label={attr}
                   setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[attr] = v; }}
@@ -157,7 +159,7 @@ export default function AttributeFiltersList(
           </AccordionDetails>
         </Accordion>
       }
-      {(cs.length > 0 && bounds) &&
+      {(cs.length > 0) &&
         <Accordion
           expanded={csExpanded}
           onChange={(_, v) => { setCsExpanded(v); }}
@@ -174,6 +176,7 @@ export default function AttributeFiltersList(
               {cs.map((attr, i) => (
                 <AttributeFilterViewCollect
                   key={i}
+                  bound={(adviceItem.bounds as any)[attr] as string[]}
                   initial={(filters.cs ?? {})[attr]}
                   label={attr}
                   setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[attr] = v; }}

@@ -24,15 +24,6 @@ public sealed class AdviceController : ControllerBase
         _context = context; _logger = logger;
     }
 
-    [HttpGet]
-    [Route("bounds", Name = "AdviseBounds")]
-    [Produces(MediaTypeNames.Application.Json)]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public ActionResult<BoundsAdvice> AdviseBounds()
-    {
-        return AdviceService.GetBounds(_context.BoundsAdvice);
-    }
-
     public sealed class KeywordsRequest
     {
         /// <example>m</example>

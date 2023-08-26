@@ -20,10 +20,7 @@ import {
   KeywordAdviceItem,
   KeywordCategory
 } from "../../domain/types";
-import {
-  useSearchBoundsAdvice,
-  useSearchKeywordsAdvice
-} from "../../features/searchHooks";
+import { useSearchKeywordsAdvice } from "../../features/searchHooks";
 import AttributeFiltersList from "./AttributeFiltersList";
 
 type CategoryDialogProps = {
@@ -52,7 +49,6 @@ function CategoryDialog(
 
   const filters = structuredClone(category?.filters ?? {}); // clone!
 
-  useSearchBoundsAdvice();
   const {
     loading,
     options

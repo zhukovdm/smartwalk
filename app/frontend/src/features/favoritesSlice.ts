@@ -10,6 +10,12 @@ import {
   WgsPoint
 } from "../domain/types";
 
+const compareDirecs = (l: StoredDirec, r: StoredDirec) => l.name.localeCompare(r.name);
+
+const comparePlaces = (l: StoredPlace, r: StoredPlace) => l.name.localeCompare(r.name);
+
+const compareRoutes = (l: StoredRoute, r: StoredRoute) => l.name.localeCompare(r.name);
+
 type FavoritesState = {
   loaded: boolean;
   name: string;
@@ -63,14 +69,14 @@ export const favoritesSlice = createSlice({
     // direcs
 
     setFavoriteDirecs: (state, action: PayloadAction<StoredDirec[]>) => {
-      state.direcs = action.payload;
+      state.direcs = action.payload.sort(compareDirecs);
     },
     createFavoriteDirec: (state, action: PayloadAction<StoredDirec>) => {
-      state.direcs.push(action.payload);
+      state.direcs = [...state.direcs, action.payload].sort(compareDirecs);
     },
     updateFavoriteDirec: (state, action: PayloadAction<{ direc: StoredDirec, index: number }>) => {
       const { direc, index } = action.payload;
-      state.direcs = updateItemImmutable(state.direcs, direc, index);
+      state.direcs = updateItemImmutable(state.direcs, direc, index).sort(compareDirecs);
     },
     deleteFavoriteDirec: (state, action: PayloadAction<number>) => {
       state.direcs = deleteItemImmutable(state.direcs, action.payload);
@@ -82,14 +88,14 @@ export const favoritesSlice = createSlice({
     // places
 
     setFavoritePlaces: (state, action: PayloadAction<StoredPlace[]>) => {
-      state.places = action.payload;
+      state.places = action.payload.sort(comparePlaces);
     },
     createFavoritePlace: (state, action: PayloadAction<StoredPlace>) => {
-      state.places.push(action.payload);
+      state.places = [...state.places, action.payload].sort(comparePlaces);
     },
     updateFavoritePlace: (state, action: PayloadAction<{ place: StoredPlace, index: number }>) => {
       const { place, index } = action.payload;
-      state.places = updateItemImmutable(state.places, place, index);
+      state.places = updateItemImmutable(state.places, place, index).sort(comparePlaces);
     },
     deleteFavoritePlace: (state, action: PayloadAction<number>) => {
       state.places = deleteItemImmutable(state.places, action.payload);
@@ -101,14 +107,14 @@ export const favoritesSlice = createSlice({
     // routes
 
     setFavoriteRoutes: (state, action: PayloadAction<StoredRoute[]>) => {
-      state.routes = action.payload;
+      state.routes = action.payload.sort(compareRoutes);
     },
     createFavoriteRoute: (state, action: PayloadAction<StoredRoute>) => {
-      state.routes.push(action.payload);
+      state.routes = [...state.routes, action.payload].sort(compareRoutes);
     },
     updateFavoriteRoute: (state, action: PayloadAction<{ route: StoredRoute, index: number }>) => {
       const { route, index } = action.payload;
-      state.routes = updateItemImmutable(state.routes, route, index);
+      state.routes = updateItemImmutable(state.routes, route, index).sort(compareRoutes);
     },
     deleteFavoriteRoute: (state, action: PayloadAction<number>) => {
       state.routes = deleteItemImmutable(state.routes, action.payload);
