@@ -35,7 +35,7 @@ import {
 } from "./shared/_list-items";
 import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
-import { KilometersLink } from "./search/KilometersLink";
+import KilometersLink from "./search/KilometersLink";
 import DistanceSlider from "./search/DistanceSlider";
 import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";

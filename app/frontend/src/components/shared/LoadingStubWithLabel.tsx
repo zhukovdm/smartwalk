@@ -8,6 +8,9 @@ type LoadingStubWithLabelProps = {
   progress: number;
 };
 
+/**
+ * Loading stub with percent progress (e.g. storage loading).
+ */
 export default function LoadingStubWithLabel(
   { progress }: LoadingStubWithLabelProps): JSX.Element {
 

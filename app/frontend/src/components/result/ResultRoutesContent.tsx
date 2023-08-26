@@ -29,7 +29,7 @@ import TraversableDistance from "../shared/TraversableDistance";
 import RouteCategoryFilters from "../shared/RouteCategoryFilters";
 import SomethingActionMenu from "../shared/SomethingActionMenu";
 import SomethingSaveDialog from "../shared/SomethingSaveDialog";
-import SomethingModifyDialog from "../shared/SomethingModifyDialog";
+import TraversableModifyDialog from "../shared/TraversableModifyDialog";
 
 type ResultRoutesContentProps = {
 
@@ -151,7 +151,7 @@ export default function ResultRoutesContent(
         onHide={() => { setShowS(false); }}
         onSave={onSave}
       />
-      <SomethingModifyDialog
+      <TraversableModifyDialog
         show={showM}
         what={"route"}
         onHide={() => { setShowM(false); }}

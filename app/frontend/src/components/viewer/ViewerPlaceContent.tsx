@@ -11,6 +11,8 @@ import PlaceKeywords from "../shared/PlaceKeywords";
 import PlaceLocation from "../shared/PlaceLocation";
 
 type ViewerPlaceContentProps = {
+
+  /** Place to view */
   place: UiPlace;
 };
 

@@ -1,4 +1,5 @@
-import { Alert, Box } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
 import { BackCloseMenu } from "./shared/_menus";
 import SolidContent from "./session/SolidContent";

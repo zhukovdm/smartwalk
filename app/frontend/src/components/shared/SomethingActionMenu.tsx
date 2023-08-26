@@ -1,20 +1,23 @@
 import { MouseEvent, useState } from "react";
-import {
-  Box,
-  IconButton,
-  ListItemIcon,
-  Menu,
-  MenuItem,
-  Typography
-} from "@mui/material";
-import { Directions, Favorite, MoreVert } from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Typography from "@mui/material/Typography";
+import DirectionsIcon from "@mui/icons-material/Directions";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 type ResultSomethingMenuProps = {
 
+  /** Show/hide save dialog */
   showSaveDialog?: () => void;
 
+  /** Show/hide dialog for appending place. */
   showAppendDialog?: () => void;
 
+  /** Show/hide dialog for modifying route or direction. */
   showModifyDialog?: () => void;
 };
 
@@ -47,7 +50,7 @@ export default function SomethingActionMenu(
         aria-expanded={open}
         aria-controls={open ? mid : undefined}
       >
-        <MoreVert fontSize={"small"} />
+        <MoreVertIcon fontSize={"small"} />
       </IconButton>
       <Menu
         id={mid}
@@ -65,7 +68,7 @@ export default function SomethingActionMenu(
           }
         >
           <ListItemIcon>
-            <Favorite className={"action-place"} fontSize={"small"} />
+            <FavoriteIcon className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>Save</Typography>
         </MenuItem>
@@ -74,7 +77,7 @@ export default function SomethingActionMenu(
             onClick={() => { showAppendDialog(); closeMenuAction(); }}
           >
             <ListItemIcon>
-              <Directions className={"action-place"} fontSize={"small"} />
+              <DirectionsIcon className={"action-place"} fontSize={"small"} />
             </ListItemIcon>
             <Typography>Append</Typography>
           </MenuItem>
@@ -84,7 +87,7 @@ export default function SomethingActionMenu(
           onClick={() => { showModifyDialog(); closeMenuAction(); }}
         >
           <ListItemIcon>
-            <Directions className={"action-place"} fontSize={"small"} />
+            <DirectionsIcon className={"action-place"} fontSize={"small"} />
           </ListItemIcon>
           <Typography>Modify</Typography>
         </MenuItem>

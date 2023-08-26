@@ -10,7 +10,11 @@ import RouteCategoryFilters from "../shared/RouteCategoryFilters";
 import RouteContentList from "../shared/RouteContentList";
 
 type ViewerRouteContentProps = {
+
+  /** Route to show */
   route: StoredRoute;
+
+  /** List of (in-)active categories */
   filterList: boolean[];
 };
 

@@ -27,7 +27,7 @@ import {
 } from "./shared/_list-items";
 import SelectPlaceDialog from "./shared/SelectPlaceDialog";
 import DistanceSlider from "./search/DistanceSlider";
-import { KilometersLink } from "./search/KilometersLink";
+import KilometersLink from "./search/KilometersLink";
 import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
 

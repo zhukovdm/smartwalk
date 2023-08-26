@@ -1,6 +1,8 @@
 import Typography from "@mui/material/Typography";
 
 type TraversableDistanceProps = {
+
+  /** Walking distance of a `traversable` */
   distance: number;
 }
 

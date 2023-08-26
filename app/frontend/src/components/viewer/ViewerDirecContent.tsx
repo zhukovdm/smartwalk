@@ -12,6 +12,8 @@ import TraversableHeader from "../shared/TraversableHeader";
 import TraversableDistance from "../shared/TraversableDistance";
 
 type ViewerDirecContentProps = {
+
+  /** Direction to view */
   direc: StoredDirec;
 }
 

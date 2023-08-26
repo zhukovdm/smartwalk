@@ -1,4 +1,4 @@
-import { ExpandMore } from "@mui/icons-material";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 type ExpandSectionIconProps = {
   expanded: boolean;
@@ -8,6 +8,6 @@ export default function ExpandSectionIcon(
   { expanded }: ExpandSectionIconProps): JSX.Element {
 
   return (
-    <ExpandMore titleAccess={expanded ? "Collapse" : "Expand"} />
+    <ExpandMoreIcon titleAccess={expanded ? "Collapse" : "Expand"} />
   );
 }

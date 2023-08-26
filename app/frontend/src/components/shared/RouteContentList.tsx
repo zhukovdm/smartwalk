@@ -5,13 +5,26 @@ import { FixedPlaceListItem } from "./_list-items";
 import PlacesList from "./PlacesList";
 
 type RouteContentListProps = {
+
+  /** Current map */
   map: IMap | undefined;
+
+  /** Starting point */
   source: UiPlace;
+
+  /** Destination */
   target: UiPlace;
+
+  /** Visited places in-between */
   places: UiPlace[];
+
+  /** Show/hide specific categorie (index-based) */
   filterList: boolean[];
 };
 
+/**
+ * List of places forming a route, possibly with filtered categories.
+ */
 export default function RouteContentList(
   { map, source, target, places, filterList }: RouteContentListProps): JSX.Element {
 

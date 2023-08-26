@@ -1,13 +1,14 @@
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { FixedPlaceListItem } from "./_list-items";
-import { IMap } from "../../domain/interfaces";
 
 type PlacesListProps = {
 
+  /** Current map */
   map: IMap | undefined;
 
-  /** List of places. */
+  /** Places to be listed */
   places: UiPlace[];
 };
 

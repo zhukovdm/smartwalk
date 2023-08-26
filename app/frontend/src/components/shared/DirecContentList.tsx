@@ -1,10 +1,14 @@
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { FixedPlaceListItem } from "./_list-items";
 
 type DirecContentListProps = {
+
+  /** Current map */
   map: IMap | undefined;
+
+  /** Places on the direction */
   places: UiPlace[];
 };
 

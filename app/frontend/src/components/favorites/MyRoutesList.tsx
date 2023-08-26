@@ -35,7 +35,7 @@ import {
 } from "../../features/storeHooks";
 import { RouteButton } from "../shared/_buttons";
 import { BusyListItem } from "../shared/_list-items";
-import SomethingModifyDialog from "../shared/SomethingModifyDialog";
+import TraversableModifyDialog from "../shared/TraversableModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import SomethingEditDialog from "./SomethingEditDialog";
@@ -158,7 +158,7 @@ function MyRoutesListItem(
         onHide={() => { setShowE(false); }}
         onSave={onEdit}
       />
-      <SomethingModifyDialog
+      <TraversableModifyDialog
         show={showM}
         what={"route"}
         onHide={() => { setShowM(false); }}

@@ -1,16 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  ButtonProps,
-  styled
-} from "@mui/material";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
+import Button, { ButtonProps } from "@mui/material/Button";
 import Icon from "@mui/material/Icon";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
+import { styled } from "@mui/material/styles";
 import { AppContext } from "../App";
 import { SESSION_SOLID_ADDR } from "../domain/routing";
 import { resetFavorites } from "../features/favoritesSlice";

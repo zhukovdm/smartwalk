@@ -11,7 +11,7 @@ import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import Close from "@mui/icons-material/Close";
+import CloseIcon from "@mui/icons-material/Close";
 import { AppContext } from "../../App";
 import { WgsPoint, UiPlace, StoredPlace } from "../../domain/types";
 import { point2place } from "../../utils/helpers";
@@ -96,7 +96,7 @@ export default function SelectPlaceDialog(
           title={"Hide dialog"}
           onClick={onHide}
         >
-          <Close fontSize={"small"} />
+          <CloseIcon fontSize={"small"} />
         </IconButton>
       </DialogTitle>
       <DialogContent>
