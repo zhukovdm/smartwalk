@@ -5,6 +5,9 @@ import { BackCloseMenu } from "./shared/_menus";
 import LoadingStub from "./shared/LoadingStub";
 import ViewerDirecContent from "./viewer/ViewerDirecContent";
 
+/**
+ * Panel for viewing stored directions.
+ */
 export default function ViewerDirecPanel(): JSX.Element {
 
   const { direc } = useAppSelector((state) => state.viewer);

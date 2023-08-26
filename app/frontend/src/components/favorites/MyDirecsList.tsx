@@ -50,6 +50,9 @@ type MyDirecsListItemProps = {
   storedSmarts: Map<string, StoredPlace>;
 };
 
+/**
+ * List item with direction icon, label, and menu.
+ */
 function MyDirecsListItem(
   { index, direc, storedPlaces, storedSmarts }: MyDirecsListItemProps): JSX.Element {
 

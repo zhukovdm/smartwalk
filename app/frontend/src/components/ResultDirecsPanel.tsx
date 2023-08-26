@@ -5,6 +5,9 @@ import { BackCloseMenu } from "./shared/_menus";
 import LoadingStub from "./shared/LoadingStub";
 import ResultDirecsContent from "./result/ResultDirecsContent";
 
+/**
+ * Panel containing the latest result of a direction search.
+ */
 export default function ResultDirecsPanel(): JSX.Element {
 
   const { loaded } = useAppSelector((state) => state.favorites);

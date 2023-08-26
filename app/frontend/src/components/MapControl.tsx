@@ -4,6 +4,9 @@ import { MapContainer, TileLayer, useMap } from "react-leaflet";
 import { AppContext } from "../App";
 import { MapFactory } from "../features/context";
 
+/**
+ * Obtain Leaflet map and store it to the context.
+ */
 function MapExtractor(): JSX.Element {
 
   const map = useMap();
@@ -14,6 +17,9 @@ function MapExtractor(): JSX.Element {
   return (<></>);
 }
 
+/**
+ * Leaflet map.
+ */
 export default function MapControl(): JSX.Element {
 
   const cnt = new LatLng(50.088349, 14.403679);

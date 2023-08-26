@@ -21,6 +21,10 @@ type ResultSomethingMenuProps = {
   showModifyDialog?: () => void;
 };
 
+/**
+ * Menu with allowed actions on an entity (possible are save, append, and
+ * modify) shown in the Result panel.
+ */
 export default function SomethingActionMenu(
   { showSaveDialog, showAppendDialog, showModifyDialog }: ResultSomethingMenuProps): JSX.Element {
 

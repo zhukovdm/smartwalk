@@ -56,6 +56,9 @@ type MyRoutesListItemProps = {
   storedSmarts: Map<string, StoredPlace>;
 };
 
+/**
+ * List item with route icon, label, and menu.
+ */
 function MyRoutesListItem(
   { index, route, storedPlaces, storedSmarts }: MyRoutesListItemProps): JSX.Element {
 

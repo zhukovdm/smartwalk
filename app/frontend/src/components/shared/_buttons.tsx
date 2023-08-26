@@ -23,7 +23,12 @@ type IconWrapperProps = {
   onClick?: MouseEventHandler<Element>;
 };
 
-function IconWrapper({ disabled, icon, title, onClick }: IconWrapperProps): JSX.Element {
+/**
+ * Icon button wrapping passed icon with an action.
+ */
+function IconWrapper(
+  { disabled, icon, title, onClick }: IconWrapperProps): JSX.Element {
+
   return (
     <IconButton
       disabled={disabled}
@@ -45,6 +50,9 @@ type RouteButtonProps = {
   onRoute: MouseEventHandler<Element>;
 };
 
+/**
+ * Button with standard route icon.
+ */
 export function RouteButton({ title, onRoute }: RouteButtonProps): JSX.Element {
   return (
     <IconWrapper
@@ -72,7 +80,11 @@ type PlaceButtonProps = {
   onPlace: MouseEventHandler<Element>;
 };
 
+/**
+ * Button with standard place icon.
+ */
 export function PlaceButton({ kind, title, onPlace }: PlaceButtonProps): JSX.Element {
+
   return (
     <IconWrapper
       onClick={onPlace}
@@ -93,7 +105,12 @@ type AddPlaceButtonProps = PlaceButtonProps & {
   disabled: boolean;
 };
 
-export function AddPlaceButton({ disabled, kind, title, onPlace }: AddPlaceButtonProps): JSX.Element {
+/**
+ * Button with `+`-like place icon.
+ */
+export function AddPlaceButton(
+  { disabled, kind, title, onPlace }: AddPlaceButtonProps): JSX.Element {
+
   return (
     <IconWrapper
       disabled={disabled}
@@ -118,7 +135,11 @@ type DirecButtonProps = {
   onDirec: MouseEventHandler<Element>;
 };
 
+/**
+ * Button with standard directions icon.
+ */
 export function DirecButton({ title, onDirec }: DirecButtonProps): JSX.Element {
+
   return (
     <IconWrapper
       title={title}
@@ -142,7 +163,11 @@ type DeleteButtonProps = {
   onDelete: MouseEventHandler<Element>;
 };
 
+/**
+ * Button with standard remove icon.
+ */
 export function DeleteButton({ title, onDelete }: DeleteButtonProps): JSX.Element {
+
   return (
     <IconWrapper
       title={title}
@@ -161,7 +186,11 @@ type SwapButtonProps = {
   onSwap: MouseEventHandler<Element>;
 };
 
+/**
+ * Button with standard swap icon.
+ */
 export function SwapButton({ title, onSwap }: SwapButtonProps): JSX.Element {
+
   return (
     <IconWrapper
       title={title}

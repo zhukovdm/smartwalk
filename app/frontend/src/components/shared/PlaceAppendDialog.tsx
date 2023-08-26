@@ -21,6 +21,9 @@ type AppendPlaceDialogProps = {
   onAppend: () => void;
 };
 
+/**
+ * Dialog for appending a random place to the direction sequence.
+ */
 export default function AppendPlaceDialog(
   { show, onHide, onAppend }: AppendPlaceDialogProps): JSX.Element {
 

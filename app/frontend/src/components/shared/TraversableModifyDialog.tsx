@@ -24,6 +24,10 @@ type TraversableModifyDialogProps = {
   onModify: () => void;
 };
 
+/**
+ * Dialog that replaces direction sequence by points of a route, or direction
+ * from a result or stored one.
+ */
 export default function TraversableModifyDialog(
   { show, what, onHide, onModify }: TraversableModifyDialogProps): JSX.Element {
 

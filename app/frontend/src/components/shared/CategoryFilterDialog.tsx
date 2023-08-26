@@ -27,6 +27,9 @@ type CategoryFilterCollectProps = {
   items: string[];
 };
 
+/**
+ * Read-only list of collection items.
+ */
 function CategoryFilterCollect({ label, items }: CategoryFilterCollectProps): JSX.Element {
 
   return (

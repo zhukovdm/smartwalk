@@ -5,6 +5,9 @@ import { BackCloseMenu } from "./shared/_menus";
 import LoadingStub from "./shared/LoadingStub";
 import ViewerRouteContent from "./viewer/ViewerRouteContent";
 
+/**
+ * Panel for viewing stored routes.
+ */
 export default function ViewerRoutePanel(): JSX.Element {
 
   const { loaded } = useAppSelector((state) => state.favorites);

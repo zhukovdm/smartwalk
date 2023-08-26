@@ -31,6 +31,9 @@ import KilometersLink from "./search/KilometersLink";
 import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
 
+/**
+ * Panel for place search configuration.
+ */
 export default function SearchPlacesPanel(): JSX.Element {
 
   const navigate = useNavigate();
@@ -99,7 +102,7 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Box>
         <Box>
           <Typography>
-            Within a crow-fly distance of at most (in <KilometersLink />):
+            Within a crow-fly distance of at most (in&nbsp;<KilometersLink />):
           </Typography>
         </Box>
         <Box>

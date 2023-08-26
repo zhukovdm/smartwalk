@@ -39,6 +39,9 @@ type MyPlacesListItemProps = {
   place: StoredPlace;
 };
 
+/**
+ * List item with place icon, label, and menu.
+ */
 function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element {
 
   const navigate = useNavigate();

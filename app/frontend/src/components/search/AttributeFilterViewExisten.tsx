@@ -18,7 +18,8 @@ type AttributeFilterViewExistenProps = {
 /**
  * Filter telling if an attribute exists on an entity.
  */
-export default function AttributeFilterViewExisten({ label, setter, initial }: AttributeFilterViewExistenProps): JSX.Element {
+export default function AttributeFilterViewExisten(
+  { label, setter, initial }: AttributeFilterViewExistenProps): JSX.Element {
 
   const [check, setCheck] = useState(!!initial);
 

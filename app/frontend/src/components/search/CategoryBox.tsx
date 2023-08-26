@@ -38,6 +38,9 @@ type CategoryDialogProps = {
   insert: (category: KeywordCategory) => void;
 };
 
+/**
+ * Dialog for category configuration (keyword and additional attributes).
+ */
 function CategoryDialog(
   { category, onHide, insert }: CategoryDialogProps): JSX.Element {
 

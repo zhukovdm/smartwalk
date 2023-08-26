@@ -23,10 +23,12 @@ type DistanceSliderProps = {
 };
 
 /**
- * Standard distance slider.
+ * Standard distance slider used in Search panels.
  */
-export default function DistanceSlider({ seq, distance, dispatch, ariaLabel, ...rest }: DistanceSliderProps): JSX.Element {
-  const marks = seq.map(m => { return { value: m, label: m }; });
+export default function DistanceSlider(
+  { seq, distance, dispatch, ariaLabel, ...rest }: DistanceSliderProps): JSX.Element {
+
+  const marks = seq.map(m => ({ value: m, label: m }));
 
   return (
     <Box display={"flex"} justifyContent={"center"}>

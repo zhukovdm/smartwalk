@@ -43,6 +43,9 @@ import ViewerDirecPanel from "./ViewerDirecPanel";
 import ViewerPlacePanel from "./ViewerPlacePanel";
 import ViewerRoutePanel from "./ViewerRoutePanel";
 
+/**
+ * Main panel drawer with routing capabilities.
+ */
 export default function PanelControl(): JSX.Element {
 
   const dispatch = useAppDispatch();

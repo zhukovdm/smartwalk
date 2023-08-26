@@ -6,6 +6,9 @@ type TraversableDistanceProps = {
   distance: number;
 }
 
+/**
+ * Distance of a route or direction shown in the Result or Viewer panel.
+ */
 export default function TraversableDistance(
   { distance }: TraversableDistanceProps): JSX.Element {
 

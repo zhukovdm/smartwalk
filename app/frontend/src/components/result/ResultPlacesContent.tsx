@@ -38,7 +38,6 @@ function getPageCount(itemCount: number, pageSize: number): number {
   return Math.max(1, whole + ((whole * pageSize < itemCount) ? 1 : 0));
 }
 
-
 /**
  * Component presenting a result of searching places within a given circle.
  */

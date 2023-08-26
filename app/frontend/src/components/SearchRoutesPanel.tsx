@@ -41,6 +41,9 @@ import CategoryBox from "./search/CategoryBox";
 import BottomButtons from "./search/BottomButtons";
 import PrecedenceBox from "./search/PrecedenceBox";
 
+/**
+ * Panel for route search configuration.
+ */
 export default function SearchRoutesPanel(): JSX.Element {
 
   const navigate = useNavigate();
@@ -143,7 +146,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           </Box>
         </Stack>
         <Typography>
-          With walking distance of at most (in <KilometersLink />):
+          With walking distance of at most (in&nbsp;<KilometersLink />):
         </Typography>
         <DistanceSlider
           max={30}

@@ -6,7 +6,7 @@ import {
   RESULT_DIRECS_ADDR
 } from "../domain/routing";
 // import { SmartWalkFetcher } from "../utils/smartwalk";
-import { OsrmProjectFetcher } from "../utils/osrm-project";
+import { OsrmProjectFetcher } from "../utils/osrmProject";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultDirecs,
@@ -23,6 +23,9 @@ import { LogoCloseMenu, MainMenu } from "./shared/_menus";
 import BottomButtons from "./search/BottomButtons";
 import SearchDirecsSequence from "./search/SearchDirecsSequence";
 
+/**
+ * Panel for direction search configuration.
+ */
 export default function SearchDirecsPanel(): JSX.Element {
 
   const navigate = useNavigate();

@@ -8,10 +8,17 @@ import MyPlacesSection from "./favorites/MyPlacesSection";
 import MyRoutesSection from "./favorites/MyRoutesSection";
 
 type FavoritesPanelProps = {
+
+  /** Loaded from the storage */
   loaded: boolean;
+
+  /** Ratio of loaded entities / all stored entities. */
   loadedRatio: number;
 };
 
+/**
+ * Panel with favorite entities.
+ */
 export default function FavoritesPanel(
   { loaded, loadedRatio }: FavoritesPanelProps): JSX.Element {
 

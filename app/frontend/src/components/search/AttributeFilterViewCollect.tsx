@@ -8,22 +8,25 @@ import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 type CollectAutocompleteProps = {
 
-  /** Name of a filter. */
+  /** Name of a filter */
   label: string;
 
-  /** Current value on the filter. */
+  /** Current value on the filter */
   value: string[];
 
-  /** Possible remaining options. */
+  /** Possible remaining options */
   options: string[];
 
-  /** Flag disabling filter. */
+  /** Flag disabling filter */
   disabled: boolean;
 
-  /** Action handling changes on a filter. */
+  /** Action handling changes on a filter */
   onChange: (v: string[]) => void;
 };
 
+/**
+ * Selector of possible items in a collection.
+ */
 function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompleteProps): JSX.Element {
   return (
     <Autocomplete
@@ -39,13 +42,13 @@ function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompletePr
 
 type AttributeFilterViewCollectProps = {
 
-  /** Name of a filter. */
+  /** Name of a filter */
   label: string;
 
-  /** Action setting new value. */
+  /** Action setting new value */
   setter: (v: AttributeFilterCollect | undefined) => void;
 
-  /** Initial value. */
+  /** Initial value */
   initial: AttributeFilterCollect | undefined;
 }
 

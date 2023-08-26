@@ -5,6 +5,9 @@ import { BackCloseMenu } from "./shared/_menus";
 import LoadingStub from "./shared/LoadingStub";
 import ResultRoutesContent from "./result/ResultRoutesContent";
 
+/**
+ * Panel containing the latest result of a route search.
+ */
 export default function ResultRoutesPanel(): JSX.Element {
 
   const { loaded } = useAppSelector((state) => state.favorites);

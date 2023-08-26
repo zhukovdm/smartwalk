@@ -57,6 +57,9 @@ type DirectControlListItemProps = {
   onRevers: MouseEventHandler<Element>;
 };
 
+/**
+ * Control bar appending places and reversing sequence.
+ */
 function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProps): JSX.Element {
 
   return (

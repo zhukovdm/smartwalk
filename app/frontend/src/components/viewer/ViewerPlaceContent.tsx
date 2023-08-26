@@ -16,6 +16,9 @@ type ViewerPlaceContentProps = {
   place: UiPlace;
 };
 
+/**
+ * View of a stored place.
+ */
 export default function ViewerPlaceContent(
   { place }: ViewerPlaceContentProps): JSX.Element {
 

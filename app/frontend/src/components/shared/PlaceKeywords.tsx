@@ -7,6 +7,9 @@ type PlaceKeywordsProps = {
   keywords: string[];
 };
 
+/**
+ * List of place keywords shown in the Result or Viewer panel.
+ */
 export default function PlaceKeywords(
   { keywords }: PlaceKeywordsProps): JSX.Element {
 

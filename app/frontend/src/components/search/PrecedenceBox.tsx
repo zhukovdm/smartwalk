@@ -27,6 +27,9 @@ type PrecedenceSelectorProps = {
   onSelect: (i: number) => void;
 };
 
+/**
+ * Category selector defining one side (cat from, or cat to) of a new arrow.
+ */
 function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): JSX.Element {
 
   const [value, setValue] = useState("");
@@ -67,6 +70,9 @@ type PrecedenceBoxProps = {
   appendEdge: (e: PrecedenceEdge) => void;
 };
 
+/**
+ * Dialog for adding category arrows.
+ */
 export default function PrecedenceBox(
   { categories, precedence, deleteEdge, appendEdge }: PrecedenceBoxProps): JSX.Element {
 

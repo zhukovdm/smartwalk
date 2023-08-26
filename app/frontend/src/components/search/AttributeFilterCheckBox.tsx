@@ -17,7 +17,9 @@ type AttributeFilterCheckBoxProps = {
 /**
  * Represent (un-)selected filters.
  */
-export default function AttributeFilterCheckBox({ label, toggle, checked }: AttributeFilterCheckBoxProps): JSX.Element {
+export default function AttributeFilterCheckBox(
+  { label, toggle, checked }: AttributeFilterCheckBoxProps): JSX.Element {
+
   return (
     <FormControlLabel
       label={camelCaseToLabel(label)}

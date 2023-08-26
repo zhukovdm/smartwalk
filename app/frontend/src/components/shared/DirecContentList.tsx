@@ -12,6 +12,9 @@ type DirecContentListProps = {
   places: UiPlace[];
 };
 
+/**
+ * List of direction waypoints shown in the Result or Viewer panel.
+ */
 export default function DirecContentList(
   { map, places }: DirecContentListProps): JSX.Element {
 

@@ -5,6 +5,9 @@ import { BackCloseMenu } from "./shared/_menus";
 import LoadingStub from "./shared/LoadingStub";
 import ViewerPlaceContent from "./viewer/ViewerPlaceContent";
 
+/**
+ * Panel for viewing stored places.
+ */
 export default function ViewerPlacePanel(): JSX.Element {
 
   const { place } = useAppSelector((state) => state.viewer);

@@ -17,6 +17,9 @@ type ViewerDirecContentProps = {
   direc: StoredDirec;
 }
 
+/**
+ * View of a stored direction.
+ */
 export default function ViewerDirecContent(
   { direc }: ViewerDirecContentProps): JSX.Element {
 

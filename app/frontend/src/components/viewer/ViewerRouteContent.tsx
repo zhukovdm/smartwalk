@@ -18,6 +18,9 @@ type ViewerRouteContentProps = {
   filterList: boolean[];
 };
 
+/**
+ * View of a stored route.
+ */
 export default function ViewerRouteContent(
   { route, filterList }: ViewerRouteContentProps): JSX.Element {
 

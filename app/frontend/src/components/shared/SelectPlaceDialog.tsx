@@ -43,8 +43,8 @@ type SelectPlaceDialogProps = {
 };
 
 /**
- * Component showing a dialog for selecting a place,
- * either stored or user-defined.
+ * Component showing a dialog for selecting a place, either stored
+ * or user-defined.
  */
 export default function SelectPlaceDialog(
   { show, kind, onHide, onSelect }: SelectPlaceDialogProps): JSX.Element {

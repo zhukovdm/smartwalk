@@ -27,7 +27,8 @@ type AttributeFiltersListProps = {
 /**
  * Renders five different types of attributes in a `type-unsafe` manner.
  */
-export default function AttributeFiltersList({ adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
+export default function AttributeFiltersList(
+  { adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
 
   const { bounds } = useAppSelector((state) => state.panel);
   const {

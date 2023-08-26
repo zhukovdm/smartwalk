@@ -1,6 +1,6 @@
 import { ReactElement } from "react";
 import { useNavigate } from "react-router-dom";
-import { SxProps } from "@mui/system"; // {}
+import { SxProps } from "@mui/system";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";

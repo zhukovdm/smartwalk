@@ -15,6 +15,10 @@ type PrecedenceDrawingProps = {
   edge?: PrecedenceEdge;
 };
 
+/**
+ * Drawing of a category precedence graph. Vertices are cats, and edges are
+ * arrows.
+ */
 export default function PrecedenceDrawing(
   { categories, precedence, edge }: PrecedenceDrawingProps): JSX.Element {
 

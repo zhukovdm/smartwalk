@@ -41,7 +41,7 @@ const SessionButton = styled(Button)<ButtonProps>(() => ({
 }));
 
 /**
- * Menu and dialogs for supported remote storage providers.
+ * Menu and dialogs for supported remote storage providers (Solid, etc.).
  */
 export default function SessionProvider():JSX.Element {
 

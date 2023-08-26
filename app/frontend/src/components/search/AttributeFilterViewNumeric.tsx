@@ -23,7 +23,8 @@ type AttributeFilterViewNumericProps = {
 /**
  * Range-based numeric filter view.
  */
-export default function AttributeFilterViewNumeric({ label, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
+export default function AttributeFilterViewNumeric(
+  { label, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
 
   const bound = (useAppSelector((state) => state.panel.bounds) as any)[label] as AttributeFilterNumeric;
 

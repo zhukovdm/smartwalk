@@ -16,6 +16,9 @@ type AttributeFilterViewTextualProps = {
   initial: AttributeFilterTextual | undefined;
 };
 
+/**
+ * Text-based filter view (substring matching).
+ */
 export default function AttributeFilterViewTextual(
   { label, setter, initial }: AttributeFilterViewTextualProps) {
 

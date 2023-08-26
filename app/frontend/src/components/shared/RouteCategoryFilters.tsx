@@ -10,7 +10,7 @@ type RouteCategoryFiltersProps = {
   /** Is category active/shown in the list? */
   filterList: boolean[];
 
-  /** Show/hide category. */
+  /** Show/hide category */
   onToggle: (index: number) => void;
 };
 

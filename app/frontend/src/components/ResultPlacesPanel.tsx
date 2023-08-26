@@ -5,6 +5,9 @@ import { BackCloseMenu } from "./shared/_menus";
 import LoadingStub from "./shared/LoadingStub";
 import ResultPlacesContent from "./result/ResultPlacesContent";
 
+/**
+ * Panel containing the latest result of a place search.
+ */
 export default function ResultPlacesPanel(): JSX.Element {
 
   const { loaded } = useAppSelector((state) => state.favorites);
