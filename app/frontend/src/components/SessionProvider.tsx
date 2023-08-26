@@ -9,7 +9,10 @@ import MenuItem from "@mui/material/MenuItem";
 import Typography from "@mui/material/Typography";
 import { styled } from "@mui/material/styles";
 import { AppContext } from "../App";
-import { SESSION_SOLID_ADDR } from "../domain/routing";
+import {
+  FAVORITES_ADDR,
+  SESSION_SOLID_ADDR
+} from "../domain/routing";
 import { resetFavorites } from "../features/favoritesSlice";
 import { showPanel } from "../features/panelSlice";
 import {
@@ -84,6 +87,7 @@ export default function SessionProvider():JSX.Element {
           dispatch(resetSession());
           dispatch(resetFavorites());
           context.storage = new LocalStorage();
+          navigate(FAVORITES_ADDR);
         }
       );
       dispatch(setSolidRedirect());

@@ -84,7 +84,6 @@ export default function SolidContent(): JSX.Element {
     dispatch(setBlock(true));
     try {
       await SolidProvider.logout();
-      navigate(FAVORITES_ADDR);
     }
     catch (ex) { alert(ex); }
     finally {
@@ -126,6 +125,7 @@ export default function SolidContent(): JSX.Element {
             <TextField
               {...params}
               label={"Pod Id"}
+              required
               InputProps={{
                 ...params.InputProps,
                 endAdornment: (
