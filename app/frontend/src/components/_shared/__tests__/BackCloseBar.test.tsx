@@ -1,11 +1,5 @@
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import {
-  RenderResult,
-  fireEvent,
-  render as rtlRender
-} from "@testing-library/react";
-import { store } from "../../../features/store";
+import { fireEvent } from "@testing-library/react";
+import { renderWithProviders } from "../../../utils/testUtils";
 import BackCloseBar from "../BackCloseBar";
 
 const mockUseNavigate = jest.fn();
@@ -17,14 +11,8 @@ jest.mock(rrdModule, () => ({
   useNavigate: () => mockUseNavigate
 }));
 
-function render(): RenderResult {
-  return rtlRender(
-    <Provider store={store}>
-      <MemoryRouter>
-        <BackCloseBar />
-      </MemoryRouter>
-    </Provider>
-  );
+function render() {
+  return renderWithProviders(<BackCloseBar />, {});
 }
 
 describe("<BackCloseBar />", () => {

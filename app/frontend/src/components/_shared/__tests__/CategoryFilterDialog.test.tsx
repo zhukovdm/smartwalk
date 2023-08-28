@@ -72,7 +72,7 @@ describe("<CategoryFilterDialog />", () => {
   it("should show cS attributes", () => {
     const { getByText } = render();
 
-    [/payment/i, /cash/i, /card/i].forEach((item) => {
+    ["payment", "cash", "card"].forEach((item) => {
       expect(getByText(item)).toBeInTheDocument();
     });
   });

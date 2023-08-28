@@ -1,22 +1,9 @@
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
-import {
-  RenderResult,
-  cleanup,
-  fireEvent,
-  render as rtlRender
-} from "@testing-library/react";
-import { store } from "../../features/store";
+import { cleanup, fireEvent } from "@testing-library/react";
+import { renderWithProviders } from "../../utils/testUtils";
 import SearchRoutesPanel from "../SearchRoutesPanel";
 
-function render(): RenderResult {
-  return rtlRender(
-    <Provider store={store}>
-      <MemoryRouter>
-        <SearchRoutesPanel />
-      </MemoryRouter>
-    </Provider>
-  );
+function render() {
+  return renderWithProviders(<SearchRoutesPanel />, {});
 }
 
 describe("<SearchRoutesPanel />", () => {

@@ -59,7 +59,11 @@ export default function CategoryFilter(
           </Typography>
         </Box>
       </Stack>
-      <CategoryFilterDialog show={showDialog} onHide={() => { setShowDialog(false); }} category={category} />
+      <CategoryFilterDialog
+        category={category}
+        show={showDialog}
+        onHide={() => { setShowDialog(false); }}
+      />
     </Box>
   );
 }

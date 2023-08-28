@@ -1,37 +1,24 @@
-import {
-  RenderResult,
-  fireEvent,
-  render as rtlRender,
-  screen
-} from "@testing-library/react";
-import { MemoryRouter } from "react-router-dom";
-import { Provider } from "react-redux";
+import { fireEvent, screen } from "@testing-library/react";
 import {
   FAVORITES_ADDR,
   SEARCH_DIRECS_ADDR,
   SEARCH_PLACES_ADDR,
   SEARCH_ROUTES_ADDR
 } from "../../../domain/routing";
-import { store } from "../../../features/store";
+import { renderWithProviders } from "../../../utils/testUtils";
 import PanelSelector from "../PanelSelector";
 
 const mockUseNavigate = jest.fn();
 
-const rtlModule = "react-router-dom";
+const rrdModule = "react-router-dom";
 
-jest.mock(rtlModule, () => ({
-  ...jest.requireActual(rtlModule),
+jest.mock(rrdModule, () => ({
+  ...jest.requireActual(rrdModule),
   useNavigate: () => mockUseNavigate
 }));
 
-function render(panel: number): RenderResult {
-  return rtlRender(
-    <Provider store={store}>
-      <MemoryRouter>
-        <PanelSelector panel={panel} />
-      </MemoryRouter>
-    </Provider>
-  );
+function render(panel: number) {
+  return renderWithProviders(<PanelSelector panel={panel} />, {});
 }
 
 describe("<PanelSelector />", () => {
