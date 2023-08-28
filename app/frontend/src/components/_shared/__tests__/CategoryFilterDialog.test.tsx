@@ -5,7 +5,7 @@ import {
 } from "@testing-library/react";
 import CategoryFilterDialog from "../CategoryFilterDialog";
 
-const category = {
+const getCategory = () => ({
   keyword: "museum",
   filters: {
     es: {
@@ -27,7 +27,7 @@ const category = {
       }
     }
   }
-};
+});
 
 const onHide = jest.fn();
 
@@ -35,7 +35,7 @@ function render(): RenderResult {
   return rtlRender(
     <CategoryFilterDialog
       show
-      category={category}
+      category={getCategory()}
       onHide={onHide}
     />
   );

@@ -29,7 +29,7 @@ export function withProviders(ui: ReactNode, preloadedState?: PreloadedState<Sto
   return withState(withRouter(ui), preloadedState);
 }
 
-type StoreRenderOptions = Omit<RenderOptions, "queries"> & {
+export type StoreRenderOptions = Omit<RenderOptions, "queries"> & {
   preloadedState?: PreloadedState<StoreState>;
 };
 

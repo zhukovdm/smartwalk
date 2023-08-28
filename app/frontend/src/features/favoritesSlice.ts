@@ -28,7 +28,7 @@ type FavoritesState = {
   routesExpanded: boolean;
 };
 
-const initialFavoritesState = (): FavoritesState => ({
+export const initialFavoritesState = (): FavoritesState => ({
   loaded: false,
   name: "",
   direcs: [],

@@ -12,7 +12,7 @@ describe("<App />", () => {
 
   beforeEach(cleanup);
 
-  it("simple render", () => {
+  it("basic render", () => {
     const { container } = render(<App />);
     expect(container).toBeTruthy();
   });

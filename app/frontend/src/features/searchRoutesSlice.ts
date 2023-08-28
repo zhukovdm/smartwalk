@@ -10,13 +10,17 @@ type SearchRoutesState = {
   precedence: PrecedenceEdge[];
 };
 
-const initialState = (): SearchRoutesState => ({ distance: 5.0, categories: [], precedence: [] });
+export const initialSearchRoutesState = (): SearchRoutesState => ({
+  distance: 5.0,
+  categories: [],
+  precedence: []
+});
 
 export const searchRoutesSlice = createSlice({
   name: "search/routes",
-  initialState: initialState(),
+  initialState: initialSearchRoutesState(),
   reducers: {
-    resetSearchRoutes: () => initialState(),
+    resetSearchRoutes: () => initialSearchRoutesState(),
     setSearchRoutesSource: (state, action: PayloadAction<UiPlace | undefined>) => {
       state.source = action.payload;
     },
