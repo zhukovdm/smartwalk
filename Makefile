@@ -1,11 +1,11 @@
-dev-infra-up:
+infra-dev-up:
 	@docker compose -f docker-compose.dev.yaml up
 
-dev-infra-down:
+infra-dev-down:
 	@docker compose -f docker-compose.dev.yaml down
 
-dev-backend:
+backend-dev:
 	@cd ./app/backend/SmartWalk.Api/ && dotnet run
 
-dev-frontend:
+frontend-dev:
 	@cd ./app/frontend/ && npm start
