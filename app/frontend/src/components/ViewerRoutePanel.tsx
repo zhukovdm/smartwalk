@@ -1,7 +1,7 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
-import { BackCloseMenu } from "./_shared/_menus";
+import BackCloseBar from "./_shared/BackCloseBar";
 import LoadingStub from "./_shared/LoadingStub";
 import ViewerRouteContent from "./viewer/ViewerRouteContent";
 
@@ -18,7 +18,7 @@ export default function ViewerRoutePanel(): JSX.Element {
 
   return (
     <Box>
-      <BackCloseMenu />
+      <BackCloseBar />
       <Box sx={{ mx: 2, my: 4 }}>
         {loaded
           ? <Box>

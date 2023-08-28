@@ -6,7 +6,7 @@ type PanelState = {
   block: boolean;
 };
 
-const initialState = (): PanelState => ({
+const initialPanelState = (): PanelState => ({
   show: false,
   dialogBlock: false,
   block: false
@@ -14,7 +14,7 @@ const initialState = (): PanelState => ({
 
 export const panelSlice = createSlice({
   name: "panel",
-  initialState: initialState(),
+  initialState: initialPanelState(),
   reducers: {
     showPanel: (state) => {
       state.show = true;

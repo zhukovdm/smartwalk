@@ -5,11 +5,11 @@ type EntityState = {
   place?: ExtendedPlace;
 };
 
-const initialState = (): EntityState => ({});
+const initialEntityState = (): EntityState => ({});
 
 export const entitySlice = createSlice({
   name: "entity",
-  initialState: initialState(),
+  initialState: initialEntityState(),
   reducers: {
     setEntityPlace: (state, action: PayloadAction<ExtendedPlace>) => {
       state.place = action.payload;

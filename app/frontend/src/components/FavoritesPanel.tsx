@@ -1,7 +1,8 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
 import LoadingStubWithLabel from "./_shared/LoadingStubWithLabel";
+import LogoCloseBar from "./_shared/LogoCloseBar";
+import PanelSelector from "./_shared/PanelSelector";
 import StorageSection from "./favorites/StorageSection";
 import MyDirecsSection from "./favorites/MyDirecsSection";
 import MyPlacesSection from "./favorites/MyPlacesSection";
@@ -24,8 +25,8 @@ export default function FavoritesPanel(
 
   return (
     <Box>
-      <LogoCloseMenu />
-      <MainMenu panel={3} />
+      <LogoCloseBar />
+      <PanelSelector panel={3} />
       <Box sx={{ m: 2 }}>
         {(loaded)
           ? <Stack>

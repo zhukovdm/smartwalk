@@ -28,7 +28,7 @@ type FavoritesState = {
   routesExpanded: boolean;
 };
 
-const initialState = (): FavoritesState => ({
+const initialFavoritesState = (): FavoritesState => ({
   loaded: false,
   name: "",
   direcs: [],
@@ -41,10 +41,10 @@ const initialState = (): FavoritesState => ({
 
 export const favoritesSlice = createSlice({
   name: "favorites",
-  initialState: initialState(),
+  initialState: initialFavoritesState(),
   reducers: {
 
-    resetFavorites: () => initialState(),
+    resetFavorites: () => initialFavoritesState(),
 
     setFavoritesLoaded: (state) => {
       state.loaded = true;

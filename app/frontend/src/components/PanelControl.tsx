@@ -27,7 +27,11 @@ import {
 } from "../domain/routing";
 import { showPanel } from "../features/panelSlice";
 import { useFavorites } from "../features/panelHooks";
-import { useAppDispatch, useAppSelector } from "../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../features/storeHooks";
+import SessionProvider from "./SessionProvider";
 import EntityPlacePanel from "./EntityPlacePanel";
 import NotFoundPanel from "./NotFoundPanel";
 import SearchDirecsPanel from "./SearchDirecsPanel";
@@ -37,7 +41,6 @@ import ResultDirecsPanel from "./ResultDirecsPanel";
 import ResultPlacesPanel from "./ResultPlacesPanel";
 import ResultRoutesPanel from "./ResultRoutesPanel";
 import FavoritesPanel from "./FavoritesPanel";
-import SessionProvider from "./SessionProvider";
 import SessionSolidPanel from "./SessionSolidPanel";
 import ViewerDirecPanel from "./ViewerDirecPanel";
 import ViewerPlacePanel from "./ViewerPlacePanel";
@@ -49,15 +52,16 @@ import ViewerRoutePanel from "./ViewerRoutePanel";
 export default function PanelControl(): JSX.Element {
 
   const dispatch = useAppDispatch();
+
   const { show } = useAppSelector((state) => state.panel);
   const {
     loaded: favoritesLoaded
   } = useAppSelector((state) => state.favorites);
 
   const loadedRatio = useFavorites();
-  useEffect(() => { dispatch(showPanel()); }, [dispatch]);
-
   const width = useMediaQuery("(max-width: 500px)") ? "100%" : "400px";
+
+  useEffect(() => { dispatch(showPanel()); }, [dispatch]);
 
   return (
     <HashRouter>

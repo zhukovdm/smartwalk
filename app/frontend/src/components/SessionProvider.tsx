@@ -110,8 +110,8 @@ export default function SessionProvider():JSX.Element {
     }
   };
 
-  const bid = `session-provider-menu-button`;
-  const mid = `session-provider-menu`;
+  const bid = `smartwalk-session-menu-button`;
+  const mid = `smartwalk-session-menu`;
 
   return (
     <Box
@@ -120,7 +120,6 @@ export default function SessionProvider():JSX.Element {
       {!login
         ? <Box>
             <SessionButton
-              aria-label={"Session selector"}
               id={bid}
               onClick={clickMenuAction}
               variant={"outlined"}
@@ -129,7 +128,7 @@ export default function SessionProvider():JSX.Element {
               aria-expanded={open}
               aria-controls={open ? mid : undefined}
             >
-              Log in
+              <span>Log in</span>
             </SessionButton>
             <Menu
               id={mid}

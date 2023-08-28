@@ -42,14 +42,19 @@ function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): 
 
   return (
     <Select
-      aria-label={"Category"}
+      aria-label={"category"}
       fullWidth
       onChange={handleChange}
       size={"small"}
       value={value}
     >
       {categories.map((c, i) => (
-        <MenuItem key={i} value={i}>{`${i + 1}: ${c.keyword}`}</MenuItem>
+        <MenuItem
+          key={i}
+          value={i.toString()}
+        >
+          {`${i + 1}: ${c.keyword}`}
+        </MenuItem>
       ))}
     </Select>
   )
@@ -130,7 +135,10 @@ export default function PrecedenceBox(
           <span>Add arrow</span>
         </Button>
       </Paper>
-      <Dialog open={showDialog} fullScreen={fullScreen}>
+      <Dialog
+        open={showDialog}
+        fullScreen={fullScreen}
+      >
         <DialogTitle>Add arrow</DialogTitle>
         <DialogContent>
           <Stack mt={0.5} gap={2} maxWidth={"360px"}>

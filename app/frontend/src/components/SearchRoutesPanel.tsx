@@ -33,12 +33,13 @@ import {
   FreePlaceListItem,
   RemovablePlaceListItem,
 } from "./_shared/_list-items";
-import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
-import SelectPlaceDialog from "./_shared/SelectPlaceDialog";
-import KilometersLink from "./search/KilometersLink";
-import DistanceSlider from "./search/DistanceSlider";
-import CategoryBox from "./search/CategoryBox";
+import LogoCloseBar from "./_shared/LogoCloseBar";
+import PanelSelector from "./_shared/PanelSelector";
+import SelectPointDialog from "./_shared/SelectPointDialog";
 import BottomButtons from "./search/BottomButtons";
+import CategoryBox from "./search/CategoryBox";
+import DistanceSlider from "./search/DistanceSlider";
+import KilometersLink from "./search/KilometersLink";
 import PrecedenceBox from "./search/PrecedenceBox";
 
 /**
@@ -92,9 +93,9 @@ export default function SearchRoutesPanel(): JSX.Element {
   };
 
   return (
-    <Box>
-      <LogoCloseMenu />
-      <MainMenu panel={0} />
+    <Box role={"search"} aria-label={"Search routes"}>
+      <LogoCloseBar />
+      <PanelSelector panel={0} />
       <Stack direction={"column"} gap={4} sx={{ mx: 2, my: 4 }}>
         <Typography>Find routes between two points:</Typography>
         <Stack direction={"column"} gap={1}>
@@ -178,13 +179,13 @@ export default function SearchRoutesPanel(): JSX.Element {
           onClear={() => { dispatch(resetSearchRoutes()); }}
           onSearch={() => { searchAction(); }}
         />
-        <SelectPlaceDialog
+        <SelectPointDialog
           show={sourceSelectDialog}
           kind={"source"}
           onHide={() => setSourceSelectDialog(false)}
           onSelect={(place) => dispatch(setSearchRoutesSource(place))}
         />
-        <SelectPlaceDialog
+        <SelectPointDialog
           show={targetSelectDialog}
           kind={"target"}
           onHide={() => setTargetSelectDialog(false)}

@@ -1,7 +1,7 @@
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { useAppSelector } from "../features/storeHooks";
-import { BackCloseMenu } from "./_shared/_menus";
+import BackCloseBar from "./_shared/BackCloseBar";
 import SolidContent from "./session/SolidContent";
 import SolidPodLink from "./session/SolidPodLink";
 
@@ -17,7 +17,7 @@ export default function SessionSolidPanel(): JSX.Element {
 
   return (
     <Box>
-      <BackCloseMenu />
+      <BackCloseBar />
       <Box sx={{ m: 2 }}>
         {login && solid
           ? <SolidContent />

@@ -28,7 +28,7 @@ type DistanceSliderProps = {
 export default function DistanceSlider(
   { seq, distance, dispatch, ariaLabel, ...rest }: DistanceSliderProps): JSX.Element {
 
-  const marks = seq.map(m => ({ value: m, label: m }));
+  const marks = seq.map((m) => ({ value: m, label: m }));
 
   return (
     <Box display={"flex"} justifyContent={"center"}>
@@ -36,8 +36,8 @@ export default function DistanceSlider(
         <Slider
           {...rest}
           aria-label={ariaLabel}
-          min={0}
           marks={marks}
+          min={0}
           value={distance}
           valueLabelDisplay={"auto"}
           onChange={(_, value) => { dispatch(value as number); }}

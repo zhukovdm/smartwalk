@@ -134,7 +134,10 @@ function MyRoutesListItem(
   };
 
   return (
-    <Box>
+    <Box
+      role={"listitem"}
+      aria-label={route.name}
+    >
       <BusyListItem
         label={name}
         l={
@@ -178,10 +181,17 @@ function MyRoutesListItem(
   );
 }
 
+type MyRoutesListProps = {
+
+  /** Human-readable label */
+  ariaLabelledby: string;
+};
+
 /**
  * Component presenting the list of stored routes.
  */
-export default function MyRoutesList(): JSX.Element {
+export default function MyRoutesList(
+  { ariaLabelledby }: MyRoutesListProps): JSX.Element {
 
   const storedPlaces = useStoredPlaces();
   const storedSmarts = useStoredSmarts();
@@ -191,7 +201,13 @@ export default function MyRoutesList(): JSX.Element {
   return (
     <Box>
       {routes.length > 0
-        ? <Stack direction={"column"} gap={2} sx={{ mb: 2 }}>
+        ? <Stack
+            direction={"column"}
+            aria-labelledby={ariaLabelledby}
+            gap={2}
+            role={"list"}
+            sx={{ mb: 2 }}
+          >
             {routes.map((r, i) => (
               <MyRoutesListItem
                 key={i}

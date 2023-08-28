@@ -19,7 +19,8 @@ import {
   useStoredSmarts
 } from "../features/sharedHooks";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
-import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
+import LogoCloseBar from "./_shared/LogoCloseBar";
+import PanelSelector from "./_shared/PanelSelector";
 import BottomButtons from "./search/BottomButtons";
 import SearchDirecsSequence from "./search/SearchDirecsSequence";
 
@@ -57,8 +58,8 @@ export default function SearchDirecsPanel(): JSX.Element {
 
   return (
     <Box>
-      <LogoCloseMenu onLogo={() => {}} />
-      <MainMenu panel={2} />
+      <LogoCloseBar />
+      <PanelSelector panel={2} />
       <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
         <Typography>
           Define a sequence of points (at least two), and find the fastest routes visiting them in order.

@@ -11,6 +11,7 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
+import { camelCaseToLabel } from "../../domain/functions";
 import {
   AttributeFilterCollect,
   AttributeFilterNumeric,
@@ -43,7 +44,12 @@ function CategoryFilterCollect({ label, items }: CategoryFilterCollectProps): JS
         input={<OutlinedInput label={label} />}
         renderValue={(selected) => (
           <Stack direction={"row"} flexWrap={"wrap"} gap={0.2}>
-            {selected.map((v, i) => <Chip key={i} label={v} />)}
+            {selected.map((v, i) => (
+              <Chip
+                key={i}
+                label={v}
+              />
+            ))}
           </Stack>
         )}
       />
@@ -85,6 +91,7 @@ export default function CategoryFilterDialog(
         aria-label={"Category"}
         display={"flex"}
         justifyContent={"space-between"}
+        alignItems={"center"}
       >
         <span>Category</span>
         <IconButton size={"small"} title={"Hide dialog"} onClick={onHide}>
@@ -105,7 +112,13 @@ export default function CategoryFilterDialog(
             <Stack direction={"column"} gap={1}>
               <Typography>Should have</Typography>
               <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
-                {esKeys.map((e, i) => (<Chip key={i} label={e} variant={"outlined"} />))}
+                {esKeys.map((e, i) => (
+                  <Chip
+                    key={i}
+                    label={camelCaseToLabel(e)}
+                    variant={"outlined"}
+                  />
+                ))}
               </Stack>
             </Stack>
           }
@@ -114,7 +127,11 @@ export default function CategoryFilterDialog(
               <Typography>Yes / No</Typography>
               <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
                 {bsKeys.map((b, i) => (
-                  <Chip key={i} label={`${b} == ${(bs as any)[b] ? "yes" : "no"}`} variant={"outlined"} />))}
+                  <Chip
+                    key={i}
+                    label={`${camelCaseToLabel(b)} == ${(bs as any)[b] ? "yes" : "no"}`}
+                    variant={"outlined"}
+                  />))}
               </Stack>
             </Stack>
           }
@@ -124,7 +141,13 @@ export default function CategoryFilterDialog(
               <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
                 {nsKeys.map((n, i) => {
                   const { min, max } = ((ns as any)[n]) as AttributeFilterNumeric;
-                  return <Chip key={i} label={`${min} &leq; ${n} &leq; ${max}`} variant={"outlined"} />
+                  return (
+                    <Chip
+                      key={i}
+                      label={`${min} ≤ ${camelCaseToLabel(n)} ≤ ${max}`}
+                      variant={"outlined"}
+                    />
+                  );
                 })}
               </Stack>
             </Stack>
@@ -134,7 +157,11 @@ export default function CategoryFilterDialog(
               <Typography>Contains</Typography>
               <Stack direction={"row"} flexWrap={"wrap"} gap={1}>
                 {tsKeys.map((t, i) => (
-                  <Chip key={i} label={`${((ts as any)[t]) as AttributeFilterTextual} + ${t}`} variant={"outlined"} />
+                  <Chip
+                    key={i}
+                    label={`${((ts as any)[t]) as AttributeFilterTextual} ∈ ${camelCaseToLabel(t)}`}
+                    variant={"outlined"}
+                  />
                 ))}
               </Stack>
             </Stack>
@@ -143,11 +170,11 @@ export default function CategoryFilterDialog(
             <Stack direction={"column"} gap={1}>
               <Typography>Includes any / Excludes all</Typography>
               <Stack direction={"column"} gap={1}>
-                {csKeys.map((cat, i) => {
-                  const { inc, exc } = ((cs as any)[cat]) as AttributeFilterCollect;
+                {csKeys.map((c, i) => {
+                  const { inc, exc } = ((cs as any)[c]) as AttributeFilterCollect;
                   return (
                     <Stack key={i} direction={"column"} gap={1}>
-                      <Typography>{cat}</Typography>
+                      <Typography>{camelCaseToLabel(c)}</Typography>
                       <CategoryFilterCollect label={"Includes"} items={inc} />
                       <CategoryFilterCollect label={"Excludes"} items={exc} />
                     </Stack>

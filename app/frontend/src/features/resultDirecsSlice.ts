@@ -7,16 +7,16 @@ type ResultDirecsState = {
   result: UiDirec[];
 };
 
-const initialState = (): ResultDirecsState => ({
+const initialResultDirecsState = (): ResultDirecsState => ({
   index: 0,
   result: []
 });
 
 export const resultDirecsSlice = createSlice({
   name: "result/direcs",
-  initialState: initialState(),
+  initialState: initialResultDirecsState(),
   reducers: {
-    resetResultDirecs: () => initialState(),
+    resetResultDirecs: () => initialResultDirecsState(),
     setResultDirecs: (state, action: PayloadAction<UiDirec[]>) => {
       state.result = action.payload;
     },

@@ -80,7 +80,10 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
   };
 
   return (
-    <Box>
+    <Box
+      role={"listitem"}
+      aria-label={place.name}
+    >
       <BusyListItem
         label={place.name}
         link={getSmartPlaceLink(place.smartId)}
@@ -125,18 +128,31 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
   );
 }
 
+type MyPlacesListProps = {
+
+  /** Human-readable label */
+  ariaLabelledby: string;
+}
+
 /**
  * Component presenting list of passed places.
  */
-export default function MyPlacesList(): JSX.Element {
+export default function MyPlacesList({ ariaLabelledby }: MyPlacesListProps): JSX.Element {
 
   const { places } = useAppSelector((state) => state.favorites);
 
   return (
     <Box>
       {places.length > 0
-        ? <Stack direction={"column"} gap={2}>
-            {places.map((p, i) => <MyPlacesListItem key={i} index={i} place={p} />)}
+        ? <Stack
+            direction={"column"}
+            aria-labelledby={ariaLabelledby}
+            gap={2}
+            role={"list"}
+          >
+            {places.map((p, i) => (
+              <MyPlacesListItem key={i} index={i} place={p} />
+            ))}
           </Stack>
         : <FavoriteStub
             what={"place"}

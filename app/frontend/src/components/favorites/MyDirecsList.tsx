@@ -4,11 +4,14 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import DirectionsIcon from "@mui/icons-material/Directions";
 import { AppContext } from "../../App";
-import { StoredDirec, StoredPlace } from "../../domain/types";
 import {
   SEARCH_DIRECS_ADDR,
   VIEWER_DIREC_ADDR
 } from "../../domain/routing";
+import {
+  StoredDirec,
+  StoredPlace
+} from "../../domain/types";
 import {
   deleteFavoriteDirec,
   updateFavoriteDirec
@@ -104,7 +107,10 @@ function MyDirecsListItem(
   };
 
   return (
-    <Box>
+    <Box
+      role={"listitem"}
+      aria-label={direc.name}
+    >
       <BusyListItem
         label={name}
         l={
@@ -148,10 +154,16 @@ function MyDirecsListItem(
   );
 }
 
+type MyDirecsListProps = {
+
+  /** Human-readable label */
+  ariaLabelledby: string;
+}
+
 /**
  * Component presenting the list of stored directions.
  */
-export default function MyDirecsList(): JSX.Element {
+export default function MyDirecsList({ ariaLabelledby }: MyDirecsListProps): JSX.Element {
 
   const storedPlaces = useStoredPlaces();
   const storedSmarts = useStoredSmarts();
@@ -160,7 +172,13 @@ export default function MyDirecsList(): JSX.Element {
   return (
     <Box>
       {direcs.length > 0
-        ? <Stack direction={"column"} gap={2} sx={{ mb: 2 }}>
+        ? <Stack
+            direction={"column"}
+            aria-labelledby={ariaLabelledby}
+            gap={2}
+            role={"list"}
+            sx={{ mb: 2 }}
+          >
             {direcs.map((d, i) => (
               <MyDirecsListItem
                 key={i}

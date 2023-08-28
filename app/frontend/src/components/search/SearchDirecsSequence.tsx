@@ -27,7 +27,7 @@ import { useAppDispatch } from "../../features/storeHooks";
 import { useSearchDirecsMap } from "../../features/searchHooks";
 import { DeleteButton, PlaceButton, SwapButton } from "../_shared/_buttons";
 import { ListItemLabel } from "../_shared/_list-items";
-import SelectPlaceDialog from "../_shared/SelectPlaceDialog";
+import SelectPointDialog from "../_shared/SelectPointDialog";
 
 /**
  * Hot fix for TypeScript strict mode support.
@@ -190,7 +190,7 @@ export default function SearchDirecsSequence({ waypoints }: SearchDirecsSequence
         onAppend={() => { setSelectDialog(true); }}
         onRevers={() => { dispatch(reverseSearchDirecsWaypoints()); }}
       />
-      <SelectPlaceDialog
+      <SelectPointDialog
         show={selectDialog}
         kind={"common"}
         onHide={() => { setSelectDialog(false); }}

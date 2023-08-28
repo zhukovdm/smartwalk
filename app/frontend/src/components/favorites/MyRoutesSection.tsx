@@ -20,20 +20,23 @@ export default function MyRoutesSection(): JSX.Element {
   const dispatch = useAppDispatch();
   const { routesExpanded } = useAppSelector((state) => state.favorites);
 
+  const [head, cont] = ["head", "cont"]
+    .map((item) => `smartwalk-favorites-my-routes-${item}`);
+
   return (
     <Accordion
       expanded={routesExpanded}
       onChange={() => { dispatch(toggleFavoriteRoutesExpanded()) }}
     >
       <AccordionSummary
-        id={"favorites-my-routes-head"}
-        aria-controls={"favorites-my-routes-cont"}
+        id={head}
+        aria-controls={cont}
         expandIcon={<ExpandSectionIcon expanded={routesExpanded} />}
       >
         <Typography>My Routes</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyRoutesList />
+        <MyRoutesList ariaLabelledby={head} />
       </AccordionDetails>
     </Accordion>
   );

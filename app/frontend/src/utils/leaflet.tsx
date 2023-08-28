@@ -12,7 +12,6 @@ import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { IMap, IPin } from "../domain/interfaces";
 import { point2place } from "./helpers";
 
-const pos = "bottomright";
 const dir = process.env.PUBLIC_URL + "/assets/markers";
 
 enum Color {
@@ -167,12 +166,12 @@ export class LeafletMap implements IMap {
   private readonly fillOpacity: number = 0.2;
 
   private readonly map: Map;
-  private readonly shapeLayer: LayerGroup;
-  private readonly markerLayer: LayerGroup;
+  private readonly shpLayer: LayerGroup;
+  private readonly mrkLayer: LayerGroup;
   private pins: LeafletPin[];
 
   private addMarker(point: WgsPoint, icon: Icon<any>, draggable: boolean): Marker<any> {
-    return L.marker(new LatLng(point.lat, point.lon), { icon: icon, draggable: draggable }).addTo(this.markerLayer);
+    return L.marker(new LatLng(point.lat, point.lon), { icon: icon, draggable: draggable }).addTo(this.mrkLayer);
   }
 
   private generatePin(place: UiPlace, categories: PlaceCategory[], icon: Icon<any>, draggable: boolean): LeafletPin {
@@ -191,27 +190,25 @@ export class LeafletMap implements IMap {
   constructor(map: Map) {
 
     this.map = map;
-    L.control.zoom({ position: pos }).addTo(map);
-    L.control.locate({ position: pos }).addTo(map);
 
-    this.shapeLayer = L.layerGroup().addTo(map);
-    this.markerLayer = L.layerGroup().addTo(map);
+    this.shpLayer = L.layerGroup().addTo(map);
+    this.mrkLayer = L.layerGroup().addTo(map);
 
     this.pins = [];
   }
 
   public clear(): void {
     this.pins = [];
-    this.shapeLayer.clearLayers();
-    this.markerLayer.clearLayers();
+    this.shpLayer.clearLayers();
+    this.mrkLayer.clearLayers();
   }
 
   public clearShapes(): void {
-    this.shapeLayer.clearLayers();
+    this.shpLayer.clearLayers();
   }
 
   public flyTo(place: UiPlace): void {
-    const pin = this.pins.find(pin => pin.place === place); // ref. equality!
+    const pin = this.pins.find((pin) => pin.place === place); // ref. equality!
 
     if (pin) {
       const point = pin.place.location;
@@ -244,21 +241,21 @@ export class LeafletMap implements IMap {
     if (radius < 0.0) { return; }
     L.circle(new LatLng(center.lat, center.lon), {
       color: this.color, fillColor: this.color, fillOpacity: this.fillOpacity, radius: radius
-    }).addTo(this.shapeLayer);
+    }).addTo(this.shpLayer);
   }
 
   public drawPolygon(polygon: WgsPoint[]): void {
     if (polygon.length < 4) { return; }
     L.polygon(polygon.map(pt => LeafletConverter.point2latlng(pt)), {
       color: this.color, fillColor: this.color, fillOpacity: this.fillOpacity
-    }).addTo(this.shapeLayer);
+    }).addTo(this.shpLayer);
   }
 
   public drawPolyline(polyline: WgsPoint[]): void {
     if (polyline.length < 2) { return; }
     L.polyline(polyline.map(pt => LeafletConverter.point2latlng(pt)), {
       color: this.color, fillColor: this.color, fillOpacity: this.fillOpacity
-    }).addTo(this.shapeLayer);
+    }).addTo(this.shpLayer);
   }
 
   public captureLocation(callback: (point: WgsPoint) => void): void {

@@ -21,20 +21,23 @@ export default function MyPlacesSection(): JSX.Element {
   const dispatch = useAppDispatch();
   const { placesExpanded } = useAppSelector((state) => state.favorites);
 
+  const [head, cont] = ["head", "cont"]
+    .map((item) => `smartwalk-favorites-my-places-${item}`);
+
   return (
     <Accordion
       expanded={placesExpanded}
       onChange={() => { dispatch(toggleFavoritePlacesExpanded()); }}
     >
       <AccordionSummary
-        id={"favorites-my-places-head"}
-        aria-controls={"favorites-my-places-cont"}
+        id={head}
+        aria-controls={cont}
         expandIcon={<ExpandSectionIcon expanded={placesExpanded} />}
       >
         <Typography>My Places</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyPlacesList />
+        <MyPlacesList ariaLabelledby={head} />
         <MyPlacesCreateDialog />
       </AccordionDetails>
     </Accordion>

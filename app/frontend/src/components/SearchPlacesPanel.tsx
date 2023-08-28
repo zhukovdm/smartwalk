@@ -17,19 +17,26 @@ import {
   setSearchPlacesRadius,
   updateSearchPlacesCategory
 } from "../features/searchPlacesSlice";
-import { usePlace, useStoredPlaces } from "../features/sharedHooks";
-import { useAppDispatch, useAppSelector } from "../features/storeHooks";
+import {
+  usePlace,
+  useStoredPlaces
+} from "../features/sharedHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../features/storeHooks";
 import { useSearchPlacesMap } from "../features/searchHooks";
-import { LogoCloseMenu, MainMenu } from "./_shared/_menus";
 import {
   FreePlaceListItem,
   RemovablePlaceListItem
 } from "./_shared/_list-items";
-import SelectPlaceDialog from "./_shared/SelectPlaceDialog";
+import LogoCloseBar from "./_shared/LogoCloseBar";
+import PanelSelector from "./_shared/PanelSelector";
+import SelectPointDialog from "./_shared/SelectPointDialog";
+import BottomButtons from "./search/BottomButtons";
+import CategoryBox from "./search/CategoryBox";
 import DistanceSlider from "./search/DistanceSlider";
 import KilometersLink from "./search/KilometersLink";
-import CategoryBox from "./search/CategoryBox";
-import BottomButtons from "./search/BottomButtons";
 
 /**
  * Panel for place search configuration.
@@ -72,8 +79,8 @@ export default function SearchPlacesPanel(): JSX.Element {
 
   return (
     <Box>
-      <LogoCloseMenu />
-      <MainMenu panel={1} />
+      <LogoCloseBar />
+      <PanelSelector panel={1} />
       <Stack
         direction={"column"}
         gap={4}
@@ -128,7 +135,7 @@ export default function SearchPlacesPanel(): JSX.Element {
           onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
         />
-        <SelectPlaceDialog
+        <SelectPointDialog
           show={selectDialog}
           kind={"center"}
           onHide={() => { setSelectDialog(false); }}

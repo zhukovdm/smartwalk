@@ -1,24 +1,41 @@
-import { useContext } from "react";
-import { LatLng } from "leaflet";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { useContext, useEffect } from "react";
+import L, { LatLng } from "leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  ZoomControl,
+  useMap
+} from "react-leaflet";
+import "leaflet.locatecontrol";
 import { AppContext } from "../App";
 import { MapFactory } from "../features/context";
 
+const POS = "bottomright";
+
 /**
- * Obtain Leaflet map and store it to the context.
+ * Geolocation control.
  */
-function MapExtractor(): JSX.Element {
-
+function LocateControl(): null {
   const map = useMap();
-  const ctx = useContext(AppContext);
 
-  ctx.map = ctx.map ?? MapFactory.getMap(map);
+  useEffect(() => {
+    const lc = L.control.locate({ position: POS }).addTo(map);
+    return () => { lc.remove(); }
+  }, [map]);
 
-  return (<></>);
+  return (null);
 }
 
 /**
- * Leaflet map.
+ * Obtain Leaflet map and store in the context.
+ */
+function MapExtractor(): null {
+  useContext(AppContext).map = MapFactory.getMap(useMap());
+  return (null);
+}
+
+/**
+ * Leaflet map container.
  */
 export default function MapControl(): JSX.Element {
 
@@ -35,6 +52,8 @@ export default function MapControl(): JSX.Element {
       zoomControl={false}
     >
       <TileLayer url={url} attribution={att} />
+      <ZoomControl position={POS} />
+      <LocateControl />
       <MapExtractor />
     </MapContainer>
   );

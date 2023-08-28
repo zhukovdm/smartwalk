@@ -13,7 +13,11 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import { AppContext } from "../../App";
-import { WgsPoint, UiPlace, StoredPlace } from "../../domain/types";
+import {
+  WgsPoint,
+  UiPlace,
+  StoredPlace
+} from "../../domain/types";
 import { point2place } from "../../utils/helpers";
 import {
   hidePanel,
@@ -27,12 +31,12 @@ import {
 import { PlaceKind } from "./_types";
 import { AddPlaceButton } from "./_buttons";
 
-type SelectPlaceDialogProps = {
+type SelectPointDialogProps = {
 
   /** Set to open dialog. */
   show: boolean;
 
-  /** Place kind (source, target, etc.) */
+  /** Point kind (source, target, common, etc.) */
   kind: PlaceKind;
 
   /** Action hiding dialog. */
@@ -43,11 +47,11 @@ type SelectPlaceDialogProps = {
 };
 
 /**
- * Component showing a dialog for selecting a place, either stored
+ * Component showing a dialog for selecting a point, either stored
  * or user-defined.
  */
-export default function SelectPlaceDialog(
-  { show, kind, onHide, onSelect }: SelectPlaceDialogProps): JSX.Element {
+export default function SelectPointDialog(
+  { show, kind, onHide, onSelect }: SelectPointDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
@@ -82,7 +86,6 @@ export default function SelectPlaceDialog(
 
   return (
     <Dialog
-      aria-label={"Select point"}
       open={show}
       onClose={onHide}
     >
