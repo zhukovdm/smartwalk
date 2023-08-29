@@ -58,8 +58,10 @@ export default function StandardListItem(
 
   return (
     <Stack
+      aria-label={rest.label}
       direction={"row"}
       alignItems={"stretch"}
+      role={"listitem"}
       gap={0.5}
       sx={{ width: "100%" }}
     >

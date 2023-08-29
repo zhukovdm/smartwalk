@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Stack from "@mui/material/Stack";
@@ -35,6 +35,12 @@ export default function CategoryFilter(
   const [showDialog, setShowDialog] = useState(false);
   const chkLabel = `${active ? "Hide" : "Show"} (${catLabel}) items`;
 
+  const keyboardAction = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      setShowDialog(true);
+    }
+  }
+
   return (
     <Box>
       <Stack
@@ -53,7 +59,9 @@ export default function CategoryFilter(
         <Box
           aria-label={`Show (${catLabel}) filters`}
           role={"button"}
-          sx={{ cursor: "pointer" }}
+          tabIndex={0}
+          sx={{ cursor: "pointer", }}
+          onKeyDown={keyboardAction}
           onClick={() => { setShowDialog(true); }}
         >
           <Typography

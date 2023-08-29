@@ -6,7 +6,7 @@ import InformPlaceListItem from "./InformPlaceListItem";
 type DirecContentListProps = {
 
   /** Current map */
-  map: IMap | undefined;
+  map?: IMap;
 
   /** Places on the direction */
   places: UiPlace[];
@@ -19,7 +19,11 @@ export default function DirecContentList(
   { map, places }: DirecContentListProps): JSX.Element {
 
   return (
-    <Stack gap={2}>
+    <Stack
+      role={"list"}
+      aria-label={"Waypoints"}
+      gap={2}
+    >
       {places
         .map((place, i) => (
           <InformPlaceListItem
