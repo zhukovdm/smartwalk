@@ -17,6 +17,11 @@ function render() {
 
 describe("<BackCloseBar />", () => {
 
+  test("render", () => {
+    const { container } = render();
+    expect(container).toBeTruthy();
+  });
+
   test("back makes one step back", () => {
     const { getByRole } = render();
     fireEvent.click(getByRole("button", { name: "Back" }));
