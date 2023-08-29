@@ -36,7 +36,7 @@ export default function BackCloseBar(): JSX.Element {
         title={"Hide panel"}
         onClick={() => { dispatch(hidePanel()); }}
       >
-        <CloseIcon />
+        <CloseIcon fontSize={"small"} />
       </IconButton>
     </Box>
   );

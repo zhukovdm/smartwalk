@@ -114,17 +114,27 @@ export default function PrecedenceBox(
 
   return (
     <Box>
-      <Paper variant={"outlined"}>
-        <Stack direction={"row"} flexWrap={"wrap"}>
+      <Paper
+        aria-label={"Arrow box"}
+        role={"region"}
+        variant={"outlined"}
+      >
+        <Stack
+          aria-label={"Arrows"}
+          role={"list"}
+          direction={"row"}
+          flexWrap={"wrap"}
+        >
           {precedence.map((edge, i) => (
-            <Chip
-              key={i}
-              color={"primary"}
-              sx={{ m: 0.35, color: "black" }}
-              variant={"outlined"}
-              label={`${edge.fr + 1} → ${edge.to + 1}`}
-              onDelete={() => { deleteEdge(i); }}
-            />
+            <Box key={i} role={"listitem"}>
+              <Chip
+                color={"primary"}
+                sx={{ m: 0.35, color: "black" }}
+                variant={"outlined"}
+                label={`${edge.fr + 1} → ${edge.to + 1}`}
+                onDelete={() => { deleteEdge(i); }}
+              />
+            </Box>
           ))}
         </Stack>
         <Button

@@ -8,11 +8,11 @@ import CategoryFilterDialog from "./CategoryFilterDialog";
 
 type CategoryFilterProps = {
 
-  /** Flag is set if this category is satisfied by some place */
-  found: boolean;
-
   /** Indicate if the user has selected this filter */
   active: boolean;
+
+  /** Flag is set if this category is satisfied by some place */
+  found: boolean;
 
   /** Index of a category in the list. */
   index: number;
@@ -30,10 +30,10 @@ type CategoryFilterProps = {
 export default function CategoryFilter(
   { found, active, index, category, onToggle }: CategoryFilterProps): JSX.Element {
 
-  const catLabel = `(${index + 1}: ${category.keyword})`;
+  const catLabel = `${index + 1}: ${category.keyword}`;
 
   const [showDialog, setShowDialog] = useState(false);
-  const chkLabel = `${active ? "Hide" : "Show"} ${catLabel} items`;
+  const chkLabel = `${active ? "Hide" : "Show"} (${catLabel}) items`;
 
   return (
     <Box>
@@ -51,15 +51,20 @@ export default function CategoryFilter(
           onChange={onToggle}
         />
         <Box
-          aria-label={`Show ${catLabel} filters`}
+          aria-label={`Show (${catLabel}) filters`}
           role={"button"}
-          onClick={() => { setShowDialog(true); }}
           sx={{ cursor: "pointer" }}
+          onClick={() => { setShowDialog(true); }}
         >
           <Typography
-            sx={{ textDecorationLine: found ? undefined : "line-through", color: found ? undefined : "grey" }}
+            sx={
+              {
+                color: found ? undefined : "grey",
+                textDecorationLine: found ? undefined : "line-through"
+              }
+            }
           >
-            {`${index + 1}: ${category.keyword}`}
+            {catLabel}
           </Typography>
         </Box>
       </Stack>

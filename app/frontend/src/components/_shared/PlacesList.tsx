@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
-import { FixedPlaceListItem } from "./_list-items";
+import InformPlaceListItem from "./InformPlaceListItem";
 
 type PlacesListProps = {
 
@@ -20,11 +20,10 @@ export default function PlacesList({ map, places }: PlacesListProps): JSX.Elemen
   return (
     <Stack direction={"column"} gap={2}>
       {places.map((place, i) => (
-        <FixedPlaceListItem
+        <InformPlaceListItem
           key={i}
+          place={place}
           kind={!!place.placeId ? "stored" : "common"}
-          label={place.name}
-          smartId={place.smartId}
           title={"Fly to"}
           onPlace={() => { map?.flyTo(place); }}
         />

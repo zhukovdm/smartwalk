@@ -1,4 +1,23 @@
 /**
+ * Recognized entities.
+ */
+export type SomethingKind
+  = "direction"
+  | "place"
+  | "route";
+
+/**
+ * Recognized kinds of places (color schemata).
+ */
+export type PlaceKind
+  = "stored"
+  | "common"
+  | "source"
+  | "target"
+  | "center"
+  | "action";
+
+/**
  * Point in [WGS84] CRS with web mercator bounds.
  * - https://epsg.io/3857
  * - https://epsg.io/4326

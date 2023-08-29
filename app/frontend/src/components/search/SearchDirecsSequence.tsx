@@ -1,5 +1,4 @@
 import {
-  MouseEventHandler,
   useContext,
   useEffect,
   useState
@@ -15,7 +14,6 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import DragIndicatorIcon from "@mui/icons-material/DragIndicator";
 import { AppContext } from "../../App";
-import { getSmartPlaceLink } from "../../domain/functions";
 import { UiPlace } from "../../domain/types";
 import {
   appendSearchDirecsPlace,
@@ -25,9 +23,10 @@ import {
 } from "../../features/searchDirecsSlice";
 import { useAppDispatch } from "../../features/storeHooks";
 import { useSearchDirecsMap } from "../../features/searchHooks";
-import { DeleteButton, PlaceButton, SwapButton } from "../_shared/_buttons";
-import { ListItemLabel } from "../_shared/_list-items";
-import SelectPointDialog from "../_shared/SelectPointDialog";
+import RemovablePlaceListItem from "../_shared/RemovablePlaceListItem";
+import ReverseButton from "../_shared/ReverseButton";
+import VacantPlaceListItem from "../_shared/VacantPlaceListItem";
+import SelectPointDialog from "./SelectPointDialog";
 
 /**
  * Hot fix for TypeScript strict mode support.
@@ -51,17 +50,17 @@ export const StrictModeDroppable = ({ children, ...props }: DroppableProps) => {
 type DirectControlListItemProps = {
 
   /** Handler initiating append action. */
-  onAppend: MouseEventHandler<Element>;
+  onAppend: () => void;
 
   /** Handler reversing sequence. */
-  onRevers: MouseEventHandler<Element>;
+  onRevers: () => void;
 };
 
 /**
  * Control bar appending places and reversing sequence.
  */
 function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProps): JSX.Element {
-
+  const title = "Select waypoint";
   return (
     <Stack
       direction={"row"}
@@ -70,20 +69,13 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
       <div style={{ display: "flex", alignItems: "center" }}>
         <DragIndicatorIcon className={"action-place"} />
       </div>
-      <Stack
-        direction={"row"}
-        gap={0.5}
+      <VacantPlaceListItem
+        kind={"action"}
+        title={title}
+        label={`${title}...`}
         onClick={onAppend}
-        sx={{ width: "100%", color: "#595959", cursor: "pointer" }}
-      >
-        <PlaceButton
-          kind={"action"}
-          title={"Select waypoint"}
-          onPlace={() => { }}
-        />
-        <ListItemLabel label={"Select waypoint..."} />
-      </Stack>
-      <SwapButton title={"Reverse"} onSwap={onRevers} />
+      />
+      <ReverseButton onClick={onRevers} />
     </Stack>
   );
 }
@@ -109,9 +101,14 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
   const { map } = useContext(AppContext);
 
   return (
-    <Draggable draggableId={`place-${index}`} index={index}>
+    <Draggable
+      draggableId={`smartwalk-drag-place-${index}`}
+      index={index}
+    >
       {(provided) => (
         <div
+          aria-label={place.name}
+          role={"listitem"}
           ref={provided.innerRef}
           {...provided.draggableProps}
         >
@@ -127,18 +124,12 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
             >
               <DragIndicatorIcon className={"action-place"} />
             </div>
-            <PlaceButton
+            <RemovablePlaceListItem
+              place={place}
+              kind={!!place.placeId ? "stored" : "common"}
               title={"Fly to"}
-              kind={place.placeId ? "stored" : "common"}
               onPlace={() => { map?.flyTo(place); }}
-            />
-            <ListItemLabel
-              label={place.name}
-              link={place.smartId ? getSmartPlaceLink(place.smartId) : undefined}
-            />
-            <DeleteButton
-              title={"Remove point"}
-              onDelete={() => { dispatch(deleteSearchDirecsPlace(index)); }}
+              onRemove={() => { dispatch(deleteSearchDirecsPlace(index)); }}
             />
           </Stack>
         </div>
@@ -170,22 +161,27 @@ export default function SearchDirecsSequence({ waypoints }: SearchDirecsSequence
 
   return (
     <Box>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <StrictModeDroppable droppableId={"droppable"}>
-          {(provided) => (
-            <div ref={provided.innerRef} {...provided.droppableProps}>
-              {waypoints.map((place, i) => (
-                <DirecsPresentListItem
-                  key={i}
-                  place={place}
-                  index={i}
-                />
-              ))}
-              {provided.placeholder}
-            </div>
-          )}
-        </StrictModeDroppable>
-      </DragDropContext>
+      <Box
+        aria-label={"Waypoints"}
+        role={"list"}
+      >
+        <DragDropContext onDragEnd={onDragEnd}>
+          <StrictModeDroppable droppableId={"droppable"}>
+            {(provided) => (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {waypoints.map((place, i) => (
+                  <DirecsPresentListItem
+                    key={i}
+                    place={place}
+                    index={i}
+                  />
+                ))}
+                {provided.placeholder}
+              </div>
+            )}
+          </StrictModeDroppable>
+        </DragDropContext>
+      </Box>
       <DirecsControlListItem
         onAppend={() => { setSelectDialog(true); }}
         onRevers={() => { dispatch(reverseSearchDirecsWaypoints()); }}

@@ -30,13 +30,13 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { DirecButton } from "../_shared/_buttons";
-import { BusyListItem } from "../_shared/_list-items";
+import StandardListItem from "../_shared/StandardListItem";
 import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 import SomethingEditDialog from "./SomethingEditDialog";
 import SomethingDeleteDialog from "./SomethingDeleteDialog";
+import StoredDirecButton from "./StoredDirecButton";
 
 type MyDirecsListItemProps = {
 
@@ -111,13 +111,10 @@ function MyDirecsListItem(
       role={"listitem"}
       aria-label={direc.name}
     >
-      <BusyListItem
+      <StandardListItem
         label={name}
         l={
-          <DirecButton
-            title={"Draw direction"}
-            onDirec={onDirec}
-          />
+          <StoredDirecButton onClick={onDirec} />
         }
         r={
           <ListItemMenu

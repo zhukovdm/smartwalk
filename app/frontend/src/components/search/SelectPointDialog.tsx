@@ -19,17 +19,12 @@ import {
   StoredPlace
 } from "../../domain/types";
 import { point2place } from "../../utils/helpers";
-import {
-  hidePanel,
-  setDialogBlock,
-  showPanel
-} from "../../features/panelSlice";
+import { hidePanel, showPanel } from "../../features/panelSlice";
 import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { PlaceKind } from "./_types";
-import { AddPlaceButton } from "./_buttons";
+import AddLocationButton, { AddLocationButtonKind } from "./AddLocationButton";
 
 type SelectPointDialogProps = {
 
@@ -37,7 +32,7 @@ type SelectPointDialogProps = {
   show: boolean;
 
   /** Point kind (source, target, common, etc.) */
-  kind: PlaceKind;
+  kind: AddLocationButtonKind;
 
   /** Action hiding dialog. */
   onHide: () => void;
@@ -56,20 +51,16 @@ export default function SelectPointDialog(
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
 
-  const { dialogBlock } = useAppSelector((state) => state.panel);
-
   // custom place
 
   const callback = (point: WgsPoint) => {
     onSelect(point2place(point));
     dispatch(showPanel());
-    dispatch(setDialogBlock(false));
   };
 
-  const handleCustom = () => {
+  const handleLocation = () => {
     onHide();
     dispatch(hidePanel());
-    dispatch(setDialogBlock(true));
     map?.captureLocation(callback);
   };
 
@@ -104,7 +95,7 @@ export default function SelectPointDialog(
       </DialogTitle>
       <DialogContent>
         <Typography>
-          Click <AddPlaceButton disabled={dialogBlock} kind={kind} title={"Select location"} onPlace={handleCustom} /> to select a point on the map.
+          Click <AddLocationButton kind={kind} onClick={handleLocation} /> to select a point on the map.
         </Typography>
         <Divider>
           <Typography>OR</Typography>

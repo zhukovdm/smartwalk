@@ -1,9 +1,10 @@
 import Box from "@mui/material/Box";
+import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
-import { PlaceButton } from "./_buttons";
 import { point2text } from "../../utils/helpers";
+import PlaceButton from "./PlaceButton";
 
 type PlaceLocationProps = {
 
@@ -26,24 +27,27 @@ export default function PlaceLocation(
   return (
     <Box
       display={"flex"}
-      justifyContent={"space-between"}
+      justifyContent={"right"}
     >
-      <Box></Box>
-      <Box
+      <Stack
+        direction={"row"}
         alignItems={"center"}
-        display={"flex"}
-        onClick={() => { map?.flyTo(place); }}
-        sx={{ cursor: "pointer" }}
+        spacing={0.25}
       >
         <PlaceButton
           kind={isStored ? "stored" : "common"}
           title={"Fly to"}
-          onPlace={() => {}}
+          onClick={() => { map?.flyTo(place); }}
         />
-        <Typography fontSize={"small"}>
+        <Typography
+          fontSize={"small"}
+          sx={{ cursor: "pointer" }}
+          aria-hidden
+          onClick={() => { map?.flyTo(place); }}
+        >
           {point2text(place.location)}
         </Typography>
-      </Box>
+      </Stack>
     </Box>
   );
 }

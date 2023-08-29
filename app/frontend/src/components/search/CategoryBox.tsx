@@ -161,18 +161,28 @@ export default function CategoryBox(
 
   return (
     <Box>
-      <Paper variant={"outlined"}>
-        <Stack direction={"row"} flexWrap={"wrap"}>
+      <Paper
+        aria-label={"Category box"}
+        role={"region"}
+        variant={"outlined"}
+      >
+        <Stack
+          aria-label={"Categories"}
+          role={"list"}
+          direction={"row"}
+          flexWrap={"wrap"}
+        >
           {categories.map((category, i) => (
-            <Chip
-              key={i}
-              color={"primary"}
-              sx={{ m: 0.35, fontWeight: "medium" }}
-              variant={"filled"}
-              label={`${i + 1}: ${category.keyword}`}
-              onClick={() => dialog(i)}
-              onDelete={() => deleteCategory(i)}
-            />
+            <Box key={i} role={"listitem"}>
+              <Chip
+                color={"primary"}
+                sx={{ m: 0.35, fontWeight: "medium" }}
+                variant={"filled"}
+                label={`${i + 1}: ${category.keyword}`}
+                onClick={() => dialog(i)}
+                onDelete={() => deleteCategory(i)}
+              />
+            </Box>
           ))}
         </Stack>
         <Button

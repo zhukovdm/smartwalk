@@ -29,18 +29,16 @@ import {
   useAppSelector
 } from "../features/storeHooks";
 import { useSearchRoutesMap } from "../features/searchHooks";
-import {
-  FreePlaceListItem,
-  RemovablePlaceListItem,
-} from "./_shared/_list-items";
 import LogoCloseBar from "./_shared/LogoCloseBar";
 import PanelSelector from "./_shared/PanelSelector";
-import SelectPointDialog from "./_shared/SelectPointDialog";
+import RemovablePlaceListItem from "./_shared/RemovablePlaceListItem";
+import VacantPlaceListItem from "./_shared/VacantPlaceListItem";
 import BottomButtons from "./search/BottomButtons";
 import CategoryBox from "./search/CategoryBox";
 import DistanceSlider from "./search/DistanceSlider";
 import KilometersLink from "./search/KilometersLink";
 import PrecedenceBox from "./search/PrecedenceBox";
+import SelectPointDialog from "./search/SelectPointDialog";
 
 /**
  * Panel for route search configuration.
@@ -92,8 +90,14 @@ export default function SearchRoutesPanel(): JSX.Element {
     }
   };
 
+  const sourceTitle = "Select starting point";
+  const targetTitle = "Select destination";
+
   return (
-    <Box role={"search"} aria-label={"Search routes"}>
+    <Box
+      role={"search"}
+      aria-label={"Search routes"}
+    >
       <LogoCloseBar />
       <PanelSelector panel={0} />
       <Stack direction={"column"} gap={4} sx={{ mx: 2, my: 4 }}>
@@ -101,35 +105,33 @@ export default function SearchRoutesPanel(): JSX.Element {
         <Stack direction={"column"} gap={1}>
           <Stack direction={"column"} gap={2}>
             {(!source)
-              ? <FreePlaceListItem
+              ? <VacantPlaceListItem
                   kind={"source"}
-                  label={"Select starting point..."}
-                  title={"Select starting point"}
-                  onPlace={() => { setSourceSelectDialog(true); }}
+                  label={`${sourceTitle}...`}
+                  title={sourceTitle}
+                  onClick={() => { setSourceSelectDialog(true); }}
                 />
               : <RemovablePlaceListItem
                   kind={"source"}
-                  label={source.name}
-                  smartId={source.smartId}
+                  place={source}
                   title={"Fly to"}
                   onPlace={() => { map?.flyTo(source); }}
-                  onDelete={() => { dispatch(setSearchRoutesSource(undefined)); }}
+                  onRemove={() => { dispatch(setSearchRoutesSource(undefined)); }}
                 />
             }
             {(!target)
-              ? <FreePlaceListItem
+              ? <VacantPlaceListItem
                   kind={"target"}
-                  label={"Select destination..."}
-                  title={"Select destination"}
-                  onPlace={() => { setTargetSelectDialog(true); }}
+                  label={`${targetTitle}...`}
+                  title={targetTitle}
+                  onClick={() => { setTargetSelectDialog(true); }}
                 />
               : <RemovablePlaceListItem
                   kind={"target"}
-                  label={target.name}
-                  smartId={target.smartId}
+                  place={target}
                   title={"Fly to"}
                   onPlace={() => { map?.flyTo(target); }}
-                  onDelete={() => { dispatch(setSearchRoutesTarget(undefined)); }}
+                  onRemove={() => { dispatch(setSearchRoutesTarget(undefined)); }}
                 />
             }
           </Stack>
@@ -155,7 +157,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           step={0.2}
           distance={distance}
           dispatch={(value) => { dispatch(setSearchRoutesDistance(value)); }}
-          ariaLabel={"Maximum walking distance of a route"}
+          aria-label={"Maximum walking distance of a route"}
         />
         <Typography>
           Visit places from the following categories:

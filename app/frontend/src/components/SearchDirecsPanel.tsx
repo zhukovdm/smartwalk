@@ -18,7 +18,10 @@ import {
   useStoredPlaces,
   useStoredSmarts
 } from "../features/sharedHooks";
-import { useAppDispatch, useAppSelector } from "../features/storeHooks";
+import {
+  useAppDispatch,
+  useAppSelector
+} from "../features/storeHooks";
 import LogoCloseBar from "./_shared/LogoCloseBar";
 import PanelSelector from "./_shared/PanelSelector";
 import BottomButtons from "./search/BottomButtons";
@@ -57,7 +60,10 @@ export default function SearchDirecsPanel(): JSX.Element {
   };
 
   return (
-    <Box>
+    <Box
+      role={"search"}
+      aria-label={"Search directions"}
+    >
       <LogoCloseBar />
       <PanelSelector panel={2} />
       <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>

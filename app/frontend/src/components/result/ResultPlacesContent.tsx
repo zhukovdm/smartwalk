@@ -23,9 +23,9 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { FixedPlaceListItem } from "../_shared/_list-items";
-import PlacesList from "../_shared/PlacesList";
 import CategoryFilter from "../_shared/CategoryFilter";
+import InformPlaceListItem from "../_shared/InformPlaceListItem";
+import PlacesList from "../_shared/PlacesList";
 
 type ResultPlacesContentProps = {
 
@@ -94,10 +94,9 @@ export default function ResultPlacesContent(
         <Typography fontSize={"1.10rem"}>
           Found a total of <strong>{resultPlaces.length}</strong> place{resultPlaces.length > 1 ? "s" : ""} within a distance of at most <strong>{radius}</strong>&nbsp;km around the center point:
         </Typography>
-        <FixedPlaceListItem
+        <InformPlaceListItem
           kind={"center"}
-          label={center.name}
-          smartId={center.smartId}
+          place={center}
           title={"Fly to"}
           onPlace={() => { map?.flyTo(center); }}
         />

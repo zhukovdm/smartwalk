@@ -25,10 +25,8 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import {
-  FreePlaceListItem,
-  RemovablePlaceListItem
-} from "../_shared/_list-items";
+import RemovablePlaceListItem from "../_shared/RemovablePlaceListItem";
+import VacantPlaceListItem from "../_shared/VacantPlaceListItem";
 
 /**
  * Dialog with the user enabling to create custom place (named location).
@@ -104,6 +102,8 @@ export default function MyPlacesCreateDialog(): JSX.Element {
     }
   };
 
+  const title = "Select location";
+
   return (
     <Box sx={{ mt: 4, mb: 1 }}>
       <details>
@@ -116,16 +116,16 @@ export default function MyPlacesCreateDialog(): JSX.Element {
           {place
             ? <RemovablePlaceListItem
                 kind={"common"}
-                label={place.name}
+                place={place}
                 title={"Draw point"}
                 onPlace={() => clickPlace(place)}
-                onDelete={deleteLocation}
+                onRemove={deleteLocation}
               />
-            : <FreePlaceListItem
+            : <VacantPlaceListItem
                 kind={"common"}
-                title={"Select location"}
-                label={"Select location..."}
-                onPlace={addLocation}
+                title={title}
+                label={`${title}...`}
+                onClick={addLocation}
               />
           }
           <TextField

@@ -7,12 +7,12 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { SomethingKind } from "../../domain/types";
 import { setDialogBlock } from "../../features/panelSlice";
 import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { SomethingKind } from "../_shared/_types";
 
 type DeleteSomethingDialogProps = {
 

@@ -26,13 +26,11 @@ import {
   useAppSelector
 } from "../features/storeHooks";
 import { useSearchPlacesMap } from "../features/searchHooks";
-import {
-  FreePlaceListItem,
-  RemovablePlaceListItem
-} from "./_shared/_list-items";
 import LogoCloseBar from "./_shared/LogoCloseBar";
 import PanelSelector from "./_shared/PanelSelector";
-import SelectPointDialog from "./_shared/SelectPointDialog";
+import RemovablePlaceListItem from "./_shared/RemovablePlaceListItem";
+import VacantPlaceListItem from "./_shared/VacantPlaceListItem";
+import SelectPointDialog from "./search/SelectPointDialog";
 import BottomButtons from "./search/BottomButtons";
 import CategoryBox from "./search/CategoryBox";
 import DistanceSlider from "./search/DistanceSlider";
@@ -77,8 +75,13 @@ export default function SearchPlacesPanel(): JSX.Element {
     }
   };
 
+  const centerTitle = "Select center point";
+
   return (
-    <Box>
+    <Box
+      role={"search"}
+      aria-label={"Search places"}
+    >
       <LogoCloseBar />
       <PanelSelector panel={1} />
       <Stack
@@ -91,19 +94,18 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Box>
         <Box>
           {(!center)
-            ? <FreePlaceListItem
+            ? <VacantPlaceListItem
                 kind={"center"}
-                label={"Select center point..."}
-                title={"Select center point"}
-                onPlace={() => { setSelectDialog(true); }}
+                label={`${centerTitle}...`}
+                title={centerTitle}
+                onClick={() => { setSelectDialog(true); }}
               />
             : <RemovablePlaceListItem
                 kind={"center"}
-                label={center.name}
-                smartId={center.smartId}
+                place={center}
                 title={"Fly to"}
                 onPlace={() => { map?.flyTo(center); }}
-                onDelete={() => { dispatch(setSearchPlacesCenter(undefined)); }}
+                onRemove={() => { dispatch(setSearchPlacesCenter(undefined)); }}
               />
           }
         </Box>
@@ -119,7 +121,7 @@ export default function SearchPlacesPanel(): JSX.Element {
             step={0.1}
             distance={radius}
             dispatch={(value) => { dispatch(setSearchPlacesRadius(value)); }}
-            ariaLabel={"Maximum crow-fly distance from the center point"}
+            aria-label={"Maximum crow-fly distance from the center point"}
           />
         </Box>
         <Typography>

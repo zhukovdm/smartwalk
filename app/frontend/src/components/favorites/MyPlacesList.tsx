@@ -22,8 +22,8 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { PlaceButton } from "../_shared/_buttons";
-import { BusyListItem } from "../_shared/_list-items";
+import PlaceButton from "../_shared/PlaceButton";
+import StandardListItem from "../_shared/StandardListItem";
 import AppendPlaceDialog from "../_shared/PlaceAppendDialog";
 import DeleteSomethingDialog from "./SomethingDeleteDialog";
 import EditSomethingDialog from "./SomethingEditDialog";
@@ -84,14 +84,14 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
       role={"listitem"}
       aria-label={place.name}
     >
-      <BusyListItem
+      <StandardListItem
         label={place.name}
         link={getSmartPlaceLink(place.smartId)}
         l={
           <PlaceButton
             kind={"stored"}
-            onPlace={onPlace}
-            title={"Draw point"}
+            onClick={onPlace}
+            title={"Draw place"}
           />
         }
         r={

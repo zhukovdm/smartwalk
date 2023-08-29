@@ -5,11 +5,11 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
+import { SomethingKind } from "../../domain/types";
 import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import { SomethingKind } from "./_types";
 import { setDialogBlock } from "../../features/panelSlice";
 import SaveSomethingDialogActions from "./SomethingSaveDialogActions";
 

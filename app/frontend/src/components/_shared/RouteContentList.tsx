@@ -1,7 +1,7 @@
 import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
-import { FixedPlaceListItem } from "./_list-items";
+import InformPlaceListItem from "./InformPlaceListItem";
 import PlacesList from "./PlacesList";
 
 type RouteContentListProps = {
@@ -30,10 +30,10 @@ export default function RouteContentList(
 
   return (
     <Stack gap={2}>
-      <FixedPlaceListItem
-        title={"Fly to"}
+      <InformPlaceListItem
         kind={"source"}
-        label={source.name}
+        place={source}
+        title={"Fly to"}
         onPlace={() => { map?.flyTo(source); }}
       />
       {filterList.some((f) => f) && (
@@ -42,10 +42,10 @@ export default function RouteContentList(
           places={places}
         />
       )}
-      <FixedPlaceListItem
-        title={"Fly to"}
+      <InformPlaceListItem
         kind={"target"}
-        label={target.name}
+        place={target}
+        title={"Fly to"}
         onPlace={() => { map?.flyTo(target); }}
       />
     </Stack>

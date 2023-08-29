@@ -19,14 +19,14 @@ type DistanceSliderProps = {
   dispatch: (value: number) => void;
 
   /** Slider label */
-  ariaLabel: string;
+  "aria-label": string;
 };
 
 /**
  * Standard distance slider used in Search panels.
  */
 export default function DistanceSlider(
-  { seq, distance, dispatch, ariaLabel, ...rest }: DistanceSliderProps): JSX.Element {
+  { seq, distance, dispatch, ...rest }: DistanceSliderProps): JSX.Element {
 
   const marks = seq.map((m) => ({ value: m, label: m }));
 
@@ -35,7 +35,7 @@ export default function DistanceSlider(
       <Box sx={{ width: "94%" }}>
         <Slider
           {...rest}
-          aria-label={ariaLabel}
+          getAriaValueText={(v) => v.toString()}
           marks={marks}
           min={0}
           value={distance}
