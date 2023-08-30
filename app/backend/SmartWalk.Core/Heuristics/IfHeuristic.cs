@@ -61,6 +61,8 @@ internal static class IfCategoryFormer
 
 internal static class IfCandidateFinder
 {
+    private static (SolverPlace, double, int) GetDefaults() => (null, double.MaxValue, -1);
+
     private static double NextDistance(
         IReadOnlyList<SolverPlace> seq, IDistanceMatrix distMatrix, SolverPlace place, double currDist, int seqIdx)
     {
@@ -73,10 +75,7 @@ internal static class IfCandidateFinder
     public static (SolverPlace, double, int) FindBest(
         IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix, double currDist)
     {
-        SolverPlace best = null;
-        double lastDist = double.MaxValue;
-
-        int seqIdx = -1;
+        (SolverPlace best, double lastDist, int seqIdx) = GetDefaults();
 
         foreach (var place in cat)
         {
@@ -84,17 +83,24 @@ internal static class IfCandidateFinder
 
             for (int i = 1 /* source */; i < seq.Count; ++i)
             {
-                // category cannot be inserted
+                /**
+                 * Category cannot use any further indices for insertion,
+                 * because it shall precede the category on position (i - 1).
+                 */
 
                 if (precMatrix.IsBefore(place.cat, seq[i - 1].cat))
                 {
                     break;
                 }
 
-                // try insert in the next step
+                /**
+                 * Place in the sequence shall come before the considered
+                 * one. Already found best placement is no longer relevant.
+                 */
 
                 if (precMatrix.IsBefore(seq[i].cat, place.cat))
                 {
+                    (best, lastDist, seqIdx) = GetDefaults();
                     continue;
                 }
 

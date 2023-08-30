@@ -59,10 +59,8 @@ public static class SearchService
             .Concat(new[] { new Place() { location = target, categories = new() { targetCat } } })
             .ToList();
 
-        // solver-dependent precedence matrix!
-
         var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(categories.Count, precedence);
+            .GetPrecedenceMatrix(precedence, categories.Count);
 
         var distMatrix = new HaversineDistanceMatrix(places);
 
@@ -86,8 +84,6 @@ public static class SearchService
 
         while (true)
         {
-            // solver-dependent procedure!
-
             var seq = SolverFactory.GetSolver()
                 .Solve(solverSource, solverTarget, solverPlaces, distMatrix, precMatrix);
 

@@ -6,11 +6,27 @@ namespace SmartWalk.Core.Solvers;
 
 public static class SolverFactory
 {
+    /**
+     ***************************************************************************
+     *
+     *                  NOTE THAT THE PROCEDURE FOR FINDING
+     *                 PRECEDENCE MATRIX IS SOLVER-DEPENDENT
+     *
+     ***************************************************************************
+     */
+
     /// <summary>
     /// <b>Solver-specific</b> precedence matrix.
     /// </summary>
-    public static IPrecedenceMatrix GetPrecedenceMatrix(int catsCount, List<PrecedenceEdge> precedence)
-        => IfSolver.GetPrecedenceMatrix(catsCount, precedence);
+    public static IPrecedenceMatrix GetPrecedenceMatrix(IReadOnlyList<PrecedenceEdge> precedence, int catsCount)
+    {
+        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount);
+        return OgSolver.GetPrecedenceMatrix(precedence, catsCount);
+    }
 
-    public static ISolver GetSolver() => new IfSolver();
+    public static ISolver GetSolver()
+    {
+        // return new IfSolver();
+        return new OgSolver();
+    }
 }
