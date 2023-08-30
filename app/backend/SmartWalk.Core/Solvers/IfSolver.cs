@@ -16,8 +16,8 @@ internal sealed class IfSolver : HeuristicSolverBase, ISolver
     }
 
     protected override List<SolverPlace> SolveImpl(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
+        SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        return IfHeuristic.Advise(places, distMatrix, precMatrix);
+        return IfHeuristic.Advise(source, target, places, distMatrix, precMatrix);
     }
 }

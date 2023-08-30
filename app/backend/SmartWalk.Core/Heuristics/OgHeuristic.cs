@@ -35,7 +35,7 @@ internal static class OgCategoryFormer
     /// predecessors, and calculate explicit set of successor categories.
     /// </summary>
     public static SortedDictionary<int, OgCategory> Form(
-        List<SolverPlace> solverPlaces, IPrecedenceMatrix precMatrix)
+        IEnumerable<SolverPlace> solverPlaces, IPrecedenceMatrix precMatrix, int sourceCat, int targetCat)
     {
         var result = new SortedDictionary<int, OgCategory>();
 
@@ -54,8 +54,8 @@ internal static class OgCategoryFormer
 
         // remove source and target cats!
 
-        result.Remove(precMatrix.CsCount + 0);
-        result.Remove(precMatrix.CsCount + 1);
+        result.Remove(sourceCat);
+        result.Remove(targetCat);
 
         // add edges between categories
 
@@ -123,10 +123,10 @@ internal static class OgHeuristic
     }
 
     public static List<SolverPlace> Advise(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
+        SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        var seq = new List<SolverPlace>() { places[^2], places[^1] };
-        var cats = OgCategoryFormer.Form(places, precMatrix);
+        var seq = new List<SolverPlace>() { source, target };
+        var cats = OgCategoryFormer.Form(places, precMatrix, source.cat, target.cat);
 
         while (cats.Count > 0)
         {

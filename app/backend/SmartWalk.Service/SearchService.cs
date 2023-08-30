@@ -31,6 +31,12 @@ public static class SearchService
 
     #region Routes
 
+    private sealed class SolverPlaceComparer : IComparer<SolverPlace>
+    {
+        public int Compare(SolverPlace l, SolverPlace r)
+            => (l.idx != r.idx) ? l.idx.CompareTo(r.idx) : l.cat.CompareTo(r.cat);
+    }
+
     private sealed class RouteComparer : IComparer<Route>
     {
         public int Compare(Route l, Route r) => l.path.distance.CompareTo(r.path.distance);
@@ -44,32 +50,46 @@ public static class SearchService
 
         var ellipse = Spherical.BoundingEllipse(source, target, maxDistance);
 
+        var sourceCat = categories.Count + 0;
+        var targetCat = categories.Count + 1;
+
         var places = new List<Place>()
             .Concat(await entityIndex.GetWithin(ellipse, categories))
-            .Concat(new[] { new Place() { location = source, categories = new() { categories.Count + 0 } } })
-            .Concat(new[] { new Place() { location = target, categories = new() { categories.Count + 1 } } })
+            .Concat(new[] { new Place() { location = source, categories = new() { sourceCat } } })
+            .Concat(new[] { new Place() { location = target, categories = new() { targetCat } } })
             .ToList();
+
+        // solver-dependent precedence matrix!
 
         var precMatrix = SolverFactory
             .GetPrecedenceMatrix(categories.Count, precedence);
 
+        var distMatrix = new HaversineDistanceMatrix(places);
+
+        var solverSource = default(SolverPlace);
+        var solverTarget = default(SolverPlace);
+
+        var solverPlaces = places
+            .Select((p, i) => (p, i))
+            .Aggregate(new SortedSet<SolverPlace>(new SolverPlaceComparer()), (acc, itm) =>
+            {
+                foreach (var cat in itm.p.categories)
+                {
+                    SolverPlace place = new(itm.i, cat);
+                    _ = acc.Add(place);
+
+                    if (cat == sourceCat) { solverSource = place; }
+                    if (cat == targetCat) { solverTarget = place; }
+                }
+                return acc;
+            });
+
         while (true)
         {
-            var solverPlaces = places
-                .Select((p, i) => (p, i))
-                .Aggregate(new List<SolverPlace>(), (acc, itm) =>
-                {
-                    foreach (var cat in itm.p.categories)
-                    {
-                        acc.Add(new(itm.i, cat));
-                    }
-                    return acc;
-                });
-
-            var distMatrix = new HaversineDistanceMatrix(places);
+            // solver-dependent procedure!
 
             var seq = SolverFactory.GetSolver()
-                .Solve(solverPlaces, distMatrix, precMatrix);
+                .Solve(solverSource, solverTarget, solverPlaces, distMatrix, precMatrix);
 
             var trimmedSeq = seq.Skip(1).SkipLast(1).ToList();
 
@@ -101,7 +121,7 @@ public static class SearchService
                 result.Add(new() { path = path, places = routePlaces, waypoints = routeWaypoints });
             }
 
-            trimmedSeq.ForEach((p) => places[p.idx].categories.Remove(p.cat));
+            trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
         }
 
         result.Sort(new RouteComparer());

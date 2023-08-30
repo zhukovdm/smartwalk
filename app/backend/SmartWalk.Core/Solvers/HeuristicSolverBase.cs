@@ -10,12 +10,12 @@ internal abstract class HeuristicSolverBase : ISolver
     protected HeuristicSolverBase() { }
 
     protected abstract List<SolverPlace> SolveImpl(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix);
+        SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix);
 
     public List<SolverPlace> Solve(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
+        SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        var seq = SolveImpl(places, distMatrix, precMatrix);
+        var seq = SolveImpl(source, target, places, distMatrix, precMatrix);
 
         if (precMatrix.EsCount == 0)
         {

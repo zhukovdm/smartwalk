@@ -14,8 +14,8 @@ internal sealed class OgSolver : HeuristicSolverBase, ISolver
     }
 
     protected override List<SolverPlace> SolveImpl(
-        List<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
+        SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {
-        return OgHeuristic.Advise(places, distMatrix, precMatrix);
+        return OgHeuristic.Advise(source, target, places, distMatrix, precMatrix);
     }
 }
