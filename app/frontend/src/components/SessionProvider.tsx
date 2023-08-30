@@ -156,7 +156,7 @@ export default function SessionProvider():JSX.Element {
             variant={"outlined"}
             color={"success"}
             onClick={sessionAction}
-            title={`Active ${sessionLabel()} session`}
+            title={`${sessionLabel()} session`}
           >
             {sessionLabel()}
           </SessionButton>

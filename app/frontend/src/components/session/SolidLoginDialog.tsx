@@ -62,7 +62,7 @@ export default function SolidLoginDialog(
 
   return (
     <Dialog open={show}>
-      <DialogTitle>Solid login</DialogTitle>
+      <DialogTitle>Solid session</DialogTitle>
       <DialogContent>
         <Stack gap={2}>
           <Typography>
@@ -98,7 +98,7 @@ export default function SolidLoginDialog(
           onClick={loginAction}
           startIcon={<PersonIcon />}
         >
-          <span>Login</span>
+          <span>Log in</span>
         </LoadingButton>
       </DialogActions>
     </Dialog>

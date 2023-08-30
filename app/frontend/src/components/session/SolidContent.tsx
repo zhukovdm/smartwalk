@@ -165,7 +165,7 @@ export default function SolidContent(): JSX.Element {
           color={"error"}
           onClick={logoutAction}
         >
-          <span>Logout</span>
+          <span>Log out</span>
         </LoadingButton>
       </Stack>
     </Stack>
