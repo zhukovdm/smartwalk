@@ -19,9 +19,12 @@ export default function PlaceKeywords(
       flexWrap={"wrap"}
       justifyContent={"center"}
       gap={1}
+      role={"list"}
+      aria-label={"Keywords"}
     >
       {keywords.map((k, i) => (
         <Chip
+          role={"listitem"}
           key={i}
           color={"primary"}
           label={k}

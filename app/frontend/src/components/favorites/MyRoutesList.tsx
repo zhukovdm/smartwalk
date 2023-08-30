@@ -180,7 +180,7 @@ function MyRoutesListItem(
 
 type MyRoutesListProps = {
 
-  /** Standard ARIA meaning */
+  /** Id of a label provider */
   "aria-labelledby": string;
 };
 

@@ -22,7 +22,7 @@ type PanelSelectorProps = {
 
 /**
  * Standard four-section search menu with `routes`, `places`, `directions`,
- * and `favourites`.
+ * and `favorites`.
  */
 export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Element {
 
@@ -31,12 +31,13 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
 
   return (
     <Box
-      aria-label={"Search panels"}
+      aria-label={"Panels"}
       role={"navigation"}
       sx={{ borderTop: 1, borderBottom: 1, borderColor: "divider" }}
     >
       <BottomNavigation showLabels={true} value={panel}>
         <BottomNavigationAction
+          aria-label={"Search routes"}
           label={"Routes"}
           data-testid={"smartwalk-search-routes-button"}
           icon={<RouteIcon />}
@@ -44,6 +45,7 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
           onClick={() => { navigate(SEARCH_ROUTES_ADDR); }}
         />
         <BottomNavigationAction
+          aria-label={"Search places"}
           label={"Places"}
           data-testid={"smartwalk-search-places-button"}
           icon={<PlaceIcon />}
@@ -51,6 +53,7 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
           onClick={() => { navigate(SEARCH_PLACES_ADDR); }}
         />
         <BottomNavigationAction
+          aria-label={"Search directions"}
           label={"Directions"}
           data-testid={"smartwalk-search-direcs-button"}
           icon={<DirectionsIcon />}

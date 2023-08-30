@@ -1,4 +1,4 @@
-import { useContext, useMemo, useState } from "react";
+import { MouseEventHandler, useContext, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -19,7 +19,8 @@ import {
   deleteFavoriteCustomLocation,
   resetFavoriteCustom,
   setFavoriteCustomName,
-  setFavoriteCustomLocation
+  setFavoriteCustomLocation,
+  toggleFavoriteCreateExpanded
 } from "../../features/favoritesSlice";
 import {
   useAppDispatch,
@@ -36,8 +37,13 @@ export default function MyPlacesCreateDialog(): JSX.Element {
   const { map, storage } = useContext(AppContext);
 
   const dispatch = useAppDispatch();
-  const { block } = useAppSelector(state => state.panel);
-  const { name, location } = useAppSelector(state => state.favorites);
+
+  const { block } = useAppSelector((state) => state.panel);
+  const {
+    name,
+    location,
+    createExpanded
+  } = useAppSelector((state) => state.favorites);
 
   const [loading, setLoading] = useState(false);
 
@@ -102,11 +108,18 @@ export default function MyPlacesCreateDialog(): JSX.Element {
     }
   };
 
-  const title = "Select location";
+  // https://github.com/facebook/react/issues/15486#issuecomment-488028431
+  const onToggle: MouseEventHandler<HTMLDetailsElement> = (e) => {
+    e.preventDefault();
+    dispatch(toggleFavoriteCreateExpanded());
+  }
 
   return (
     <Box sx={{ mt: 4, mb: 1 }}>
-      <details>
+      <details
+        open={createExpanded}
+        onClick={onToggle}
+      >
         <summary style={{ cursor: "pointer" }}>
           <Typography sx={{ display: "inline-block" }}>
             Create custom place
@@ -123,8 +136,8 @@ export default function MyPlacesCreateDialog(): JSX.Element {
               />
             : <VacantPlaceListItem
                 kind={"common"}
-                title={title}
-                label={`${title}...`}
+                title={"Select location"}
+                label={"Select location..."}
                 onClick={addLocation}
               />
           }

@@ -20,6 +20,7 @@ type FavoritesState = {
   loaded: boolean;
   name: string;
   location?: WgsPoint;
+  createExpanded: boolean;
   direcs: StoredDirec[];
   direcsExpanded: boolean;
   places: StoredPlace[];
@@ -31,6 +32,7 @@ type FavoritesState = {
 export const initialFavoritesState = (): FavoritesState => ({
   loaded: false,
   name: "",
+  createExpanded: true,
   direcs: [],
   direcsExpanded: true,
   places: [],
@@ -64,6 +66,9 @@ export const favoritesSlice = createSlice({
     },
     deleteFavoriteCustomLocation: (state) => {
       state.location = undefined;
+    },
+    toggleFavoriteCreateExpanded: (state) => {
+      state.createExpanded = !state.createExpanded;
     },
 
     // direcs
@@ -136,6 +141,7 @@ export const {
   setFavoriteCustomLocation,
   resetFavoriteCustom,
   deleteFavoriteCustomLocation,
+  toggleFavoriteCreateExpanded,
 
   // direcs
 

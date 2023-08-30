@@ -130,7 +130,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
 
 type MyPlacesListProps = {
 
-  /** Human-readable label */
+  /** Id of a label provider */
   "aria-labelledby": string;
 }
 

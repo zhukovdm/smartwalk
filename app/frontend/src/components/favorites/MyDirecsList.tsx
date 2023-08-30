@@ -153,7 +153,7 @@ function MyDirecsListItem(
 
 type MyDirecsListProps = {
 
-  /** Human-readable label */
+  /** Id of a label provider */
   "aria-labelledby": string;
 }
 
