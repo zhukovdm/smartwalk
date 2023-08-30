@@ -180,15 +180,14 @@ function MyRoutesListItem(
 
 type MyRoutesListProps = {
 
-  /** Human-readable label */
-  ariaLabelledby: string;
+  /** Standard ARIA meaning */
+  "aria-labelledby": string;
 };
 
 /**
  * Component presenting the list of stored routes.
  */
-export default function MyRoutesList(
-  { ariaLabelledby }: MyRoutesListProps): JSX.Element {
+export default function MyRoutesList(props: MyRoutesListProps): JSX.Element {
 
   const storedPlaces = useStoredPlaces();
   const storedSmarts = useStoredSmarts();
@@ -199,8 +198,8 @@ export default function MyRoutesList(
     <Box>
       {routes.length > 0
         ? <Stack
+            {...props}
             direction={"column"}
-            aria-labelledby={ariaLabelledby}
             gap={2}
             role={"list"}
             sx={{ mb: 2 }}

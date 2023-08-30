@@ -36,7 +36,7 @@ export default function MyDirecsSection(): JSX.Element {
         <Typography>My Directions</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyDirecsList ariaLabelledby={head} />
+        <MyDirecsList aria-labelledby={head} />
       </AccordionDetails>
     </Accordion>
   );

@@ -154,13 +154,13 @@ function MyDirecsListItem(
 type MyDirecsListProps = {
 
   /** Human-readable label */
-  ariaLabelledby: string;
+  "aria-labelledby": string;
 }
 
 /**
  * Component presenting the list of stored directions.
  */
-export default function MyDirecsList({ ariaLabelledby }: MyDirecsListProps): JSX.Element {
+export default function MyDirecsList(props: MyDirecsListProps): JSX.Element {
 
   const storedPlaces = useStoredPlaces();
   const storedSmarts = useStoredSmarts();
@@ -170,8 +170,8 @@ export default function MyDirecsList({ ariaLabelledby }: MyDirecsListProps): JSX
     <Box>
       {direcs.length > 0
         ? <Stack
+            {...props}
             direction={"column"}
-            aria-labelledby={ariaLabelledby}
             gap={2}
             role={"list"}
             sx={{ mb: 2 }}

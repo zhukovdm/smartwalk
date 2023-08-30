@@ -36,7 +36,7 @@ export default function MyRoutesSection(): JSX.Element {
         <Typography>My Routes</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyRoutesList ariaLabelledby={head} />
+        <MyRoutesList aria-labelledby={head} />
       </AccordionDetails>
     </Accordion>
   );

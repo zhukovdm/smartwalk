@@ -37,7 +37,7 @@ export default function MyPlacesSection(): JSX.Element {
         <Typography>My Places</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <MyPlacesList ariaLabelledby={head} />
+        <MyPlacesList aria-labelledby={head} />
         <MyPlacesCreateDialog />
       </AccordionDetails>
     </Accordion>

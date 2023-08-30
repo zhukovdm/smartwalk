@@ -131,13 +131,13 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
 type MyPlacesListProps = {
 
   /** Human-readable label */
-  ariaLabelledby: string;
+  "aria-labelledby": string;
 }
 
 /**
  * Component presenting list of passed places.
  */
-export default function MyPlacesList({ ariaLabelledby }: MyPlacesListProps): JSX.Element {
+export default function MyPlacesList(props: MyPlacesListProps): JSX.Element {
 
   const { places } = useAppSelector((state) => state.favorites);
 
@@ -145,8 +145,8 @@ export default function MyPlacesList({ ariaLabelledby }: MyPlacesListProps): JSX
     <Box>
       {places.length > 0
         ? <Stack
+            {...props}
             direction={"column"}
-            aria-labelledby={ariaLabelledby}
             gap={2}
             role={"list"}
           >
