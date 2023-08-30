@@ -39,7 +39,7 @@ import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SaveSomethingDialog from "../_shared/SomethingSaveDialog";
 import PlaceLocation from "../_shared/PlaceLocation";
 import PlaceKeywords from "../_shared/PlaceKeywords";
-import AppendPlaceDialog from "../_shared/PlaceAppendDialog";
+import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 
@@ -205,7 +205,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
         onHide={() => { setShowS(false); }}
         onSave={onSave}
       />
-      <AppendPlaceDialog
+      <PlaceAppendDialog
         show={showA}
         onHide={() => { setShowA(false); }}
         onAppend={onAppend}
@@ -216,14 +216,31 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
       {(ico) &&
         <Stack direction={"column"} gap={1.5}>
           {address &&
-            <Stack direction={"row"} columnGap={2}>
-              <HomeIcon className={"entity-place"} titleAccess={"Address"} />
+            <Stack
+              direction={"row"}
+              columnGap={2}
+              role={"region"}
+              aria-label={"Address"}
+            >
+              <HomeIcon
+                aria-hidden
+                className={"entity-place"}
+                titleAccess={"Address"}
+              />
               <Typography noWrap>{composeAddress(address)}</Typography>
             </Stack>
           }
           {website &&
-            <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <OpenInNewIcon className={"entity-place"} titleAccess={"Webpage"} />
+            <Stack
+              direction={"row"}
+              columnGap={2}
+              alignItems={"center"}
+            >
+              <OpenInNewIcon
+                aria-hidden
+                className={"entity-place"}
+                titleAccess={"Webpage"}
+              />
               <Link
                 href={website}
                 rel={"noopener noreferrer"}
@@ -235,8 +252,16 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             </Stack>
           }
           {phone &&
-            <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <PhoneIcon className={"entity-place"} titleAccess={"Phone number"} />
+            <Stack
+              direction={"row"}
+              columnGap={2}
+              alignItems={"center"}
+            >
+              <PhoneIcon
+                aria-hidden
+                className={"entity-place"}
+                titleAccess={"Phone number"}
+              />
               <Link
                 href={`tel:${phone}`}
                 rel={"noopener noreferrer"}
@@ -248,8 +273,16 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             </Stack>
           }
           {email &&
-            <Stack direction={"row"} columnGap={2} alignItems={"center"}>
-              <MailIcon className={"entity-place"} titleAccess={"Email"} />
+            <Stack
+              direction={"row"}
+              columnGap={2}
+              alignItems={"center"}
+            >
+              <MailIcon
+                aria-hidden
+                className={"entity-place"}
+                titleAccess={"Email"}
+              />
               <Link
                 href={`mailto:${email}`}
                 rel={"noopener noreferrer"}
@@ -267,6 +300,8 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
               gap={1}
               justifyContent={"center"}
               alignItems={"center"}
+              role={"region"}
+              aria-label={"Social networks"}
             >
               {socialNetworks.facebook &&
                 <Link
@@ -275,7 +310,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.facebook}
                   aria-label={socialNetworks.facebook}
                 >
-                  <FacebookIcon titleAccess={"Facebook profile"} />
+                  <FacebookIcon
+                    aria-hidden
+                    titleAccess={"Facebook profile"}
+                  />
                 </Link>
               }
               {socialNetworks.instagram &&
@@ -285,7 +323,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.instagram}
                   aria-label={socialNetworks.instagram}
                 >
-                  <InstagramIcon titleAccess={"Instagram profile"} />
+                  <InstagramIcon
+                    aria-hidden
+                    titleAccess={"Instagram profile"}
+                  />
                 </Link>
               }
               {socialNetworks.linkedin &&
@@ -295,7 +336,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.linkedin}
                   aria-label={socialNetworks.linkedin}
                 >
-                  <LinkedInIcon titleAccess={"LinkedIn profile"} />
+                  <LinkedInIcon
+                    aria-hidden
+                    titleAccess={"LinkedIn profile"}
+                  />
                 </Link>
               }
               {socialNetworks.pinterest &&
@@ -305,7 +349,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.pinterest}
                   aria-label={socialNetworks.pinterest}
                 >
-                  <PinterestIcon titleAccess={"Pinterest profile"} />
+                  <PinterestIcon
+                    aria-hidden
+                    titleAccess={"Pinterest profile"}
+                  />
                 </Link>
               }
               {socialNetworks.telegram &&
@@ -315,7 +362,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.telegram}
                   aria-label={socialNetworks.telegram}
                 >
-                  <TelegramIcon titleAccess={"Telegram profile"} />
+                  <TelegramIcon
+                    aria-hidden
+                    titleAccess={"Telegram profile"}
+                  />
                 </Link>
               }
               {socialNetworks.twitter &&
@@ -325,7 +375,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.twitter}
                   aria-label={socialNetworks.twitter}
                 >
-                  <TwitterIcon titleAccess={"Twitter profile"} />
+                  <TwitterIcon
+                    aria-hidden
+                    titleAccess={"Twitter profile"}
+                  />
                 </Link>
               }
               {socialNetworks.youtube &&
@@ -335,14 +388,23 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
                   href={socialNetworks.youtube}
                   aria-label={socialNetworks.youtube}
                 >
-                  <YouTubeIcon titleAccess={"YouTube profile"} />
+                  <YouTubeIcon
+                    aria-hidden
+                    titleAccess={"YouTube profile"}
+                  />
                 </Link>
               }
             </Stack>
           }
           {arr(openingHours) &&
-            <Stack direction={"row"} columnGap={2}>
+            <Stack
+              direction={"row"}
+              columnGap={2}
+              role={"region"}
+              aria-label={"Opening hours"}
+            >
               <AccessTimeIcon
+                aria-hidden
                 className={"entity-place"}
                 titleAccess={"Opening hours"}
               />
@@ -352,8 +414,14 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             </Stack>
           }
           {arr(charge) &&
-            <Stack direction="row" columnGap={2}>
+            <Stack
+              direction="row"
+              columnGap={2}
+              role={"region"}
+              aria-label={"Toll"}
+            >
               <TollIcon
+                aria-hidden
                 className={"entity-place"}
                 titleAccess={"Toll"}
               />
@@ -369,14 +437,14 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           href={image}
           rel={"noopener noreferrer"}
           target={"_blank"}
-          aria-label={"image as an external resource"}
+          aria-label={"Image as an external resource"}
         >
           <Image
             fit={"contain"}
             showLoading={true}
             src={image}
             style={{ maxHeight: "300px" }}
-            alt={"image loaded at the link"}
+            alt={"image"}
           />
         </Link>
       }
@@ -385,7 +453,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           {description}
         </Typography>
       }
-      {(add) && 
+      {(add) &&
         <Divider sx={{ background: "lightgrey" }} />
       }
       {(add) &&
@@ -413,7 +481,14 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             <ExtraArray label={"rental"} array={rental!} />
           )}
           {arr(extra) &&
-            <Stack direction="row" gap={0.5} flexWrap="wrap" sx={{ py: 0.5 }}>
+            <Stack
+              direction={"row"}
+              gap={0.5}
+              flexWrap={"wrap"}
+              sx={{ py: 0.5 }}
+              role={"region"}
+              aria-label={"facts"}
+            >
               {capacity &&
                 <ExtraChip label={`capacity ${capacity}`} />
               }

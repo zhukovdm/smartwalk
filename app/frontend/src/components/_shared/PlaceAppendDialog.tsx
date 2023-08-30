@@ -9,7 +9,7 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import DirectionsIcon from "@mui/icons-material/Directions";
 
-type AppendPlaceDialogProps = {
+type PlaceAppendDialogProps = {
 
   /** Show/hide dialog */
   show: boolean;
@@ -24,8 +24,8 @@ type AppendPlaceDialogProps = {
 /**
  * Dialog for appending a random place to the direction sequence.
  */
-export default function AppendPlaceDialog(
-  { show, onHide, onAppend }: AppendPlaceDialogProps): JSX.Element {
+export default function PlaceAppendDialog(
+  { show, onHide, onAppend }: PlaceAppendDialogProps): JSX.Element {
 
   const confirmAction = async () => {
     onAppend();
@@ -54,7 +54,7 @@ export default function AppendPlaceDialog(
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            This action will <strong>append</strong> the point to the <DirectionsIcon titleAccess={"direction"} fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} /> sequence.
+            This action will <strong>append</strong> the point to the current <DirectionsIcon titleAccess={"direction"} fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} /> sequence.
           </Typography>
         </Stack>
       </DialogContent>

@@ -17,7 +17,11 @@ export default function ExtraArray({ label, array }: ExtraArrayProps): JSX.Eleme
   return (
     <Stack direction={"row"} gap={2}>
       <Typography>{label.slice(0, 1).toUpperCase() + label.slice(1)}:</Typography>
-      <Typography>{array.join(", ")}</Typography>
+      <Typography
+        aria-label={label}
+      >
+        {array.join(", ")}
+      </Typography>
     </Stack>
   );
 }

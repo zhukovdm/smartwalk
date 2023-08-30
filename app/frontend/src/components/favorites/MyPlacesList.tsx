@@ -24,7 +24,7 @@ import {
 } from "../../features/storeHooks";
 import PlaceButton from "../_shared/PlaceButton";
 import StandardListItem from "../_shared/StandardListItem";
-import AppendPlaceDialog from "../_shared/PlaceAppendDialog";
+import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import DeleteSomethingDialog from "./SomethingDeleteDialog";
 import EditSomethingDialog from "./SomethingEditDialog";
 import ListItemMenu from "./ListItemMenu";
@@ -112,7 +112,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
         onHide={() => { setShowE(false); }}
         onSave={onSave}
       />
-      <AppendPlaceDialog
+      <PlaceAppendDialog
         show={showA}
         onHide={() => { setShowA(false); }}
         onAppend={onAppend}

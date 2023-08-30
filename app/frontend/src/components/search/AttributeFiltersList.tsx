@@ -9,6 +9,7 @@ import {
   AttributeFilterNumeric,
   KeywordAdviceItem
 } from "../../domain/types";
+import { camelCaseToLabel } from "../../domain/functions";
 import { KeywordAdviceAttributes } from "../../utils/helpers";
 import ExpandSectionIcon from "../_shared/ExpandSectionIcon";
 import AttributeFilterViewExisten from "./AttributeFilterViewExisten";
@@ -67,14 +68,20 @@ export default function AttributeFiltersList(
               flexWrap={"wrap"}
               justifyContent={"center"}
               spacing={1}
+              role={"list"}
+              aria-labelledby={"search-es-attributes-head"}
             >
               {es.map((e, i) => (
-                <AttributeFilterViewExisten
+                <Box
                   key={i}
-                  initial={(filters.es ?? {})[e]}
-                  label={e}
-                  setter={(v) => { filters.es = filters.es ?? {}; filters.es[e] = v; }}
-                />
+                  role={"listitem"}
+                >
+                  <AttributeFilterViewExisten
+                    initial={(filters.es ?? {})[e]}
+                    label={e}
+                    setter={(v) => { filters.es = filters.es ?? {}; filters.es[e] = v; }}
+                  />
+                </Box>
               ))}
             </Stack>
           </AccordionDetails>
@@ -93,14 +100,22 @@ export default function AttributeFiltersList(
             <Typography>Yes / No</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack spacing={1}>
+            <Stack
+              spacing={1}
+              role={"list"}
+              aria-labelledby={"search-bs-attributes-head"}
+            >
               {bs.map((b, i) => (
-                <AttributeFilterViewBoolean
+                <Box
                   key={i}
-                  initial={(filters.bs ?? {})[b]}
-                  label={b}
-                  setter={(v) => { filters.bs = filters.bs ?? {}; filters.bs[b] = v; }}
-                />
+                  role={"listitem"}
+                >
+                  <AttributeFilterViewBoolean
+                    initial={(filters.bs ?? {})[b]}
+                    label={b}
+                    setter={(v) => { filters.bs = filters.bs ?? {}; filters.bs[b] = v; }}
+                  />
+                </Box>
               ))}
             </Stack>
           </AccordionDetails>
@@ -119,15 +134,24 @@ export default function AttributeFiltersList(
             <Typography>Numeric</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack spacing={3}>
+            <Stack
+              spacing={3}
+              role={"list"}
+              aria-labelledby={"search-ns-attributes-head"}
+            >
               {ns.map((attr, i) => (
-                <AttributeFilterViewNumeric
+                <Box
                   key={i}
-                  bound={(adviceItem.bounds as any)[attr] as AttributeFilterNumeric}
-                  initial={(filters.ns ?? {})[attr]}
-                  label={attr}
-                  setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[attr] = v; }}
-                />
+                  role={"listitem"}
+                  aria-label={camelCaseToLabel(attr)}
+                >
+                  <AttributeFilterViewNumeric
+                    bound={(adviceItem.bounds as any)[attr] as AttributeFilterNumeric}
+                    initial={(filters.ns ?? {})[attr]}
+                    label={attr}
+                    setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[attr] = v; }}
+                  />
+                </Box>
               ))}
             </Stack>
           </AccordionDetails>
@@ -146,14 +170,23 @@ export default function AttributeFiltersList(
             <Typography>Contains text</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack spacing={1}>
+            <Stack
+              spacing={1}
+              role={"list"}
+              aria-labelledby={"search-ts-attributes-head"}
+            >
               {ts.map((attr, i) => (
-                <AttributeFilterViewTextual
+                <Box
                   key={i}
-                  initial={(filters.ts ?? {})[attr]}
-                  label={attr}
-                  setter={(v) => { filters.ts = filters.ts ?? {}; filters.ts[attr] = v; }}
-                />
+                  role={"listitem"}
+                  aria-label={camelCaseToLabel(attr)}
+                >
+                  <AttributeFilterViewTextual
+                    initial={(filters.ts ?? {})[attr]}
+                    label={attr}
+                    setter={(v) => { filters.ts = filters.ts ?? {}; filters.ts[attr] = v; }}
+                  />
+                </Box>
               ))}
             </Stack>
           </AccordionDetails>
@@ -172,15 +205,24 @@ export default function AttributeFiltersList(
             <Typography>Include any / Exclude all</Typography>
           </AccordionSummary>
           <AccordionDetails>
-            <Stack spacing={2}>
+            <Stack
+              spacing={2}
+              role={"list"}
+              aria-labelledby={"search-cs-attributes-head"}
+            >
               {cs.map((attr, i) => (
-                <AttributeFilterViewCollect
+                <Box
                   key={i}
-                  bound={(adviceItem.bounds as any)[attr] as string[]}
-                  initial={(filters.cs ?? {})[attr]}
-                  label={attr}
-                  setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[attr] = v; }}
-                />
+                  role={"listitem"}
+                  aria-label={camelCaseToLabel(attr)}
+                >
+                  <AttributeFilterViewCollect
+                    bound={(adviceItem.bounds as any)[attr] as string[]}
+                    initial={(filters.cs ?? {})[attr]}
+                    label={attr}
+                    setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[attr] = v; }}
+                  />
+                </Box>
               ))}
             </Stack>
           </AccordionDetails>

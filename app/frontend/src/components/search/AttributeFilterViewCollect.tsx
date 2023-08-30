@@ -71,8 +71,15 @@ export default function AttributeFilterViewCollect(
   }, [check, includes, excludes, setter]);
 
   return (
-    <Stack spacing={2} direction={"column"}>
-      <AttributeFilterCheckBox label={label} checked={check} toggle={toggle} />
+    <Stack
+      spacing={2}
+      direction={"column"}
+    >
+      <AttributeFilterCheckBox
+        label={label}
+        checked={check}
+        toggle={toggle}
+      />
       <CollectAutocomplete
         label={"Includes"}
         value={includes}

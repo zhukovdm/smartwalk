@@ -103,7 +103,7 @@ function CategoryDialog(
             />
           )}
           size={"small"}
-          isOptionEqualToValue={(o, v) => { return o.keyword === v.keyword }}
+          isOptionEqualToValue={(o, v) => (o.keyword === v.keyword)}
         />
         <DialogContentText>
           Configure attributes to customize this category (optional).
