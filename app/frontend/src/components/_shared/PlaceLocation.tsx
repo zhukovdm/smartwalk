@@ -32,7 +32,7 @@ export default function PlaceLocation(
       <Stack
         direction={"row"}
         alignItems={"center"}
-        spacing={0.25}
+        spacing={0}
       >
         <PlaceButton
           kind={isStored ? "stored" : "common"}

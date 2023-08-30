@@ -30,10 +30,10 @@ type CategoryFilterProps = {
 export default function CategoryFilter(
   { found, active, index, category, onToggle }: CategoryFilterProps): JSX.Element {
 
-  const catLabel = `${index + 1}: ${category.keyword}`;
-
   const [showDialog, setShowDialog] = useState(false);
-  const chkLabel = `${active ? "Hide" : "Show"} (${catLabel}) items`;
+
+  const catLabel = `${index + 1}: ${category.keyword}`;
+  const chkLabel = `${active ? "Hide" : "Show"} places`;
 
   const keyboardAction = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
@@ -42,7 +42,10 @@ export default function CategoryFilter(
   }
 
   return (
-    <Box>
+    <Box
+      role={"listitem"}
+      aria-label={catLabel}
+    >
       <Stack
         alignItems={"center"}
         direction={"row"}
@@ -57,7 +60,7 @@ export default function CategoryFilter(
           onChange={onToggle}
         />
         <Box
-          aria-label={`Show (${catLabel}) filters`}
+          aria-label={`Show filters`}
           role={"button"}
           tabIndex={0}
           sx={{ cursor: "pointer", }}

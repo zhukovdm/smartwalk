@@ -25,7 +25,7 @@ import {
 } from "../../features/storeHooks";
 import CategoryFilter from "../_shared/CategoryFilter";
 import InformPlaceListItem from "../_shared/InformPlaceListItem";
-import PlacesList from "../_shared/PlacesList";
+import PlacesFoundList from "./PlacesFoundList";
 
 type ResultPlacesContentProps = {
 
@@ -94,15 +94,22 @@ export default function ResultPlacesContent(
         <Typography fontSize={"1.10rem"}>
           Found a total of <strong>{resultPlaces.length}</strong> place{resultPlaces.length > 1 ? "s" : ""} within a distance of at most <strong>{radius}</strong>&nbsp;km around the center point:
         </Typography>
-        <InformPlaceListItem
-          kind={"center"}
-          place={center}
-          title={"Fly to"}
-          onPlace={() => { map?.flyTo(center); }}
-        />
+        <Box
+          role={"region"}
+          aria-label={"Center point"}
+        >
+          <InformPlaceListItem
+            kind={"center"}
+            place={center}
+            title={"Fly to"}
+            onPlace={() => { map?.flyTo(center); }}
+          />
+        </Box>
       </Stack>
       {categories.length > 0 &&
         <Stack
+          role={"list"}
+          aria-label={"Categories"}
           direction={"row"}
           flexWrap={"wrap"}
           justifyContent={"center"}
@@ -126,14 +133,17 @@ export default function ResultPlacesContent(
           })}
         </Stack>
       }
-      <Box display={"flex"} justifyContent={"center"}>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+      >
         <Pagination
           page={page + 1}
           count={getPageCount(places.length, pageSize)}
           onChange={onPage}
         />
       </Box>
-      <PlacesList
+      <PlacesFoundList
         map={map}
         places={places.slice(page * pageSize, page * pageSize + pageSize)}
       />
@@ -145,7 +155,8 @@ export default function ResultPlacesContent(
       >
         <Typography>Rows per page:</Typography>
         <Select
-          aria-label={"Rows per page"}
+          role={"navigation"}
+          aria-label={"rows per page"}
           onChange={onRows}
           size={"small"}
           value={pageSize.toString()}
