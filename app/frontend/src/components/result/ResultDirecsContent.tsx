@@ -22,8 +22,8 @@ import {
 } from "../../features/storeHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
 import { IdGenerator } from "../../utils/helpers";
-import DirecContentList from "../_shared/DirecContentList";
 import TraversableDistance from "../_shared/TraversableDistance";
+import TraversableWaypointList from "../_shared/TraversableWaypointList";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 
@@ -114,7 +114,7 @@ export default function ResultDirecsContent(
         onSave={onSave}
       />
       <TraversableDistance distance={path.distance} />
-      <DirecContentList
+      <TraversableWaypointList
         map={map}
         places={places}
       />

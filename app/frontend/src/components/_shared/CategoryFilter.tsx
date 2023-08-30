@@ -21,7 +21,7 @@ type CategoryFilterProps = {
   category: PlaceCategory;
 
   /** Toggle filter selection */
-  onToggle: () => void;
+  onToggle: (index: number) => void;
 };
 
 /**
@@ -57,7 +57,7 @@ export default function CategoryFilter(
           title={chkLabel}
           disabled={!found}
           checked={active}
-          onChange={onToggle}
+          onChange={() => { onToggle(index); }}
         />
         <Box
           aria-label={`Show filters`}

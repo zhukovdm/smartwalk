@@ -60,7 +60,7 @@ type DirectControlListItemProps = {
  * Control bar appending places and reversing sequence.
  */
 function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProps): JSX.Element {
-  const title = "Select waypoint";
+
   return (
     <Stack
       direction={"row"}
@@ -71,8 +71,8 @@ function DirecsControlListItem({ onAppend, onRevers }: DirectControlListItemProp
       </div>
       <VacantPlaceListItem
         kind={"action"}
-        title={title}
-        label={`${title}...`}
+        title={"Select waypoint"}
+        label={"Select waypoint..."}
         onClick={onAppend}
       />
       <ReverseButton onClick={onRevers} />

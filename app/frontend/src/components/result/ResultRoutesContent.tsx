@@ -24,11 +24,11 @@ import {
 } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
 import { IdGenerator } from "../../utils/helpers";
+import CategoryFilterList from "../_shared/CategoryFilterList";
 import RouteContentList from "../_shared/RouteContentList";
-import TraversableDistance from "../_shared/TraversableDistance";
-import RouteCategoryFilters from "../_shared/RouteCategoryFilters";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
+import TraversableDistance from "../_shared/TraversableDistance";
 import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
 
 type ResultRoutesContentProps = {
@@ -110,7 +110,7 @@ export default function ResultRoutesContent(
   return (
     <Stack direction={"column"} gap={2.5}>
       <Typography fontSize={"1.1rem"}>
-        Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categories.
+        Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"}.
       </Typography>
       <Box display={"flex"} justifyContent={"center"}>
         <Pagination
@@ -158,9 +158,10 @@ export default function ResultRoutesContent(
         onModify={onModify}
       />
       <TraversableDistance distance={path.distance} />
-      <RouteCategoryFilters
+      <CategoryFilterList
         categories={categories}
         filterList={filterList}
+        found={(_: number) => true}
         onToggle={(index: number) => {
           dispatch(toggleResultRoutesFilter(index));
         }}

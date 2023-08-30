@@ -4,10 +4,10 @@ import { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
 import { useAppDispatch } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
+import CategoryFilterList from "../_shared/CategoryFilterList";
+import RouteContentList from "../_shared/RouteContentList";
 import TraversableHeader from "../_shared/TraversableHeader";
 import TraversableDistance from "../_shared/TraversableDistance";
-import RouteCategoryFilters from "../_shared/RouteCategoryFilters";
-import RouteContentList from "../_shared/RouteContentList";
 
 type ViewerRouteContentProps = {
 
@@ -46,9 +46,10 @@ export default function ViewerRouteContent(
     <Stack gap={2.5}>
       <TraversableHeader name={name} />
       <TraversableDistance distance={path.distance} />
-      <RouteCategoryFilters
+      <CategoryFilterList
         categories={categories}
         filterList={filterList}
+        found={(_: number) => true}
         onToggle={(index: number) => {
           dispatch(toggleViewerRouteFilter(index));
         }}

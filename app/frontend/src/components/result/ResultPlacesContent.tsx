@@ -23,7 +23,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import CategoryFilter from "../_shared/CategoryFilter";
+import CategoryFilterList from "../_shared/CategoryFilterList";
 import InformPlaceListItem from "../_shared/InformPlaceListItem";
 import PlacesFoundList from "./PlacesFoundList";
 
@@ -107,31 +107,15 @@ export default function ResultPlacesContent(
         </Box>
       </Stack>
       {categories.length > 0 &&
-        <Stack
-          role={"list"}
-          aria-label={"Categories"}
-          direction={"row"}
-          flexWrap={"wrap"}
-          justifyContent={"center"}
-          spacing={2}
-        >
-          {categories.map((c, i) => {
-            const active = filterList[i];
-            return (
-              <CategoryFilter
-                key={i}
-                active={active}
-                index={i}
-                category={c}
-                found={satCategories.has(i)}
-                onToggle={() => {
-                  dispatch(setResultPlacesPage(0));
-                  dispatch(toggleResultPlacesFilter(i));
-                }}
-              />
-            );
-          })}
-        </Stack>
+        <CategoryFilterList
+          categories={categories}
+          filterList={filterList}
+          found={(index: number) => satCategories.has(index)}
+          onToggle={(index: number) => {
+            dispatch(setResultPlacesPage(0));
+            dispatch(toggleResultPlacesFilter(index));
+          }}
+        />
       }
       <Box
         display={"flex"}

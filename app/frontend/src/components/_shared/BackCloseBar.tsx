@@ -22,7 +22,7 @@ export default function BackCloseBar(): JSX.Element {
       sx={{ mx: 2, my: 2 }}
       alignItems={"center"}
     >
-      <Box>
+      <Box role={"none"}>
         <Button
           startIcon={<ArrowBackIcon />}
           size={"small"}

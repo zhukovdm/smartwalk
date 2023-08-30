@@ -1,8 +1,9 @@
+import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
+import TraversableWaypointList from "./TraversableWaypointList";
 import InformPlaceListItem from "./InformPlaceListItem";
-import PlacesList from "./PlacesList";
 
 type RouteContentListProps = {
 
@@ -30,24 +31,34 @@ export default function RouteContentList(
 
   return (
     <Stack gap={2}>
-      <InformPlaceListItem
-        kind={"source"}
-        place={source}
-        title={"Fly to"}
-        onPlace={() => { map?.flyTo(source); }}
-      />
+      <Box
+        role={"region"}
+        aria-label={"Starting point"}
+      >
+        <InformPlaceListItem
+          kind={"source"}
+          place={source}
+          title={"Fly to"}
+          onPlace={() => { map?.flyTo(source); }}
+        />
+      </Box>
       {filterList.some((f) => f) && (
-        <PlacesList
+        <TraversableWaypointList
           map={map}
           places={places}
         />
       )}
-      <InformPlaceListItem
-        kind={"target"}
-        place={target}
-        title={"Fly to"}
-        onPlace={() => { map?.flyTo(target); }}
-      />
+      <Box
+        role={"region"}
+        aria-label={"Destination"}
+      >
+        <InformPlaceListItem
+          kind={"target"}
+          place={target}
+          title={"Fly to"}
+          onPlace={() => { map?.flyTo(target); }}
+        />
+      </Box>
     </Stack>
   );
 }
