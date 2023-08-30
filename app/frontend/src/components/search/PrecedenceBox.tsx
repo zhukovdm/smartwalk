@@ -115,8 +115,7 @@ export default function PrecedenceBox(
   return (
     <Box>
       <Paper
-        aria-label={"Arrow box"}
-        role={"region"}
+        role={"none"}
         variant={"outlined"}
       >
         <Stack

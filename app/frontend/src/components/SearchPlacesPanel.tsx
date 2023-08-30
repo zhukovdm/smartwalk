@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -13,7 +12,6 @@ import {
 import {
   deleteSearchPlacesCategory,
   resetSearchPlaces,
-  setSearchPlacesCenter,
   setSearchPlacesRadius,
   updateSearchPlacesCategory
 } from "../features/searchPlacesSlice";
@@ -28,13 +26,11 @@ import {
 import { useSearchPlacesMap } from "../features/searchHooks";
 import LogoCloseBar from "./_shared/LogoCloseBar";
 import PanelSelector from "./_shared/PanelSelector";
-import RemovablePlaceListItem from "./_shared/RemovablePlaceListItem";
-import VacantPlaceListItem from "./_shared/VacantPlaceListItem";
-import SelectPointDialog from "./search/SelectPointDialog";
 import BottomButtons from "./search/BottomButtons";
 import CategoryBox from "./search/CategoryBox";
 import DistanceSlider from "./search/DistanceSlider";
 import KilometersLink from "./search/KilometersLink";
+import CenterPointBox from "./search/CenterPointBox";
 
 /**
  * Panel for place search configuration.
@@ -55,8 +51,6 @@ export default function SearchPlacesPanel(): JSX.Element {
 
   const map = useSearchPlacesMap(center, radius);
 
-  const [selectDialog, setSelectDialog] = useState(false);
-
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
@@ -75,12 +69,10 @@ export default function SearchPlacesPanel(): JSX.Element {
     }
   };
 
-  const centerTitle = "Select center point";
-
   return (
     <Box
       role={"search"}
-      aria-label={"Search places"}
+      aria-label={"Places"}
     >
       <LogoCloseBar />
       <PanelSelector panel={1} />
@@ -92,23 +84,10 @@ export default function SearchPlacesPanel(): JSX.Element {
         <Box>
           <Typography>Find places around the center point:</Typography>
         </Box>
-        <Box>
-          {(!center)
-            ? <VacantPlaceListItem
-                kind={"center"}
-                label={`${centerTitle}...`}
-                title={centerTitle}
-                onClick={() => { setSelectDialog(true); }}
-              />
-            : <RemovablePlaceListItem
-                kind={"center"}
-                place={center}
-                title={"Fly to"}
-                onPlace={() => { map?.flyTo(center); }}
-                onRemove={() => { dispatch(setSearchPlacesCenter(undefined)); }}
-              />
-          }
-        </Box>
+        <CenterPointBox
+          map={map}
+          center={center}
+        />
         <Box>
           <Typography>
             Within a crow-fly distance of at most (in&nbsp;<KilometersLink />):
@@ -136,12 +115,6 @@ export default function SearchPlacesPanel(): JSX.Element {
           disabled={!center}
           onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
-        />
-        <SelectPointDialog
-          show={selectDialog}
-          kind={"center"}
-          onHide={() => { setSelectDialog(false); }}
-          onSelect={(place) => { dispatch(setSearchPlacesCenter(place)) }}
         />
       </Stack>
     </Box>

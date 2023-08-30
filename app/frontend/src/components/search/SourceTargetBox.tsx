@@ -3,7 +3,6 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { useAppDispatch } from "../../features/storeHooks";
@@ -17,10 +16,13 @@ import SelectPointDialog from "./SelectPointDialog";
 
 type SourceTargetBoxProps = {
 
+  /** Current map */
   map?: IMap;
 
+  /** Starting point */
   source?: UiPlace;
 
+  /** Destination */
   target?: UiPlace;
 };
 
@@ -37,57 +39,67 @@ export default function SourceTargetBox(
     dispatch(setSearchRoutesTarget(source));
   };
 
-  const sourceTitle = "Select starting point";
-  const targetTitle = "Select destination";
-
   return (
     <Stack
       direction={"column"}
       gap={1}
     >
-      <Stack direction={"column"} gap={2}>
-        {(!source)
-          ? <VacantPlaceListItem
-              kind={"source"}
-              label={`${sourceTitle}...`}
-              title={sourceTitle}
-              onClick={() => { setSourceSelectDialog(true); }}
-            />
-          : <RemovablePlaceListItem
-              kind={"source"}
-              place={source}
-              title={"Fly to"}
-              onPlace={() => { map?.flyTo(source); }}
-              onRemove={() => { dispatch(setSearchRoutesSource(undefined)); }}
-            />
-        }
-        <SelectPointDialog
-          show={sourceSelectDialog}
-          kind={"source"}
-          onHide={() => setSourceSelectDialog(false)}
-          onSelect={(place) => dispatch(setSearchRoutesSource(place))}
-        />
-        {(!target)
-          ? <VacantPlaceListItem
-              kind={"target"}
-              label={`${targetTitle}...`}
-              title={targetTitle}
-              onClick={() => { setTargetSelectDialog(true); }}
-            />
-          : <RemovablePlaceListItem
-              kind={"target"}
-              place={target}
-              title={"Fly to"}
-              onPlace={() => { map?.flyTo(target); }}
-              onRemove={() => { dispatch(setSearchRoutesTarget(undefined)); }}
-            />
-        }
-        <SelectPointDialog
-          show={targetSelectDialog}
-          kind={"target"}
-          onHide={() => setTargetSelectDialog(false)}
-          onSelect={(place) => dispatch(setSearchRoutesTarget(place))}
-        />
+      <Stack
+        direction={"column"}
+        gap={2}
+      >
+        <Box
+          role={"region"}
+          aria-label={"Starting point"}
+        >
+          {(!source)
+            ? <VacantPlaceListItem
+                kind={"source"}
+                label={"Select starting point..."}
+                title={"Select starting point"}
+                onClick={() => { setSourceSelectDialog(true); }}
+              />
+            : <RemovablePlaceListItem
+                kind={"source"}
+                place={source}
+                title={"Fly to"}
+                onPlace={() => { map?.flyTo(source); }}
+                onRemove={() => { dispatch(setSearchRoutesSource(undefined)); }}
+              />
+          }
+          <SelectPointDialog
+            show={sourceSelectDialog}
+            kind={"source"}
+            onHide={() => setSourceSelectDialog(false)}
+            onSelect={(place) => dispatch(setSearchRoutesSource(place))}
+          />
+        </Box>
+        <Box
+          role={"region"}
+          aria-label={"Destination"}
+        >
+          {(!target)
+            ? <VacantPlaceListItem
+                kind={"target"}
+                label={"Select destination..."}
+                title={"Select destination"}
+                onClick={() => { setTargetSelectDialog(true); }}
+              />
+            : <RemovablePlaceListItem
+                kind={"target"}
+                place={target}
+                title={"Fly to"}
+                onPlace={() => { map?.flyTo(target); }}
+                onRemove={() => { dispatch(setSearchRoutesTarget(undefined)); }}
+              />
+          }
+          <SelectPointDialog
+            show={targetSelectDialog}
+            kind={"target"}
+            onHide={() => setTargetSelectDialog(false)}
+            onSelect={(place) => dispatch(setSearchRoutesTarget(place))}
+          />
+        </Box>
       </Stack>
       <Box
         display={"flex"}

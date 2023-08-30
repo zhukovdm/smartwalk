@@ -62,7 +62,7 @@ export default function SearchDirecsPanel(): JSX.Element {
   return (
     <Box
       role={"search"}
-      aria-label={"Search directions"}
+      aria-label={"Directions"}
     >
       <LogoCloseBar />
       <PanelSelector panel={2} />

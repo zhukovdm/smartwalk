@@ -14,12 +14,12 @@ type RemovablePlaceListItemProps = InformPlaceListItemProps & {
  * Place list item with removing capabilities.
  */
 export default function RemovablePlaceListItem(
-  { place: p, onPlace, onRemove, ...rest }: RemovablePlaceListItemProps): JSX.Element {
+  { place, onPlace, onRemove, ...rest }: RemovablePlaceListItemProps): JSX.Element {
 
   return (
     <StandardListItem
-      label={p.name}
-      link={getSmartPlaceLink(p.smartId)}
+      label={place.name}
+      link={getSmartPlaceLink(place.smartId)}
       l={
         <PlaceButton {...rest} onClick={onPlace} />
       }

@@ -78,7 +78,7 @@ export default function SearchRoutesPanel(): JSX.Element {
   return (
     <Box
       role={"search"}
-      aria-label={"Search routes"}
+      aria-label={"Routes"}
     >
       <LogoCloseBar />
       <PanelSelector panel={0} />

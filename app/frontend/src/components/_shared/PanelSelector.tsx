@@ -30,7 +30,11 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
   const { block } = useAppSelector((state) => state.panel);
 
   return (
-    <Box sx={{ borderTop: 1, borderBottom: 1, borderColor: "divider" }}>
+    <Box
+      aria-label={"Search panels"}
+      role={"navigation"}
+      sx={{ borderTop: 1, borderBottom: 1, borderColor: "divider" }}
+    >
       <BottomNavigation showLabels={true} value={panel}>
         <BottomNavigationAction
           label={"Routes"}

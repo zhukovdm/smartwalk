@@ -162,8 +162,7 @@ export default function CategoryBox(
   return (
     <Box>
       <Paper
-        aria-label={"Category box"}
-        role={"region"}
+        role={"none"}
         variant={"outlined"}
       >
         <Stack
