@@ -21,6 +21,7 @@
     "strict": true
   },
   "include": [
-    "src"
-, "jest.env.setup.ts"  ]
+    "src",
+    "jest.env.setup.ts"
+  ]
 }
