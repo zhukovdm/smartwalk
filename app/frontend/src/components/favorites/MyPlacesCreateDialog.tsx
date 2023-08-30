@@ -1,4 +1,9 @@
-import { MouseEventHandler, useContext, useMemo, useState } from "react";
+import {
+  MouseEventHandler,
+  useContext,
+  useMemo,
+  useState
+} from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -110,17 +115,18 @@ export default function MyPlacesCreateDialog(): JSX.Element {
 
   // https://github.com/facebook/react/issues/15486#issuecomment-488028431
   const onToggle: MouseEventHandler<HTMLDetailsElement> = (e) => {
+    if (e.currentTarget)
     e.preventDefault();
     dispatch(toggleFavoriteCreateExpanded());
   }
 
   return (
     <Box sx={{ mt: 4, mb: 1 }}>
-      <details
-        open={createExpanded}
-        onClick={onToggle}
-      >
-        <summary style={{ cursor: "pointer" }}>
+      <details open={createExpanded}>
+        <summary
+          onClick={onToggle}
+          style={{ cursor: "pointer" }}
+        >
           <Typography sx={{ display: "inline-block" }}>
             Create custom place
           </Typography>
