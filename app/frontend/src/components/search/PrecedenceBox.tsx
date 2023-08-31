@@ -16,7 +16,7 @@ import EastIcon from "@mui/icons-material/East";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
 import { CycleDetector } from "../../domain/cycleDetector";
 import PrecedenceList from "../_shared/PrecedenceList";
-import PrecedenceDrawing from "./PrecedenceDrawing";
+import PrecedenceDrawing from "../_shared/PrecedenceDrawing";
 
 type PrecedenceSelectorProps = {
 

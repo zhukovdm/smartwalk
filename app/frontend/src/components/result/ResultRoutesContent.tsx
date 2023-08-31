@@ -24,7 +24,9 @@ import {
 } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
 import { IdGenerator } from "../../utils/helpers";
+import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
+import PrecedenceViewDialog from "../_shared/PrecedenceViewDialog";
 import RouteContentList from "../_shared/RouteContentList";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
@@ -54,6 +56,7 @@ export default function ResultRoutesContent(
 
   const [showM, setShowM] = useState(false);
   const [showS, setShowS] = useState(false);
+  const [showP, setShowP] = useState(false);
 
   const route = result[index];
 
@@ -66,6 +69,7 @@ export default function ResultRoutesContent(
     places: routePlaces,
     distance,
     categories,
+    precedence,
     waypoints
   } = route;
 
@@ -111,7 +115,7 @@ export default function ResultRoutesContent(
     <Stack direction={"column"} gap={2.5}>
       <Stack gap={1}>
         <Typography>
-          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"}:
+          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with distances of at most <strong>{distance}</strong>&nbsp;km, visiting at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
         </Typography>
         <CategoryFilterList
           categories={categories}
@@ -121,7 +125,13 @@ export default function ResultRoutesContent(
             dispatch(toggleResultRoutesFilter(index));
           }}
         />
-      </Stack>
+        <PrecedenceViewDialog
+          show={showP}
+          categories={categories}
+          precedence={precedence}
+          onHide={() => { setShowP(false); }}
+        />
+        </Stack>
       <Box display={"flex"} justifyContent={"center"}>
         <Pagination
           page={index + 1}

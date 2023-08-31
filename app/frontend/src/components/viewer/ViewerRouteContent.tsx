@@ -1,13 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
 import { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
 import { useAppDispatch } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
+import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
+import PrecedenceViewDialog from "../_shared/PrecedenceViewDialog";
 import RouteContentList from "../_shared/RouteContentList";
 import TraversableHeader from "../_shared/TraversableHeader";
-import TraversableDistance from "../_shared/TraversableDistance";
 
 type ViewerRouteContentProps = {
 
@@ -28,6 +30,7 @@ export default function ViewerRouteContent(
 
   const {
     categories,
+    precedence,
     name,
     path
   } = route;
@@ -39,21 +42,33 @@ export default function ViewerRouteContent(
     places
   } = useResultRoute(route, filterList);
 
+  const [showP, setShowP] = useState(false);
+
   // eslint-disable-next-line
   useEffect(() => { map?.flyTo(source); }, []);
 
   return (
     <Stack gap={2.5}>
       <TraversableHeader name={name} />
-      <TraversableDistance distance={path.distance} />
-      <CategoryFilterList
-        categories={categories}
-        filterList={filterList}
-        found={(_: number) => true}
-        onToggle={(index: number) => {
-          dispatch(toggleViewerRouteFilter(index));
-        }}
-      />
+      <Stack gap={1}>
+        <Typography>
+          This route is <strong>{path.distance.toFixed(2)}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
+        </Typography>
+        <CategoryFilterList
+          categories={categories}
+          filterList={filterList}
+          found={(_: number) => true}
+          onToggle={(index: number) => {
+            dispatch(toggleViewerRouteFilter(index));
+          }}
+        />
+        <PrecedenceViewDialog
+          show={showP}
+          categories={categories}
+          precedence={precedence}
+          onHide={() => { setShowP(false); }}
+        />
+      </Stack>
       <RouteContentList
         map={map}
         source={source}

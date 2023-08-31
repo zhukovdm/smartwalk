@@ -32,7 +32,7 @@ type FavoritesState = {
 export const initialFavoritesState = (): FavoritesState => ({
   loaded: false,
   name: "",
-  createExpanded: true,
+  createExpanded: false,
   direcs: [],
   direcsExpanded: true,
   places: [],

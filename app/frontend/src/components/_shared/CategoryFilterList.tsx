@@ -27,9 +27,10 @@ export default function CategoryFilterList(
     <Stack
       role={"list"}
       aria-label={"Category filters"}
+      rowGap={0.75}
+      columnGap={1.5}
       direction={"row"}
       flexWrap={"wrap"}
-      columnGap={1.5}
     >
       {categories.map((c, i) => (
         <CategoryFilter
