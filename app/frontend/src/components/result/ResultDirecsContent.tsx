@@ -22,10 +22,10 @@ import {
 } from "../../features/storeHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
 import { IdGenerator } from "../../utils/helpers";
-import TraversableDistance from "../_shared/TraversableDistance";
-import TraversableWaypointList from "../_shared/TraversableWaypointList";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
+import TraversableDistance from "../_shared/TraversableDistance";
+import TraversableWaypointList from "../_shared/TraversableWaypointList";
 
 type ResultDirecsContentProps = {
 
@@ -76,7 +76,7 @@ export default function ResultDirecsContent(
 
   return (
     <Stack direction={"column"} gap={2.5}>
-      <Typography fontSize={"1.1rem"}>
+      <Typography>
         Found a total of <strong>{result.length}</strong> direction{result.length > 1 ? "s" : ""}.
       </Typography>
       <Box display={"flex"} justifyContent={"center"}>

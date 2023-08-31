@@ -91,7 +91,7 @@ export default function ResultPlacesContent(
   return (
     <Stack direction={"column"} gap={2.5}>
       <Stack direction={"column"} gap={2}>
-        <Typography fontSize={"1.10rem"}>
+        <Typography>
           Found a total of <strong>{resultPlaces.length}</strong> place{resultPlaces.length > 1 ? "s" : ""} within a distance of at most <strong>{radius}</strong>&nbsp;km around the center point:
         </Typography>
         <Box
@@ -105,18 +105,18 @@ export default function ResultPlacesContent(
             onPlace={() => { map?.flyTo(center); }}
           />
         </Box>
+        {categories.length > 0 &&
+          <CategoryFilterList
+            categories={categories}
+            filterList={filterList}
+            found={(index: number) => satCategories.has(index)}
+            onToggle={(index: number) => {
+              dispatch(setResultPlacesPage(0));
+              dispatch(toggleResultPlacesFilter(index));
+            }}
+          />
+        }
       </Stack>
-      {categories.length > 0 &&
-        <CategoryFilterList
-          categories={categories}
-          filterList={filterList}
-          found={(index: number) => satCategories.has(index)}
-          onToggle={(index: number) => {
-            dispatch(setResultPlacesPage(0));
-            dispatch(toggleResultPlacesFilter(index));
-          }}
-        />
-      }
       <Box
         display={"flex"}
         justifyContent={"center"}

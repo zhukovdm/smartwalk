@@ -1,8 +1,10 @@
 import { KeyboardEvent, useState } from "react";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { PlaceCategory } from "../../domain/types";
 import CategoryFilterDialog from "./CategoryFilterDialog";
 
@@ -49,16 +51,22 @@ export default function CategoryFilter(
       <Stack
         alignItems={"center"}
         direction={"row"}
-        gap={0.2}
+        gap={0.5}
         justifyContent={"center"}
       >
-        <Checkbox
-          inputProps={{ "aria-label": chkLabel }}
-          title={chkLabel}
+        <IconButton
+          color={"primary"}
           disabled={!found}
-          checked={active}
-          onChange={() => { onToggle(index); }}
-        />
+          role={"checkbox"}
+          size={"small"}
+          title={chkLabel}
+          onClick={() => { onToggle(index); }}
+        >
+          {active
+            ? <CheckBoxIcon />
+            : <CheckBoxOutlineBlankIcon />
+          }
+        </IconButton>
         <Box
           aria-label={`Show filters`}
           role={"button"}

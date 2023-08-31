@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Chip from "@mui/material/Chip";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -16,6 +15,7 @@ import { useTheme } from "@mui/material/styles";
 import EastIcon from "@mui/icons-material/East";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
 import { CycleDetector } from "../../domain/cycleDetector";
+import PrecedenceList from "../_shared/PrecedenceList";
 import PrecedenceDrawing from "./PrecedenceDrawing";
 
 type PrecedenceSelectorProps = {
@@ -118,24 +118,10 @@ export default function PrecedenceBox(
         role={"none"}
         variant={"outlined"}
       >
-        <Stack
-          aria-label={"Arrows"}
-          role={"list"}
-          direction={"row"}
-          flexWrap={"wrap"}
-        >
-          {precedence.map((edge, i) => (
-            <Box key={i} role={"listitem"}>
-              <Chip
-                color={"primary"}
-                sx={{ m: 0.35, color: "black" }}
-                variant={"outlined"}
-                label={`${edge.fr + 1} → ${edge.to + 1}`}
-                onDelete={() => { deleteEdge(i); }}
-              />
-            </Box>
-          ))}
-        </Stack>
+        <PrecedenceList
+          precedence={precedence}
+          onDelete={deleteEdge}
+        />
         <Button
           size={"large"}
           onClick={() => { setShowDialog(true); }}

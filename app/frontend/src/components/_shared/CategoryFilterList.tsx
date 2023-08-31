@@ -29,8 +29,7 @@ export default function CategoryFilterList(
       aria-label={"Category filters"}
       direction={"row"}
       flexWrap={"wrap"}
-      justifyContent={"center"}
-      spacing={2}
+      columnGap={1.5}
     >
       {categories.map((c, i) => (
         <CategoryFilter

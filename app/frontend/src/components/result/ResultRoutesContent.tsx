@@ -109,9 +109,19 @@ export default function ResultRoutesContent(
 
   return (
     <Stack direction={"column"} gap={2.5}>
-      <Typography fontSize={"1.1rem"}>
-        Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"}.
-      </Typography>
+      <Stack gap={1}>
+        <Typography>
+          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with a distance of at most <strong>{distance}</strong>&nbsp;km. Each of them visits at least one place from <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"}:
+        </Typography>
+        <CategoryFilterList
+          categories={categories}
+          filterList={filterList}
+          found={(_: number) => true}
+          onToggle={(index: number) => {
+            dispatch(toggleResultRoutesFilter(index));
+          }}
+        />
+      </Stack>
       <Box display={"flex"} justifyContent={"center"}>
         <Pagination
           page={index + 1}
@@ -158,14 +168,6 @@ export default function ResultRoutesContent(
         onModify={onModify}
       />
       <TraversableDistance distance={path.distance} />
-      <CategoryFilterList
-        categories={categories}
-        filterList={filterList}
-        found={(_: number) => true}
-        onToggle={(index: number) => {
-          dispatch(toggleResultRoutesFilter(index));
-        }}
-      />
       <RouteContentList
         map={map}
         source={source}
