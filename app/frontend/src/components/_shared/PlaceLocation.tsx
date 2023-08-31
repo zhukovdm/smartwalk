@@ -9,7 +9,7 @@ import PlaceButton from "./PlaceButton";
 type PlaceLocationProps = {
 
   /** Current map */
-  map: IMap | undefined;
+  map?: IMap;
 
   /** Place in consideration. */
   place: UiPlace;

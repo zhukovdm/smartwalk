@@ -80,7 +80,13 @@ function PlacePopup({ place, categories }: PlacePopupProps): JSX.Element {
       <strong>{place.name}</strong>
       <div>
         <hr style={{opacity: 0.7, margin: "0.25rem 0"}} />
-        <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", columnGap: "12px", width: "220px" }}>
+        <div style={{
+          columnGap: "12px",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          width: "220px"
+        }}>
           {lst.map((itm, i) => (<div key={i}>{itm}</div>))}
         </div>
       </div>
@@ -91,7 +97,8 @@ function PlacePopup({ place, categories }: PlacePopupProps): JSX.Element {
 class PlacePopupFactory {
 
   public static getPopup(place: UiPlace, categories: PlaceCategory[]): string {
-    return ReactDOMServer.renderToString(<PlacePopup place={place} categories={categories} />);
+    return ReactDOMServer.renderToString(
+      <PlacePopup place={place} categories={categories} />);
   }
 }
 
@@ -165,7 +172,7 @@ export class LeafletMap implements IMap {
   private readonly color: string = "green";
   private readonly fillOpacity: number = 0.2;
 
-  private readonly map: Map;
+  private readonly map?: Map;
   private readonly shpLayer: LayerGroup;
   private readonly mrkLayer: LayerGroup;
   private pins: LeafletPin[];
@@ -187,12 +194,16 @@ export class LeafletMap implements IMap {
     return this.appendPin(this.generatePin(place, categories, icon, draggable));
   }
 
-  constructor(map: Map) {
+  constructor(map?: Map) {
 
     this.map = map;
+    this.shpLayer = L.layerGroup();
+    this.mrkLayer = L.layerGroup();
 
-    this.shpLayer = L.layerGroup().addTo(map);
-    this.mrkLayer = L.layerGroup().addTo(map);
+    if (!!map) {
+      this.shpLayer = this.shpLayer.addTo(map);
+      this.mrkLayer = this.mrkLayer.addTo(map);
+    }
 
     this.pins = [];
   }
@@ -212,7 +223,7 @@ export class LeafletMap implements IMap {
 
     if (pin) {
       const point = pin.place.location;
-      this.map.flyTo(new LatLng(point.lat, point.lon), this.map.getZoom());
+      this.map?.flyTo(new LatLng(point.lat, point.lon), this.map?.getZoom());
       pin.marker.openPopup();
     }
   }
@@ -259,10 +270,12 @@ export class LeafletMap implements IMap {
   }
 
   public captureLocation(callback: (point: WgsPoint) => void): void {
+    if (!this.map) { return; }
     const style = this.map.getContainer().style;
     style.cursor = "crosshair";
 
     this.map.once("click", (e) => {
+      if (!this.map) { return; }
       style.cursor = "";
       callback(LeafletConverter.latlng2point(this.map.mouseEventToLatLng(e.originalEvent)));
     });
