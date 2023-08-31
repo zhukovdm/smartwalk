@@ -37,29 +37,37 @@ export default function CategoryFilter(
   const catLabel = `${index + 1}: ${category.keyword}`;
   const chkLabel = `${active ? "Hide" : "Show"} places`;
 
-  const keyboardAction = (e: KeyboardEvent<HTMLDivElement>) => {
+  const chkKeyAction = (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+    }
+    if (e.key === " ") { onToggle(index); }
+  }
+
+  const fltKeyAction = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === "Enter" || e.key === " ") {
       setShowDialog(true);
     }
   }
 
   return (
-    <Box
-      role={"listitem"}
-      aria-label={catLabel}
-    >
+    <Box>
       <Stack
         alignItems={"center"}
         direction={"row"}
         gap={0.5}
         justifyContent={"center"}
+        role={"listitem"}
+        aria-label={catLabel}
       >
         <IconButton
           color={"primary"}
           disabled={!found}
           role={"checkbox"}
+          aria-checked={active}
           size={"small"}
           title={chkLabel}
+          onKeyDown={chkKeyAction}
           onClick={() => { onToggle(index); }}
         >
           {active
@@ -68,11 +76,12 @@ export default function CategoryFilter(
           }
         </IconButton>
         <Box
-          aria-label={`Show filters`}
+          title={"Show filters"}
+          aria-label={"Show filters"}
           role={"button"}
           tabIndex={0}
-          sx={{ cursor: "pointer", }}
-          onKeyDown={keyboardAction}
+          sx={{ cursor: "pointer" }}
+          onKeyDown={fltKeyAction}
           onClick={() => { setShowDialog(true); }}
         >
           <Typography

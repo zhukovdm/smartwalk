@@ -94,7 +94,11 @@ export default function CategoryFilterDialog(
         alignItems={"center"}
       >
         <span>Category</span>
-        <IconButton size={"small"} title={"Hide dialog"} onClick={onHide}>
+        <IconButton
+          size={"small"}
+          title={"Hide dialog"}
+          onClick={onHide}
+        >
           <CloseIcon fontSize={"small"} />
         </IconButton>
       </DialogTitle>
