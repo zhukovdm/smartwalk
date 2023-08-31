@@ -40,7 +40,7 @@ export default function AttributeFilterViewNumeric(
   }, [check, value, setter]);
 
   return (
-    <Stack spacing={3}>
+    <Stack rowGap={2}>
       <FormControlLabel
         control={<Checkbox checked={check} onChange={toggle} />}
         label={`${camelCaseToLabel(label)} between ${value[0]} and ${value[1]}`}

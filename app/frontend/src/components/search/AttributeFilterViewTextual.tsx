@@ -32,7 +32,10 @@ export default function AttributeFilterViewTextual(
   }, [check, value, setter]);
 
   return (
-    <Stack direction={"row"} spacing={4}>
+    <Stack
+      direction={"row"}
+      columnGap={2}
+    >
       <AttributeFilterCheckBox
         checked={check}
         label={label}

@@ -67,7 +67,7 @@ export default function AttributeFiltersList(
               display={"flex"}
               flexWrap={"wrap"}
               justifyContent={"center"}
-              spacing={1}
+              columnGap={1}
               role={"list"}
               aria-labelledby={"search-es-attributes-head"}
             >
@@ -101,7 +101,7 @@ export default function AttributeFiltersList(
           </AccordionSummary>
           <AccordionDetails>
             <Stack
-              spacing={1}
+              rowGap={1}
               role={"list"}
               aria-labelledby={"search-bs-attributes-head"}
             >
@@ -135,7 +135,7 @@ export default function AttributeFiltersList(
           </AccordionSummary>
           <AccordionDetails>
             <Stack
-              spacing={3}
+              rowGap={2.5}
               role={"list"}
               aria-labelledby={"search-ns-attributes-head"}
             >
@@ -171,7 +171,7 @@ export default function AttributeFiltersList(
           </AccordionSummary>
           <AccordionDetails>
             <Stack
-              spacing={1}
+              rowGap={1}
               role={"list"}
               aria-labelledby={"search-ts-attributes-head"}
             >
@@ -206,7 +206,7 @@ export default function AttributeFiltersList(
           </AccordionSummary>
           <AccordionDetails>
             <Stack
-              spacing={2}
+              rowGap={2}
               role={"list"}
               aria-labelledby={"search-cs-attributes-head"}
             >

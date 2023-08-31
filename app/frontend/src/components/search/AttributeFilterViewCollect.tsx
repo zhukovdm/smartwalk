@@ -72,7 +72,7 @@ export default function AttributeFilterViewCollect(
 
   return (
     <Stack
-      spacing={2}
+      rowGap={2}
       direction={"column"}
     >
       <AttributeFilterCheckBox
