@@ -3,7 +3,7 @@ import Paper from "@mui/material/Paper";
 import { Edge, Network, Node, Options } from "vis-network";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
 
-type PrecedenceDrawingProps = {
+export type PrecedenceDrawingProps = {
 
   /** Configured categories */
   categories: PlaceCategory[];

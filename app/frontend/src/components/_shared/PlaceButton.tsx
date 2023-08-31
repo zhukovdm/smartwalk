@@ -2,7 +2,7 @@ import LocationOnIcon from "@mui/icons-material/LocationOn";
 import IconButton from "@mui/material/IconButton";
 import { PlaceKind } from "../../domain/types";
 
-type PlaceButtonProps = {
+export type PlaceButtonProps = {
 
   /** Kind of a place presented to the user */
   kind: PlaceKind;

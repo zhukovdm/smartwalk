@@ -40,51 +40,74 @@ describe("<CategoryFilter />", () => {
     expect(container).toBeTruthy();
   });
 
-  test("active checkbox has proper label and title", () => {
-    const text = "Hide (1: museum) items";
-    const { getByRole, getByLabelText } = render();
-    expect(getByLabelText(text)).toBeInTheDocument();
-    expect(getByRole("checkbox", { name: text })).toBeInTheDocument();
+  test("filter role and name", () => {
+    const { getByRole } = render();
+    expect(getByRole("listitem", { name: "1: museum" })).toBeInTheDocument();
   });
 
-  test("inactive checkbox has proper label and title", () => {
-    const text = "Show (1: museum) items";
-    const { getByRole, getByLabelText } = render({ active: false });
-    expect(getByLabelText(text)).toBeInTheDocument();
-    expect(getByRole("checkbox", { name: text })).toBeInTheDocument();
+  describe("checkbox", () => {
+
+    test("active role and name", () => {
+      const { getByRole } = render();
+      expect(getByRole("checkbox", { name: "Hide places" })).toBeInTheDocument();
+    });
+
+    test("inactive role and name", () => {
+      const { getByRole } = render({ active: false });
+      expect(getByRole("checkbox", { name: "Show places" })).toBeInTheDocument();
+    });
+
+    describe("onToggle", () => {
+
+      test("gets called upon Click", () => {
+        const fn = jest.fn();
+        const { getByRole } = render({ onToggle: fn });
+        fireEvent.click(getByRole("checkbox"));
+        expect(fn).toHaveBeenCalledTimes(1);
+      });
+
+      test("gets called upon Space", () => {
+        const fn = jest.fn();
+        const { getByRole } = render({ onToggle: fn });
+        fireEvent.keyDown(getByRole("checkbox"), { key: " " });
+        expect(fn).toHaveBeenCalledTimes(1);
+      });
+
+      test("does not get called upon Enter", () => {
+        const fn = jest.fn();
+        const { getByRole } = render({ onToggle: fn });
+        fireEvent.keyDown(getByRole("checkbox"), { key: "Enter" });
+        expect(fn).toHaveBeenCalledTimes(0);
+      });
+    });
   });
 
-  test("toggle callback gets called", () => {
-    const onToggle = jest.fn();
-    const { getByRole } = render({ onToggle: onToggle });
-    fireEvent.click(getByRole("checkbox", { name: "Hide (1: museum) items" }));
-    expect(onToggle).toHaveBeenCalledTimes(1);
-  });
+  describe("filter button", () => {
 
-  test("filter button has proper label and title", () => {
-    const { getByRole, getByText } = render();
-    expect(getByRole("button", { name: "Show (1: museum) filters" })).toBeInTheDocument();
-    expect(getByText("1: museum")).toBeInTheDocument();
-  });
+    test("role and name", () => {
+      const { getByRole } = render();
+      expect(getByRole("button", { name: "Show filters" })).toBeInTheDocument();
+    });
 
-  test("filter button opens dialog upon click", () => {
-    const { getByRole, queryAllByRole } = render();
-    expect(queryAllByRole("dialog").length).toEqual(0);
-    fireEvent.click(getByRole("button"));
-    expect(getByRole("dialog")).toBeInTheDocument();
-  });
+    test("opens dialog upon Click", () => {
+      const { getByRole, queryAllByRole } = render();
+      expect(queryAllByRole("dialog").length).toEqual(0);
+      fireEvent.click(getByRole("button"));
+      expect(getByRole("dialog")).toBeInTheDocument();
+    });
 
-  test("filter button opens dialog upon Enter", () => {
-    const { getByRole, queryAllByRole } = render();
-    expect(queryAllByRole("dialog").length).toEqual(0);
-    fireEvent.keyDown(getByRole("button"), { key: "Enter" });
-    expect(getByRole("dialog")).toBeInTheDocument();
-  });
+    test("opens dialog upon Enter", () => {
+      const { getByRole, queryAllByRole } = render();
+      expect(queryAllByRole("dialog").length).toEqual(0);
+      fireEvent.keyDown(getByRole("button"), { key: "Enter" });
+      expect(getByRole("dialog")).toBeInTheDocument();
+    });
 
-  test("filter button opens dialog upon Space", () => {
-    const { getByRole, queryAllByRole } = render();
-    expect(queryAllByRole("dialog").length).toEqual(0);
-    fireEvent.keyDown(getByRole("button"), { key: " " });
-    expect(getByRole("dialog")).toBeInTheDocument();
+    test("opens dialog upon Space", () => {
+      const { getByRole, queryAllByRole } = render();
+      expect(queryAllByRole("dialog").length).toEqual(0);
+      fireEvent.keyDown(getByRole("button"), { key: " " });
+      expect(getByRole("dialog")).toBeInTheDocument();
+    });
   });
 });

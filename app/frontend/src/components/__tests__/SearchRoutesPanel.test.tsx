@@ -15,13 +15,10 @@ describe("<SearchRoutesPanel />", () => {
 
   beforeEach(cleanup);
 
-  describe("basic", () => {
-
-    test("render", () => {
-      const { container } = render();
-      expect(container).toBeTruthy();
-    });
-  })
+  test("render", () => {
+    const { container } = render();
+    expect(container).toBeTruthy();
+  });
 
   describe("source", () => {
 

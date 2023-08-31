@@ -11,7 +11,7 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 
 type PlaceAppendDialogProps = {
 
-  /** Show/hide dialog */
+  /** Show dialog */
   show: boolean;
 
   /** Callback hiding dialog */
@@ -40,7 +40,11 @@ export default function PlaceAppendDialog(
     >
       <DialogTitle
         aria-label={"Append place"}
-        sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center"
+        }}
       >
         <span>Append place</span>
         <IconButton
@@ -52,13 +56,20 @@ export default function PlaceAppendDialog(
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Stack direction={"column"} gap={2} maxWidth={"300px"}>
+        <Stack
+          direction={"column"}
+          gap={2}
+          maxWidth={"300px"}
+        >
           <Typography>
             This action will <strong>append</strong> the point to the current <DirectionsIcon titleAccess={"direction"} fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} /> sequence.
           </Typography>
         </Stack>
       </DialogContent>
-      <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
+      <DialogActions sx={{
+        display: "flex",
+        justifyContent: "space-between"
+      }}>
         <Button
           color={"error"}
           onClick={onHide}

@@ -43,35 +43,34 @@ function render(): RenderResult {
 
 describe("<CategoryFilterDialog />", () => {
 
-  test("hide button triggers hide event", () => {
-    const { getByTitle } = render();
-    fireEvent.click(getByTitle(/hide dialog/i));
+  test("hide button triggers onHide", () => {
+    const { getByRole } = render();
+    fireEvent.click(getByRole("button", { name: "Hide dialog" }));
     expect(onHide).toBeCalledTimes(1);
   });
 
   it("should show eS attributes", () => {
     const { getByText } = render();
-    expect(getByText(/opening hours/i)).toBeInTheDocument();
+    expect(getByText("opening hours")).toBeInTheDocument();
   });
 
   it("should show bS attributes", () => {
     const { getByText } = render();
-    expect(getByText(/internet access == yes/i)).toBeInTheDocument();
+    expect(getByText("internet access == yes")).toBeInTheDocument();
   });
 
   it("should show nS attributes", () => {
     const { getByText } = render();
-    expect(getByText(/0 ≤ minimum age ≤ 21/i)).toBeInTheDocument();
+    expect(getByText("0 ≤ minimum age ≤ 21")).toBeInTheDocument();
   });
 
   it("should show tS attributes", () => {
     const { getByText } = render();
-    expect(getByText(/old ∈ name/i)).toBeInTheDocument();
+    expect(getByText("old ∈ name")).toBeInTheDocument();
   });
 
   it("should show cS attributes", () => {
     const { getByText } = render();
-
     ["payment", "cash", "card"].forEach((item) => {
       expect(getByText(item)).toBeInTheDocument();
     });

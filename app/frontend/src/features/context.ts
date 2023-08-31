@@ -19,7 +19,7 @@ export class MapFactory {
    * @param map original Leaflet map object
    * @returns wrapper with desired functionality
    */
-  static getMap(map: LeafletRawMap): IMap {
+  static getMap(map?: LeafletRawMap): IMap {
     return new LeafletMap(map);
   }
 }

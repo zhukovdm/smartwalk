@@ -6,7 +6,7 @@ type PanelState = {
   block: boolean;
 };
 
-const initialPanelState = (): PanelState => ({
+export const initialPanelState = (): PanelState => ({
   show: false,
   dialogBlock: false,
   block: false
