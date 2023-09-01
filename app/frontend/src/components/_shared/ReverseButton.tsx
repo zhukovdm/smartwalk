@@ -1,15 +1,14 @@
-import SwapVertIcon from "@mui/icons-material/SwapVert";
 import IconButton from "@mui/material/IconButton";
-import { MouseEventHandler } from "react";
+import SwapVertIcon from "@mui/icons-material/SwapVert";
 
-type ReverseButtonProps = {
+export type ReverseButtonProps = {
 
   /** Button event handler */
-  onClick: MouseEventHandler<Element>;
+  onClick: () => void;
 };
 
 /**
- * Reverse button with standard swap icon.
+ * Reverse button with swap icon.
  */
 export default function ReverseButton(props: ReverseButtonProps): JSX.Element {
 

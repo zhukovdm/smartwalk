@@ -14,7 +14,7 @@ export type InformPlaceListItemProps = {
   /** Concise button title */
   title: string;
 
-  /** Event handler */
+  /** Event handler for a location button */
   onPlace: () => void;
 };
 

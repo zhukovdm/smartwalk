@@ -1,14 +1,13 @@
 import {
-  RenderResult,
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
 import { withRouter } from "../../../utils/testUtils";
-import InformPlaceListItem, {
-  InformPlaceListItemProps
-} from "../InformPlaceListItem";
+import RemovablePlaceListItem, {
+  RemovablePlaceListItemProps
+} from "../RemovablePlaceListItem";
 
-const getDefault = (): InformPlaceListItemProps => ({
+const getDefault = (): RemovablePlaceListItemProps => ({
   place: {
     smartId: "1",
     name: "Place",
@@ -16,19 +15,25 @@ const getDefault = (): InformPlaceListItemProps => ({
       lon: 0.0,
       lat: 0.0
     },
-    keywords: [],
-    categories: []
+    keywords: [
+      "castle",
+      "museum"
+    ],
+    categories: [
+      0
+    ]
   },
+  onPlace: jest.fn(),
+  onRemove: jest.fn(),
   kind: "common",
-  title: "Fly to",
-  onPlace: jest.fn()
+  title: "Fly to"
 });
 
-function render(props = getDefault()): RenderResult {
-  return rtlRender(withRouter(<InformPlaceListItem {...props} />));
+function render(props = getDefault()) {
+  return rtlRender(withRouter(<RemovablePlaceListItem {...props} />));
 }
 
-describe("<InformPlaceListItem />", () => {
+describe("<RemovablePlaceListItem />", () => {
 
   test("render", () => {
     const { container } = render();
@@ -49,7 +54,18 @@ describe("<InformPlaceListItem />", () => {
       ...d,
       onPlace: f
     });
-    fireEvent.click(getByRole("button"));
+    fireEvent.click(getByRole("button", { name: "Fly to" }));
+    expect(f).toBeCalledTimes(1);
+  });
+
+  test("pass onRemove", () => {
+    const d = getDefault();
+    const f = jest.fn();
+    const { getByRole } = render({
+      ...d,
+      onRemove: f
+    });
+    fireEvent.click(getByRole("button", { name: "Remove point" }));
     expect(f).toBeCalledTimes(1);
   });
 });

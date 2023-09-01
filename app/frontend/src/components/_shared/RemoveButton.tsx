@@ -1,11 +1,10 @@
-import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import IconButton from "@mui/material/IconButton";
-import { MouseEventHandler } from "react";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 
-type RemoveButtonProps = {
+export type RemoveButtonProps = {
 
   /** Button event handler */
-  onClick: MouseEventHandler<Element>;
+  onClick: () => void;
 };
 
 /**

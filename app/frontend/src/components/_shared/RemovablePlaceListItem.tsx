@@ -6,7 +6,7 @@ import StandardListItem from "./StandardListItem";
 
 export type RemovablePlaceListItemProps = InformPlaceListItemProps & {
 
-  /** Event handler */
+  /** Event handler for a remove button */
   onRemove: () => void;
 };
 

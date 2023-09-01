@@ -48,7 +48,7 @@ describe("<PlaceLocation />", () => {
   });
 
   test("text content", () => {
-    const { getByText, debug } = render(); debug()
+    const { getByText } = render();
     expect(getByText("0.000000N, 0.000000E")).toBeInTheDocument();
   });
 
