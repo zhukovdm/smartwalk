@@ -36,7 +36,7 @@ import {
   appendSearchDirecsPlace
 } from "../../features/searchDirecsSlice";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
-import SaveSomethingDialog from "../_shared/SomethingSaveDialog";
+import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import PlaceLocation from "../_shared/PlaceLocation";
 import PlaceKeywords from "../_shared/PlaceKeywords";
 import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
@@ -198,7 +198,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
             This place is not in your Favorites yet.
           </Alert>
       }
-      <SaveSomethingDialog
+      <SomethingSaveDialog
         name={place.name}
         show={showS}
         what={"place"}

@@ -11,9 +11,9 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 import { setDialogBlock } from "../../features/panelSlice";
-import SaveSomethingDialogActions from "./SomethingSaveDialogActions";
+import SomethingSaveDialogActions from "./SomethingSaveDialogActions";
 
-type SaveSomethingDialogProps = {
+export type SomethingSaveDialogProps = {
 
   /** An initial name of `something`. */
   name: string;
@@ -34,8 +34,8 @@ type SaveSomethingDialogProps = {
 /**
  * Dialog for saving `something`.
  */
-export default function SaveSomethingDialog(
-  { name: oldName, show, what, onHide, onSave }: SaveSomethingDialogProps): JSX.Element {
+export default function SomethingSaveDialog(
+  { name: oldName, show, what, onHide, onSave }: SomethingSaveDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);
@@ -84,7 +84,7 @@ export default function SaveSomethingDialog(
           </Typography>
         </Stack>
       </DialogContent>
-      <SaveSomethingDialogActions
+      <SomethingSaveDialogActions
         disableSave={!(name.trim().length > 0)}
         loadingSave={dialogBlock}
         discardAction={discardAction}

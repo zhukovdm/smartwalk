@@ -3,7 +3,7 @@ import DialogActions from "@mui/material/DialogActions";
 import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 
-type SaveSomethingDialogActionsProps = {
+export type SomethingSaveDialogActionsProps = {
 
   /** Flag preventing erroneous save. */
   disableSave: boolean;
@@ -21,8 +21,8 @@ type SaveSomethingDialogActionsProps = {
 /**
  * Actions for `places`, `routes`, and `directions` save dialog.
  */
-export default function SaveSomethingDialogActions(
-  { disableSave, loadingSave, saveAction, discardAction }: SaveSomethingDialogActionsProps): JSX.Element {
+export default function SomethingSaveDialogActions(
+  { disableSave, loadingSave, saveAction, discardAction }: SomethingSaveDialogActionsProps): JSX.Element {
 
   return (
     <DialogActions

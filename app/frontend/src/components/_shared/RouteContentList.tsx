@@ -2,13 +2,13 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
-import TraversableWaypointList from "./TraversableWaypointList";
 import InformPlaceListItem from "./InformPlaceListItem";
+import TraversableWaypointList from "./TraversableWaypointList";
 
-type RouteContentListProps = {
+export type RouteContentListProps = {
 
   /** Current map */
-  map: IMap | undefined;
+  map?: IMap;
 
   /** Starting point */
   source: UiPlace;
@@ -19,7 +19,7 @@ type RouteContentListProps = {
   /** Visited places in-between */
   places: UiPlace[];
 
-  /** Show/hide specific categorie (index-based) */
+  /** Show specific categorie (index-based) */
   filterList: boolean[];
 };
 

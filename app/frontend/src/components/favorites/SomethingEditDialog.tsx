@@ -11,7 +11,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import SaveSomethingDialogActions from "../_shared/SomethingSaveDialogActions";
+import SomethingSaveDialogActions from "../_shared/SomethingSaveDialogActions";
 
 type EditSomethingDialogProps = {
 
@@ -81,7 +81,7 @@ export default function EditSomethingDialog(
           />
         </Stack>
       </DialogContent>
-      <SaveSomethingDialogActions
+      <SomethingSaveDialogActions
         disableSave={!(name.trim().length > 0)}
         loadingSave={dialogBlock}
         discardAction={() => { discardAction(); }}

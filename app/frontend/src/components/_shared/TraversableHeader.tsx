@@ -2,7 +2,7 @@ import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
-type TraversableHeaderProps = {
+export type TraversableHeaderProps = {
 
   /** Name of a route or direction (for stored entities) */
   name: string;

@@ -1,4 +1,5 @@
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
+import type { MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -9,9 +10,9 @@ import DirectionsIcon from "@mui/icons-material/Directions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-type ResultSomethingMenuProps = {
+export type SomethingActionMenuProps = {
 
-  /** Show/hide save dialog */
+  /** Show save dialog */
   showSaveDialog?: () => void;
 
   /** Show/hide dialog for appending place. */
@@ -22,17 +23,17 @@ type ResultSomethingMenuProps = {
 };
 
 /**
- * Menu with allowed actions on an entity (possible are save, append, and
- * modify) shown in the Result panel.
+ * Menu with allowed actions on a found entity (possible are save, append,
+ * and modify).
  */
 export default function SomethingActionMenu(
-  { showSaveDialog, showAppendDialog, showModifyDialog }: ResultSomethingMenuProps): JSX.Element {
+  { showSaveDialog, showAppendDialog, showModifyDialog }: SomethingActionMenuProps): JSX.Element {
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const open = Boolean(anchorEl);
-  const rid = `result-action-menu-button`;
-  const mid = `result-action-menu`;
+  const open = !!anchorEl;
+  const bid = `smartwalk-action-menu-button`;
+  const mid = `smartwalk-action-menu`;
 
   const clickMenuAction = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -45,12 +46,12 @@ export default function SomethingActionMenu(
   return (
     <Box>
       <IconButton
-        id={rid}
+        id={bid}
         onClick={clickMenuAction}
         color={"inherit"}
         size={"small"}
         title={"Menu"}
-        aria-haspopup={"listbox"}
+        aria-haspopup={"true"}
         aria-expanded={open}
         aria-controls={open ? mid : undefined}
       >
@@ -58,7 +59,7 @@ export default function SomethingActionMenu(
       </IconButton>
       <Menu
         id={mid}
-        aria-labelledby={rid}
+        aria-labelledby={bid}
         open={open}
         anchorEl={anchorEl}
         onClose={closeMenuAction}

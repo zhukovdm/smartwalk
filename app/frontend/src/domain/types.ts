@@ -4,7 +4,8 @@
 export type SomethingKind
   = "direction"
   | "place"
-  | "route";
+  | "route"
+  ;
 
 /**
  * Recognized kinds of places (color schemata).
@@ -15,7 +16,8 @@ export type PlaceKind
   | "source"
   | "target"
   | "center"
-  | "action";
+  | "action"
+  ;
 
 /**
  * Point in [WGS84] CRS with web mercator bounds.
