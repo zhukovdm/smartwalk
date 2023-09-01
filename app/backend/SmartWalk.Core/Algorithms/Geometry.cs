@@ -59,14 +59,14 @@ public static class Spherical
     /// <summary>
     /// Approximate the midpoint between two points on a sphere (use <b>ONLY</b> for small distances).
     /// </summary>
-    public static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
+    private static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
         => new((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
 
     /// <summary>
     /// Approximate an angle in the counter-clockwise direction.
     /// </summary>
     /// <returns>Angle in radians.</returns>
-    internal static double RotAngle(WgsPoint p1, WgsPoint p2)
+    private static double RotAngle(WgsPoint p1, WgsPoint p2)
     {
         var lat = DegToRad(Midpoint(p1, p2).lat);
 
@@ -77,6 +77,11 @@ public static class Spherical
 
         return Math.Atan2(y, x);
     }
+
+    /// <summary>
+    /// Round given coordinate to 7 fractional digits.
+    /// </summary>
+    public static double Round(double coordinate) => Math.Round(coordinate, 7);
 
     /// <summary>
     /// Calculate the central angle between two given points on a sphere in
@@ -149,6 +154,6 @@ public static class Spherical
             .Translate(m.lon, m.lat)
             .Transform(new Polygon(new LinearRing(cs)));
 
-        return e3.Coordinates.Select(c => new WgsPoint(c.X, c.Y)).ToList();
+        return e3.Coordinates.Select(c => new WgsPoint(Round(c.X), Round(c.Y))).ToList();
     }
 }

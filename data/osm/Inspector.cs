@@ -1,10 +1,16 @@
-using OsmSharp;
+using System;
 using System.Collections.Generic;
+using OsmSharp;
 
 namespace osm;
 
 internal static class Inspector
 {
+    /// <summary>
+    /// Round coordinate to the allowed number of fractional digits.
+    /// </summary>
+    private static double Round(double coordinate) => Math.Round(coordinate, 7);
+
     private static readonly Dictionary<long, Point> _nodes = new();
 
     public static Place Inspect(Node node)
@@ -20,14 +26,15 @@ internal static class Inspector
 
             // extract and verify position
 
-            var lon = node.Longitude.Value;
-            var lat = node.Latitude.Value;
+            var lon = Round(node.Longitude.Value);
+            var lat = Round(node.Latitude.Value);
+            var loc = new Point() { lon = lon, lat = lat };
 
             if (!CrsEpsg3857.IsWithin(lon, lat)) { Reporter.ReportOutbound(node); }
 
             // keep node for later usage
 
-            _nodes.Add(node.Id.Value, new() { lon = lon, lat = lat });
+            _nodes.Add(node.Id.Value, loc);
 
             if (node.Tags is null || node.Tags.Count == 0) { return null; }
 
@@ -42,7 +49,7 @@ internal static class Inspector
                 NameExtractor.Extract(node.Tags, place);
                 LinkedExtractor.Extract(node, place.linked);
 
-                place.location = new() { lon = lon, lat = lat };
+                place.location = loc;
 
                 return place;
             }
@@ -98,7 +105,7 @@ internal static class Inspector
                 var cen = Cartesian.Centroid(seq);
 
                 place.attributes.polygon = seq;
-                place.location = new() { lon = cen.lon, lat = cen.lat };
+                place.location = new() { lon = Round(cen.lon), lat = Round(cen.lat) };
 
                 return place;
             }
@@ -126,7 +133,7 @@ internal static class Inspector
                     NameExtractor.Extract(relation.Tags, place);
                     LinkedExtractor.Extract(relation, place.linked);
 
-                    place.location = new() { lon = loc.lon, lat = loc.lat };
+                    place.location = new() { lon = Round(loc.lon), lat = Round(loc.lat) };
 
                     return place;
                 }

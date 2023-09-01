@@ -30,6 +30,8 @@ const cs = [
   ["Q110910970", 5000 ], // visual work
 ];
 
+const LOCATION_PRECISION = 7;
+
 /**
  * @param {string} cat Wikidata identifier defining category of objects.
  * @param {number} lim Maximum number of requested objects.
@@ -75,7 +77,10 @@ function extractLocation(location) {
 
   const re = /^Point\((?<lon>-?\d+(\.\d+)?) (?<lat>-?\d+(\.\d+)?)\)$/i;
   const { groups: { lon, lat } } = re.exec(location);
-  return { lon: Number(lon), lat: Number(lat) };
+  return {
+    lon: parseFloat(Number(lon).toFixed(LOCATION_PRECISION)),
+    lat: parseFloat(Number(lat).toFixed(LOCATION_PRECISION))
+  };
 }
 
 function constructFromEntity(ent) {

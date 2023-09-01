@@ -5,9 +5,9 @@ namespace osm;
 
 internal sealed class Point
 {
-    public double lon { get; set; }
+    public double lon { get; init; }
 
-    public double lat { get; set; }
+    public double lat { get; init; }
 }
 
 internal sealed class Address

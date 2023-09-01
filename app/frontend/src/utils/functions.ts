@@ -1,6 +1,8 @@
 import { ENTITY_PLACES_ADDR } from '../domain/routing';
 import { UiPlace, WgsPoint } from '../domain/types';
 
+const LOCATION_PRECISION = 7;
+
 /**
  * Create a copy of an array with deleted item on a certain index.
  */
@@ -42,16 +44,16 @@ export function camelCaseToLabel(token: string): string {
  * `-1.0N -1.0E` is a valid representation.
  */
 export function point2text(point: WgsPoint): string {
-  return `${point.lat}N, ${point.lon}E`;
+  return `${point.lat.toFixed(6)}N, ${point.lon.toFixed(6)}E`;
 }
 
 /**
- * Convert a point to a simple place.
+ * Convert a point to a simple place (without keywords and categories).
  */
 export function point2place(point: WgsPoint): UiPlace {
   const location = {
-    lon: parseFloat(point.lon.toFixed(7)),
-    lat: parseFloat(point.lat.toFixed(7))
+    lon: parseFloat(point.lon.toFixed(LOCATION_PRECISION)),
+    lat: parseFloat(point.lat.toFixed(LOCATION_PRECISION))
   };
   return { name: point2text(location), location: location, keywords: [], categories: [] };
 }

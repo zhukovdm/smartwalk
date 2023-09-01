@@ -72,7 +72,7 @@ public sealed class SearchController : ControllerBase
         [Range(-85.06, +85.06)]
         public double? lat { get; init; }
 
-        public WgsPoint AsWgs() => new(lon.Value, lat.Value);
+        public WgsPoint AsWgs() => new(Spherical.Round(lon.Value), Spherical.Round(lat.Value));
     }
 
     internal sealed class WebPrecedenceEdge
@@ -250,6 +250,9 @@ public sealed class SearchController : ControllerBase
     {
         RoutesQuery rq = null;
 
+        WgsPoint s = null;
+        WgsPoint t = null;
+
         try
         {
             rq = DeserializeQuery<RoutesQuery>(request.query, _routesSchema);
@@ -258,7 +261,10 @@ public sealed class SearchController : ControllerBase
                 throw new Exception("Malformed precedence graph");
             }
 
-            if (!VerifyDistance(rq.source.AsWgs(), rq.target.AsWgs(), rq.distance.Value)) {
+            s = rq.source.AsWgs();
+            t = rq.target.AsWgs();
+
+            if (!VerifyDistance(s, t, rq.distance.Value)) {
                 throw new Exception("Malformed point-distance configuration");
             }
         }
@@ -270,8 +276,7 @@ public sealed class SearchController : ControllerBase
         try
         {
             return await SearchService.GetRoutes(
-                _context.EntityIndex, _context.RoutingEngine, rq.source.AsWgs(),
-                rq.target.AsWgs(), rq.distance.Value, rq.categories, precedence);
+                _context.EntityIndex, _context.RoutingEngine, s, t, rq.distance.Value, rq.categories, precedence);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }
