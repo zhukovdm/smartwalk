@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+import SmartWalkFetcher from "../utils/smartwalk";
 
 export function useSmartPlace(smartId: string) {
 

@@ -2,9 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { UiPlace } from "../domain/types";
 import {
   deleteItemImmutable,
-  fromtoItemImmutable,
+  fromToItemImmutable,
   updateItemImmutable
-} from "./immutable";
+} from "../utils/functions";
 
 type SearchDirectState = {
   waypoints: UiPlace[];
@@ -33,7 +33,7 @@ export const searchDirecsSlice = createSlice({
     },
     fromtoSearchDirecsPlace: (state, action: PayloadAction<{ fr: number, to: number }>) => {
       const { fr, to } = action.payload;
-      state.waypoints = fromtoItemImmutable(state.waypoints, fr, to);
+      state.waypoints = fromToItemImmutable(state.waypoints, fr, to);
     }
   }
 });

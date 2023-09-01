@@ -1,5 +1,5 @@
-import { getSmartPlaceLink } from "../../domain/functions";
 import { PlaceKind, UiPlace } from "../../domain/types";
+import { getSmartPlaceLink } from "../../utils/functions";
 import PlaceButton from "./PlaceButton";
 import StandardListItem from "./StandardListItem";
 

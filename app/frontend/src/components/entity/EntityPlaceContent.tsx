@@ -24,6 +24,7 @@ import {
   ExtendedPlace,
   PlaceAddress
 } from "../../domain/types";
+import IdGenerator from "../../utils/idGenerator";
 import {
   useAppDispatch,
   useAppSelector
@@ -34,7 +35,6 @@ import {
 import {
   appendSearchDirecsPlace
 } from "../../features/searchDirecsSlice";
-import { IdGenerator } from "../../utils/helpers";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SaveSomethingDialog from "../_shared/SomethingSaveDialog";
 import PlaceLocation from "../_shared/PlaceLocation";

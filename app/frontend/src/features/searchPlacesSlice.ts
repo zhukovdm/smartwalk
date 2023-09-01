@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { KeywordCategory, UiPlace } from "../domain/types";
-import { deleteItemImmutable, updateItemImmutable } from "./immutable";
+import { deleteItemImmutable, updateItemImmutable } from "../utils/functions";
 
 type SearchPlacesState = {
   center?: UiPlace;

@@ -1,6 +1,6 @@
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
-import { camelCaseToLabel } from "../../domain/functions";
+import { camelCaseToLabel } from "../../utils/functions";
 
 type AttributeFilterCheckBoxProps = {
 

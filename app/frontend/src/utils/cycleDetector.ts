@@ -1,4 +1,4 @@
-import { PrecedenceEdge } from "./types";
+import { PrecedenceEdge } from "../domain/types";
 
 enum Color {
   A,
@@ -14,7 +14,7 @@ type Vertex = {
 /**
  * Detect cycles in a directed graph (standard 3-color recursive procedure).
  */
-export class CycleDetector {
+export default class CycleDetector {
 
   static getArrayBase(order: number) {
     return Array(order).fill(undefined);

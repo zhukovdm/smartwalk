@@ -5,8 +5,7 @@ import Typography from "@mui/material/Typography";
 import {
   RESULT_DIRECS_ADDR
 } from "../domain/routing";
-// import { SmartWalkFetcher } from "../utils/smartwalk";
-import { OsrmProjectFetcher } from "../utils/osrmProject";
+import SmartWalkFetcher from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultDirecs,
@@ -46,8 +45,7 @@ export default function SearchDirecsPanel(): JSX.Element {
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      // const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
-      const direcs = await OsrmProjectFetcher.searchDirecs(waypoints);
+      const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
 
       dispatch(resetResultDirecs());
       dispatch(setResultDirecs(direcs));

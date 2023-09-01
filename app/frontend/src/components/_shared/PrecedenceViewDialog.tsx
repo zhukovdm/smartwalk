@@ -14,7 +14,7 @@ import {
 import PrecedenceList from "./PrecedenceList";
 import PrecedenceDrawing from "./PrecedenceDrawing";
 
-type PrecedenceViewDialogProps = {
+export type PrecedenceViewDialogProps = {
 
   /** Show dialog */
   show: boolean;

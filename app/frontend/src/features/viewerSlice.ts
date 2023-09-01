@@ -4,7 +4,7 @@ import {
   StoredPlace,
   StoredRoute
 } from "../domain/types";
-import { updateItemImmutable } from "./immutable";
+import { updateItemImmutable } from "../utils/functions";
 
 type ViewerStateType = {
   direc?: StoredDirec;

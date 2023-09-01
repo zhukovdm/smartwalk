@@ -1,3 +1,4 @@
+import axios from "axios";
 import { UiDirec, UiPlace, WgsPoint } from "../domain/types";
 
 function getQuery(waypoints: WgsPoint[]) {
@@ -5,14 +6,15 @@ function getQuery(waypoints: WgsPoint[]) {
   return `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${chain}?alternatives=true&geometries=geojson&skip_waypoints=true`;
 }
 
-export class OsrmProjectFetcher {
+export default class OsrmProjectFetcher {
 
   private static async fetch(url: string): Promise<any> {
-    const res = await fetch(url);
-    const jsn = await res.json();
+    const res = await axios.get(url, {
+      method: "GET"
+    });
     switch (res.status) {
-      case 200: return jsn;
-      default: throw new Error(`${res.statusText} (status code ${res.status}, osrm code ${jsn?.code}).`)
+      case 200: return res.data;
+      default: throw new Error(`${res.statusText} (status code ${res.status}, osrm code ${res.data?.code}).`)
     }
   }
 

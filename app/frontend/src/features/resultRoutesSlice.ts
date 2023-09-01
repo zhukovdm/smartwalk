@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { UiRoute } from "../domain/types";
-import { updateItemImmutable } from "./immutable";
+import { updateItemImmutable } from "../utils/functions";
 
 type ResultRoutesState = {
   index: number;

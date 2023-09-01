@@ -4,8 +4,8 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import { camelCaseToLabel } from "../../domain/functions";
 import { AttributeFilterNumeric } from "../../domain/types";
+import { camelCaseToLabel } from "../../utils/functions";
 
 type AttributeFilterViewNumericProps = {
 

@@ -4,12 +4,12 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import PlaceIcon from "@mui/icons-material/Place";
 import { AppContext } from "../../App";
-import { getSmartPlaceLink } from "../../domain/functions";
 import {
   SEARCH_PLACES_ADDR,
   VIEWER_PLACE_ADDR
 } from "../../domain/routing";
 import { StoredPlace } from "../../domain/types";
+import { getSmartPlaceLink } from "../../utils/functions";
 import {
   updateFavoritePlace,
   deleteFavoritePlace

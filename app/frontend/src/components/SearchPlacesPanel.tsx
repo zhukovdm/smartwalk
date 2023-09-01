@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+import SmartWalkFetcher from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultPlaces,

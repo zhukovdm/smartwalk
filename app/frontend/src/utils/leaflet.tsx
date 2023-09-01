@@ -10,7 +10,7 @@ import L, {
 import * as ReactDOMServer from "react-dom/server";
 import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { IMap, IPin } from "../domain/interfaces";
-import { point2place } from "./helpers";
+import { point2place } from "./functions";
 
 const dir = process.env.PUBLIC_URL + "/assets/markers";
 

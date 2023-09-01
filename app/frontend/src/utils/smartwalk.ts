@@ -11,6 +11,7 @@ import {
   UiRoute,
   WgsPoint
 } from "../domain/types";
+import OsrmProjectFetcher from "./osrmProject";
 
 const SMARTWALK_BASE_URL = process.env.REACT_APP_API_ADDRESS!;
 
@@ -27,14 +28,14 @@ const SMARTWALK_ENTITY_PLACES_URL = SMARTWALK_ENTITY_URL + "/places";
 // search service
 
 const SMARTWALK_SEARCH_URL = SMARTWALK_BASE_URL + "/search";
-const SMARTWALK_SEARCH_DIRECS_URL = SMARTWALK_SEARCH_URL + "/direcs?query=";
+// const SMARTWALK_SEARCH_DIRECS_URL = SMARTWALK_SEARCH_URL + "/direcs?query=";
 const SMARTWALK_SEARCH_PLACES_URL = SMARTWALK_SEARCH_URL + "/places?query=";
 const SMARTWALK_SEARCH_ROUTES_URL = SMARTWALK_SEARCH_URL + "/routes?query=";
 
 /**
  * SmartWalk-specific API calls.
  */
-export class SmartWalkFetcher {
+export default class SmartWalkFetcher {
 
   /**
    * Standard `GET` from an application server. Note that only JSON content
@@ -77,18 +78,19 @@ export class SmartWalkFetcher {
    * Fetch walking path visiting a sequence of locations in a given order.
    */
   public static async searchDirecs(waypoints: UiPlace[]): Promise<UiDirec[]> {
-    const qry = { waypoints: waypoints.map((w) => w.location) };
-    const jsn = await SmartWalkFetcher
-      .fetch(SMARTWALK_SEARCH_DIRECS_URL + encodeURIComponent(JSON.stringify(qry)));
+    // const qry = { waypoints: waypoints.map((w) => w.location) };
+    // const jsn = await SmartWalkFetcher
+    //   .fetch(SMARTWALK_SEARCH_DIRECS_URL + encodeURIComponent(JSON.stringify(qry)));
 
-    return jsn.map((direc: any) => ({
-      name: "",
-      path: {
-        ...direc,
-        distance: direc.distance / 1000.0
-      },
-      waypoints: waypoints
-    }));
+    // return jsn.map((direc: any) => ({
+    //   name: "",
+    //   path: {
+    //     ...direc,
+    //     distance: direc.distance / 1000.0
+    //   },
+    //   waypoints: waypoints
+    // }));
+    return OsrmProjectFetcher.searchDirecs(waypoints);
   }
 
   /**

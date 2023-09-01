@@ -3,9 +3,9 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { PrecedenceEdge } from "../../domain/types";
 
-type PrecedenceListProps = {
+export type PrecedenceListProps = {
 
-  /** Arrows */
+  /** Confirmed arrows */
   precedence: PrecedenceEdge[];
 
   /** Callback deleting an arrow */

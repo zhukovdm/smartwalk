@@ -11,13 +11,13 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
-import { camelCaseToLabel } from "../../domain/functions";
 import {
   AttributeFilterCollect,
   AttributeFilterNumeric,
   AttributeFilterTextual,
   PlaceCategory
 } from "../../domain/types";
+import { camelCaseToLabel } from "../../utils/functions";
 
 type CategoryFilterCollectProps = {
 

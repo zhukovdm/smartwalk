@@ -1,33 +1,7 @@
-import { v4 as uuidv4 } from "uuid";
-import { UiPlace, WgsPoint } from '../domain/types';
-
-/**
- * Constructs human-readable GPS representation of a point. Note that
- * `-1.0N -1.0E` is a valid representation.
- */
-export function point2text(point: WgsPoint): string {
-  const prec = 6;
-  return `${point.lat.toFixed(prec)}N, ${point.lon.toFixed(prec)}E`;
-}
-
-/**
- * Convert a point to a simple place.
- */
-export function point2place(point: WgsPoint): UiPlace {
-  return { name: point2text(point), location: point, keywords: [], categories: [] };
-}
-
-/**
- * Generate Id based on a content of a JavaScript entity.
- */
-export class IdGenerator {
-  public static generateId(_: any) { return uuidv4(); }
-}
-
 /**
  * Extract supported attributes in case the server releases extended data model.
  */
-export class KeywordAdviceAttributes {
+export default class AttributeGrouper {
 
   private static supportedEs = new Set([
     "description",

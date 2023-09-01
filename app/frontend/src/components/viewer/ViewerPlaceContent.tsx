@@ -6,7 +6,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiPlace } from "../../domain/types";
-import { getSmartPlaceLink } from "../../domain/functions";
+import { getSmartPlaceLink } from "../../utils/functions";
 import PlaceKeywords from "../_shared/PlaceKeywords";
 import PlaceLocation from "../_shared/PlaceLocation";
 

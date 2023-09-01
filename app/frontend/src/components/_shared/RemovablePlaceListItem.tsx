@@ -1,10 +1,10 @@
-import { getSmartPlaceLink } from "../../domain/functions";
+import { getSmartPlaceLink } from "../../utils/functions";
 import { InformPlaceListItemProps } from "./InformPlaceListItem";
 import PlaceButton from "./PlaceButton";
 import RemoveButton from "./RemoveButton";
 import StandardListItem from "./StandardListItem";
 
-type RemovablePlaceListItemProps = InformPlaceListItemProps & {
+export type RemovablePlaceListItemProps = InformPlaceListItemProps & {
 
   /** Event handler */
   onRemove: () => void;

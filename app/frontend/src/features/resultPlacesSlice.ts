@@ -1,6 +1,6 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import { PlacesResult } from "../domain/types";
-import { updateItemImmutable } from "./immutable";
+import { updateItemImmutable } from "../utils/functions";
 
 type ResultPlacesState = {
   result?: PlacesResult;

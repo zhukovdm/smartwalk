@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiPlace, UiRoute } from "../../domain/types";
 import { SEARCH_DIRECS_ADDR } from "../../domain/routing";
+import IdGenerator from "../../utils/idGenerator";
 import {
   toggleResultRoutesFilter,
   setResultRoutesIndex,
@@ -23,7 +24,6 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
-import { IdGenerator } from "../../utils/helpers";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
 import PrecedenceViewDialog from "../_shared/PrecedenceViewDialog";

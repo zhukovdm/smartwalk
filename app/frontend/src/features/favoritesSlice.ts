@@ -1,14 +1,14 @@
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 import {
-  deleteItemImmutable,
-  updateItemImmutable
-} from "./immutable";
-import {
   StoredDirec,
   StoredPlace,
   StoredRoute,
   WgsPoint
 } from "../domain/types";
+import {
+  deleteItemImmutable,
+  updateItemImmutable
+} from "../utils/functions";
 
 const compareDirecs = (l: StoredDirec, r: StoredDirec) => l.name.localeCompare(r.name);
 

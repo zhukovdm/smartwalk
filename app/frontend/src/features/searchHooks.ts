@@ -2,8 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import { AppContext } from "../App";
 import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { IMap } from "../domain/interfaces";
-import { point2place } from "../utils/helpers";
-import { SmartWalkFetcher } from "../utils/smartwalk";
+import { point2place } from "../utils/functions";
+import SmartWalkFetcher from "../utils/smartwalk";
 import { updateSearchDirecsPlace } from "./searchDirecsSlice";
 import { setSearchPlacesCenter } from "./searchPlacesSlice";
 import {

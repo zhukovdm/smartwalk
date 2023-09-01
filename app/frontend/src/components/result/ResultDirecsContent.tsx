@@ -6,6 +6,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import { UiDirec } from "../../domain/types";
+import IdGenerator from "../../utils/idGenerator";
 import {
   setResultDirecsIndex,
   updateResultDirec
@@ -21,7 +22,6 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import { IdGenerator } from "../../utils/helpers";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import TraversableDistance from "../_shared/TraversableDistance";

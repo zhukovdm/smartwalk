@@ -13,7 +13,8 @@ import SaveIcon from "@mui/icons-material/Save";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { AppContext } from "../../App";
 import { UiPlace, WgsPoint } from "../../domain/types";
-import { IdGenerator, point2place } from "../../utils/helpers";
+import { point2place } from "../../utils/functions";
+import IdGenerator from "../../utils/idGenerator";
 import {
   hidePanel,
   setBlock,

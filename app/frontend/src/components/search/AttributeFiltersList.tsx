@@ -9,8 +9,8 @@ import {
   AttributeFilterNumeric,
   KeywordAdviceItem
 } from "../../domain/types";
-import { camelCaseToLabel } from "../../domain/functions";
-import { KeywordAdviceAttributes } from "../../utils/helpers";
+import { camelCaseToLabel } from "../../utils/functions";
+import AttributeGrouper from "../../utils/attributeGrouper";
 import ExpandSectionIcon from "../_shared/ExpandSectionIcon";
 import AttributeFilterViewExisten from "./AttributeFilterViewExisten";
 import AttributeFilterViewBoolean from "./AttributeFilterViewBoolean";
@@ -39,7 +39,7 @@ export default function AttributeFiltersList(
     ns,
     ts,
     cs
-  } = KeywordAdviceAttributes.group(adviceItem.attributeList);
+  } = AttributeGrouper.group(adviceItem.attributeList);
 
   const [esExpanded, setEsExpanded] = useState(true);
   const [bsExpanded, setBsExpanded] = useState(true);

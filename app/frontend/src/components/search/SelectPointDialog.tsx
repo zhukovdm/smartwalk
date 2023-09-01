@@ -18,7 +18,7 @@ import {
   UiPlace,
   StoredPlace
 } from "../../domain/types";
-import { point2place } from "../../utils/helpers";
+import { point2place } from "../../utils/functions";
 import { hidePanel, showPanel } from "../../features/panelSlice";
 import {
   useAppDispatch,
