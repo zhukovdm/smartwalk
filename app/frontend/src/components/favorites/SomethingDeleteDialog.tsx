@@ -14,7 +14,7 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 
-type DeleteSomethingDialogProps = {
+export type DeleteSomethingDialogProps = {
 
   /** Opens dialog window. */
   show: boolean;
