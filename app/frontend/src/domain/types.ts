@@ -88,7 +88,7 @@ export type StoredPlace = PlaceAttributes & {
  * Place external links with `owl:sameAs` semantic. In particular, all are
  * identifiers and shall be expanded.
  */
-type PlaceLinked = {
+export type PlaceLinked = {
 
   /** DbPedia Id */
   dbpedia?: string;
@@ -528,7 +528,7 @@ type RouteAttributes = RoutesRequest & {
   /** Places lying on the path. */
   places: Place[];
 
-  /** Ordered list of smartId identifiers and satisfied category. */
+  /** Ordered list of `(smartId, satisfied cat)` objects. */
   waypoints: Waypoint[];
 };
 

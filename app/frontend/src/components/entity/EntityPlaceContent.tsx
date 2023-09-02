@@ -1,4 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
+import { Helmet, HelmetProvider } from "react-helmet-async";
 import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -24,6 +25,7 @@ import {
   ExtendedPlace,
   PlaceAddress
 } from "../../domain/types";
+import { getJsonLdPlace } from "../../utils/jsonld";
 import IdGenerator from "../../utils/idGenerator";
 import {
   useAppDispatch,
@@ -152,6 +154,16 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
 
   return (
     <Stack direction={"column"} gap={2.5}>
+      {
+        /* helmet */
+      }
+      <HelmetProvider>
+        <Helmet>
+          <script type="application/ld+json">
+            {getJsonLdPlace(place)}
+          </script>
+        </Helmet>
+      </HelmetProvider>
       {
         /* header */
       }
