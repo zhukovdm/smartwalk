@@ -18,7 +18,7 @@ export default function StoredRouteButton(props: StoredRouteButtonProps): JSX.El
       size={"small"}
       title={"Draw route"}
     >
-      <RouteIcon className={"stored-route"} />
+      <RouteIcon className={"stored-share"} />
     </IconButton>
   );
 }

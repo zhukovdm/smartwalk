@@ -18,7 +18,7 @@ export default function StoredDirecButton(props: StoredDirecButtonProps): JSX.El
       size={"small"}
       title={"Draw direction"}
     >
-      <DirectionsIcon className={"stored-direc"} />
+      <DirectionsIcon className={"stored-share"} />
     </IconButton>
   );
 }

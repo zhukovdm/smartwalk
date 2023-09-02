@@ -11,7 +11,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import InfoIcon from "@mui/icons-material/Info";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
-type ListItemMenuProps = {
+export type ListItemMenuProps = {
 
   /** Object kind. */
   what: "place" | "route" | "direc"
@@ -22,7 +22,7 @@ type ListItemMenuProps = {
   /** Redirect to the viewer. */
   onShow: () => void;
 
-  /** Shows edit dialog. */
+  /** Shows edit dialog (name, etc.). */
   showEditDialog: () => void;
 
   /** Shows delete dialog. */
@@ -43,9 +43,9 @@ export default function ListItemMenu(
 
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
-  const open = Boolean(anchorEl);
-  const bid = `favorites-my-${what}-menu-button-${index}`;
-  const mid = `favorites-my-${what}-menu-${index}`;
+  const open = !!anchorEl;
+  const bid = `smartwalk-my-${what}-menu-button-${index}`;
+  const mid = `smartwalk-my-${what}-menu-${index}`;
 
   const clickMenuAction = (e: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);
@@ -62,7 +62,7 @@ export default function ListItemMenu(
         onClick={clickMenuAction}
         size={"small"}
         title={"Menu"}
-        aria-haspopup={"listbox"}
+        aria-haspopup={"true"}
         aria-expanded={open}
         aria-controls={open ? mid : undefined}
       >

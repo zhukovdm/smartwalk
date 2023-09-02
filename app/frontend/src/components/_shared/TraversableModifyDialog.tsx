@@ -9,18 +9,18 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import DirectionsIcon from "@mui/icons-material/Directions";
 
-type TraversableModifyDialogProps = {
+export type TraversableModifyDialogProps = {
 
-  /** Show/hide dialog */
+  /** Show dialog */
   show: boolean;
 
-  /** Kind of `traversable` */
+  /** Kind of a `traversable` */
   what: "route" | "direction";
 
   /** Callback hiding dialog */
   onHide: () => void;
 
-  /** Callback upon confirmation */
+  /** Callback confirming modification */
   onModify: () => void;
 };
 

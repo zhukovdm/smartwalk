@@ -85,26 +85,27 @@ export type StoredPlace = PlaceAttributes & {
 };
 
 /**
- * Place external links with `owl:sameAs` semantic.
+ * Place external links with `owl:sameAs` semantic. In particular, all are
+ * identifiers and shall be expanded.
  */
 type PlaceLinked = {
 
-  /**  */
+  /** DbPedia Id */
   dbpedia?: string;
 
-  /**  */
+  /** GeoNames Id */
   geonames?: string;
 
-  /**  */
+  /** MapyCz Id */
   mapycz?: string;
 
-  /**  */
+  /** OpenStreetMap Id */
   osm?: string;
 
-  /**  */
+  /** Wikidata Id */
   wikidata?: string;
 
-  /**  */
+  /** Yago Id */
   yago?: string;
 };
 
@@ -137,16 +138,16 @@ export type PlaceAddress = {
  */
 export type PlaceSocialNetworks = {
 
-  /**  */
+  /** Facebook profile */
   facebook?: string;
 
-  /** instagram profile */
+  /** Instagram profile */
   instagram?: string;
 
-  /**  */
+  /** LinkedIn profile */
   linkedin?: string;
 
-  /** */
+  /** Pinterest profile */
   pinterest?: string;
 
   /**  */
@@ -301,23 +302,25 @@ type AttributeFilterCollects = {
 };
 
 /**
- * All possible attribute filters.
+ * All possible attribute filters, setting filter means this particular
+ * attribute shall exist on the object, and its value shall be within the
+ * range defined by the filter.
  */
 export type AttributeFilters = {
 
-  /**  */
+  /** existential filters */
   es?: AttributeFilterExistens;
 
-  /**  */
+  /** boolean filters */
   bs?: AttributeFilterBooleans;
 
-  /**  */
+  /** numeric filters */
   ns?: AttributeFilterNumerics;
 
-  /**  */
+  /** textual filters */
   ts?: AttributeFilterTextuals;
 
-  /**  */
+  /** collection filters */
   cs?: AttributeFilterCollects;
 };
 
@@ -338,34 +341,34 @@ type BoundNumeric = {
  */
 export type Bounds = {
 
-  /**  */
+  /** Capacity of a facility */
   capacity: BoundNumeric;
 
-  /**  */
+  /** Elevation above sea level */
   elevation: BoundNumeric;
 
-  /**  */
+  /** Minimum allowed age */
   minimumAge: BoundNumeric;
 
-  /**  */
+  /** Rating determined by visitors */
   rating: BoundNumeric;
 
-  /**  */
+  /** Year of opening, establishing, etc. */
   year: BoundNumeric;
 
-  /**  */
+  /** List of clothes kinds sold */
   clothes: string[];
 
-  /**  */
+  /** Cuisine of a restaurant, etc. */
   cuisine: string[];
 
-  /**  */
+  /** Religious subgroup */
   denomination: string[];
 
-  /**  */
+  /** Payment methods */
   payment: string[];
 
-  /**  */
+  /** Kinds of items that can be rent */
   rental: string[];
 };
 
@@ -374,13 +377,13 @@ export type Bounds = {
  */
 export type KeywordAdviceItem = {
 
-  /**  */
+  /** Keyword that make sense to look for */
   keyword: string;
 
-  /**  */
+  /** Options of attributes specific for a keyword */
   attributeList: string[];
 
-  /**  */
+  /** Bounds imposed by a keyword and its attributes */
   bounds: Bounds;
 };
 
@@ -389,10 +392,10 @@ export type KeywordAdviceItem = {
  */
 export type PlaceCategory = {
 
-  /**  */
+  /** Keyword that make sense to look for */
   keyword: string;
 
-  /**  */
+  /** Filters further specifying objects having a keyword */
   filters: AttributeFilters;
 };
 
@@ -413,17 +416,17 @@ export type PrecedenceEdge = {
 };
 
 /**
- * Simple path with geometry, distance, approximate duration.
+ * Simple path with geometry, distance, and approximate duration.
  */
 export type Path = {
 
-  /**  */
+  /** Walking distance in `km` */
   distance: number;
 
-  /**  */
+  /** Walking duration in `sec` */
   duration: number;
 
-  /**  */
+  /** Geometry defined by LineString */
   polyline: WgsPoint[];
 };
 
@@ -432,13 +435,13 @@ export type Path = {
  */
 export type DirecAttributes = {
 
-  /**  */
+  /** User-defined name */
   name: string;
 
-  /**  */
+  /** Exact traversal */
   path: Path;
 
-  /**  */
+  /** Places lying on the direction */
   waypoints: UiPlace[];
 };
 
@@ -486,10 +489,10 @@ export type PlacesResult = PlacesRequest & {
 
 type Waypoint = {
 
-  /**  */
+  /** Id of a place issued by the server */
   smartId: string;
 
-  /**  */
+  /** Exact match for a given category */
   category: number;
 };
 
@@ -516,10 +519,10 @@ export type RoutesRequest = {
 
 type RouteAttributes = RoutesRequest & {
 
-  /** */
+  /** User-defined name */
   name: string;
 
-  /**  */
+  /** Exact traversal */
   path: Path;
 
   /** Places lying on the path. */

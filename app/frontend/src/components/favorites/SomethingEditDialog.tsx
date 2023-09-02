@@ -13,7 +13,7 @@ import {
 } from "../../features/storeHooks";
 import SomethingSaveDialogActions from "../_shared/SomethingSaveDialogActions";
 
-type EditSomethingDialogProps = {
+export type SomethingEditDialogProps = {
 
   /** Old name of `something`. */
   name: string;
@@ -34,8 +34,8 @@ type EditSomethingDialogProps = {
 /**
  * Dialog for editing and saving edited `something`.
  */
-export default function EditSomethingDialog(
-  { name: oldName, show, what, onHide, onSave }: EditSomethingDialogProps): JSX.Element {
+export default function SomethingEditDialog(
+  { name: oldName, show, what, onHide, onSave }: SomethingEditDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);

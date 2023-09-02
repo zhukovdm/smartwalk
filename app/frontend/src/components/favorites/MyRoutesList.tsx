@@ -217,7 +217,9 @@ export default function MyRoutesList(props: MyRoutesListProps): JSX.Element {
         : <FavoriteStub
             what={"route"}
             link={SEARCH_ROUTES_ADDR}
-            icon={(sx) => <RouteIcon sx={sx} />}
+            icon={
+              (sx) => (<RouteIcon className={"stored-share"} sx={sx} />)
+            }
           />
       }
     </Box>

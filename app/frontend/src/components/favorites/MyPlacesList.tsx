@@ -26,7 +26,7 @@ import PlaceButton from "../_shared/PlaceButton";
 import StandardListItem from "../_shared/StandardListItem";
 import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import DeleteSomethingDialog from "./SomethingDeleteDialog";
-import EditSomethingDialog from "./SomethingEditDialog";
+import SomethingEditDialog from "./SomethingEditDialog";
 import ListItemMenu from "./ListItemMenu";
 import FavoriteStub from "./FavoriteStub";
 
@@ -105,7 +105,7 @@ function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element 
           />
         }
       />
-      <EditSomethingDialog
+      <SomethingEditDialog
         show={showE}
         name={place.name}
         what={"place"}
@@ -157,7 +157,9 @@ export default function MyPlacesList(props: MyPlacesListProps): JSX.Element {
         : <FavoriteStub
             what={"place"}
             link={SEARCH_PLACES_ADDR}
-            icon={(sx) => <PlaceIcon sx={sx} />}
+            icon={
+              (sx) => (<PlaceIcon className={"stored-share"} sx={sx} />)
+            }
           />
       }
     </Box>

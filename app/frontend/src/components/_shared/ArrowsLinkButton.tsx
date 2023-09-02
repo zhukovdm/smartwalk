@@ -1,7 +1,7 @@
 import { KeyboardEvent } from "react";
 import Link from "@mui/material/Link";
 
-type ArrowsLinkButtonProps = {
+export type ArrowsLinkButtonProps = {
 
   /** Event handler */
   onClick: () => void;

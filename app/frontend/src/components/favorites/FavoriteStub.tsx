@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { SomethingKind } from "../../domain/types";
 
-type FavoriteStubProps = {
+export type FavoriteStubProps = {
 
   /** What is not found? */
   what: SomethingKind;
@@ -22,7 +22,8 @@ type FavoriteStubProps = {
 /**
  * Stub appearing in the storage section in case no items are available.
  */
-export default function FavoriteStub({ what, icon, link }: FavoriteStubProps): JSX.Element {
+export default function FavoriteStub(
+  { what, icon, link }: FavoriteStubProps): JSX.Element {
 
   const navigate = useNavigate();
 
@@ -33,7 +34,7 @@ export default function FavoriteStub({ what, icon, link }: FavoriteStubProps): J
           title={`Search ${what}s`}
           onClick={() => { navigate(link); }}
         >
-          {icon({ fontSize: 50, color: "grey" })}
+          {icon({ fontSize: 45 })}
         </IconButton>
       </Box>
       <Box display={"flex"} justifyContent={"center"}>

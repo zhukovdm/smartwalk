@@ -4,7 +4,7 @@ import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import InformPlaceListItem from "./InformPlaceListItem";
 
-type TraversableWaypointListProps = {
+export type TraversableWaypointListProps = {
 
   /** Current map */
   map?: IMap;

@@ -4,7 +4,7 @@ import { ExtendedPlace, KeywordAdviceItem } from "../domain/types";
 import { IMap, IStorage } from "../domain/interfaces";
 import LocalStorage from "../utils/localStorage";
 
-type AppContextValue = {
+export type AppContextValue = {
   map?: IMap;
   storage: IStorage;
   smart: {

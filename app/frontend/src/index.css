@@ -31,8 +31,7 @@ html, body, #root, #map {
 
 .action-place,
 .center-place,
-.stored-direc,
-.stored-route,
-.entity-place {
+.entity-place,
+.stored-share {
   color: #797979; /* #595959 */
 }

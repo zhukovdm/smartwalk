@@ -15,10 +15,10 @@ export type SomethingActionMenuProps = {
   /** Show save dialog */
   showSaveDialog?: () => void;
 
-  /** Show/hide dialog for appending place. */
+  /** Show dialog for appending place. */
   showAppendDialog?: () => void;
 
-  /** Show/hide dialog for modifying route or direction. */
+  /** Show dialog for modifying route or direction. */
   showModifyDialog?: () => void;
 };
 
@@ -32,8 +32,8 @@ export default function SomethingActionMenu(
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
 
   const open = !!anchorEl;
-  const bid = `smartwalk-action-menu-button`;
-  const mid = `smartwalk-action-menu`;
+  const bid = "smartwalk-action-menu-button";
+  const mid = "smartwalk-action-menu";
 
   const clickMenuAction = (e: MouseEvent<HTMLElement>) => {
     setAnchorEl(e.currentTarget);

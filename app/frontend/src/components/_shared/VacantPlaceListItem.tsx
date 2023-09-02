@@ -4,7 +4,7 @@ import Typography from "@mui/material/Typography";
 import { PlaceKind } from "../../domain/types";
 import PlaceButton from "./PlaceButton";
 
-type VacantPlaceListItemProps = {
+export type VacantPlaceListItemProps = {
 
   /** Kind of a place */
   kind: PlaceKind;
