@@ -10,7 +10,7 @@ import { useAppSelector } from "../../features/storeHooks";
 import FavoriteStub from "./FavoriteStub";
 import MyDirecsListItem from "./MyDirecsListItem";
 
-type MyDirecsListProps = {
+export type MyDirecsListProps = {
 
   /** Id of a label provider */
   "aria-labelledby": string;

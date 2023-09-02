@@ -29,6 +29,7 @@ export default function MyRoutesSection(): JSX.Element {
       onChange={() => { dispatch(toggleFavoriteRoutesExpanded()) }}
     >
       <AccordionSummary
+        aria-label={"My Routes"}
         id={head}
         aria-controls={cont}
         expandIcon={<ExpandSectionIcon expanded={routesExpanded} />}

@@ -30,6 +30,7 @@ export default function MyPlacesSection(): JSX.Element {
       onChange={() => { dispatch(toggleFavoritePlacesExpanded()); }}
     >
       <AccordionSummary
+        aria-label={"My Places"}
         id={head}
         aria-controls={cont}
         expandIcon={<ExpandSectionIcon expanded={placesExpanded} />}

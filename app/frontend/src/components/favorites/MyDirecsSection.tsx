@@ -29,6 +29,7 @@ export default function MyDirecsSection(): JSX.Element {
       onChange={() => { dispatch(toggleFavoriteDirecsExpanded()); }}
     >
       <AccordionSummary
+        aria-label={"My Directions"}
         id={head}
         aria-controls={cont}
         expandIcon={<ExpandSectionIcon expanded={direcsExpanded} />}
