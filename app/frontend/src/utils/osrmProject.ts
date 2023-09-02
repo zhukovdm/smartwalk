@@ -1,5 +1,5 @@
 import axios from "axios";
-import { UiDirec, UiPlace, WgsPoint } from "../domain/types";
+import { Path, UiDirec, UiPlace, WgsPoint } from "../domain/types";
 
 function getQuery(waypoints: WgsPoint[]) {
   const chain = waypoints.map((w) => `${w.lon},${w.lat}`).join(";");
@@ -29,7 +29,11 @@ export default class OsrmProjectFetcher {
         polyline: r.geometry.coordinates
           .map(([lon, lat]: [number, number]) => ({ lon: lon, lat: lat }))
       }))
-      .map((p: any) => ({ name: "", path: p, waypoints: waypoints }))
-      .sort((l: any, r: any) => l.length - r.length);
+      .map((p: Path) => ({
+        name: "",
+        path: p,
+        waypoints: waypoints
+      }))
+      .sort((l: UiDirec, r: UiDirec) => Math.sign(l.path.distance - r.path.distance));
   }
 }
