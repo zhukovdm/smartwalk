@@ -33,14 +33,14 @@ describe("<SomethingSaveDialog />", () => {
     expect(getByRole("textbox", { name: "Name" })).toHaveValue(v);
   });
 
-  test("Hide gets called upon discard", () => {
+  test("Hide gets called upon Discard", () => {
     const f = jest.fn();
     const { getByRole } = render({
       ...getDefault(),
       onHide: f
     });
     fireEvent.click(getByRole("button", { name: "Discard" }));
-
+    expect(f).toHaveBeenCalled();
   });
 
   test("Save is disabled if input is empty", () => {

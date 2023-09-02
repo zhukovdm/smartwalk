@@ -1,16 +1,15 @@
 import {
-  RenderResult,
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import ArrowsLinkButton from "../ArrowsLinkButton";
+import ArrowsLinkButton, { ArrowsLinkButtonProps } from "../ArrowsLinkButton";
 
-function render(
-  onClick: () => void = () => { }
-): RenderResult {
-  return rtlRender(
-    <ArrowsLinkButton onClick={onClick} />
-  );
+const getDefault = (): ArrowsLinkButtonProps => ({
+  onClick: jest.fn()
+});
+
+function render(props = getDefault()) {
+  return rtlRender(<ArrowsLinkButton {...props} />);
 }
 
 describe("<ArrowsLinkButton />", () => {
@@ -28,24 +27,30 @@ describe("<ArrowsLinkButton />", () => {
   describe("onClick callback", () => {
 
     test("gets called upon Click", () => {
-      const fn = jest.fn();
-      const { getByRole } = render(fn);
+      const f = jest.fn();
+      const { getByRole } = render({
+        onClick: f
+      });
       fireEvent.click(getByRole("button"));
-      expect(fn).toHaveBeenCalledTimes(1);
+      expect(f).toHaveBeenCalledTimes(1);
     });
 
     test("gets called upon Enter", () => {
-      const fn = jest.fn();
-      const { getByRole } = render(fn);
+      const f = jest.fn();
+      const { getByRole } = render({
+        onClick: f
+      });
       fireEvent.keyDown(getByRole("button"), { key: "Enter" });
-      expect(fn).toHaveBeenCalledTimes(1);
+      expect(f).toHaveBeenCalledTimes(1);
     });
 
     test("gets called upon Space", () => {
-      const fn = jest.fn();
-      const { getByRole } = render(fn);
+      const f = jest.fn();
+      const { getByRole } = render({
+        onClick: f
+      });
       fireEvent.keyDown(getByRole("button"), { key: " " });
-      expect(fn).toHaveBeenCalledTimes(1);
+      expect(f).toHaveBeenCalledTimes(1);
     });
   })
 });

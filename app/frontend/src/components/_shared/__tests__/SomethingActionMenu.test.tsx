@@ -61,10 +61,10 @@ describe("<SomethingActionMenu />", () => {
     fireEvent.click(getByRole("button"));
     fireEvent.click(getByRole("menuitem", { name: "Append" }));
     expect(f).toHaveBeenCalledTimes(1);
-    expect(queryAllByRole("menu").length).toEqual(0);
+    expect(queryAllByRole("menu").length).toBe(0);
   });
 
-  test("onModify gets called and hide menu", () => {
+  test("Modify gets called and hide menu", () => {
     const f = jest.fn();
     const { getByRole, queryAllByRole } = render({
       ...getDefault(),
@@ -73,6 +73,6 @@ describe("<SomethingActionMenu />", () => {
     fireEvent.click(getByRole("button"));
     fireEvent.click(getByRole("menuitem", { name: "Modify" }));
     expect(f).toHaveBeenCalledTimes(1);
-    expect(queryAllByRole("menu").length).toEqual(0);
+    expect(queryAllByRole("menu").length).toBe(0);
   });
 });
