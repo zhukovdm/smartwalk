@@ -31,6 +31,7 @@ public class Program
 
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddHealthChecks();
 
         builder.Services.AddSwaggerGen((g) => {
             g.SwaggerDoc("v1", new OpenApiInfo()
@@ -86,6 +87,7 @@ public class Program
             .UseAuthentication();
 
         wapp.MapControllers();
+        wapp.MapHealthChecks("/healthcheck");
 
         wapp.Run();
     }
