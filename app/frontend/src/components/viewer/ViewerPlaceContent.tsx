@@ -5,19 +5,19 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
-import { UiPlace } from "../../domain/types";
+import { StoredPlace } from "../../domain/types";
 import { getSmartPlaceLink } from "../../utils/functions";
 import PlaceKeywords from "../_shared/PlaceKeywords";
 import PlaceLocation from "../_shared/PlaceLocation";
 
-type ViewerPlaceContentProps = {
+export type ViewerPlaceContentProps = {
 
   /** Place to view */
-  place: UiPlace;
+  place: StoredPlace;
 };
 
 /**
- * View of a stored place.
+ * Read-only view of a stored place.
  */
 export default function ViewerPlaceContent(
   { place }: ViewerPlaceContentProps): JSX.Element {

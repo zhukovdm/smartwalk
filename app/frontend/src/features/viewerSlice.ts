@@ -13,13 +13,13 @@ type ViewerStateType = {
   routeFilters: boolean[];
 };
 
-const initialState = (): ViewerStateType => ({
+export const initialViewerState = (): ViewerStateType => ({
   routeFilters: []
 });
 
 export const viewerSlice = createSlice({
   name: "viewer",
-  initialState: initialState(),
+  initialState: initialViewerState(),
   reducers: {
     setViewerDirec: (state, action: PayloadAction<StoredDirec>) => {
       state.direc = action.payload;

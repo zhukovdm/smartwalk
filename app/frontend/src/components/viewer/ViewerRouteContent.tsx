@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
-import { useAppDispatch } from "../../features/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
@@ -11,22 +11,22 @@ import PrecedenceViewDialog from "../_shared/PrecedenceViewDialog";
 import RouteContentList from "../_shared/RouteContentList";
 import TraversableHeader from "../_shared/TraversableHeader";
 
-type ViewerRouteContentProps = {
+export type ViewerRouteContentProps = {
 
   /** Route to show */
   route: StoredRoute;
-
-  /** List of (in-)active categories */
-  filterList: boolean[];
 };
 
 /**
  * View of a stored route.
  */
 export default function ViewerRouteContent(
-  { route, filterList }: ViewerRouteContentProps): JSX.Element {
+  { route }: ViewerRouteContentProps): JSX.Element {
 
   const dispatch = useAppDispatch();
+  const {
+    routeFilters: filterList
+  } = useAppSelector((state) => state.viewer);
 
   const {
     categories,

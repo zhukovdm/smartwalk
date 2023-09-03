@@ -78,8 +78,8 @@ function extractLocation(location) {
   const re = /^Point\((?<lon>-?\d+(\.\d+)?) (?<lat>-?\d+(\.\d+)?)\)$/i;
   const { groups: { lon, lat } } = re.exec(location);
   return {
-    lon: parseFloat(Number(lon).toFixed(LOCATION_PRECISION)),
-    lat: parseFloat(Number(lat).toFixed(LOCATION_PRECISION))
+    lon: parseFloat(parseFloat(lon).toFixed(LOCATION_PRECISION)),
+    lat: parseFloat(parseFloat(lat).toFixed(LOCATION_PRECISION))
   };
 }
 

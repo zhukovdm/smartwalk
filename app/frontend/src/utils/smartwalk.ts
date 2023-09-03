@@ -114,14 +114,17 @@ export default class SmartWalkFetcher {
     const toGeoJson = (point: WgsPoint) => ({
       type: "Point",
       coordinates: [point.lon, point.lat]
-    } as { type: "Point", coordinates: [number, number] });
+    } as {
+      type: "Point",
+      coordinates: [number, number]
+    });
 
     const fr = toGeoJson(source.location);
     const to = toGeoJson(target.location);
     const cf = crowFlyDistance(fr, to, { units: "kilometers" });
 
     if (cf > distance) {
-      throw Error(`Points are too far from each other (at least ${cf.toFixed(2)} km). Move them closer, or adjust the distance slider.`);
+      throw Error(`Points are too far from each other (at least ${parseFloat(cf.toFixed(2))} km). Move them closer, or adjust the distance slider.`);
     }
 
     const qry = {

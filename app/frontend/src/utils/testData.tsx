@@ -6,7 +6,7 @@ import {
 } from "../domain/types";
 
 const getPath = (): Path => ({
-  distance: 3.0,
+  distance: 3.1,
   duration: 900,
   polyline: [
     { lon: 0.0, lat: 0.0 },

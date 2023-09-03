@@ -14,7 +14,7 @@ export default function TraversableDistance(
 
   return (
     <Typography>
-      Walking distance: <strong>{Number(distance.toFixed(2))}</strong> km
+      Walking distance: <strong>{parseFloat(distance.toFixed(2))}</strong>&nbsp;km
     </Typography>
   )
 }
