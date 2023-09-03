@@ -7,10 +7,10 @@ namespace SmartWalk.Core.Solvers;
 
 internal sealed class OgSolver : HeuristicSolverBase, ISolver
 {
-    internal static IPrecedenceMatrix GetPrecedenceMatrix(IReadOnlyList<PrecedenceEdge> precedence, int catsCount)
+    internal static IPrecedenceMatrix GetPrecedenceMatrix(IReadOnlyList<PrecedenceEdge> precedence, int catsCount, int sourceCat, int targetCat)
     {
         return new ListPrecedenceMatrix(
-            ListPrecedenceMatrix.GetPrecedence(precedence, catsCount), precedence.Count);
+            ListPrecedenceMatrix.GetPrecedence(precedence, catsCount), precedence.Count, sourceCat, targetCat);
     }
 
     protected override List<SolverPlace> SolveImpl(

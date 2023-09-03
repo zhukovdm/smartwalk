@@ -17,28 +17,30 @@ public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
     }
 
     private readonly List<List<bool>> _matrix;
-
-    public ListPrecedenceMatrix(List<List<bool>> matrix, int esCount)
-    {
-        _matrix = matrix; EsCount = esCount;
-    }
+    private readonly int _sourceCat;
+    private readonly int _targetCat;
 
     public int CsCount => _matrix.Count;
 
     public int EsCount { get; }
 
+    public ListPrecedenceMatrix(List<List<bool>> matrix, int esCount, int sourceCat, int targetCat)
+    {
+        _matrix = matrix; EsCount = esCount; _sourceCat = sourceCat; _targetCat = targetCat;
+    }
+
     public bool IsBefore(int fr, int to)
     {
         // (implicit) source before any, any before target
 
-        if (fr == (CsCount + 0) || to == (CsCount + 1))
+        if (fr == _sourceCat || to == _targetCat)
         {
             return true;
         }
 
         // (implicit) no after target, no before source
 
-        if (fr == (CsCount + 1) || to == (CsCount + 0))
+        if (fr == _targetCat || to == _sourceCat)
         {
             return false;
         }

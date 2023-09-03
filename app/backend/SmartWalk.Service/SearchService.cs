@@ -60,7 +60,7 @@ public static class SearchService
             .ToList();
 
         var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(precedence, categories.Count);
+            .GetPrecedenceMatrix(precedence, categories.Count, sourceCat, targetCat);
 
         var distMatrix = new HaversineDistanceMatrix(places);
 
@@ -100,6 +100,8 @@ public static class SearchService
                 var routePlaces = trimmedSeq.Aggregate(new List<Place>(), (acc, sp) =>
                 {
                     var p = places[sp.idx];
+
+                    // ensure only satisfied categories!
                     acc.Add(new()
                     {
                         smartId = p.smartId, name = p.name, location = p.location, keywords = p.keywords, categories = new() { sp.cat }

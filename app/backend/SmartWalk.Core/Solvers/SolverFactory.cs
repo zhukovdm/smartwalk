@@ -18,10 +18,11 @@ public static class SolverFactory
     /// <summary>
     /// <b>Solver-specific</b> precedence matrix.
     /// </summary>
-    public static IPrecedenceMatrix GetPrecedenceMatrix(IReadOnlyList<PrecedenceEdge> precedence, int catsCount)
+    public static IPrecedenceMatrix GetPrecedenceMatrix(
+        IReadOnlyList<PrecedenceEdge> precedence, int catsCount, int sourceCat, int targetCat)
     {
-        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount);
-        return OgSolver.GetPrecedenceMatrix(precedence, catsCount);
+        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount, sourceCat, targetCat);
+        return OgSolver.GetPrecedenceMatrix(precedence, catsCount, sourceCat, targetCat);
     }
 
     public static ISolver GetSolver()
