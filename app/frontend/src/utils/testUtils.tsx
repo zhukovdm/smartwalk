@@ -6,8 +6,15 @@ import { RenderOptions, render } from "@testing-library/react";
 import { AppContext } from "../App";
 import { LeafletMap } from "./leaflet";
 import InmemStorage from "./inmemStorage";
-import { AppContextValue, context as appContext } from "../features/context";
-import { AppStore, StoreState, setupStore } from "../features/store";
+import {
+  AppContextValue,
+  context as appContext
+} from "../features/context";
+import {
+  AppStore,
+  StoreState,
+  setupStore
+} from "../features/store";
 
 function ContextWrapper({ children, context }: PropsWithChildren<{ context: AppContextValue }>): JSX.Element {
   return (<AppContext.Provider value={context}>{children}</AppContext.Provider>);
