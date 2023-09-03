@@ -68,15 +68,6 @@ export function getSatCategories(places: UiPlace[]): Set<number> {
 }
 
 /**
- * Detect whether a place has a familiar identifier (either placeId or smartId).
- */
-export function isPlaceStored(place: UiPlace, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): boolean {
-  const pid = place.placeId;
-  const sid = place.smartId;
-  return (!!pid && storedPlaces.has(pid)) || (!!sid && storedSmarts.has(sid));
-}
-
-/**
  * Construct url for a Smart place.
  */
 export function getSmartPlaceLink(smartId: string | undefined): string | undefined {

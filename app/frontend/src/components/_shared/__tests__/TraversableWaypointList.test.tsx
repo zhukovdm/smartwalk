@@ -2,30 +2,21 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
+import { getPlace } from "../../../utils/testData";
 import { LeafletMap } from "../../../utils/leaflet";
 import TraversableWaypointList, { TraversableWaypointListProps } from "../TraversableWaypointList";
 
 const getDefault = (): TraversableWaypointListProps => ({
   map: new LeafletMap(),
-  places: [
-    {
-      name: "Place A",
-      keywords: [],
-      location: {
-        lon: 0.0,
-        lat: 0.0
-      },
-      categories: []
-    },
-    {
-      name: "Place B",
-      keywords: [],
-      location: {
-        lon: 0.0,
-        lat: 0.0
-      },
-      categories: []
-    }
+  waypoints: [
+    [
+      { ...getPlace(), name: "Place A" },
+      true
+    ],
+    [
+      { ...getPlace(), name: "Place B" },
+      false
+    ]
   ]
 });
 

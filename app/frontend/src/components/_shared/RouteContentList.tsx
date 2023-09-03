@@ -16,8 +16,8 @@ export type RouteContentListProps = {
   /** Destination */
   target: UiPlace;
 
-  /** Visited places in-between */
-  places: UiPlace[];
+  /** Visited places in-between (with `stored` flag) */
+  waypoints: [UiPlace, boolean][];
 
   /** Show specific categorie (index-based) */
   filterList: boolean[];
@@ -27,7 +27,7 @@ export type RouteContentListProps = {
  * List of places forming a route, possibly with filtered categories.
  */
 export default function RouteContentList(
-  { map, source, target, places, filterList }: RouteContentListProps): JSX.Element {
+  { map, source, target, waypoints, filterList }: RouteContentListProps): JSX.Element {
 
   return (
     <Stack gap={2}>
@@ -45,7 +45,7 @@ export default function RouteContentList(
       {filterList.some((f) => f) && (
         <TraversableWaypointList
           map={map}
-          places={places}
+          waypoints={waypoints}
         />
       )}
       <Box

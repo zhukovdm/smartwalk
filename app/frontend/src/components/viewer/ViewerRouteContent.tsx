@@ -39,7 +39,7 @@ export default function ViewerRouteContent(
     map,
     source,
     target,
-    places
+    waypoints
   } = useResultRoute(route, filterList);
 
   const [showP, setShowP] = useState(false);
@@ -52,7 +52,7 @@ export default function ViewerRouteContent(
       <TraversableHeader name={name} />
       <Stack gap={1}>
         <Typography>
-          This route is <strong>{path.distance.toFixed(2)}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
+          This route is <strong>{parseFloat(path.distance.toFixed(2))}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
         </Typography>
         <CategoryFilterList
           categories={categories}
@@ -73,7 +73,7 @@ export default function ViewerRouteContent(
         map={map}
         source={source}
         target={target}
-        places={places}
+        waypoints={waypoints}
         filterList={filterList}
       />
     </Stack>

@@ -9,7 +9,6 @@ import {
   StoredDirec,
   StoredPlace
 } from "../../domain/types";
-import { isPlaceStored } from "../../utils/functions";
 import { AppContext } from "../../App";
 import {
   deleteFavoriteDirec,
@@ -54,8 +53,13 @@ export default function MyDirecsListItem(
   const dispatch = useAppDispatch();
   const { map, storage } = useContext(AppContext);
 
-  const { name, path, waypoints } = direc;
-  const places = usePlaces(waypoints, storedPlaces, storedSmarts);
+  const {
+    name,
+    path,
+    waypoints: direcWaypoints
+  } = direc;
+
+  const waypoints = usePlaces(direcWaypoints, storedPlaces, storedSmarts);
 
   const [showD, setShowD] = useState(false);
   const [showE, setShowE] = useState(false);
@@ -63,13 +67,13 @@ export default function MyDirecsListItem(
 
   const onDirec = () => {
     map?.clear();
-    places.forEach((place) => {
-      (isPlaceStored(place, storedPlaces, storedSmarts))
-        ? map?.addStored(place, [])
-        : map?.addCommon(place, [], false);
+    waypoints.forEach(([w, s]) => {
+      (s)
+        ? map?.addStored(w, [])
+        : map?.addCommon(w, [], false);
     });
     map?.drawPolyline(path.polyline);
-    map?.flyTo(places[0]);
+    map?.flyTo(waypoints[0][0]);
   };
 
   const onShow = () => {
@@ -85,8 +89,8 @@ export default function MyDirecsListItem(
 
   const onModify = (): void => {
     dispatch(resetSearchDirecs());
-    waypoints.forEach((waypoint) => {
-      dispatch(appendSearchDirecsPlace(waypoint));
+    waypoints.forEach(([w, _]) => {
+      dispatch(appendSearchDirecsPlace(w));
     });
     navigate(SEARCH_DIRECS_ADDR);
   };

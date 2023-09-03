@@ -9,8 +9,8 @@ export type TraversableWaypointListProps = {
   /** Current map */
   map?: IMap;
 
-  /** Places on the direction */
-  places: UiPlace[];
+  /** Waypoints lying on the direction (with `stored` flag) */
+  waypoints: [UiPlace, boolean][];
 };
 
 /**
@@ -18,7 +18,7 @@ export type TraversableWaypointListProps = {
  * both `routes` and `directions`.
  */
 export default function TraversableWaypointList(
-  { map, places }: TraversableWaypointListProps): JSX.Element {
+  { map, waypoints }: TraversableWaypointListProps): JSX.Element {
 
   return (
     <Stack
@@ -27,17 +27,17 @@ export default function TraversableWaypointList(
       direction={"column"}
       gap={2}
     >
-      {places.map((place, i) => (
+      {waypoints.map(([w, s], i) => (
         <Box
           key={i}
-          aria-label={place.name}
+          aria-label={w.name}
           role={"listitem"}
         >
           <InformPlaceListItem
-            place={place}
-            kind={!!place.placeId ? "stored" : "common"}
+            place={w}
+            kind={s ? "stored" : "common"}
             title={"Fly to"}
-            onPlace={() => { map?.flyTo(place); }}
+            onPlace={() => { map?.flyTo(w); }}
           />
         </Box>
       ))}

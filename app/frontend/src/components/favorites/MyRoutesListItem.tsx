@@ -31,7 +31,6 @@ import ListItemMenu from "./ListItemMenu";
 import SomethingEditDialog from "./SomethingEditDialog";
 import SomethingDeleteDialog from "./SomethingDeleteDialog";
 import StoredRouteButton from "./StoredRouteButton";
-import { isPlaceStored } from "../../utils/functions";
 
 export type MyRoutesListItemProps = {
 
@@ -79,10 +78,10 @@ export default function MyRoutesListItem(
   const onRoute = () => {
     map?.clear();
 
-    places.forEach((place) => {
-      (isPlaceStored(place, storedPlaces, storedSmarts))
-        ? map?.addStored(place, categories)
-        : map?.addCommon(place, categories, false);
+    places.forEach(([p, s]) => {
+      (s)
+        ? map?.addStored(p, categories)
+        : map?.addCommon(p, categories, false);
     });
 
     map?.addSource(source, [], false);

@@ -3,28 +3,24 @@ import {
   render as rtlRender,
   within
 } from "@testing-library/react";
-import { UiPlace } from "../../../domain/types";
 import { LeafletMap } from "../../../utils/leaflet";
 import { withRouter } from "../../../utils/testUtils";
 import RouteContentList, { RouteContentListProps } from "../RouteContentList";
-
-const getPlace = (name: string): UiPlace => ({
-  name: name,
-  keywords: ["castle"],
-  location: {
-    lon: 0.0,
-    lat: 0.0
-  },
-  categories: []
-});
+import { getPlace } from "../../../utils/testData";
 
 const getDefault = (): RouteContentListProps => ({
   map: new LeafletMap(),
-  source: getPlace("Place A"),
-  target: getPlace("Place D"),
-  places: [
-    getPlace("Place B"),
-    getPlace("Place C")
+  source: { ...getPlace(), name: "Place A" },
+  target: { ...getPlace(), name: "Place D" },
+  waypoints: [
+    [
+      { ...getPlace(), name: "Place B" },
+      true
+    ],
+    [
+      { ...getPlace(), name: "Place C" },
+      false
+    ]
   ],
   filterList: [false, true, false]
 });

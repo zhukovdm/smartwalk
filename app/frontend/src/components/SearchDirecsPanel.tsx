@@ -34,18 +34,14 @@ export default function SearchDirecsPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const storedPlaces = useStoredPlaces();
-  const storedSmarts = useStoredSmarts();
-  const {
-    waypoints: storedWaypoints
-  } = useAppSelector((state) => state.searchDirecs);
-
-  const waypoints = usePlaces(storedWaypoints, storedPlaces, storedSmarts);
+  const waypoints = usePlaces(
+    useAppSelector((state) => state.searchDirecs).waypoints, useStoredPlaces(), useStoredSmarts());
 
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      const direcs = await SmartWalkFetcher.searchDirecs(waypoints);
+      const direcs = await SmartWalkFetcher
+        .searchDirecs(waypoints.map(([w, _]) => (w)));
 
       dispatch(resetResultDirecs());
       dispatch(setResultDirecs(direcs));

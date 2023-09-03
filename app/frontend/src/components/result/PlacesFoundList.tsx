@@ -10,7 +10,7 @@ type PlacesFoundListProps = {
   map?: IMap;
 
   /** Places to be listed */
-  places: UiPlace[];
+  places: [UiPlace, boolean][];
 };
 
 /**
@@ -25,17 +25,17 @@ export default function PlacesFoundList({ map, places }: PlacesFoundListProps): 
       gap={2}
       direction={"column"}
     >
-      {places.map((place, i) => (
+      {places.map(([p, s], i) => (
         <Box
           key={i}
           role={"listitem"}
-          aria-label={place.name}
+          aria-label={p.name}
         >
           <InformPlaceListItem
-            place={place}
-            kind={!!place.placeId ? "stored" : "common"}
+            place={p}
+            kind={s ? "stored" : "common"}
             title={"Fly to"}
-            onPlace={() => { map?.flyTo(place); }}
+            onPlace={() => { map?.flyTo(p); }}
           />
         </Box>
       ))}

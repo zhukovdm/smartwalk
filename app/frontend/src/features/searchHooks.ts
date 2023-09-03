@@ -1,9 +1,9 @@
 import { useContext, useEffect, useState } from "react";
-import { AppContext } from "../App";
-import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { IMap } from "../domain/interfaces";
+import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { point2place } from "../utils/functions";
 import SmartWalkFetcher from "../utils/smartwalk";
+import { AppContext } from "../App";
 import { updateSearchDirecsPlace } from "./searchDirecsSlice";
 import { setSearchPlacesCenter } from "./searchPlacesSlice";
 import {
@@ -12,6 +12,9 @@ import {
 } from "./searchRoutesSlice";
 import { useAppDispatch } from "./storeHooks";
 
+/**
+ * Obtain keyword advice from the server.
+ */
 export function useSearchKeywordsAdvice(
   input: string, value: KeywordAdviceItem | null): { loading: boolean; options: KeywordAdviceItem[] } {
 
@@ -77,21 +80,27 @@ export function useSearchKeywordsAdvice(
   return { loading, options };
 }
 
-export function useSearchDirecsMap(waypoints: UiPlace[]): void {
+/**
+ * Prepare map with search direcs sequence (search direcs).
+ */
+export function useSearchDirecsMap(waypoints: [UiPlace, boolean][]): void {
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
 
   useEffect(() => {
     map?.clear();
-    waypoints.forEach((waypoint, i) => {
-      (!!waypoint.placeId)
-        ? map?.addStored(waypoint, [])
-        : map?.addCommon(waypoint, [], !waypoint.smartId).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
+    waypoints.forEach(([w, s], i) => {
+      (s)
+        ? map?.addStored(w, [])
+        : map?.addCommon(w, [], !w.smartId).withDrag((pt) => { dispatch(updateSearchDirecsPlace({ place: point2place(pt), index: i})); });
     });
   }, [map, dispatch, waypoints]);
 }
 
+/**
+ * Prepare map with center and circle (search places).
+ */
 export function useSearchPlacesMap(center: UiPlace | undefined, radius: number): IMap | undefined {
 
   const dispatch = useAppDispatch();
@@ -113,6 +122,9 @@ export function useSearchPlacesMap(center: UiPlace | undefined, radius: number):
   return map;
 }
 
+/**
+ * Prepare map with source and target (search routes).
+ */
 export function useSearchRoutesMap(source: UiPlace | undefined, target: UiPlace | undefined): IMap | undefined {
 
   const dispatch = useAppDispatch();

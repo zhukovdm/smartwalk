@@ -59,21 +59,21 @@ export default function ResultPlacesContent(
     categories
   } = result;
 
-  const center = usePlace(resultCenter, storedPlaces, new Map())!;
+  const center = usePlace(resultCenter, storedPlaces, storedSmarts)!;
 
-  const places = usePlaces(resultPlaces, new Map(), storedSmarts)
-    .filter((place) => (
-      categories.length === 0 || place.categories.some((c: number) => filterList[c])));
+  const places = usePlaces(resultPlaces, storedPlaces, storedSmarts)
+    .filter(([p, _]) => (
+      categories.length === 0 || p.categories.some((c: number) => filterList[c])));
 
   const satCategories = useMemo(() => getSatCategories(resultPlaces), [resultPlaces]);
 
   useEffect(() => {
     map?.clear();
 
-    places.forEach((place) => {
-      (!!place.placeId)
-        ? map?.addStored(place, categories)
-        : map?.addCommon(place, categories, false);
+    places.forEach(([p, s]) => {
+      (s)
+        ? map?.addStored(p, categories)
+        : map?.addCommon(p, categories, false);
     });
 
     map?.addCenter(center, [], false);

@@ -52,12 +52,12 @@ export default function ResultDirecsContent(
     direcId,
     name,
     path,
-    waypoints
+    waypoints: direcWaypoints
   } = direc;
 
-  const places = usePlaces(waypoints, useStoredPlaces(), useStoredSmarts());
+  const waypoints = usePlaces(direcWaypoints, useStoredPlaces(), useStoredSmarts());
 
-  const map = useResultDirecsMap(places, path);
+  const map = useResultDirecsMap(waypoints, path);
 
   const onSave = async (name: string) => {
     const d = { ...direc, name: name };
@@ -116,7 +116,7 @@ export default function ResultDirecsContent(
       <TraversableDistance distance={path.distance} />
       <TraversableWaypointList
         map={map}
-        places={places}
+        waypoints={waypoints}
       />
     </Stack>
   );

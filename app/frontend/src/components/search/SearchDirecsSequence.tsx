@@ -85,8 +85,8 @@ type DirecsPresentListItemProps = {
   /** Position of the place in the sequence. */
   index: number;
 
-  /** Already added place. */
-  place: UiPlace;
+  /** A place on the list with `stored` flag. */
+  waypoint: [UiPlace, boolean];
 };
 
 /**
@@ -95,7 +95,7 @@ type DirecsPresentListItemProps = {
  * Note that draggableProps and dragHandleProps behave unexpectedly if margin
  * is set ~> padding-bottom is a replacement.
  */
-function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JSX.Element {
+function DirecsPresentListItem({ waypoint: [w, s], index }: DirecsPresentListItemProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
@@ -107,7 +107,7 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
     >
       {(provided) => (
         <div
-          aria-label={place.name}
+          aria-label={w.name}
           role={"listitem"}
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -125,10 +125,10 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
               <DragIndicatorIcon className={"action-place"} />
             </div>
             <RemovablePlaceListItem
-              place={place}
-              kind={!!place.placeId ? "stored" : "common"}
+              place={w}
+              kind={s ? "stored" : "common"}
               title={"Fly to"}
-              onPlace={() => { map?.flyTo(place); }}
+              onPlace={() => { map?.flyTo(w); }}
               onRemove={() => { dispatch(deleteSearchDirecsPlace(index)); }}
             />
           </Stack>
@@ -141,7 +141,7 @@ function DirecsPresentListItem({ place, index }: DirecsPresentListItemProps): JS
 type SearchDirecsSequenceProps = {
 
   /** Waypoints configured by the user. */
-  waypoints: UiPlace[];
+  waypoints: [UiPlace, boolean][];
 }
 
 /**
@@ -169,10 +169,10 @@ export default function SearchDirecsSequence({ waypoints }: SearchDirecsSequence
           <StrictModeDroppable droppableId={"droppable"}>
             {(provided) => (
               <div ref={provided.innerRef} {...provided.droppableProps}>
-                {waypoints.map((place, i) => (
+                {waypoints.map((w, i) => (
                   <DirecsPresentListItem
                     key={i}
-                    place={place}
+                    waypoint={w}
                     index={i}
                   />
                 ))}

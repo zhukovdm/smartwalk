@@ -11,14 +11,14 @@ import TraversableDistance from "../_shared/TraversableDistance";
 import TraversableHeader from "../_shared/TraversableHeader";
 import TraversableWaypointList from "../_shared/TraversableWaypointList";
 
-type ViewerDirecContentProps = {
+export type ViewerDirecContentProps = {
 
   /** Direction to view */
   direc: StoredDirec;
 }
 
 /**
- * View of a stored direction.
+ * Simple view of a stored direction (name, distance, and waypoints).
  */
 export default function ViewerDirecContent(
   { direc }: ViewerDirecContentProps): JSX.Element {
@@ -26,16 +26,15 @@ export default function ViewerDirecContent(
   const {
     name,
     path,
-    waypoints
+    waypoints: direcWaypoints
   } = direc;
 
-  const places = usePlaces(waypoints, useStoredPlaces(), useStoredSmarts());
-  const source = places[0];
+  const waypoints = usePlaces(direcWaypoints, useStoredPlaces(), useStoredSmarts());
 
-  const map = useResultDirecsMap(places, path);
+  const map = useResultDirecsMap(waypoints, path);
 
   // eslint-disable-next-line
-  useEffect(() => { map?.flyTo(source); }, []);
+  useEffect(() => { map?.flyTo(waypoints[0][0]); }, []);
 
   return (
     <Stack gap={2.5}>
@@ -45,7 +44,7 @@ export default function ViewerDirecContent(
       />
       <TraversableWaypointList
         map={map}
-        places={places}
+        waypoints={waypoints}
       />
     </Stack>
   );

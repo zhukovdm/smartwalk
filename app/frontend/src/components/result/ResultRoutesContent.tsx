@@ -70,14 +70,14 @@ export default function ResultRoutesContent(
     distance,
     categories,
     precedence,
-    waypoints
+    waypoints: routeWaypoints
   } = route;
 
   const {
     map,
     source,
     target,
-    places
+    waypoints: places
   } = useResultRoute(result[index], filterList);
 
   const onSave = async (name: string) => {
@@ -98,9 +98,9 @@ export default function ResultRoutesContent(
     const placesMap = routePlaces
       .reduce((acc, place) => (acc.set(place.smartId!, place)), new Map<string, UiPlace>())
 
-    waypoints.forEach((waypoint) => {
-      const place = placesMap.get(waypoint.smartId)!;
-      dispatch(appendSearchDirecsPlace({ ...place, categories: [] }));
+    routeWaypoints.forEach((w) => {
+      dispatch(appendSearchDirecsPlace(
+        { ...placesMap.get(w.smartId)!, categories: [] }));
     });
 
     dispatch(appendSearchDirecsPlace(routeTarget));
@@ -182,7 +182,7 @@ export default function ResultRoutesContent(
         map={map}
         source={source}
         target={target}
-        places={places}
+        waypoints={places}
         filterList={filterList}
       />
     </Stack>
