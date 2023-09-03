@@ -10,7 +10,7 @@ import { useAppSelector } from "../../features/storeHooks";
 import FavoriteStub from "./FavoriteStub";
 import MyRoutesListItem from "./MyRoutesListItem";
 
-type MyRoutesListProps = {
+export type MyRoutesListProps = {
 
   /** Id of a label provider */
   "aria-labelledby": string;

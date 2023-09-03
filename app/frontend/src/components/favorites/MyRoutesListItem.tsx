@@ -68,9 +68,9 @@ export default function MyRoutesListItem(
     categories
   } = route;
 
-  const source = usePlace(routeSource, storedPlaces, new Map())!;
-  const target = usePlace(routeTarget, storedPlaces, new Map())!;
-  const places = usePlaces(routePlaces, new Map(), storedSmarts);
+  const source = usePlace(routeSource, storedPlaces, storedSmarts)!;
+  const target = usePlace(routeTarget, storedPlaces, storedSmarts)!;
+  const places = usePlaces(routePlaces, storedPlaces, storedSmarts);
 
   const [showD, setShowD] = useState(false);
   const [showE, setShowE] = useState(false);

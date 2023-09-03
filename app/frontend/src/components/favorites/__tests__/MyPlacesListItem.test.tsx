@@ -4,7 +4,6 @@ import {
   waitFor
 } from "@testing-library/react";
 import { StoredPlace } from "../../../domain/types";
-import { getPlace, getDirec } from "../../../utils/testData";
 import {
   StoreRenderOptions,
   renderWithProviders,
@@ -13,7 +12,8 @@ import { LeafletMap } from "../../../utils/leaflet";
 import InmemStorage from "../../../utils/inmemStorage";
 import { context } from "../../../features/context";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyDirecsListItem, { MyDirecsListItemProps } from "../MyDirecsListItem";
+import MyPlacesListItem, { MyPlacesListItemProps } from "../MyPlacesListItem";
+import { getPlace } from "../../../utils/testData";
 
 const mockUseNavigate = jest.fn();
 
@@ -24,48 +24,27 @@ jest.mock(rrdModule, () => ({
   useNavigate: () => mockUseNavigate
 }));
 
-const getDefault = (): MyDirecsListItemProps => ({
+const getDefault = (): MyPlacesListItemProps => ({
   index: 1,
-  direc: {
-    ...getDirec(),
-    direcId: "1",
-    name: "Direction A",
-  },
-  storedPlaces: new Map<string, StoredPlace>([
-    [
-      "2",
-      {
-        ...getPlace(),
-        placeId: "2",
-        name: "Place X" // !
-      }
-    ]
-  ]),
-  storedSmarts: new Map<string, StoredPlace>([
-    [
-      "D",
-      {
-        ...getPlace(),
-        placeId: "4",
-        smartId: "D",
-        name: "Place Y", // !
-      }
-    ]
-  ])
+  place: {
+    ...getPlace(),
+    placeId: "1",
+    name: "Place A"
+  }
 });
 
 function render(props = getDefault(), options: StoreRenderOptions = {}) {
-  return renderWithProviders(<MyDirecsListItem {...props} />, options);
+  return renderWithProviders(<MyPlacesListItem {...props} />, options);
 }
 
-describe("<MyDirecsListItem />", () => {
+describe("<MyPlacesListItem />", () => {
 
   test("render", () => {
     const { container } = render();
     expect(container).toBeTruthy();
   });
 
-  test("Direc button draws direction", () => {
+  test("Place button draws place", () => {
     const map = new LeafletMap();
     const ctx = {
       ...context,
@@ -73,39 +52,30 @@ describe("<MyDirecsListItem />", () => {
       storage: new InmemStorage()
     };
 
-    const [
-      clear,
-      addStored,
-      addCommon,
-      drawPolyline,
-      flyTo
-    ] = Array(5).fill(undefined).map(() => jest.fn());
+    const [clr, ads, fly] = Array(3)
+      .fill(undefined).map(() => jest.fn());
 
-    jest.spyOn(map, "clear").mockImplementation(clear);
-    jest.spyOn(map, "addStored").mockImplementation(addStored);
-    jest.spyOn(map, "addCommon").mockImplementation(addCommon);
-    jest.spyOn(map, "drawPolyline").mockImplementation(drawPolyline);
-    jest.spyOn(map, "flyTo").mockImplementation(flyTo);
+    jest.spyOn(map, "clear").mockImplementation(clr);
+    jest.spyOn(map, "addStored").mockImplementation(ads);
+    jest.spyOn(map, "flyTo").mockImplementation(fly);
 
     const { getByRole } = render(getDefault(), { context: ctx });
-    fireEvent.click(getByRole("button", { name: "Draw direction" }));
+    fireEvent.click(getByRole("button", { name: "Draw place" }));
 
-    expect(clear).toHaveBeenCalled();
-    expect(addStored).toHaveBeenCalledTimes(2);
-    expect(addCommon).toHaveBeenCalledTimes(3);
-    expect(drawPolyline).toHaveBeenCalled();
-    expect(flyTo).toHaveBeenCalled();
+    expect(clr).toHaveBeenCalled();
+    expect(ads).toHaveBeenCalled();
+    expect(fly).toHaveBeenCalled();
   });
 
-  test("View sets direction and redirect", () => {
-    const d = getDefault();
+  test("View sets place and redirect", () => {
+    const p = getDefault();
 
-    const { store, getByRole } = render(d);
+    const { store, getByRole } = render(p);
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "View" }));
 
-    expect(mockUseNavigate).toHaveBeenCalledWith("/viewer/direc");
-    expect(store.getState().viewer.direc).toBe(d.direc);
+    expect(mockUseNavigate).toHaveBeenCalledWith("/viewer/place");
+    expect(store.getState().viewer.place).toBe(p.place);
   });
 
   test("Edit updates storage and state", async () => {
@@ -118,7 +88,7 @@ describe("<MyDirecsListItem />", () => {
     const { store, getByRole } = render(getDefault(), { context: ctx });
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "Edit" }));
-    fireEvent.change(getByRole("textbox"), { target: { value: "Direction B" } });
+    fireEvent.change(getByRole("textbox"), { target: { value: "Place B" } });
 
     // multiple update ~> fails without async!
     await act(async () => {
@@ -126,12 +96,12 @@ describe("<MyDirecsListItem />", () => {
     });
 
     await waitFor(() => {
-      expect(store.getState().favorites.direcs[1]?.name === "Direction B");
-      expect(storage.getDirec("1")).toBeTruthy();
+      expect(store.getState().favorites.places[1]?.name === "Place B");
+      expect(storage.getPlace("1")).toBeTruthy();
     });
   });
 
-  test("Modify replace direction sequence and redirects", () => {
+  test("Append extends current direction sequence by a place", () => {
 
     const { store, getByRole } = render(getDefault(), {
       preloadedState: {
@@ -148,17 +118,16 @@ describe("<MyDirecsListItem />", () => {
       }
     });
     fireEvent.click(getByRole("button", { name: "Menu" }));
-    fireEvent.click(getByRole("menuitem", { name: "Modify" }));
+    fireEvent.click(getByRole("menuitem", { name: "Append" }));
     fireEvent.click(getByRole("button", { name: "Confirm" }));
 
-    expect(store.getState().searchDirecs.waypoints.length).toBe(5);
-    expect(mockUseNavigate).toHaveBeenCalledWith("/search/direcs");
+    expect(store.getState().searchDirecs.waypoints.length).toBe(2);
   });
 
-  test("Delete removes direc from storage and state", async () => {
+  test("Delete removes place from storage and state", async () => {
     const f = jest.fn();
     const storage = new InmemStorage();
-    jest.spyOn(storage, "deleteDirec").mockImplementation(f);
+    jest.spyOn(storage, "deletePlace").mockImplementation(f);
     const ctx = {
       ...context,
       storage: storage
@@ -168,9 +137,9 @@ describe("<MyDirecsListItem />", () => {
       preloadedState: {
         favorites: {
           ...initialFavoritesState(),
-          direcs: Array(5).fill(undefined).map(() => ({
-            ...getDirec(),
-            direcId: "1"
+          places: Array(5).fill(undefined).map(() => ({
+            ...getPlace(),
+            placeId: "1"
           }))
         }
       },
@@ -183,7 +152,7 @@ describe("<MyDirecsListItem />", () => {
     });
 
     await waitFor(() => {
-      expect(store.getState().favorites.direcs.length).toBe(4);
+      expect(store.getState().favorites.places.length).toBe(4);
       expect(f).toHaveBeenCalledTimes(1);
     });
   });

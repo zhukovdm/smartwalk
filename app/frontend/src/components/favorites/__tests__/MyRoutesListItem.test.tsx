@@ -1,19 +1,15 @@
-import {
-  act,
-  fireEvent,
-  waitFor
-} from "@testing-library/react";
+import { act, fireEvent, waitFor } from "@testing-library/react";
 import { StoredPlace } from "../../../domain/types";
-import { getPlace, getDirec } from "../../../utils/testData";
+import { context } from "../../../features/context";
+import InmemStorage from "../../../utils/inmemStorage";
+import { LeafletMap } from "../../../utils/leaflet";
+import { getPlace, getRoute } from "../../../utils/testData";
 import {
   StoreRenderOptions,
   renderWithProviders,
 } from "../../../utils/testUtils";
-import { LeafletMap } from "../../../utils/leaflet";
-import InmemStorage from "../../../utils/inmemStorage";
-import { context } from "../../../features/context";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyDirecsListItem, { MyDirecsListItemProps } from "../MyDirecsListItem";
+import MyRoutesListItem, { MyRoutesListItemProps } from "../MyRoutesListItem";
 
 const mockUseNavigate = jest.fn();
 
@@ -24,48 +20,48 @@ jest.mock(rrdModule, () => ({
   useNavigate: () => mockUseNavigate
 }));
 
-const getDefault = (): MyDirecsListItemProps => ({
+const getDefault = (): MyRoutesListItemProps => ({
   index: 1,
-  direc: {
-    ...getDirec(),
-    direcId: "1",
-    name: "Direction A",
+  route: {
+    ...getRoute(),
+    routeId: "1",
+    name: "Route A"
   },
   storedPlaces: new Map<string, StoredPlace>([
     [
-      "2",
+      "1",
       {
         ...getPlace(),
-        placeId: "2",
-        name: "Place X" // !
+        name: "Starting point", // !
+        placeId: "1"
       }
     ]
   ]),
   storedSmarts: new Map<string, StoredPlace>([
     [
-      "D",
+      "C",
       {
         ...getPlace(),
+        name: "Street market", // !
         placeId: "4",
-        smartId: "D",
-        name: "Place Y", // !
+        smartId: "C"
       }
     ]
   ])
 });
 
 function render(props = getDefault(), options: StoreRenderOptions = {}) {
-  return renderWithProviders(<MyDirecsListItem {...props} />, options);
+  return renderWithProviders(<MyRoutesListItem {...props} />, options);
 }
 
-describe("<MyDirecsListItem />", () => {
+describe("<MyRoutesListItem />", () => {
 
   test("render", () => {
     const { container } = render();
     expect(container).toBeTruthy();
   });
 
-  test("Direc button draws direction", () => {
+  test("Route button draws route (with merge)", () => {
     const map = new LeafletMap();
     const ctx = {
       ...context,
@@ -77,35 +73,58 @@ describe("<MyDirecsListItem />", () => {
       clear,
       addStored,
       addCommon,
+      addSource,
+      addTarget,
       drawPolyline,
       flyTo
-    ] = Array(5).fill(undefined).map(() => jest.fn());
+    ] = Array(7).fill(undefined).map(() => jest.fn());
 
     jest.spyOn(map, "clear").mockImplementation(clear);
     jest.spyOn(map, "addStored").mockImplementation(addStored);
     jest.spyOn(map, "addCommon").mockImplementation(addCommon);
+    jest.spyOn(map, "addSource").mockImplementation(addSource);
+    jest.spyOn(map, "addTarget").mockImplementation(addTarget);
     jest.spyOn(map, "drawPolyline").mockImplementation(drawPolyline);
     jest.spyOn(map, "flyTo").mockImplementation(flyTo);
 
     const { getByRole } = render(getDefault(), { context: ctx });
-    fireEvent.click(getByRole("button", { name: "Draw direction" }));
+    fireEvent.click(getByRole("button", { name: "Draw route" }));
 
     expect(clear).toHaveBeenCalled();
-    expect(addStored).toHaveBeenCalledTimes(2);
+
+    const mergedStored = {
+      ...getPlace(),
+      name: "Street market",
+      placeId: "4",
+      smartId: "C",
+      categories: [3]
+    };
+    expect(addStored).toHaveBeenCalledWith(
+      mergedStored, getDefault().route.categories);
+
+    const mergedSource = {
+      ...getPlace(),
+      name: "Starting point",
+      placeId: "1"
+    };
+    expect(addSource).toHaveBeenCalledWith(
+      mergedSource, [], false);
+
     expect(addCommon).toHaveBeenCalledTimes(3);
+    expect(addTarget).toHaveBeenCalled();
     expect(drawPolyline).toHaveBeenCalled();
     expect(flyTo).toHaveBeenCalled();
   });
 
-  test("View sets direction and redirect", () => {
-    const d = getDefault();
+  test("View sets route and redirect", () => {
+    const r = getDefault();
 
-    const { store, getByRole } = render(d);
+    const { store, getByRole } = render(r);
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "View" }));
 
-    expect(mockUseNavigate).toHaveBeenCalledWith("/viewer/direc");
-    expect(store.getState().viewer.direc).toBe(d.direc);
+    expect(mockUseNavigate).toHaveBeenCalledWith("/viewer/route");
+    expect(store.getState().viewer.route).toBe(r.route);
   });
 
   test("Edit updates storage and state", async () => {
@@ -118,7 +137,7 @@ describe("<MyDirecsListItem />", () => {
     const { store, getByRole } = render(getDefault(), { context: ctx });
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "Edit" }));
-    fireEvent.change(getByRole("textbox"), { target: { value: "Direction B" } });
+    fireEvent.change(getByRole("textbox"), { target: { value: "Route B" } });
 
     // multiple update ~> fails without async!
     await act(async () => {
@@ -126,22 +145,25 @@ describe("<MyDirecsListItem />", () => {
     });
 
     await waitFor(() => {
-      expect(store.getState().favorites.direcs[1]?.name === "Direction B");
-      expect(storage.getDirec("1")).toBeTruthy();
+      expect(store.getState().favorites.routes[1]?.name === "Route B");
+      expect(storage.getRoute("1")).toBeTruthy();
     });
   });
 
   test("Modify replace direction sequence and redirects", () => {
+
+    /**
+     * Specifically, the place with `smartId` equal to "A" is passed TWO times.
+     * This is the correct behavior and enables filtering points by category.
+     */
 
     const { store, getByRole } = render(getDefault(), {
       preloadedState: {
         searchDirecs: {
           waypoints: [
             {
+              ...getPlace(),
               name: "Place X",
-              keywords: [],
-              location: { lon: 0.0, lat: 0.0 },
-              categories: []
             }
           ]
         }
@@ -151,14 +173,15 @@ describe("<MyDirecsListItem />", () => {
     fireEvent.click(getByRole("menuitem", { name: "Modify" }));
     fireEvent.click(getByRole("button", { name: "Confirm" }));
 
-    expect(store.getState().searchDirecs.waypoints.length).toBe(5);
+    expect(store.getState().searchDirecs.waypoints.length).toBe(7);
     expect(mockUseNavigate).toHaveBeenCalledWith("/search/direcs");
   });
 
-  test("Delete removes direc from storage and state", async () => {
+  test("Delete removes route from storage and state", async () => {
+    const N = 5;
     const f = jest.fn();
     const storage = new InmemStorage();
-    jest.spyOn(storage, "deleteDirec").mockImplementation(f);
+    jest.spyOn(storage, "deleteRoute").mockImplementation(f);
     const ctx = {
       ...context,
       storage: storage
@@ -168,9 +191,9 @@ describe("<MyDirecsListItem />", () => {
       preloadedState: {
         favorites: {
           ...initialFavoritesState(),
-          direcs: Array(5).fill(undefined).map(() => ({
-            ...getDirec(),
-            direcId: "1"
+          routes: Array(N).fill(undefined).map(() => ({
+            ...getRoute(),
+            routeId: "1"
           }))
         }
       },
@@ -183,7 +206,7 @@ describe("<MyDirecsListItem />", () => {
     });
 
     await waitFor(() => {
-      expect(store.getState().favorites.direcs.length).toBe(4);
+      expect(store.getState().favorites.routes.length).toBe(N - 1);
       expect(f).toHaveBeenCalledTimes(1);
     });
   });
