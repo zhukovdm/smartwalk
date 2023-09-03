@@ -1,5 +1,5 @@
 import { useContext, useEffect, useMemo, useState } from "react";
-import { Helmet, HelmetProvider } from "react-helmet-async";
+import { Helmet, HelmetData } from "react-helmet-async";
 import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -157,13 +157,11 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
       {
         /* helmet */
       }
-      <HelmetProvider>
-        <Helmet>
-          <script type="application/ld+json">
-            {getJsonLdPlace(place)}
-          </script>
-        </Helmet>
-      </HelmetProvider>
+      <Helmet helmetData={new HelmetData({})}>
+        <script type={"application/ld+json"}>
+          {getJsonLdPlace(place)}
+        </script>
+      </Helmet>
       {
         /* header */
       }
