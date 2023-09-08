@@ -145,6 +145,7 @@ export default function MyRoutesListItem(
         }
       />
       <SomethingEditDialog
+        key={name}
         show={showE}
         name={name}
         what={"route"}

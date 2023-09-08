@@ -1,9 +1,9 @@
 import DirectionsIcon from "@mui/icons-material/Directions";
 import IconButton from "@mui/material/IconButton";
 
-type StoredDirecButtonProps = {
+export type StoredDirecButtonProps = {
 
-  /** Button event handler */
+  /** Draw event handler */
   onClick: () => void;
 };
 

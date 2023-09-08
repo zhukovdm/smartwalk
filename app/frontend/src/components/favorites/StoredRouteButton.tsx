@@ -1,9 +1,9 @@
 import RouteIcon from "@mui/icons-material/Route";
 import IconButton from "@mui/material/IconButton";
 
-type StoredRouteButtonProps = {
+export type StoredRouteButtonProps = {
 
-  /** Event handler */
+  /** Draw event handler */
   onClick: () => void;
 };
 

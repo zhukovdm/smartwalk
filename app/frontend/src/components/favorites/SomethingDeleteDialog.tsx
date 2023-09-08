@@ -14,7 +14,7 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 
-export type DeleteSomethingDialogProps = {
+export type SomethingDeleteDialogProps = {
 
   /** Opens dialog window. */
   show: boolean;
@@ -35,8 +35,8 @@ export type DeleteSomethingDialogProps = {
 /**
  * Dialog for deleting named `something`.
  */
-export default function DeleteSomethingDialog(
-  { show, name, what, onHide, onDelete }: DeleteSomethingDialogProps): JSX.Element {
+export default function SomethingDeleteDialog(
+  { show, name, what, onHide, onDelete }: SomethingDeleteDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);
@@ -73,10 +73,9 @@ export default function DeleteSomethingDialog(
         </Button>
         <LoadingButton
           color={"error"}
+          startIcon={<DeleteIcon />}
           loading={dialogBlock}
           loadingPosition={"start"}
-          title={"Send request"}
-          startIcon={<DeleteIcon />}
           onClick={() => { deleteAction(); }}
         >
           <span>Delete</span>

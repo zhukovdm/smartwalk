@@ -17,7 +17,7 @@ import { useAppDispatch } from "../../features/storeHooks";
 import PlaceButton from "../_shared/PlaceButton";
 import StandardListItem from "../_shared/StandardListItem";
 import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
-import DeleteSomethingDialog from "./SomethingDeleteDialog";
+import SomethingDeleteDialog from "./SomethingDeleteDialog";
 import SomethingEditDialog from "./SomethingEditDialog";
 import ListItemMenu from "./ListItemMenu";
 
@@ -35,6 +35,8 @@ export type MyPlacesListItemProps = {
  */
 export default function MyPlacesListItem({ index, place }: MyPlacesListItemProps): JSX.Element {
 
+  const { name, placeId, smartId } = place;
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { map, storage } = useContext(AppContext);
@@ -43,29 +45,29 @@ export default function MyPlacesListItem({ index, place }: MyPlacesListItemProps
   const [showD, setShowD] = useState(false);
   const [showE, setShowE] = useState(false);
 
-  const onPlace = () => {
+  const onPlace = (): void => {
     map?.clear();
     map?.addStored(place, []);
     map?.flyTo(place);
   };
 
-  const onShow = () => {
+  const onShow = (): void => {
     dispatch(setViewerPlace(place));
     navigate(VIEWER_PLACE_ADDR);
   };
 
-  const onSave = async (name: string): Promise<void> => {
-    const p = { ...place, name: name };
+  const onSave = async (newName: string): Promise<void> => {
+    const p = { ...place, name: newName };
     await storage.updatePlace(p);
     dispatch(updateFavoritePlace({ place: p, index: index }));
   };
 
   const onAppend = (): void => {
     dispatch(appendSearchDirecsPlace(place));
-  }
+  };
 
   const onDelete = async (): Promise<void> => {
-    await storage.deletePlace(place.placeId);
+    await storage.deletePlace(placeId);
     dispatch(deleteFavoritePlace(index));
     map?.clear();
   };
@@ -73,11 +75,11 @@ export default function MyPlacesListItem({ index, place }: MyPlacesListItemProps
   return (
     <Box
       role={"listitem"}
-      aria-label={place.name}
+      aria-label={name}
     >
       <StandardListItem
-        label={place.name}
-        link={getSmartPlaceLink(place.smartId)}
+        label={name}
+        link={getSmartPlaceLink(smartId)}
         l={
           <PlaceButton
             kind={"stored"}
@@ -97,8 +99,9 @@ export default function MyPlacesListItem({ index, place }: MyPlacesListItemProps
         }
       />
       <SomethingEditDialog
+        key={name}
         show={showE}
-        name={place.name}
+        name={name}
         what={"place"}
         onHide={() => { setShowE(false); }}
         onSave={onSave}
@@ -108,9 +111,9 @@ export default function MyPlacesListItem({ index, place }: MyPlacesListItemProps
         onHide={() => { setShowA(false); }}
         onAppend={onAppend}
       />
-      <DeleteSomethingDialog
+      <SomethingDeleteDialog
         show={showD}
-        name={place.name}
+        name={name}
         what={"place"}
         onHide={() => { setShowD(false); }}
         onDelete={onDelete}

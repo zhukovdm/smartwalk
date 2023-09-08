@@ -123,6 +123,7 @@ export default function MyDirecsListItem(
         }
       />
       <SomethingEditDialog
+        key={name}
         show={showE}
         name={name}
         what={"direction"}

@@ -114,9 +114,13 @@ export default function MyPlacesCreateDialog(): JSX.Element {
     }
   };
 
-  // https://github.com/facebook/react/issues/15486#issuecomment-488028431
   const onToggle: MouseEventHandler<HTMLDetailsElement> = (e) => {
-    if (e.currentTarget)
+
+    /* Without preventing default behavior, expansion happens only upon
+     * the second click.
+     *  - https://github.com/facebook/react/issues/15486#issuecomment-488028431
+     */
+
     e.preventDefault();
     dispatch(toggleFavoriteCreateExpanded());
   }
@@ -156,7 +160,10 @@ export default function MyPlacesCreateDialog(): JSX.Element {
             value={name}
             onChange={(e) => dispatch(setFavoriteCustomName(e.target.value))}
           />
-          <Box display={"flex"} justifyContent={"space-evenly"}>
+          <Box
+            display={"flex"}
+            justifyContent={"space-evenly"}
+          >
             <Button
               color={"error"}
               disabled={block}
