@@ -1,4 +1,4 @@
-import {
+import type {
   ExtendedPlace,
   Path,
   UiDirec,
@@ -169,7 +169,7 @@ export const getRoute = (): UiRoute => ({
     ...getPlace(),
     name: "Target"
   },
-  distance: 5.0,
+  maxDistance: 5.0,
   categories: [
     { keyword: "castle", filters: {} },
     { keyword: "museum", filters: {} },

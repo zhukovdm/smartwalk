@@ -67,7 +67,7 @@ export default function ResultRoutesContent(
     source: routeSource,
     target: routeTarget,
     places: routePlaces,
-    distance,
+    maxDistance: maxDistance,
     categories,
     precedence,
     waypoints: routeWaypoints
@@ -115,7 +115,10 @@ export default function ResultRoutesContent(
     <Stack direction={"column"} gap={2.5}>
       <Stack gap={1}>
         <Typography>
-          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with distances of at most <strong>{distance}</strong>&nbsp;km, visiting at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
+          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with
+          distances of at most <strong>{maxDistance}</strong>&nbsp;km, visiting at least one place from each
+          of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged
+          by <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
         </Typography>
         <CategoryFilterList
           categories={categories}

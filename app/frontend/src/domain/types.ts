@@ -510,8 +510,8 @@ export type RoutesRequest = {
   /** Destination point. */
   target: UiPlace;
 
-  /** Distance in kilometers. */
-  distance: number;
+  /** Maximum walking distance (in kilometers) */
+  maxDistance: number;
 
   /** Categories to be fulfilled. */
   categories: PlaceCategory[];

@@ -5,13 +5,13 @@ import { deleteItemImmutable, updateItemImmutable } from "../utils/functions";
 type SearchRoutesState = {
   source?: UiPlace;
   target?: UiPlace;
-  distance: number;
+  maxDistance: number;
   categories: KeywordCategory[];
   precedence: PrecedenceEdge[];
 };
 
 export const initialSearchRoutesState = (): SearchRoutesState => ({
-  distance: 5.0,
+  maxDistance: 5.0,
   categories: [],
   precedence: []
 });
@@ -27,8 +27,8 @@ export const searchRoutesSlice = createSlice({
     setSearchRoutesTarget: (state, action: PayloadAction<UiPlace | undefined>) => {
       state.target = action.payload;
     },
-    setSearchRoutesDistance: (state, action: PayloadAction<number>) => {
-      state.distance = action.payload;
+    setSearchRoutesMaxDistance: (state, action: PayloadAction<number>) => {
+      state.maxDistance = action.payload;
     },
     deleteSearchRoutesCategory: (state, action: PayloadAction<number>) => {
       const i = action.payload;
@@ -52,7 +52,7 @@ export const {
   resetSearchRoutes,
   setSearchRoutesSource,
   setSearchRoutesTarget,
-  setSearchRoutesDistance,
+  setSearchRoutesMaxDistance,
   deleteSearchRoutesCategory,
   updateSearchRoutesCategory,
   appendSearchRoutesPrecEdge,

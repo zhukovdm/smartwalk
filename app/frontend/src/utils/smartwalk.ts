@@ -109,7 +109,7 @@ export default class SmartWalkFetcher {
    * Fetch routes that visit places belonging to at least one user-defined category.
    */
   public static async searchRoutes(request: RoutesRequest): Promise<UiRoute[]> {
-    const { source, target, distance, ...rest } = request;
+    const { source, target, maxDistance: maxDistance, ...rest } = request;
 
     const toGeoJson = (point: WgsPoint) => ({
       type: "Point",
@@ -123,7 +123,7 @@ export default class SmartWalkFetcher {
     const to = toGeoJson(target.location);
     const cf = crowFlyDistance(fr, to, { units: "kilometers" });
 
-    if (cf > distance) {
+    if (cf > maxDistance) {
       throw Error(`Points are too far from each other (at least ${parseFloat(cf.toFixed(2))} km). Move them closer, or adjust the distance slider.`);
     }
 
@@ -131,7 +131,7 @@ export default class SmartWalkFetcher {
       ...rest,
       source: source.location,
       target: target.location,
-      distance: distance * 1000.0
+      maxDistance: maxDistance * 1000.0
     };
 
     const jsn = await SmartWalkFetcher

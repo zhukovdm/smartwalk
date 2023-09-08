@@ -25,8 +25,8 @@ public sealed class SearchController : ControllerBase
     private static ProblemDetails GetProblemDetails(int status, string detail)
         => new() { Status = status, Detail = detail };
 
-    private static bool VerifyDistance(WgsPoint source, WgsPoint target, double distance)
-        => Spherical.HaversineDistance(source, target) <= distance && distance <= 30_000;
+    private static bool VerifyDistance(WgsPoint source, WgsPoint target, double maxDistance)
+        => Spherical.HaversineDistance(source, target) <= maxDistance && maxDistance <= 30_000;
 
     /// <summary>
     /// Check if edges define directed acyclic loop-free graph, repeated edges
@@ -225,7 +225,7 @@ public sealed class SearchController : ControllerBase
         /// </summary>
         [Required]
         [Range(0, 30_000)]
-        public double? distance { get; init; }
+        public double? maxDistance { get; init; }
 
         [Required]
         [MinLength(1)]
@@ -264,7 +264,7 @@ public sealed class SearchController : ControllerBase
             s = rq.source.AsWgs();
             t = rq.target.AsWgs();
 
-            if (!VerifyDistance(s, t, rq.distance.Value)) {
+            if (!VerifyDistance(s, t, rq.maxDistance.Value)) {
                 throw new Exception("Malformed point-distance configuration");
             }
         }
@@ -276,7 +276,7 @@ public sealed class SearchController : ControllerBase
         try
         {
             return await SearchService.GetRoutes(
-                _context.EntityIndex, _context.RoutingEngine, s, t, rq.distance.Value, rq.categories, precedence);
+                _context.EntityIndex, _context.RoutingEngine, s, t, rq.maxDistance.Value, rq.categories, precedence);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }

@@ -14,7 +14,7 @@ import {
   resetSearchRoutes,
   deleteSearchRoutesCategory,
   updateSearchRoutesCategory,
-  setSearchRoutesDistance,
+  setSearchRoutesMaxDistance,
   deleteSearchRoutesPrecEdge,
   appendSearchRoutesPrecEdge,
 } from "../features/searchRoutesSlice";
@@ -45,7 +45,7 @@ export default function SearchRoutesPanel(): JSX.Element {
   const {
     source: storedSource,
     target: storedTarget,
-    distance,
+    maxDistance: maxDistance,
     categories,
     precedence
   } = useAppSelector((state) => state.searchRoutes);
@@ -61,7 +61,7 @@ export default function SearchRoutesPanel(): JSX.Element {
       const routes = await SmartWalkFetcher.searchRoutes({
         source: source!,
         target: target!,
-        distance: distance,
+        maxDistance: maxDistance,
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters })),
         precedence: precedence
       });
@@ -96,8 +96,8 @@ export default function SearchRoutesPanel(): JSX.Element {
           max={30}
           seq={[ 5, 10, 15, 20, 25 ]}
           step={0.2}
-          distance={distance}
-          dispatch={(value) => { dispatch(setSearchRoutesDistance(value)); }}
+          distance={maxDistance}
+          dispatch={(value) => { dispatch(setSearchRoutesMaxDistance(value)); }}
           aria-label={"Maximum walking distance of a route"}
         />
         <Typography>
