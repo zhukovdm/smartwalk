@@ -1,13 +1,13 @@
 import { cleanup, fireEvent } from "@testing-library/react";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
 import SearchRoutesPanel from "../SearchRoutesPanel";
 import { initialSearchRoutesState } from "../../features/searchRoutesSlice";
 import { initialFavoritesState } from "../../features/favoritesSlice";
 
-function render(options: StoreRenderOptions = {}) {
+function render(options: AppRenderOptions = {}) {
   return renderWithProviders(<SearchRoutesPanel />, options);
 }
 

@@ -6,7 +6,7 @@ import {
 import { StoredPlace } from "../../../domain/types";
 import { getPlace, getDirec } from "../../../utils/testData";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders,
 } from "../../../utils/testUtils";
 import { LeafletMap } from "../../../utils/leaflet";
@@ -54,7 +54,7 @@ const getDefault = (): MyDirecsListItemProps => ({
   ])
 });
 
-function render(props = getDefault(), options: StoreRenderOptions = {}) {
+function render(props = getDefault(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyDirecsListItem {...props} />, options);
 }
 

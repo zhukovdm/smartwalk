@@ -1,5 +1,5 @@
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
@@ -18,7 +18,7 @@ const getStoredPlace = (placeId: string, name: string): StoredPlace => ({
   categories: []
 });
 
-function render(props = getDefault(), options: StoreRenderOptions = {}) {
+function render(props = getDefault(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyPlacesList {...props} />, options);
 }
 

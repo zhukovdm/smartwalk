@@ -1,12 +1,12 @@
 import { fireEvent, waitFor } from "@testing-library/react";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
 import MyPlacesSection from "../MyPlacesSection";
 
-function render(options: StoreRenderOptions = {}) {
+function render(options: AppRenderOptions = {}) {
   return renderWithProviders(<MyPlacesSection />, options);
 }
 

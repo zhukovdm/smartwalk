@@ -5,7 +5,7 @@ import InmemStorage from "../../../utils/inmemStorage";
 import { LeafletMap } from "../../../utils/leaflet";
 import { getPlace, getRoute } from "../../../utils/testData";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders,
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
@@ -50,7 +50,7 @@ const getDefault = (): MyRoutesListItemProps => ({
   ])
 });
 
-function render(props = getDefault(), options: StoreRenderOptions = {}) {
+function render(props = getDefault(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyRoutesListItem {...props} />, options);
 }
 

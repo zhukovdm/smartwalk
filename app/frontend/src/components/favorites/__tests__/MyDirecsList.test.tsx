@@ -1,6 +1,6 @@
 import { getDirec } from "../../../utils/testData";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
@@ -10,7 +10,7 @@ const getDefault = (): MyDirecsListProps => ({
   "aria-labelledby": "smartwalk-my-direcs-head"
 });
 
-function render(props = getDefault(), options: StoreRenderOptions = {}) {
+function render(props = getDefault(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyDirecsList {...props} />, options);
 }
 

@@ -3,9 +3,8 @@ import {
   fireEvent,
   waitFor
 } from "@testing-library/react";
-import { StoredPlace } from "../../../domain/types";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders,
 } from "../../../utils/testUtils";
 import { LeafletMap } from "../../../utils/leaflet";
@@ -33,7 +32,7 @@ const getDefault = (): MyPlacesListItemProps => ({
   }
 });
 
-function render(props = getDefault(), options: StoreRenderOptions = {}) {
+function render(props = getDefault(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyPlacesListItem {...props} />, options);
 }
 

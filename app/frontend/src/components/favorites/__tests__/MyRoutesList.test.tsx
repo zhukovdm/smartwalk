@@ -1,6 +1,6 @@
 import { getRoute } from "../../../utils/testData";
 import {
-  StoreRenderOptions,
+  AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
 import {
@@ -12,7 +12,7 @@ const getDefault = (): MyRoutesListProps => ({
   "aria-labelledby": "smartwalk-my-routes-head"
 });
 
-function render(props = getDefault(), options: StoreRenderOptions = {}) {
+function render(props = getDefault(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyRoutesList {...props} />, options);
 }
 

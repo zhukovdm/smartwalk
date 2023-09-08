@@ -37,14 +37,13 @@ describe("<PlaceLocation />", () => {
 
   test("button fly", () => {
     const m = new LeafletMap();
-    const f = jest.fn();
-    jest.spyOn(m, "flyTo").mockImplementation(f);
+    const flyTo = jest.spyOn(m, "flyTo").mockImplementation(() => {});
     const { getByRole } = render({
       ...getDefault(),
       map: m
     });
     fireEvent.click(getByRole("button"));
-    expect(f).toHaveBeenCalledTimes(1);
+    expect(flyTo).toHaveBeenCalledTimes(1);
   });
 
   test("text content", () => {
@@ -54,13 +53,12 @@ describe("<PlaceLocation />", () => {
 
   test("text fly", () => {
     const m = new LeafletMap();
-    const f = jest.fn();
-    jest.spyOn(m, "flyTo").mockImplementation(f);
+    const flyTo = jest.spyOn(m, "flyTo").mockImplementation(jest.fn());
     const { getByText } = render({
       ...getDefault(),
       map: m
     });
     fireEvent.click(getByText("0.000000N, 0.000000E"));
-    expect(f).toHaveBeenCalledTimes(1);
+    expect(flyTo).toHaveBeenCalledTimes(1);
   });
 });

@@ -1,12 +1,12 @@
 import LogoCloseBar from "../LogoCloseBar";
 import {
-    StoreRenderOptions,
+    AppRenderOptions,
     renderWithProviders
 } from "../../../utils/testUtils";
 import { initialPanelState } from "../../../features/panelSlice";
 import { fireEvent } from "@testing-library/react";
 
-function render(options: StoreRenderOptions = {}) {
+function render(options: AppRenderOptions = {}) {
   return renderWithProviders(<LogoCloseBar />, options);
 }
 
