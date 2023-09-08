@@ -56,13 +56,13 @@ export function withProviders(
   return withContext(withState(withRouter(ui), preloadedState), context);
 }
 
-export type StoreRenderOptions = Omit<RenderOptions, "queries"> & {
+export type AppRenderOptions = Omit<RenderOptions, "queries"> & {
   context?: AppContextValue;
   preloadedState?: PreloadedState<StoreState>;
 };
 
 export function renderWithProviders(
-  ui: ReactNode, { preloadedState, context, ...renderOptions }: StoreRenderOptions) {
+  ui: ReactNode, { preloadedState, context, ...renderOptions }: AppRenderOptions) {
 
   const store = setupStore(preloadedState);
   return {

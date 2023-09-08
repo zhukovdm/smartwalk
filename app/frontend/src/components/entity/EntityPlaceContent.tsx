@@ -1,5 +1,4 @@
-import { useContext, useEffect, useMemo, useState } from "react";
-import { Helmet, HelmetData } from "react-helmet-async";
+import { useState } from "react";
 import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -20,23 +19,12 @@ import TollIcon from "@mui/icons-material/Toll";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import Image from "mui-image";
-import { AppContext } from "../../App";
-import {
-  ExtendedPlace,
-  PlaceAddress
-} from "../../domain/types";
-import { getJsonLdPlace } from "../../utils/jsonld";
+import { type ExtendedPlace, type PlaceAddress } from "../../domain/types";
 import IdGenerator from "../../utils/idGenerator";
-import {
-  useAppDispatch,
-  useAppSelector
-} from "../../features/storeHooks";
-import {
-  createFavoritePlace
-} from "../../features/favoritesSlice";
-import {
-  appendSearchDirecsPlace
-} from "../../features/searchDirecsSlice";
+import { createFavoritePlace } from "../../features/favoritesSlice";
+import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
+import { useExtendedPlace } from "../../features/entityHooks";
+import { useAppDispatch } from "../../features/storeHooks";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import PlaceLocation from "../_shared/PlaceLocation";
@@ -44,8 +32,9 @@ import PlaceKeywords from "../_shared/PlaceKeywords";
 import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
+import EntityPlaceHelmet from "./EntityPlaceHelmet";
 
-type PlaceContentProps = {
+export type EntityPlaceContentProps = {
 
   /** An extended place contained in the panel. */
   place: ExtendedPlace;
@@ -54,18 +43,19 @@ type PlaceContentProps = {
 /**
  * Component showing all available information about the passed place.
  */
-export default function PlaceContent({ place }: PlaceContentProps): JSX.Element {
-
-  const { map, storage } = useContext(AppContext);
+export default function EntityPlaceContent({ place }: EntityPlaceContentProps): JSX.Element {
 
   const dispatch = useAppDispatch();
-  const { places } = useAppSelector((state) => state.favorites);
 
   const [showA, setShowA] = useState(false);
   const [showS, setShowS] = useState(false);
 
   const {
-    polygon,
+    name,
+    attributes
+  } = place;
+
+  const {
     description,
     image,
     website,
@@ -94,24 +84,12 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
     denomination,
     payment,
     rental
-  } = place.attributes;
+  } = attributes;
 
   const composeAddress = ({ country, settlement, district, place, house, postalCode }: PlaceAddress) => (
     [place, house, postalCode, district, settlement, country].filter((str) => !!str).join(", "));
 
-  const storedPlace = useMemo(() => (
-    places.find((p) => p.smartId === place.smartId)), [place, places]);
-
-  useEffect(() => {
-    map?.clear();
-    (storedPlace)
-      ? map?.addStored(place, [])
-      : map?.addCommon(place, [], false);
-    if (polygon) {
-      map?.drawPolygon(polygon);
-    }
-    map?.flyTo(place);
-  }, [map, place, storedPlace, polygon])
+  const { map, storage, storedPlace } = useExtendedPlace(place);
 
   const extra = [
     ["fee", fee], ["delivery", delivery], ["drinking water", drinkingWater], ["internet access", internetAccess],
@@ -157,11 +135,10 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
       {
         /* helmet */
       }
-      <Helmet helmetData={new HelmetData({})}>
-        <script type={"application/ld+json"}>
-          {getJsonLdPlace(place)}
-        </script>
-      </Helmet>
+      <EntityPlaceHelmet
+        place={place}
+        url={window.location.href}
+      />
       {
         /* header */
       }
@@ -170,7 +147,7 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           fontSize={"1.25rem"}
           fontWeight={"medium"}
         >
-          {place.name}
+          {name}
         </Typography>
         <Divider sx={{ background: "lightgrey" }} />
         <PlaceLocation
@@ -209,7 +186,8 @@ export default function PlaceContent({ place }: PlaceContentProps): JSX.Element 
           </Alert>
       }
       <SomethingSaveDialog
-        name={place.name}
+        key={name}
+        name={name}
         show={showS}
         what={"place"}
         onHide={() => { setShowS(false); }}

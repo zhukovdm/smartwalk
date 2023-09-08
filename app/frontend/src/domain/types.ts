@@ -90,22 +90,22 @@ export type StoredPlace = PlaceAttributes & {
  */
 export type PlaceLinked = {
 
-  /** DbPedia Id */
+  /** DbPedia Id, `Item_Name`  */
   dbpedia?: string;
 
-  /** GeoNames Id */
+  /** GeoNames Id, `1` */
   geonames?: string;
 
-  /** MapyCz Id */
+  /** MapyCz Id, `base&id=1` */
   mapycz?: string;
 
-  /** OpenStreetMap Id */
+  /** OpenStreetMap Id, `node/1` */
   osm?: string;
 
-  /** Wikidata Id */
+  /** Wikidata Id, `Q1` */
   wikidata?: string;
 
-  /** Yago Id */
+  /** Yago Id, `Item_Name` */
   yago?: string;
 };
 
@@ -114,22 +114,22 @@ export type PlaceLinked = {
  */
 export type PlaceAddress = {
 
-  /**  */
+  /** Country */
   country?: string;
 
-  /**  */
+  /** City, town, village, etc. */
   settlement?: string;
 
-  /**  */
+  /** Part of a settlement, e.g. Praha 1 */
   district?: string;
 
-  /**  */
+  /** Street, square, avenue, etc. */
   place?: string;
 
-  /**  */
+  /** Conscription number of a house */
   house?: string;
 
-  /**  */
+  /** Postal code */
   postalCode?: string;
 };
 
@@ -150,13 +150,13 @@ export type PlaceSocialNetworks = {
   /** Pinterest profile */
   pinterest?: string;
 
-  /**  */
+  /** Telegram profile */
   telegram?: string;
 
-  /**  */
+  /** Twitter profile */
   twitter?: string;
 
-  /**  */
+  /** YouTube profile */
   youtube?: string;
 };
 
@@ -164,7 +164,10 @@ export type PlaceSocialNetworks = {
  * List of possible entity attributes.
  */
 type EntityAttributes = {
+
+  /** Sequence of at least 4 points */
   polygon?: WgsPoint[];
+
   description?: string;
   image?: string;
   website?: string;

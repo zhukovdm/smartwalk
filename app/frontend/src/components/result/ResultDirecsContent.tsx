@@ -107,6 +107,7 @@ export default function ResultDirecsContent(
           </Alert>
       }
       <SomethingSaveDialog
+        key={name}
         name={name}
         show={showS}
         what={"direction"}

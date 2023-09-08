@@ -30,7 +30,7 @@ export default class SolidProvider {
     await login({
       oidcIssuer: oidcIssuer,
       clientName: "SmartWalk App",
-      redirectUrl: window.location.origin + window.location.pathname
+      redirectUrl: window.location.origin
     });
   }
 

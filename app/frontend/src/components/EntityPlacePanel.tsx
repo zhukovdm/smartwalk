@@ -5,7 +5,7 @@ import { useSmartPlace } from "../features/entityHooks";
 import { useAppSelector } from "../features/storeHooks";
 import BackCloseBar from "./_shared/BackCloseBar";
 import LoadingStub from "./_shared/LoadingStub";
-import PlaceContent from "./entity/EntityPlaceContent";
+import EntityPlaceContent from "./entity/EntityPlaceContent";
 
 /**
  * Panel presenting a place, with menu, and content.
@@ -26,7 +26,7 @@ export default function EntityPlacePanel(): JSX.Element {
         {(favoritesLoaded && placeLoaded)
           ? <Box>
               {(!!place)
-                ? <PlaceContent place={place} />
+                ? <EntityPlaceContent place={place} />
                 : <Alert severity={"warning"}>
                     Either an entity does not exist, or a communication error has occurred.
                   </Alert>

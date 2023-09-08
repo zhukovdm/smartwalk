@@ -8,7 +8,7 @@ import MyDirecsSection from "./favorites/MyDirecsSection";
 import MyPlacesSection from "./favorites/MyPlacesSection";
 import MyRoutesSection from "./favorites/MyRoutesSection";
 
-type FavoritesPanelProps = {
+export type FavoritesPanelProps = {
 
   /** Loaded from the storage */
   loaded: boolean;

@@ -1,4 +1,5 @@
 import {
+  ExtendedPlace,
   Path,
   UiDirec,
   UiPlace,
@@ -21,6 +22,98 @@ export const getPlace = (): UiPlace => ({
   keywords: [],
   categories: []
 });
+
+export const getExtendedPlace = (): ExtendedPlace => ({
+  smartId: "A",
+  name: "Medieval castle",
+  location: { lon: 0.0, lat: 0.0 },
+  keywords: [
+    "castle",
+    "museum",
+    "restaurant"
+  ],
+  categories: [],
+  linked: {
+    dbpedia: "Medieval_Castle",
+    geonames: "1",
+    mapycz: "base&id=1",
+    osm: "node/1",
+    wikidata: "Q1",
+    yago: "Medieval_Castle"
+  },
+  attributes: {
+    polygon: [
+      { lon: 0.0, lat: 0.0 },
+      { lon: 0.0, lat: 1.0 },
+      { lon: 1.0, lat: 1.0 },
+      { lon: 1.0, lat: 0.0 },
+      { lon: 0.0, lat: 0.0 }
+    ],
+    description: "You definitely should see it!",
+    image: "https://www.medieval.com/picture.png",
+    website: "https://www.medieval.com/",
+    address: {
+      country: "Czech Republic",
+      settlement: "Prague",
+      district: "Prague 1",
+      place: "Malostranske namesti",
+      house: "1",
+      postalCode: "100 00"
+    },
+    email: "medieval@castle.com",
+    phone: "+420 123 456 789",
+    socialNetworks: {
+      facebook: "a",
+      instagram: "b",
+      linkedin: "c",
+      pinterest: "d",
+      telegram: "e",
+      twitter: "f",
+      youtube: "g"
+    },
+    charge: [
+      "200 CZK per hour",
+      "children under 10 free of charge"
+    ],
+    openingHours: [
+      "Mon 08:00 - 16:30",
+      "Tue 08:00 - 16:30",
+      "Wed 08:00 - 16:30",
+      "Thu closed",
+      "Fri 08:00 - 16:30",
+      "Sat 09:00 - 14:00",
+      "Sun closed"
+    ],
+    fee: true,
+    delivery: undefined,
+    drinkingWater: true,
+    internetAccess: true,
+    shower: undefined,
+    smoking: false,
+    takeaway: true,
+    toilets: true,
+    wheelchair: true,
+    capacity: 300,
+    elevation: undefined,
+    minimumAge: 1,
+    rating: 5,
+    year: 1645,
+    clothes: undefined,
+    cuisine: [
+      "czech",
+      "oriental"
+    ],
+    denomination: undefined,
+    payment: [
+      "bitcoin",
+      "cash",
+      "visa"
+    ],
+    rental: [
+      "binoculars"
+    ]
+  }
+})
 
 export const getDirec = (): UiDirec => ({
   name: "",

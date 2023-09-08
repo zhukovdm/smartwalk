@@ -165,6 +165,7 @@ export default function ResultRoutesContent(
           </Alert>
       }
       <SomethingSaveDialog
+        key={name}
         name={name}
         show={showS}
         what={"route"}
