@@ -131,6 +131,22 @@ describe("<MyDirecsListItem />", () => {
     });
   });
 
+  test("name in Edit dialog gets updated upon Save", async () => {
+    const { getByRole } = render();
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    fireEvent.change(getByRole("textbox"), { target: { value: "Direction B" } });
+    act(() => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+    await waitFor(() => {
+      expect(getByRole("button", { name: "Menu" })).toBeInTheDocument();
+    }, { timeout: 2000 });
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    expect(getByRole("textbox", { name: "Name" })).toHaveValue("Direction B");
+  });
+
   test("Modify replace direction sequence and redirects", () => {
 
     const { store, getByRole } = render(getDefault(), {

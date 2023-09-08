@@ -9,7 +9,7 @@ import {
   renderWithProviders,
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyRoutesListItem, { MyRoutesListItemProps } from "../MyRoutesListItem";
+import MyRoutesListItem, { type MyRoutesListItemProps } from "../MyRoutesListItem";
 
 const mockUseNavigate = jest.fn();
 
@@ -148,6 +148,22 @@ describe("<MyRoutesListItem />", () => {
       expect(store.getState().favorites.routes[1]?.name === "Route B");
       expect(storage.getRoute("1")).toBeTruthy();
     });
+  });
+
+  test("name in Edit dialog gets updated upon Save", async () => {
+    const { getByRole } = render();
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    fireEvent.change(getByRole("textbox"), { target: { value: "Route B" } });
+    act(() => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+    await waitFor(() => {
+      expect(getByRole("button", { name: "Menu" })).toBeInTheDocument();
+    }, { timeout: 2000 });
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    expect(getByRole("textbox", { name: "Name" })).toHaveValue("Route B");
   });
 
   test("Modify replace direction sequence and redirects", () => {
