@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Alert from "@mui/material/Alert";
 import Divider from "@mui/material/Divider";
 import Link from "@mui/material/Link";
@@ -19,24 +19,27 @@ import TollIcon from "@mui/icons-material/Toll";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import YouTubeIcon from "@mui/icons-material/YouTube";
 import Image from "mui-image";
-import { type ExtendedPlace, type PlaceAddress } from "../../domain/types";
+import {
+  type ExtendedPlace,
+  type PlaceAddress
+} from "../../domain/types";
 import IdGenerator from "../../utils/idGenerator";
 import { createFavoritePlace } from "../../features/favoritesSlice";
 import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
 import { useExtendedPlace } from "../../features/entityHooks";
 import { useAppDispatch } from "../../features/storeHooks";
-import SomethingActionMenu from "../_shared/SomethingActionMenu";
-import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
+import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import PlaceLocation from "../_shared/PlaceLocation";
 import PlaceKeywords from "../_shared/PlaceKeywords";
-import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
+import SomethingActionMenu from "../_shared/SomethingActionMenu";
+import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 import EntityPlaceHelmet from "./EntityPlaceHelmet";
 
 export type EntityPlaceContentProps = {
 
-  /** An extended place contained in the panel. */
+  /** Extended place representation */
   place: ExtendedPlace;
 };
 
@@ -90,17 +93,41 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
     [place, house, postalCode, district, settlement, country].filter((str) => !!str).join(", "));
 
   const { map, storage, storedPlace } = useExtendedPlace(place);
+  const isNonEmptyArray = useCallback((arr: any): boolean => (Array.isArray(arr) && arr.length > 0), []);
 
-  const extra = [
-    ["fee", fee], ["delivery", delivery], ["drinking water", drinkingWater], ["internet access", internetAccess],
-    ["shower", shower], ["smoking", smoking], ["takeaway", takeaway], ["toilets", toilets], ["wheelchair", wheelchair]
+  const booleanChips = [
+    ["fee", fee],
+    ["delivery", delivery],
+    ["drinking water", drinkingWater],
+    ["internet access", internetAccess],
+    ["shower", shower],
+    ["smoking", smoking],
+    ["takeaway", takeaway],
+    ["toilets", toilets],
+    ["wheelchair", wheelchair]
   ].filter(([_, value]) => value !== undefined);
 
-  const arr = (arr: any): boolean => arr && arr.length > 0;
+  const sectionWithIcons = address
+    || website
+    || phone
+    || email
+    || socialNetworks
+    || isNonEmptyArray(openingHours)
+    || isNonEmptyArray(charge);
 
-  const ico = address || website || phone || email || socialNetworks || arr(openingHours) || arr(charge);
-
-  const add = rating || capacity || minimumAge || arr(cuisine) || arr(clothes) || arr(denomination) || arr(payment) || arr(rental) || arr(extra);
+  const sectionWithFacts = isNonEmptyArray(booleanChips)
+    || capacity !== undefined
+    || elevation !== undefined
+    || minimumAge !== undefined
+    || year !== undefined;
+  
+  const sectionWithAdditionalInformation = rating !== undefined
+    || isNonEmptyArray(cuisine)
+    || isNonEmptyArray(clothes)
+    || isNonEmptyArray(denomination)
+    || isNonEmptyArray(payment)
+    || isNonEmptyArray(rental)
+    || sectionWithFacts;
 
   const onSave = async (name: string) => {
     const p = {
@@ -201,7 +228,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
       {
         /* contacts */
       }
-      {(ico) &&
+      {(sectionWithIcons) &&
         <Stack direction={"column"} gap={1.5}>
           {address &&
             <Stack
@@ -384,7 +411,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
             </Stack>
           }
-          {arr(openingHours) &&
+          {(!!openingHours) && isNonEmptyArray(openingHours) &&
             <Stack
               direction={"row"}
               columnGap={2}
@@ -397,24 +424,24 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 titleAccess={"Opening hours"}
               />
               <Stack direction={"column"} rowGap={1}>
-                {openingHours!.map((o, i) => (<Typography key={i}>{o}</Typography>))}
+                {openingHours.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
             </Stack>
           }
-          {arr(charge) &&
+          {(!!charge) && isNonEmptyArray(charge) &&
             <Stack
               direction="row"
               columnGap={2}
               role={"region"}
-              aria-label={"Toll"}
+              aria-label={"Charge"}
             >
               <TollIcon
                 aria-hidden
                 className={"entity-place"}
-                titleAccess={"Toll"}
+                titleAccess={"Charge"}
               />
               <Stack direction="column" rowGap={1}>
-                {charge!.map((o, i) => (<Typography key={i}>{o}</Typography>))}
+                {charge.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
             </Stack>
           }
@@ -441,55 +468,60 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
           {description}
         </Typography>
       }
-      {(add) &&
+      {(sectionWithAdditionalInformation) &&
         <Divider sx={{ background: "lightgrey" }} />
       }
-      {(add) &&
+      {(sectionWithAdditionalInformation) &&
         <Stack direction={"column"} gap={1}>
           <Typography fontSize={"1.2rem"}>Additional information</Typography>
-          {rating &&
-            <Stack direction={"row"} gap={2}>
+          {(rating !== undefined) &&
+            <Stack
+              role={"region"}
+              direction={"row"}
+              gap={2}
+              aria-label={"Rating"}
+            >
               <Typography>Rating:</Typography>
               <Rating value={rating} readOnly={true} />
             </Stack>
           }
-          {arr(clothes) &&
-            <ExtraArray label={"clothes"} array={clothes!} />
+          {(!!clothes) && isNonEmptyArray(clothes) &&
+            <ExtraArray label={"clothes"} array={clothes} />
           }
-          {arr(cuisine) && 
-            <ExtraArray label={"cuisine"} array={cuisine!} />
+          {(!!cuisine) && isNonEmptyArray(cuisine) && 
+            <ExtraArray label={"cuisine"} array={cuisine} />
           }
-          {arr(denomination) &&
-            <ExtraArray label={"denomination"} array={denomination!} />
+          {(!!denomination) && isNonEmptyArray(denomination) &&
+            <ExtraArray label={"denomination"} array={denomination} />
           }
-          {arr(payment) &&
-            <ExtraArray label={"payment"} array={payment!} />
+          {(!!payment) && isNonEmptyArray(payment) &&
+            <ExtraArray label={"payment"} array={payment} />
           }
-          {arr(rental) && (
-            <ExtraArray label={"rental"} array={rental!} />
+          {(!!rental) && isNonEmptyArray(rental) && (
+            <ExtraArray label={"rental"} array={rental} />
           )}
-          {arr(extra) &&
+          {(sectionWithFacts) &&
             <Stack
               direction={"row"}
               gap={0.5}
               flexWrap={"wrap"}
               sx={{ py: 0.5 }}
               role={"region"}
-              aria-label={"facts"}
+              aria-label={"Facts"}
             >
-              {capacity &&
+              {(capacity !== undefined) &&
                 <ExtraChip label={`capacity ${capacity}`} />
               }
-              {elevation &&
+              {(elevation !== undefined) &&
                 <ExtraChip label={`elevation ${elevation}`} />
               }
-              {minimumAge &&
+              {(minimumAge !== undefined) &&
                 <ExtraChip label={`minimum age ${minimumAge}`} />
               }
-              {year &&
+              {(year !== undefined) &&
                 <ExtraChip label={`year ${year}`} />
               }
-              {extra.map(([label, value], i) => (
+              {booleanChips.map(([label, value], i) => (
                 <ExtraChip key={i} label={`${value ? "" : "no "}${label}`} />
               ))}
             </Stack>

@@ -1,13 +1,15 @@
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 
+export type ExtraArrayLabel = "clothes" | "cuisine" | "denomination" | "payment" | "rental";
+
 export type ExtraArrayProps = {
 
   /** Array of values associated with the label */
   array: string[];
 
   /** Label for a array name */
-  label: "clothes" | "cuisine" | "denomination" | "payment" | "rental";
+  label: ExtraArrayLabel;
 };
 
 /**

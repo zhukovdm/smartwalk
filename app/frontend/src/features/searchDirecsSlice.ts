@@ -10,13 +10,15 @@ type SearchDirectState = {
   waypoints: UiPlace[];
 }
 
-const initialState = (): SearchDirectState => ({ waypoints: [] });
+export const initialSearchDirecsState = (): SearchDirectState => ({
+  waypoints: []
+});
 
 export const searchDirecsSlice = createSlice({
   name: "search/direcs",
-  initialState: initialState(),
+  initialState: initialSearchDirecsState(),
   reducers: {
-    resetSearchDirecs: () => initialState(),
+    resetSearchDirecs: () => initialSearchDirecsState(),
     reverseSearchDirecsWaypoints: (state) => {
       state.waypoints = [...state.waypoints].reverse();
     },

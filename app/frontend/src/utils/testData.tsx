@@ -87,10 +87,10 @@ export const getExtendedPlace = (): ExtendedPlace => ({
     fee: true,
     delivery: undefined,
     drinkingWater: true,
-    internetAccess: true,
+    internetAccess: false,
     shower: undefined,
     smoking: false,
-    takeaway: true,
+    takeaway: false,
     toilets: true,
     wheelchair: true,
     capacity: 300,
@@ -98,15 +98,22 @@ export const getExtendedPlace = (): ExtendedPlace => ({
     minimumAge: 1,
     rating: 5,
     year: 1645,
-    clothes: undefined,
+    clothes: [
+      "shirts",
+      "trousers"
+    ],
     cuisine: [
       "czech",
       "oriental"
     ],
-    denomination: undefined,
+    denomination: [
+      "a",
+      "b",
+      "c"
+    ],
     payment: [
-      "bitcoin",
       "cash",
+      "bitcoin",
       "visa"
     ],
     rental: [
