@@ -5,7 +5,9 @@ import {
   waitFor
 } from "@testing-library/react";
 import { withState } from "../../../utils/testUtils";
-import SomethingSaveDialog, { SomethingSaveDialogProps } from "../SomethingSaveDialog";
+import SomethingSaveDialog, {
+  type SomethingSaveDialogProps
+} from "../SomethingSaveDialog";
 
 const getDefault = (): SomethingSaveDialogProps => ({
   name: "",

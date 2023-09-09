@@ -3,16 +3,18 @@ import {
   fireEvent,
   waitFor
 } from "@testing-library/react";
+import { LeafletMap } from "../../../utils/leaflet";
+import InmemStorage from "../../../utils/inmemStorage";
+import { getPlace } from "../../../utils/testData";
 import {
   AppRenderOptions,
   renderWithProviders,
 } from "../../../utils/testUtils";
-import { LeafletMap } from "../../../utils/leaflet";
-import InmemStorage from "../../../utils/inmemStorage";
 import { context } from "../../../features/context";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyPlacesListItem, { MyPlacesListItemProps } from "../MyPlacesListItem";
-import { getPlace } from "../../../utils/testData";
+import MyPlacesListItem, {
+  type MyPlacesListItemProps
+} from "../MyPlacesListItem";
 
 const mockUseNavigate = jest.fn();
 

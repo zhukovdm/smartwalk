@@ -1,11 +1,11 @@
 import { cleanup, fireEvent } from "@testing-library/react";
 import {
-  AppRenderOptions,
+  type AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
-import SearchRoutesPanel from "../SearchRoutesPanel";
-import { initialSearchRoutesState } from "../../features/searchRoutesSlice";
 import { initialFavoritesState } from "../../features/favoritesSlice";
+import { initialSearchRoutesState } from "../../features/searchRoutesSlice";
+import SearchRoutesPanel from "../SearchRoutesPanel";
 
 function render(options: AppRenderOptions = {}) {
   return renderWithProviders(<SearchRoutesPanel />, options);

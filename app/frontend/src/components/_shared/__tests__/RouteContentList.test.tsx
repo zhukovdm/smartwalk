@@ -4,9 +4,11 @@ import {
   within
 } from "@testing-library/react";
 import { LeafletMap } from "../../../utils/leaflet";
-import { withRouter } from "../../../utils/testUtils";
-import RouteContentList, { RouteContentListProps } from "../RouteContentList";
 import { getPlace } from "../../../utils/testData";
+import { withRouter } from "../../../utils/testUtils";
+import RouteContentList, {
+  type RouteContentListProps
+} from "../RouteContentList";
 
 const getDefault = (): RouteContentListProps => ({
   map: new LeafletMap(),

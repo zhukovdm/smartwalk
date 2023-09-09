@@ -4,14 +4,14 @@ import {
 } from "@testing-library/react";
 import { Network } from "vis-network";
 import PrecedenceViewDialog, {
-  PrecedenceViewDialogProps
+  type PrecedenceViewDialogProps
 } from "../PrecedenceViewDialog";
 
 jest.mock("vis-network", () => ({
   Network: jest.fn().mockImplementation(() => { })
 }));
 
-const getDefault = (): PrecedenceViewDialogProps => ({
+const getProps = (): PrecedenceViewDialogProps => ({
   show: true,
   categories: [
     { keyword: "castle", filters: {} },
@@ -25,7 +25,7 @@ const getDefault = (): PrecedenceViewDialogProps => ({
   onHide: jest.fn()
 });
 
-function render(props = getDefault()) {
+function render(props = getProps()) {
   return rtlRender(<PrecedenceViewDialog {...props} />);
 }
 
@@ -38,7 +38,7 @@ describe("<PrecedenceViewDialog />", () => {
 
   test("render with empty arrays", () => {
     const { container } = render({
-      ...getDefault(),
+      ...getProps(),
       categories: [],
       precedence: []
     });
@@ -54,7 +54,7 @@ describe("<PrecedenceViewDialog />", () => {
 
     test("not rendered if array is empty", () => {
       const { queryAllByRole } = render({
-        ...getDefault(),
+        ...getProps(),
         precedence: []
       });
       expect(queryAllByRole("list").length).toEqual(0);
@@ -64,23 +64,23 @@ describe("<PrecedenceViewDialog />", () => {
   describe("onHide", () => {
 
     test("gets called upon Escape", () => {
-      const f = jest.fn();
+      const onHide = jest.fn();
       const { getByRole } = render({
-        ...getDefault(),
-        onHide: f
+        ...getProps(),
+        onHide: onHide
       });
       fireEvent.keyDown(getByRole("dialog"), { key: "Escape" });
-      expect(f).toHaveBeenCalledTimes(1);
+      expect(onHide).toHaveBeenCalledTimes(1);
     });
 
     test("gets called upon click on hide button", () => {
-      const f = jest.fn();
+      const onHide = jest.fn();
       const { getByRole } = render({
-        ...getDefault(),
-        onHide: f
+        ...getProps(),
+        onHide: onHide
       });
       fireEvent.click(getByRole("button", { name: "Hide dialog" }));
-      expect(f).toHaveBeenCalledTimes(1);
+      expect(onHide).toHaveBeenCalledTimes(1);
     });
   });
 });

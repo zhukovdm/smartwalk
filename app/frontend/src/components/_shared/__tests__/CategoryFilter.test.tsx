@@ -1,36 +1,24 @@
 import {
-  RenderResult,
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import CategoryFilter from "../CategoryFilter";
+import CategoryFilter, {
+  type CategoryFilterProps
+} from "../CategoryFilter";
 
-type CategoryFilterProps = {
-  active?: boolean;
-  found?: boolean;
-  index?: number;
-  onToggle?: () => void;
-};
+const getDefault = (): CategoryFilterProps => ({
+  active: true,
+  found: true,
+  index: 0,
+  category: {
+    keyword: "museum",
+    filters: {}
+  },
+  onToggle: jest.fn()
+})
 
-function render(
-  {
-    active = true, found = true, index = 0, onToggle = () => { }
-  }: CategoryFilterProps = {}
-): RenderResult {
-  return rtlRender(
-    <CategoryFilter
-      active={active}
-      found={found}
-      index={index}
-      category={
-        {
-          keyword: "museum",
-          filters: {}
-        }
-      }
-      onToggle={onToggle}
-    />
-  );
+function render(props = getDefault()) {
+  return rtlRender(<CategoryFilter {...props} />);
 }
 
 describe("<CategoryFilter />", () => {
@@ -53,31 +41,43 @@ describe("<CategoryFilter />", () => {
     });
 
     test("inactive role and name", () => {
-      const { getByRole } = render({ active: false });
+      const { getByRole } = render({
+        ...getDefault(),
+        active: false
+      });
       expect(getByRole("checkbox", { name: "Show places" })).toBeInTheDocument();
     });
 
     describe("onToggle", () => {
 
       test("gets called upon Click", () => {
-        const fn = jest.fn();
-        const { getByRole } = render({ onToggle: fn });
+        const onToggle = jest.fn();
+        const { getByRole } = render({
+          ...getDefault(),
+          onToggle: onToggle
+        });
         fireEvent.click(getByRole("checkbox"));
-        expect(fn).toHaveBeenCalledTimes(1);
+        expect(onToggle).toHaveBeenCalledTimes(1);
       });
 
       test("gets called upon Space", () => {
-        const fn = jest.fn();
-        const { getByRole } = render({ onToggle: fn });
+        const onToggle = jest.fn();
+        const { getByRole } = render({
+          ...getDefault(),
+          onToggle: onToggle
+        });
         fireEvent.keyDown(getByRole("checkbox"), { key: " " });
-        expect(fn).toHaveBeenCalledTimes(1);
+        expect(onToggle).toHaveBeenCalledTimes(1);
       });
 
       test("does not get called upon Enter", () => {
-        const fn = jest.fn();
-        const { getByRole } = render({ onToggle: fn });
+        const onToggle = jest.fn();
+        const { getByRole } = render({
+          ...getDefault(),
+          onToggle: onToggle
+        });
         fireEvent.keyDown(getByRole("checkbox"), { key: "Enter" });
-        expect(fn).toHaveBeenCalledTimes(0);
+        expect(onToggle).toHaveBeenCalledTimes(0);
       });
     });
   });

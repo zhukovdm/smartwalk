@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import ReverseButton, { ReverseButtonProps } from "../ReverseButton";
+import ReverseButton, {
+  type ReverseButtonProps
+} from "../ReverseButton";
 
 const getDefault = (): ReverseButtonProps => ({ onClick: jest.fn() });
 

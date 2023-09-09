@@ -1,6 +1,4 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
+import { render as rtlRender } from "@testing-library/react";
 import ExpandSectionIcon from "../ExpandSectionIcon";
 
 function render(expanded: boolean = true) {

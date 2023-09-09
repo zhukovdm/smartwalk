@@ -1,5 +1,7 @@
 import { render as rtlRender } from "@testing-library/react";
-import ExtraChip, { type ExtraChipProps } from "../ExtraChip";
+import ExtraChip, {
+  type ExtraChipProps
+} from "../ExtraChip";
 
 const getDefault = (): ExtraChipProps => ({
   label: "medieval museum"

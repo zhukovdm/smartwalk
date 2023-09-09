@@ -1,4 +1,7 @@
-import { fireEvent, screen } from "@testing-library/react";
+import {
+  fireEvent,
+  screen
+} from "@testing-library/react";
 import {
   FAVORITES_ADDR,
   SEARCH_DIRECS_ADDR,

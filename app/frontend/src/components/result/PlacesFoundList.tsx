@@ -4,12 +4,12 @@ import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import InformPlaceListItem from "../_shared/InformPlaceListItem";
 
-type PlacesFoundListProps = {
+export type PlacesFoundListProps = {
 
   /** Current map */
   map?: IMap;
 
-  /** Places to be listed */
+  /** Places to be listed with `stored` flag */
   places: [UiPlace, boolean][];
 };
 

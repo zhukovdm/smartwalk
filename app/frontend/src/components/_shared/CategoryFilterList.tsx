@@ -2,12 +2,12 @@ import Stack from "@mui/material/Stack";
 import { PlaceCategory } from "../../domain/types";
 import CategoryFilter from "./CategoryFilter";
 
-type CategoryFilterListProps = {
+export type CategoryFilterListProps = {
 
   /** Configured categories */
   categories: PlaceCategory[];
 
-  /** Is category active/shown in the list? */
+  /** Is category shown in the list? */
   filterList: boolean[];
 
   /**

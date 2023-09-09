@@ -1,12 +1,10 @@
-import {
-  RenderResult,
-  render as rtlRender
-} from "@testing-library/react";
-import CategoryFilterList from "../CategoryFilterList";
+import { render as rtlRender } from "@testing-library/react";
+import CategoryFilterList, {
+  type CategoryFilterListProps
+} from "../CategoryFilterList";
 
-function render(): RenderResult {
-
-  const categories = [
+const getProps = (): CategoryFilterListProps => ({
+  categories: [
     {
       keyword: "castle",
       filters: {}
@@ -15,21 +13,17 @@ function render(): RenderResult {
       keyword: "museum",
       filters: {}
     },
-  ];
-
-  const filterList = [
+  ],
+  filterList: [
     true,
     false
-  ];
+  ],
+  found: jest.fn(),
+  onToggle: jest.fn()
+});
 
-  return rtlRender(
-    <CategoryFilterList
-      categories={categories}
-      filterList={filterList}
-      found={jest.fn()}
-      onToggle={jest.fn()}
-    />
-  )
+function render(props = getProps()) {
+  return rtlRender(<CategoryFilterList {...props} />);
 }
 
 describe("<CategoryFilterList />", () => {

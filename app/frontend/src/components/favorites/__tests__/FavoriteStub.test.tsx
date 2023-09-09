@@ -3,7 +3,9 @@ import {
   render as rtlRender
 } from "@testing-library/react";
 import { withRouter } from "../../../utils/testUtils";
-import FavoriteStub, { FavoriteStubProps } from "../FavoriteStub";
+import FavoriteStub, {
+  type FavoriteStubProps
+} from "../FavoriteStub";
 
 const mockUseNavigate = jest.fn();
 

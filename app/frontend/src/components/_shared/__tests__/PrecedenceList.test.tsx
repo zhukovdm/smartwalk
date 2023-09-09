@@ -1,22 +1,16 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
-import PrecedenceList, { PrecedenceListProps } from "../PrecedenceList";
+import { render as rtlRender } from "@testing-library/react";
+import PrecedenceList, {
+  type PrecedenceListProps
+} from "../PrecedenceList";
 
-const getDefault = (): PrecedenceListProps => ({
+const getProps = (): PrecedenceListProps => ({
   precedence: [
-    {
-      fr: 0,
-      to: 1
-    },
-    {
-      fr: 1,
-      to: 2
-    }
+    { fr: 0, to: 1 },
+    { fr: 1, to: 2 }
   ]
 });
 
-function render(props = getDefault()) {
+function render(props = getProps()) {
   return rtlRender(<PrecedenceList {...props} />);
 }
 

@@ -1,7 +1,7 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
-import TraversableDistance, { TraversableDistanceProps } from "../TraversableDistance";
+import { render as rtlRender } from "@testing-library/react";
+import TraversableDistance, {
+  type TraversableDistanceProps
+} from "../TraversableDistance";
 
 const getDefault = (): TraversableDistanceProps => ({
   distance: 1.234

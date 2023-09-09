@@ -4,7 +4,9 @@ import {
   renderWithProviders
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyDirecsList, { MyDirecsListProps } from "../MyDirecsList";
+import MyDirecsList, {
+  type MyDirecsListProps
+} from "../MyDirecsList";
 
 const getDefault = (): MyDirecsListProps => ({
   "aria-labelledby": "smartwalk-my-direcs-head"

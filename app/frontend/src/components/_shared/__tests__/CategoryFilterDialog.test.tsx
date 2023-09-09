@@ -1,52 +1,53 @@
 import {
-  RenderResult,
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import CategoryFilterDialog from "../CategoryFilterDialog";
+import CategoryFilterDialog, {
+  type CategoryFilterDialogProps
+} from "../CategoryFilterDialog";
 
-const getCategory = () => ({
-  keyword: "museum",
-  filters: {
-    es: {
-      openingHours: {}
-    },
-    bs: {
-      internetAccess: true
-    },
-    ns: {
-      minimumAge: { min: 0, max: 21 }
-    },
-    ts: {
-      name: "old"
-    },
-    cs: {
-      payment: {
-        inc: ["cash"],
-        exc: ["card"]
+const getProps = (): CategoryFilterDialogProps => ({
+  show: true,
+  category: {
+    keyword: "museum",
+    filters: {
+      es: {
+        openingHours: {}
+      },
+      bs: {
+        internetAccess: true
+      },
+      ns: {
+        minimumAge: { min: 0, max: 21 }
+      },
+      ts: {
+        name: "old"
+      },
+      cs: {
+        payment: {
+          inc: ["cash"],
+          exc: ["card"]
+        }
       }
     }
-  }
-});
+  },
+  onHide: jest.fn()
+})
 
-const onHide = jest.fn();
-
-function render(): RenderResult {
-  return rtlRender(
-    <CategoryFilterDialog
-      show
-      category={getCategory()}
-      onHide={onHide}
-    />
-  );
+function render(props = getProps()) {
+  return rtlRender(<CategoryFilterDialog {...props} />);
 }
 
 describe("<CategoryFilterDialog />", () => {
 
   test("hide button triggers onHide", () => {
-    const { getByRole } = render();
+    const onHide = jest.fn();
+    const { getByRole } = render({
+      ...getProps(),
+      onHide: onHide
+    });
     fireEvent.click(getByRole("button", { name: "Hide dialog" }));
-    expect(onHide).toBeCalledTimes(1);
+    expect(onHide).toHaveBeenCalledTimes(1);
   });
 
   it("should show eS attributes", () => {

@@ -5,7 +5,9 @@ import {
   type AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
-import FavoritesPanel, { type FavoritesPanelProps } from "../FavoritesPanel";
+import FavoritesPanel, {
+  type FavoritesPanelProps
+} from "../FavoritesPanel";
 
 const getDefault = (): FavoritesPanelProps => ({
   loaded: true,

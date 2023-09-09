@@ -1,7 +1,9 @@
 import { Helmet } from "react-helmet-async";
 import { render as rtlRender } from "@testing-library/react";
 import { getExtendedPlace } from "../../../utils/testData";
-import EntityPlaceHelmet, { type EntityPlaceHelmetProps } from "../EntityPlaceHelmet";
+import EntityPlaceHelmet, {
+  type EntityPlaceHelmetProps
+} from "../EntityPlaceHelmet";
 
 jest.mock("react-helmet-async");
 

@@ -1,12 +1,14 @@
 import { render as rtlRender } from "@testing-library/react";
-import ExtraArray, { type ExtraArrayProps } from "../ExtraArray";
+import ExtraArray, {
+  type ExtraArrayProps
+} from "../ExtraArray";
 
-const getDefault = (): ExtraArrayProps => ({
+const getProps = (): ExtraArrayProps => ({
   array: ["1", "2", "3"],
   label: "cuisine"
 });
 
-function render(props = getDefault()) {
+function render(props = getProps()) {
   return rtlRender(<ExtraArray {...props} />);
 }
 

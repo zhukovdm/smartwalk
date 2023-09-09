@@ -4,7 +4,9 @@ import {
 } from "@testing-library/react";
 import { getPlace } from "../../../utils/testData";
 import { LeafletMap } from "../../../utils/leaflet";
-import TraversableWaypointList, { TraversableWaypointListProps } from "../TraversableWaypointList";
+import TraversableWaypointList, {
+  type TraversableWaypointListProps
+} from "../TraversableWaypointList";
 
 const getDefault = (): TraversableWaypointListProps => ({
   map: new LeafletMap(),

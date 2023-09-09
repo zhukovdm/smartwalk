@@ -1,7 +1,7 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
-import TraversableHeader, { TraversableHeaderProps } from "../TraversableHeader";
+import { render as rtlRender } from "@testing-library/react";
+import TraversableHeader, {
+  type TraversableHeaderProps
+} from "../TraversableHeader";
 
 const getDefault = (): TraversableHeaderProps => ({
   name: "Place A"

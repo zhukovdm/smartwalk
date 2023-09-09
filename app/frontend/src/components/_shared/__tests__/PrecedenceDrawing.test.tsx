@@ -1,9 +1,7 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
+import { render as rtlRender } from "@testing-library/react";
 import { Network } from "vis-network";
 import PrecedenceDrawing, {
-  PrecedenceDrawingProps
+  type PrecedenceDrawingProps
 } from "../PrecedenceDrawing";
 
 jest.mock("vis-network", () => ({

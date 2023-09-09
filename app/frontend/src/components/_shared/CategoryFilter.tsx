@@ -8,7 +8,7 @@ import CheckBoxOutlineBlankIcon from "@mui/icons-material/CheckBoxOutlineBlank";
 import { PlaceCategory } from "../../domain/types";
 import CategoryFilterDialog from "./CategoryFilterDialog";
 
-type CategoryFilterProps = {
+export type CategoryFilterProps = {
 
   /** Indicate if the user has selected this filter */
   active: boolean;

@@ -1,12 +1,12 @@
 import { act, fireEvent } from "@testing-library/react";
-import { context } from "../../../features/context";
 import { LeafletMap } from "../../../utils/leaflet";
 import {
   AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
-import MyPlacesCreateDialog from "../MyPlacesCreateDialog";
+import { context } from "../../../features/context";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
+import MyPlacesCreateDialog from "../MyPlacesCreateDialog";
 
 function render(options: AppRenderOptions = {}) {
   return renderWithProviders(<MyPlacesCreateDialog />, options);

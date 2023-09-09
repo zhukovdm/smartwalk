@@ -1,6 +1,4 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
+import { render as rtlRender } from "@testing-library/react";
 import PlaceKeywords from "../PlaceKeywords";
 
 const getDefault = () => ({ keywords: ["castle", "museum"] });

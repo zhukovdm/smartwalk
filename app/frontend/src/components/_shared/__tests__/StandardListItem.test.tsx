@@ -1,8 +1,8 @@
-import {
-  render as rtlRender
-} from "@testing-library/react";
+import { render as rtlRender } from "@testing-library/react";
 import { withRouter } from "../../../utils/testUtils";
-import StandardListItem, { StandardListItemProps } from "../StandardListItem";
+import StandardListItem, {
+  type StandardListItemProps
+} from "../StandardListItem";
 
 const getDefault = (): StandardListItemProps => ({
   link: "/entity/place/1",

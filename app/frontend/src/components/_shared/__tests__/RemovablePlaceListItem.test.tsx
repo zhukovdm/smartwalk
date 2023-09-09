@@ -4,17 +4,14 @@ import {
 } from "@testing-library/react";
 import { withRouter } from "../../../utils/testUtils";
 import RemovablePlaceListItem, {
-  RemovablePlaceListItemProps
+  type RemovablePlaceListItemProps
 } from "../RemovablePlaceListItem";
 
-const getDefault = (): RemovablePlaceListItemProps => ({
+const getProps = (): RemovablePlaceListItemProps => ({
   place: {
     smartId: "1",
     name: "Place",
-    location: {
-      lon: 0.0,
-      lat: 0.0
-    },
+    location: { lon: 0.0, lat: 0.0 },
     keywords: [
       "castle",
       "museum"
@@ -29,7 +26,7 @@ const getDefault = (): RemovablePlaceListItemProps => ({
   title: "Fly to"
 });
 
-function render(props = getDefault()) {
+function render(props = getProps()) {
   return rtlRender(withRouter(<RemovablePlaceListItem {...props} />));
 }
 
@@ -48,7 +45,7 @@ describe("<RemovablePlaceListItem />", () => {
   });
 
   test("pass onPlace", () => {
-    const d = getDefault();
+    const d = getProps();
     const f = jest.fn();
     const { getByRole } = render({
       ...d,
@@ -59,7 +56,7 @@ describe("<RemovablePlaceListItem />", () => {
   });
 
   test("pass onRemove", () => {
-    const d = getDefault();
+    const d = getProps();
     const f = jest.fn();
     const { getByRole } = render({
       ...d,

@@ -3,7 +3,7 @@ import {
   render as rtlRender
 } from "@testing-library/react";
 import PlaceButton, {
-  PlaceButtonProps
+  type PlaceButtonProps
 } from "../PlaceButton";
 
 const getDefault = (): PlaceButtonProps => ({ kind: "common", title: "Fly to", onClick: jest.fn() });

@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import TraversableModifyDialog, { TraversableModifyDialogProps } from "../TraversableModifyDialog";
+import TraversableModifyDialog, {
+  type TraversableModifyDialogProps
+} from "../TraversableModifyDialog";
 
 const getDefault = (): TraversableModifyDialogProps => ({
   show: true,

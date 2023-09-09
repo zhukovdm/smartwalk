@@ -14,7 +14,9 @@ import { context } from "../../../features/context";
 import { initialSearchDirecsState } from "../../../features/searchDirecsSlice";
 import { type ExtraArrayLabel } from "../ExtraArray";
 import EntityPlaceHelmet from "../EntityPlaceHelmet";
-import EntityPlaceContent, { type EntityPlaceContentProps } from "../EntityPlaceContent";
+import EntityPlaceContent, {
+  type EntityPlaceContentProps
+} from "../EntityPlaceContent";
 
 jest.mock("../EntityPlaceHelmet");
 

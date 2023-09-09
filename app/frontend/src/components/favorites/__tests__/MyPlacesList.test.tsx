@@ -1,10 +1,12 @@
+import type { StoredPlace } from "../../../domain/types";
 import {
   AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyPlacesList, { MyPlacesListProps } from "../MyPlacesList";
-import { StoredPlace } from "../../../domain/types";
+import MyPlacesList, {
+  type MyPlacesListProps
+} from "../MyPlacesList";
 
 const getDefault = (): MyPlacesListProps => ({
   "aria-labelledby": "smartwalk-my-direcs-head"

@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import SomethingActionMenu, { SomethingActionMenuProps } from "../SomethingActionMenu";
+import SomethingActionMenu, {
+  type SomethingActionMenuProps
+} from "../SomethingActionMenu";
 
 const getDefault = (): SomethingActionMenuProps => ({
   showSaveDialog: jest.fn(),

@@ -57,7 +57,7 @@ function CategoryFilterCollect({ label, items }: CategoryFilterCollectProps): JS
   );
 }
 
-type CategoryFilterDialogProps = {
+export type CategoryFilterDialogProps = {
 
   /** Flag showing the dialog */
   show: boolean;

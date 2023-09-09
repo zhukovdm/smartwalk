@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import ListItemMenu, { ListItemMenuProps } from "../ListItemMenu";
+import ListItemMenu, {
+  type ListItemMenuProps
+} from "../ListItemMenu";
 
 const getDefault = (): ListItemMenuProps => ({
   what: "place",

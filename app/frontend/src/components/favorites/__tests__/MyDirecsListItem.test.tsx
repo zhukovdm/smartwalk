@@ -3,7 +3,7 @@ import {
   fireEvent,
   waitFor
 } from "@testing-library/react";
-import { StoredPlace } from "../../../domain/types";
+import type { StoredPlace } from "../../../domain/types";
 import { getPlace, getDirec } from "../../../utils/testData";
 import {
   AppRenderOptions,
@@ -13,7 +13,9 @@ import { LeafletMap } from "../../../utils/leaflet";
 import InmemStorage from "../../../utils/inmemStorage";
 import { context } from "../../../features/context";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyDirecsListItem, { MyDirecsListItemProps } from "../MyDirecsListItem";
+import MyDirecsListItem, {
+  type MyDirecsListItemProps
+} from "../MyDirecsListItem";
 
 const mockUseNavigate = jest.fn();
 

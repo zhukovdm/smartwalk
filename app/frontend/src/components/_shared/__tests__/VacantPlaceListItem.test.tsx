@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import VacantPlaceListItem, { VacantPlaceListItemProps } from "../VacantPlaceListItem";
+import VacantPlaceListItem, {
+  type VacantPlaceListItemProps
+} from "../VacantPlaceListItem";
 
 const getDefault = (): VacantPlaceListItemProps => ({
   kind: "action",

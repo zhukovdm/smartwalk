@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import ArrowsLinkButton, { ArrowsLinkButtonProps } from "../ArrowsLinkButton";
+import ArrowsLinkButton, {
+  type ArrowsLinkButtonProps
+} from "../ArrowsLinkButton";
 
 const getDefault = (): ArrowsLinkButtonProps => ({
   onClick: jest.fn()

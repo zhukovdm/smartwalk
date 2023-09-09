@@ -1,11 +1,11 @@
 import {
-  RenderResult,
+  type RenderResult,
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
 import { withRouter } from "../../../utils/testUtils";
 import InformPlaceListItem, {
-  InformPlaceListItemProps
+  type InformPlaceListItemProps
 } from "../InformPlaceListItem";
 
 const getDefault = (): InformPlaceListItemProps => ({

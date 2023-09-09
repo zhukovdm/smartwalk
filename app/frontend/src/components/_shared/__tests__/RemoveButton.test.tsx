@@ -2,7 +2,9 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import RemoveButton, { RemoveButtonProps } from "../RemoveButton";
+import RemoveButton, {
+  type RemoveButtonProps
+} from "../RemoveButton";
 
 const getDefault = (): RemoveButtonProps => ({ onClick: jest.fn() });
 
