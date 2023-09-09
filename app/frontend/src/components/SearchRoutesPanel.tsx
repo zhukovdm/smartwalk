@@ -45,7 +45,7 @@ export default function SearchRoutesPanel(): JSX.Element {
   const {
     source: storedSource,
     target: storedTarget,
-    maxDistance: maxDistance,
+    maxDistance,
     categories,
     precedence
   } = useAppSelector((state) => state.searchRoutes);

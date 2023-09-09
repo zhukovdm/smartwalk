@@ -50,9 +50,6 @@ export default function ResultRoutesContent(
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { index } = useAppSelector((state) => state.resultRoutes);
-  const {
-    resultFilters: filterList
-  } = useAppSelector((state) => state.resultRoutes);
 
   const [showM, setShowM] = useState(false);
   const [showS, setShowS] = useState(false);
@@ -67,7 +64,7 @@ export default function ResultRoutesContent(
     source: routeSource,
     target: routeTarget,
     places: routePlaces,
-    maxDistance: maxDistance,
+    maxDistance,
     categories,
     precedence,
     waypoints: routeWaypoints
@@ -77,8 +74,9 @@ export default function ResultRoutesContent(
     map,
     source,
     target,
-    waypoints: places
-  } = useResultRoute(result[index], filterList);
+    waypoints: places,
+    filterList
+  } = useResultRoute(result[index]);
 
   const onSave = async (name: string) => {
     const r = { ...route, name: name };
@@ -107,7 +105,7 @@ export default function ResultRoutesContent(
     navigate(SEARCH_DIRECS_ADDR);
   };
 
-  const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
+  const onPagination = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultRoutesIndex(value - 1));
   };
 
@@ -139,7 +137,7 @@ export default function ResultRoutesContent(
         <Pagination
           page={index + 1}
           count={result.length}
-          onChange={onPage}
+          onChange={onPagination}
         />
       </Box>
       {(routeId)

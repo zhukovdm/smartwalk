@@ -109,7 +109,7 @@ export default class SmartWalkFetcher {
    * Fetch routes that visit places belonging to at least one user-defined category.
    */
   public static async searchRoutes(request: RoutesRequest): Promise<UiRoute[]> {
-    const { source, target, maxDistance: maxDistance, ...rest } = request;
+    const { source, target, maxDistance, ...rest } = request;
 
     const toGeoJson = (point: WgsPoint) => ({
       type: "Point",

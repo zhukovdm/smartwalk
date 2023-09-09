@@ -1,13 +1,14 @@
 import { useContext, useEffect, useMemo } from "react";
 import { AppContext } from "../App";
 import { IMap } from "../domain/interfaces";
-import { Path, UiPlace, UiRoute } from "../domain/types";
+import type { Path, UiPlace, UiRoute } from "../domain/types";
 import {
   usePlace,
   usePlaces,
   useStoredPlaces,
   useStoredSmarts
 } from "./sharedHooks";
+import { useAppSelector } from "./storeHooks";
 
 /**
  * Draw given places and path specific for direcs result (without `flyTo`).
@@ -34,7 +35,7 @@ export function useResultDirecsMap(waypoints: [UiPlace, boolean][], path: Path):
  * state of the storage. The list of places is filtered according to the filter
  * list (checkboxes (un-)set by the user).
  */
-export function useResultRoute(route: UiRoute, filterList: boolean[]) {
+export function useResultRoute(route: UiRoute) {
 
   const {
     path,
@@ -46,6 +47,7 @@ export function useResultRoute(route: UiRoute, filterList: boolean[]) {
   } = route;
 
   const { map } = useContext(AppContext);
+  const { routeFilters: filterList } = useAppSelector((state) => state.viewer);
 
   const storedPlaces = useStoredPlaces();
   const storedSmarts = useStoredSmarts();
@@ -82,5 +84,5 @@ export function useResultRoute(route: UiRoute, filterList: boolean[]) {
     map?.drawPolyline(path.polyline);
   }, [map, source, target, path, placeLst, categories]);
 
-  return { map: map, source: source, target: target, waypoints: waypoints };
+  return { map: map, source: source, target: target, waypoints: waypoints, filterList: filterList };
 };

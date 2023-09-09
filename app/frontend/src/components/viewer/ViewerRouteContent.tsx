@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { StoredRoute } from "../../domain/types";
+import type { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
-import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
+import { useAppDispatch } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
@@ -24,9 +24,6 @@ export default function ViewerRouteContent(
   { route }: ViewerRouteContentProps): JSX.Element {
 
   const dispatch = useAppDispatch();
-  const {
-    routeFilters: filterList
-  } = useAppSelector((state) => state.viewer);
 
   const {
     categories,
@@ -39,20 +36,21 @@ export default function ViewerRouteContent(
     map,
     source,
     target,
-    waypoints
-  } = useResultRoute(route, filterList);
-
-  const [showP, setShowP] = useState(false);
+    waypoints,
+    filterList
+  } = useResultRoute(route);
 
   // eslint-disable-next-line
   useEffect(() => { map?.flyTo(source); }, []);
+
+  const [showPrecedence, setShowPrecedence] = useState(false);
 
   return (
     <Stack gap={2.5}>
       <TraversableHeader name={name} />
       <Stack gap={1}>
         <Typography>
-          This route is <strong>{parseFloat(path.distance.toFixed(2))}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
+          This route is <strong>{parseFloat(path.distance.toFixed(2))}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowPrecedence(true); }} />):
         </Typography>
         <CategoryFilterList
           categories={categories}
@@ -63,10 +61,10 @@ export default function ViewerRouteContent(
           }}
         />
         <PrecedenceViewDialog
-          show={showP}
+          show={showPrecedence}
           categories={categories}
           precedence={precedence}
-          onHide={() => { setShowP(false); }}
+          onHide={() => { setShowPrecedence(false); }}
         />
       </Stack>
       <RouteContentList

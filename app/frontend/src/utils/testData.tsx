@@ -163,7 +163,8 @@ export const getRoute = (): UiRoute => ({
   source: {
     ...getPlace(),
     name: "Source",
-    placeId: "1" // stored!
+    placeId: "1", // stored!
+    smartId: "S"
   },
   target: {
     ...getPlace(),
@@ -185,24 +186,28 @@ export const getRoute = (): UiRoute => ({
   ],
   path: getPath(),
   places: [
+    // common & repeated
     {
       ...getPlace(),
       name: "Medieval castle",
       smartId: "A",
       categories: [0, 1]
     },
+    // common
     {
       ...getPlace(),
       name: "Old statue",
       smartId: "B",
       categories: [2]
     },
+    // stored
     {
       ...getPlace(),
       name: "Flea market",
       smartId: "C",
       categories: [3]
     },
+    // common
     {
       ...getPlace(),
       name: "Movie theater",
@@ -211,10 +216,10 @@ export const getRoute = (): UiRoute => ({
     }
   ],
   waypoints: [
-    { smartId: "B", category: 2 },
-    { smartId: "A", category: 0 },
-    { smartId: "A", category: 1 },
-    { smartId: "C", category: 3 },
-    { smartId: "D", category: 4 }
+    { smartId: "B", category: 2 }, // statue
+    { smartId: "A", category: 0 }, // castle
+    { smartId: "A", category: 1 }, // museum
+    { smartId: "C", category: 3 }, // market
+    { smartId: "D", category: 4 }, // cinema
   ]
 });
