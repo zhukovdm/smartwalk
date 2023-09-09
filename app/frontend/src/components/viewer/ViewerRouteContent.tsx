@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import type { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
-import { useAppDispatch } from "../../features/storeHooks";
+import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
@@ -24,6 +24,9 @@ export default function ViewerRouteContent(
   { route }: ViewerRouteContentProps): JSX.Element {
 
   const dispatch = useAppDispatch();
+  const {
+    routeFilters: filterList
+  } = useAppSelector((state) => state.viewer);
 
   const {
     categories,
@@ -36,9 +39,8 @@ export default function ViewerRouteContent(
     map,
     source,
     target,
-    waypoints,
-    filterList
-  } = useResultRoute(route);
+    waypoints
+  } = useResultRoute(route, filterList);
 
   // eslint-disable-next-line
   useEffect(() => { map?.flyTo(source); }, []);

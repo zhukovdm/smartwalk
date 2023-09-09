@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
-import { UiPlace, UiRoute } from "../../domain/types";
+import type { UiPlace, UiRoute } from "../../domain/types";
 import { SEARCH_DIRECS_ADDR } from "../../domain/routing";
 import IdGenerator from "../../utils/idGenerator";
 import {
@@ -33,7 +33,7 @@ import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import TraversableDistance from "../_shared/TraversableDistance";
 import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
 
-type ResultRoutesContentProps = {
+export type ResultRoutesContentProps = {
 
   /** **Non-empty** list of routes.*/
   result: UiRoute[];
@@ -49,7 +49,10 @@ export default function ResultRoutesContent(
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { index } = useAppSelector((state) => state.resultRoutes);
+  const {
+    index,
+    resultFilters: filterList
+  } = useAppSelector((state) => state.resultRoutes);
 
   const [showM, setShowM] = useState(false);
   const [showS, setShowS] = useState(false);
@@ -74,9 +77,8 @@ export default function ResultRoutesContent(
     map,
     source,
     target,
-    waypoints: places,
-    filterList
-  } = useResultRoute(result[index]);
+    waypoints: places
+  } = useResultRoute(result[index], filterList);
 
   const onSave = async (name: string) => {
     const r = { ...route, name: name };
