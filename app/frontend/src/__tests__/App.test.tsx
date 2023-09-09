@@ -50,4 +50,6 @@ describe("<App />", () => {
     fireEvent.click(getByRole("button", { name: "Show panel" }));
     expect(getByLabelText("Search routes")).toBeVisible();
   });
+
+  // append entity place to direction
 });
