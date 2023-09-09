@@ -69,23 +69,13 @@ describe("<MyRoutesListItem />", () => {
       storage: new InmemStorage()
     };
 
-    const [
-      clear,
-      addStored,
-      addCommon,
-      addSource,
-      addTarget,
-      drawPolyline,
-      flyTo
-    ] = Array(7).fill(undefined).map(() => jest.fn());
-
-    jest.spyOn(map, "clear").mockImplementation(clear);
-    jest.spyOn(map, "addStored").mockImplementation(addStored);
-    jest.spyOn(map, "addCommon").mockImplementation(addCommon);
-    jest.spyOn(map, "addSource").mockImplementation(addSource);
-    jest.spyOn(map, "addTarget").mockImplementation(addTarget);
-    jest.spyOn(map, "drawPolyline").mockImplementation(drawPolyline);
-    jest.spyOn(map, "flyTo").mockImplementation(flyTo);
+    const clear = jest.spyOn(map, "clear").mockImplementation(jest.fn());
+    const addStored = jest.spyOn(map, "addStored").mockImplementation(jest.fn());
+    const addCommon = jest.spyOn(map, "addCommon").mockImplementation(jest.fn());
+    const addSource = jest.spyOn(map, "addSource").mockImplementation(jest.fn());
+    const addTarget = jest.spyOn(map, "addTarget").mockImplementation(jest.fn());
+    const drawPolyline = jest.spyOn(map, "drawPolyline").mockImplementation(jest.fn());
+    const flyTo = jest.spyOn(map, "flyTo").mockImplementation(jest.fn());
 
     const { getByRole } = render(getDefault(), { context: ctx });
     fireEvent.click(getByRole("button", { name: "Draw route" }));
@@ -94,23 +84,21 @@ describe("<MyRoutesListItem />", () => {
 
     const mergedStored = {
       ...getPlace(),
-      name: "Street market",
+      name: "Street market", // != Flea market
       placeId: "4",
       smartId: "C",
-      categories: [3]
+      categories: [3] // != []
     };
-    expect(addStored).toHaveBeenCalledWith(
-      mergedStored, getDefault().route.categories);
+    expect(addStored).toHaveBeenCalledWith(mergedStored, getDefault().route.categories);
 
     const mergedSource = {
       ...getPlace(),
       name: "Starting point",
       placeId: "1"
     };
-    expect(addSource).toHaveBeenCalledWith(
-      mergedSource, [], false);
+    expect(addSource).toHaveBeenCalledWith(mergedSource, [], false);
 
-    expect(addCommon).toHaveBeenCalledTimes(3);
+    expect(addCommon).toHaveBeenCalledTimes(3); // repeated drawn only once
     expect(addTarget).toHaveBeenCalled();
     expect(drawPolyline).toHaveBeenCalled();
     expect(flyTo).toHaveBeenCalled();
