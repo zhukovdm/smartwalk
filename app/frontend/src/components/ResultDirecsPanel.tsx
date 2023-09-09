@@ -20,7 +20,7 @@ export default function ResultDirecsPanel(): JSX.Element {
         {loaded
           ? <Box>
               {result.length > 0
-                ? <ResultDirecsContent result={result} />
+                ? <ResultDirecsContent />
                 : <Alert severity={"warning"}>
                     The result appears to be empty. Try different search parameters.
                   </Alert>

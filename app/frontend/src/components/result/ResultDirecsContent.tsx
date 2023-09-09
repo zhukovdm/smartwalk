@@ -5,7 +5,6 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
-import { UiDirec } from "../../domain/types";
 import IdGenerator from "../../utils/idGenerator";
 import {
   setResultDirecsIndex,
@@ -27,22 +26,15 @@ import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import TraversableDistance from "../_shared/TraversableDistance";
 import TraversableWaypointList from "../_shared/TraversableWaypointList";
 
-type ResultDirecsContentProps = {
-
-  /** **Non-empty** list of directions. */
-  result: UiDirec[];
-};
-
 /**
  * Component presenting the content of a direction search result.
  */
-export default function ResultDirecsContent(
-  { result }: ResultDirecsContentProps): JSX.Element {
+export default function ResultDirecsContent(): JSX.Element {
 
   const { storage } = useContext(AppContext);
   
   const dispatch = useAppDispatch();
-  const { index } = useAppSelector((state) => state.resultDirecs);
+  const { index, result } = useAppSelector((state) => state.resultDirecs);
 
   const [showS, setShowS] = useState(false);
 
@@ -70,7 +62,7 @@ export default function ResultDirecsContent(
     dispatch(updateResultDirec({ direc: s, index: index }));
   };
 
-  const onPage = (_: React.ChangeEvent<unknown>, value: number) => {
+  const onPagination = (_: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setResultDirecsIndex(value - 1));
   };
 
@@ -83,7 +75,7 @@ export default function ResultDirecsContent(
         <Pagination
           page={index + 1}
           count={result.length}
-          onChange={onPage}
+          onChange={onPagination}
         />
       </Box>
       {(!!direcId)

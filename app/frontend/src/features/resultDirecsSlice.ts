@@ -7,7 +7,7 @@ type ResultDirecsState = {
   result: UiDirec[];
 };
 
-const initialResultDirecsState = (): ResultDirecsState => ({
+export const initialResultDirecsState = (): ResultDirecsState => ({
   index: 0,
   result: []
 });

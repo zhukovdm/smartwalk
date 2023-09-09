@@ -27,7 +27,7 @@ import CategoryFilterList from "../_shared/CategoryFilterList";
 import InformPlaceListItem from "../_shared/InformPlaceListItem";
 import PlacesFoundList from "./PlacesFoundList";
 
-type ResultPlacesContentProps = {
+export type ResultPlacesContentProps = {
 
   /** Result object to be presented. */
   result: PlacesResult;
@@ -111,7 +111,6 @@ export default function ResultPlacesContent(
             filterList={filterList}
             found={(index: number) => satCategories.has(index)}
             onToggle={(index: number) => {
-              dispatch(setResultPlacesPage(0));
               dispatch(toggleResultPlacesFilter(index));
             }}
           />
