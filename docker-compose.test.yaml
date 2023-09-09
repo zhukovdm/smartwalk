@@ -1,2 +1,21 @@
 version: '3.8'
 name: smartwalk-test
+services:
+  routing-engine:
+    build:
+      context: ./data
+      dockerfile: Dockerfile.routing-engine
+    container_name: smartwalk-routing-engine
+    environment:
+      REGION_FILE: czech-republic-latest
+    ports:
+      - 5000:5000
+    volumes:
+      - ./data/assets/routing-engine:/data
+    entrypoint: osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${REGION_FILE}.osrm
+    healthcheck:
+      test: curl --fail 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 100
+      start_period: 2m

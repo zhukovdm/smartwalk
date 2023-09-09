@@ -1,7 +1,12 @@
 FROM osrm/osrm-backend:v5.24.0
-COPY ./assets/routing-engine /data
 
-ARG REGION_FILE
+# https://stackoverflow.com/q/76094428
+
+RUN sed -i \
+    -e 's/deb.debian.org/archive.debian.org/g' \
+    -e 's|security.debian.org|archive.debian.org/|g' \
+    -e '/stretch-updates/d' /etc/apt/sources.list
+
+RUN apt-get update; apt-get -y install curl
 
 EXPOSE 5000
-ENTRYPOINT osrm-routed --max-viaroute-size 500 --max-table-size 500 --algorithm mld /data/${REGION_FILE}.osrm
