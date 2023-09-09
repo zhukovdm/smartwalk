@@ -12,12 +12,15 @@ public sealed class PlaceAddress
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string country { get; set; }
 
+    /// <example>Prague</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string settlement { get; set; }
 
+    /// <example>Prague 1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string district { get; set; }
 
+    /// <example>Malostranske namesti</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string place { get; set; }
 
