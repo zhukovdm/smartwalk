@@ -36,7 +36,7 @@ routing-engine: init
 	rm $(A_DIR)/routing-engine/$(REGION_FILE).osm.pbf
 
 taginfo: init
-	@cd $(S_DIR) && node taginfo.js \
+	@cd ./taginfo/ && npm ci && npm run build && npm run start -- \
 		aerialway \
 		aeroway \
 		amenity \
