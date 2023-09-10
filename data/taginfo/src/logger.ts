@@ -1,6 +1,6 @@
 import consola, { type ConsolaInstance } from "consola";
 
-export class Reporter {
+export class Logger {
 
   private readonly logger: ConsolaInstance;
 
@@ -8,29 +8,30 @@ export class Reporter {
     this.logger = consola.create({});
   }
 
-  reportKeys(keys: string[]) {
+  logKeys(keys: string[]) {
     this.logger.info(`Started processing OSM keys ${keys.join(", ")}.`);
   }
 
-  reportKeyProcessing(key: string) {
+  logKeyProcessing(key: string) {
     this.logger.info(`> Processing key ${key}.`);
   }
 
-  reportPageProcessing(page: number) {
+  logPageProcessing(page: number) {
     this.logger.info(`>  Processing page ${page}.`);
   }
 
-  reportFailedFetchAttempt(key: string, page: number, attempt: number) {
-    this.logger.info(`> Failed to fetch: key ${key}, page ${page}, attempt ${attempt}.`);
+  logFailedFetchAttempt(key: string, page: number, attempt: number, err: unknown) {
+    this.logger.warn(`> Failed to fetch: key ${key}, page ${page}, attempt ${attempt}.`);
+    this.logger.info(err);
   }
 
-  reportFinishedKey(key: string, length: number) {
+  logFinishedKey(key: string, length: number) {
     this.logger.info(`> Finished processing key ${key}, extracted ${length} objects.`);
   }
 
-  reportFinished() {
+  logFinished() {
     this.logger.info(`Finished processing OSM keys.`);
   }
 
-  reportError(error: unknown) { this.logger.error(error); }
+  logError(error: unknown) { this.logger.error(error); }
 }

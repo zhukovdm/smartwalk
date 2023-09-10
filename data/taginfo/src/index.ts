@@ -1,5 +1,5 @@
 import { ValueItem } from "./types";
-import { Reporter } from "./reporter";
+import { Logger } from "./logger";
 import fetch from "./fetch";
 import writeToFile from "./write";
 
@@ -169,18 +169,18 @@ function transform(map: Map<string, number>): ValueItem[] {
  * https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
  */
 async function get(keys: string[]) {
-  const reporter = new Reporter();
+  const reporter = new Logger();
 
   try {
-    reporter.reportKeys(keys);
+    reporter.logKeys(keys);
 
     for (const key of keys) {
 
-      reporter.reportKeyProcessing(key);
+      reporter.logKeyProcessing(key);
       const result = new Map<string, number>();
 
       for (let page = 1; page <= COUNT_PAGES; ++page) {
-        reporter.reportPageProcessing(page);
+        reporter.logPageProcessing(page);
 
         (await fetch(key, page, reporter)).data
           .reduce((acc, item) => (reducer(acc, item)), result);
@@ -188,11 +188,11 @@ async function get(keys: string[]) {
 
       const list = transform(result);
       writeToFile(key, list);
-      reporter.reportFinishedKey(key, list.length);
+      reporter.logFinishedKey(key, list.length);
     }
-    reporter.reportFinished();
+    reporter.logFinished();
   }
-  catch (ex) { reporter.reportError(ex); }
+  catch (ex) { reporter.logError(ex); }
 }
 
 get(process.argv.slice(2));

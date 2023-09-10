@@ -6,8 +6,8 @@ const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 const WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql";
 
 /**
- * Note that { container: language } is a valid definition even though
- * d.ts does not support it.
+ * Note that {`@container`: `@language`} is a valid definition even though d.ts
+ * does not recognize it.
  *  - https://www.w3.org/TR/json-ld11/#example-71-language-map-expressing-a-property-in-three-languages
  */
 const WIKIDATA_JSONLD_CONTEXT = {
@@ -413,13 +413,12 @@ export async function fetch(logger: Logger, items: string[]): Promise<any[]> {
   do {
     ++attempt;
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
       result = ((await fetchFromWikidata(query)) as any)
         .map((entity: any) => constructFromEntity(entity));
     }
     catch (ex) {
       logger.logFailedFetchAttempt(attempt, ex);
+      await new Promise((resolve) => setTimeout(resolve, 10000));
     }
   } while (result === undefined && attempt < 3);
 
