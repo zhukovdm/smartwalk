@@ -1,0 +1,21 @@
+{
+  "name": "wikidata-enrich",
+  "description": "Fetch extended data items from Wikidata SPARQL endpoint and enrich stubs.",
+  "version": "1.0.0",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "npx tsc",
+    "start": "node ./dist/index.js"
+  },
+  "license": "MIT",
+  "author": "Dmitry Zhukov",
+  "dependencies": {
+    "@types/jsonld": "^1.5.9",
+    "axios": "^1.5.0",
+    "commander": "^11.0.0",
+    "consola": "^3.2.3",
+    "jsonld": "^8.3.1",
+    "mongodb": "^6.0.0",
+    "typescript": "^5.2.2"
+  }
+}

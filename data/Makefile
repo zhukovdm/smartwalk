@@ -119,19 +119,16 @@ database-wikidata-create:
 # Q110910970 visual work
 
 database-wikidata-enrich:
-	@cd $(S_DIR) && node wikidata-enrich.mjs
+	@cd ./wikidata-enrich/ && npm ci && npm run build && npm run start -- \
+		--conn $(M_URL)
 
-database-dbpedia:
-	@cd $(S_DIR) && node dbpedia.cjs
+database-dbpedia-enrich:
+	@cd ./dbpedia-enrich/ && npm ci && npm run build && npm run start -- \
+		--conn $(M_URL)
 
 advice:
-	@cd $(S_DIR) && node advice.mjs
-
-search-index:
-	@cd $(S_DIR) && \
-	curl -X DELETE $(I_URL)/_all; echo && \
-	curl -X PUT $(I_URL)/place -H "Content-Type: application/json" --data-binary @search.json; echo && \
-	node search.mjs
+	@cd ./advice/ && npm ci && npm run build && npm run start -- \
+		--conn $(M_URL)
 
 check-clean:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
