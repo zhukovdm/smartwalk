@@ -25,7 +25,9 @@ M_URL=mongodb://localhost:27017
 # entity index
 I_URL=http://localhost:9200
 
-.PHONY: clean check-clean init
+################################################################################
+
+.PHONY: init check-clean
 
 init:
 	@for dir in $(EXTRA_DIRS); do \
@@ -80,14 +82,18 @@ database-osm: init
 	@cd ./osm/ && dotnet run \
 		--file $(REGION_FILE).osm.pbf \
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
+		--rows 2 \
+		--cols 2 \
 		--conn $(M_URL)
 
 database-wikidata-create:
-	@cd $(S_DIR) && node wikidata-create.mjs \
+	@cd ./wikidata-create/ && npm ci && npm run build && npm run start \
 		--w $(REGION_W) \
 		--n $(REGION_N) \
 		--e $(REGION_E) \
-		--s $(REGION_S)
+		--s $(REGION_S) \
+		--rows 5 \
+		--cols 5
 
 database-wikidata-enrich:
 	@cd $(S_DIR) && node wikidata-enrich.mjs

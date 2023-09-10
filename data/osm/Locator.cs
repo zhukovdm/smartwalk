@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -12,14 +13,18 @@ internal class Locator
 {
     private readonly Dictionary<long, Point> _locs;
 
-    public Locator(Dictionary<long, Point> locs) { _locs = locs; }
+    public Locator(ILogger logger, Dictionary<long, Point> locs)
+    {
+        _locs = locs;
+        logger.LogInformation("Created locator with {0} OSM relations.", locs.Count);
+    }
 
     public bool TryGetLocation(long id, out Point location) => _locs.TryGetValue(id, out location);
 }
 
 internal static class OverpassLocatorFactory
 {
-    private class Element
+    private class Item
     {
         public long id { get; set; }
 
@@ -28,22 +33,18 @@ internal static class OverpassLocatorFactory
 
     private class Response
     {
-        public List<Element> elements { get; set; }
+        public List<Item> elements { get; set; }
     }
 
-    /// <summary>
-    /// Exception-free fetch with retry and default value in case of failure.
-    /// </summary>
-    private static async Task<Response> Fetch(ILogger logger, List<string> bbox)
+    private static async Task<List<Item>> FetchSquare(ILogger logger, (double, double, double, double) bbox)
     {
-        Response result = null;
+        var result = new List<Item>();
 
         var attempt = 0;
-        var (w, n, e, s) = Converter.ToBbox(bbox);
+        var (w, n, e, s) = bbox;
         var url = $"https://overpass-api.de/api/interpreter?data=[out:json];relation({s},{w},{n},{e})[type=multipolygon];out%20center;";
 
-        logger.LogInformation("Trying to contact Overpass endpoint.");
-
+        logger.LogInformation("Contacting Overpass API endpoint for square s={0}, w={1}, n={2}, e={3}.", s, w, n, e);
         do
         {
             try {
@@ -51,31 +52,58 @@ internal static class OverpassLocatorFactory
                 var res = await new HttpClient().GetAsync(url);
                 var txt = await res.Content.ReadAsStringAsync();
 
-                result = JsonSerializer.Deserialize<Response>(txt);
+                result = JsonSerializer.Deserialize<Response>(txt).elements;
             }
             catch (Exception) { logger.LogError("Failed to fetch, {0} attempt.", attempt); }
         } while (result == null && attempt < 3);
 
-        result ??= new() { elements = new() };
-        logger.LogInformation("Fetched {0} entities from Overpass.", result.elements.Count);
+        logger.LogInformation("Fetched {0} entities.", result.Count);
 
         return result;
     }
 
-    private static Dictionary<long, Point> Extract(ILogger logger, Response obj)
+    /// <summary>
+    /// Exception-free fetch with retry and default value in case of failure.
+    /// </summary>
+    private static async Task<List<Item>> Fetch(ILogger logger, List<string> bbox, int rows, int cols)
     {
-        var dic = new Dictionary<long, Point>();
+        int PRECISION = 7;
 
-        foreach (var element in obj.elements)
+        var result = new List<Item>();
+        var (maxW, maxN, maxE, maxS) = Converter.ToBbox(bbox);
+
+        var rowStep = (maxN - maxS) / rows;
+        var colStep = (maxE - maxW) / cols;
+
+        for (int row = 0; row < rows; ++row)
         {
-            dic[element.id] = element.center;
+            for (int col = 0; col < cols; ++col)
+            {
+                var s = Math.Round(maxS + rowStep * row, PRECISION);
+                var n = Math.Round(s + rowStep, PRECISION);
+
+                var w = Math.Round(maxW + colStep * col, PRECISION);
+                var e = Math.Round(w + colStep, PRECISION);
+
+                result.AddRange(await FetchSquare(logger, (w, n, e, s)));
+            }
         }
-        return dic;
+
+        return result;
     }
 
-    public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox)
+    private static Dictionary<long, Point> Reduce(ILogger logger, List<Item> items)
     {
-        return new(Extract(logger, await Fetch(logger, bbox)));
+        return items.Aggregate(new Dictionary<long, Point>(), (acc, item) =>
+        {
+            acc[item.id] = item.center; // .Add method fails upon repeated keys
+            return acc;
+        });
+    }
+
+    public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox, int rows, int cols)
+    {
+        return new(logger, Reduce(logger, await Fetch(logger, bbox, rows, cols)));
     }
 }
 
@@ -172,12 +200,12 @@ SELECT ?oid ?loc WHERE {{
 
     public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox)
     {
-        return new(Extract(logger, await Fetch(logger, bbox)));
+        return new(logger, Extract(logger, await Fetch(logger, bbox)));
     }
 }
 
 internal static class LocatorFactory
 {
-    public static Task<Locator> GetInstance(ILogger logger, List<string> bbox)
-        => OverpassLocatorFactory.GetInstance(logger, bbox);
+    public static Task<Locator> GetInstance(ILogger logger, List<string> bbox, int rows, int cols)
+        => OverpassLocatorFactory.GetInstance(logger, bbox, rows, cols);
 }

@@ -17,8 +17,14 @@ internal class Program
         [Option("conn", Required = true)]
         public string Conn { get; set; }
 
-        [Option("bbox", Required = false)]
+        [Option("bbox", Required = true)]
         public IEnumerable<string> Bbox { get; set; }
+
+        [Option("rows", Required = true)]
+        public int Rows { get; set; }
+
+        [Option("cols", Required = true)]
+        public int Cols { get; set; }
     }
 
     private static async Task Main(string[] args)
@@ -34,7 +40,7 @@ internal class Program
         try
         {
             var locator = await LocatorFactory
-                .GetInstance(log, opt.Bbox.ToList());
+                .GetInstance(log, opt.Bbox.ToList(), opt.Rows, opt.Cols);
 
             var source = SourceFactory
                 .GetInstance(log, opt.File, opt.Bbox.ToList(), locator);
