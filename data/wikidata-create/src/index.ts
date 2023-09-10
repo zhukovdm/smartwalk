@@ -19,6 +19,7 @@ async function wikidataCreate() {
       const items = await fetchCat(logger, cat, { w: w, n: n, e: e, s: s }, rows, cols);
       await model.create(logger, items);
     }
+    logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }
   finally {

@@ -20,7 +20,7 @@ export function parseArgs(): {
     .option("--s <number>", "South coordinate", parseFloat)
     .option("--rows <number>", "Rows in a grid", parseInt)
     .option("--cols <number>", "Columns in a grid", parseInt)
-    .option("--conn <number>", "Database connection string")
+    .option("--conn <string>", "Database connection string")
     .option("--cats <string...>", "Categories to consider");
   return args.parse().opts();
 }

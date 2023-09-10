@@ -13,11 +13,11 @@ export default class Logger {
   }
 
   public logCategoryBbox(cat: string, { w, n, e ,s }: Bbox) {
-    this.logger.info(`> Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s} and category ${cat}.`);
+    this.logger.info(`>  Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s} and category ${cat}.`);
   }
 
   public logFailedFetchAttempt(attempt: number, err: unknown) {
-    this.logger.warn(`> Failed to fetch, ${attempt} attempt.`);
+    this.logger.warn(`>  Failed to fetch, ${attempt} attempt.`);
     this.logger.info(err);
   }
 
@@ -25,13 +25,17 @@ export default class Logger {
     this.logger.info(`> Fetched ${count} entities for ${cat} category.`);
   }
 
-  public logItemsCreated(batchCreated: number, totalCreated: number) {
-    this.logger.info(`> Created ${batchCreated} from this batch, and total ${totalCreated} entities.`)
+  public logFailedCreate(wikidata: string, err: unknown) {
+    this.logger.warn(`>  Failed to create an item with ${wikidata} identifier.`);
+    this.logger.info(err);
   }
 
-  public logFailedCreate(wikidata: string, err: unknown) {
-    this.logger.warn(`> Failed to create an item with ${wikidata} identifier.`);
-    this.logger.info(err);
+  public logItemsCreated(batchCreated: number, totalCreated: number) {
+    this.logger.info(`> Created ${batchCreated} from this batch, created total ${totalCreated} entities.`)
+  }
+
+  public logFinished() {
+    this.logger.info(`Finished processing. Exiting...`);
   }
 
   public logError(err: unknown) { this.logger.error(err); }

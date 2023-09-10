@@ -91,10 +91,14 @@ async function fetchSquare(logger: Logger, cat: string, bbox: Bbox): Promise<Ite
   do {
     ++attempt;
     try {
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       result = ((await fetchFromWikidata(query)) as any)
         .map((entity: any) => constructFromEntity(entity));
     }
-    catch (ex) { logger.logFailedFetchAttempt(attempt, ex); }
+    catch (ex) {
+      logger.logFailedFetchAttempt(attempt, ex);
+    }
   } while (result === undefined && attempt < 3);
 
   return result ?? [];
