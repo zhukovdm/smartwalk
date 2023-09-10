@@ -16,10 +16,16 @@ S_DIR=${PWD}/scripts
 
 EXTRA_DIRS=database routing-engine search-engine taginfo
 
+# routing engine
 R_CMD=docker run --rm -t -v $(A_DIR)/routing-engine:/data osrm/osrm-backend:v5.24.0
+
+# entity store
+M_URL=mongodb://localhost:27017
+
+# entity index
 I_URL=http://localhost:9200
 
-.PHONY: clean check_clean init
+.PHONY: clean check-clean init
 
 init:
 	@for dir in $(EXTRA_DIRS); do \
@@ -67,13 +73,14 @@ taginfo: init
 # man_made
 
 database-init:
-	@cd $(S_DIR) && npm ci && node init.mjs
+	@cd ./init/ && npm ci && npm run build && npm run start -- \
+		--conn $(M_URL)
 
 database-osm: init
 	@cd ./osm/ && dotnet run \
 		--file $(REGION_FILE).osm.pbf \
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
-		--conn mongodb://localhost:27017
+		--conn $(M_URL)
 
 database-wikidata-create:
 	@cd $(S_DIR) && node wikidata-create.mjs \
