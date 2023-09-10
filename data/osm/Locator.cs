@@ -36,27 +36,29 @@ internal static class OverpassLocatorFactory
         public List<Item> elements { get; set; }
     }
 
+    private static double Round(double num) => Math.Round(num, 7);
+
     private static async Task<List<Item>> FetchSquare(ILogger logger, (double, double, double, double) bbox)
     {
-        var result = new List<Item>();
+        List<Item> result = null;
 
         var attempt = 0;
         var (w, n, e, s) = bbox;
         var url = $"https://overpass-api.de/api/interpreter?data=[out:json];relation({s},{w},{n},{e})[type=multipolygon];out%20center;";
 
-        logger.LogInformation("Contacting Overpass API endpoint for square s={0}, w={1}, n={2}, e={3}.", s, w, n, e);
+        logger.LogInformation("Contacting Overpass API endpoint for square w={0}, n={1}, e={2} s={3}.", w, n, e, s);
         do
         {
+            ++attempt;
             try {
-                ++attempt;
                 var res = await new HttpClient().GetAsync(url);
                 var txt = await res.Content.ReadAsStringAsync();
-
                 result = JsonSerializer.Deserialize<Response>(txt).elements;
             }
-            catch (Exception) { logger.LogError("Failed to fetch, {0} attempt.", attempt); }
+            catch (Exception) { logger.LogWarning("Failed to fetch, {0} attempt.", attempt); }
         } while (result == null && attempt < 3);
 
+        result ??= new();
         logger.LogInformation("Fetched {0} entities.", result.Count);
 
         return result;
@@ -67,23 +69,21 @@ internal static class OverpassLocatorFactory
     /// </summary>
     private static async Task<List<Item>> Fetch(ILogger logger, List<string> bbox, int rows, int cols)
     {
-        int PRECISION = 7;
-
         var result = new List<Item>();
-        var (maxW, maxN, maxE, maxS) = Converter.ToBbox(bbox);
+        var (xW, xN, xE, xS) = Converter.ToBbox(bbox);
 
-        var rowStep = (maxN - maxS) / rows;
-        var colStep = (maxE - maxW) / cols;
+        var rowStep = (xN - xS) / rows;
+        var colStep = (xE - xW) / cols;
 
         for (int row = 0; row < rows; ++row)
         {
             for (int col = 0; col < cols; ++col)
             {
-                var s = Math.Round(maxS + rowStep * row, PRECISION);
-                var n = Math.Round(s + rowStep, PRECISION);
+                var s = Round(xS + rowStep * row);
+                var n = Round(s + rowStep);
 
-                var w = Math.Round(maxW + colStep * col, PRECISION);
-                var e = Math.Round(w + colStep, PRECISION);
+                var w = Round(xW + colStep * col);
+                var e = Round(w + colStep);
 
                 result.AddRange(await FetchSquare(logger, (w, n, e, s)));
             }

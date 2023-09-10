@@ -3,13 +3,11 @@ import { MongoClient } from "mongodb";
 export default class Model {
 
   private readonly client: MongoClient;
-  private readonly databaseName: string;
-  private readonly collectionName: string;
+  private readonly databaseName = "smartwalk";
+  private readonly collectionName = "place";
 
   constructor(conn: string) {
     this.client = new MongoClient(conn);
-    this.databaseName = "smartwalk";
-    this.collectionName = "place";
   }
 
   public dropDatabase(): Promise<boolean> {

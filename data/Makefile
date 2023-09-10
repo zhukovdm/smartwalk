@@ -87,13 +87,36 @@ database-osm: init
 		--conn $(M_URL)
 
 database-wikidata-create:
-	@cd ./wikidata-create/ && npm ci && npm run build && npm run start \
+	@cd ./wikidata-create/ && npm ci && npm run build && npm run start -- \
 		--w $(REGION_W) \
 		--n $(REGION_N) \
 		--e $(REGION_E) \
 		--s $(REGION_S) \
 		--rows 5 \
-		--cols 5
+		--cols 5 \
+		--conn $(M_URL) \
+		--cats \
+			Q41176     \
+			Q43229     \
+			Q57821     \
+			Q210272    \
+			Q386724    \
+			Q811979    \
+			Q960648    \
+			Q10855061  \
+			Q17537576  \
+			Q110910970
+
+# Q41176 building
+# Q43229 organization
+# Q57821 fortification
+# Q210272 cultural heritage
+# Q386724 work
+# Q811979 architectural structure
+# Q960648 point of interest
+# Q10855061 archaeological find
+# Q17537576 creative work
+# Q110910970 visual work
 
 database-wikidata-enrich:
 	@cd $(S_DIR) && node wikidata-enrich.mjs

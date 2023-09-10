@@ -1,5 +1,5 @@
 import Model from "./model";
-import { parseArgs } from "./parser";
+import { parseArgs } from "./parse";
 import Reporter from "./reporter";
 
 async function init() {
