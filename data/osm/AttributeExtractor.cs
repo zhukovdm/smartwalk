@@ -22,7 +22,7 @@ internal static class AttributeExtractor
 
     private static SortedSet<string> GetCollection(string file)
     {
-        var json = File.ReadAllText(string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "taginfo", file + ".json" }));
+        var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(file));
         return new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value));
     }
 

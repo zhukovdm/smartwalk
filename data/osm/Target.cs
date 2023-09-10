@@ -37,7 +37,7 @@ internal class MongoTarget : Target
     private void Write()
     {
         var bulk = new List<WriteModel<Place>>();
-        var coll = _database.GetCollection<Place>(Constants.MONGO_PLACE_COLLECTION);
+        var coll = MongoBuilder.GetCollection(_database);
 
         // upsert strategy!
 
@@ -80,8 +80,7 @@ internal static class TargetFactory
     {
         try
         {
-            var client = new MongoClient(new MongoUrl(conn));
-            return new MongoTarget(logger, client.GetDatabase(Constants.MONGO_DATABASE));
+            return new MongoTarget(logger, MongoBuilder.GetDatabase(conn));
         }
         catch (Exception) { throw new Exception("Failed to get database instance from the given connection string."); }
     }

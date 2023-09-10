@@ -56,8 +56,7 @@ internal static class KeywordExtractor
 
         foreach (var key in union)
         {
-            var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "taginfo", key + ".json" });
-            var json = File.ReadAllText(path);
+            var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(key));
             _ts.Add(key, new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)));
         }
     }

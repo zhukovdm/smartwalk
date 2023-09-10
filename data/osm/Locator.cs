@@ -31,20 +31,35 @@ internal static class OverpassLocatorFactory
         public List<Element> elements { get; set; }
     }
 
+    /// <summary>
+    /// Exception-free fetch with retry and default value in case of failure.
+    /// </summary>
     private static async Task<Response> Fetch(ILogger logger, List<string> bbox)
     {
-        logger.LogInformation("Trying to contact Overpass endpoint.");
+        Response result = null;
 
+        var attempt = 0;
         var (w, n, e, s) = Converter.ToBbox(bbox);
         var url = $"https://overpass-api.de/api/interpreter?data=[out:json];relation({s},{w},{n},{e})[type=multipolygon];out%20center;";
 
-        var res = await new HttpClient().GetAsync(url);
-        var txt = await res.Content.ReadAsStringAsync();
+        logger.LogInformation("Trying to contact Overpass endpoint.");
 
-        var jsn = JsonSerializer.Deserialize<Response>(txt);
-        logger.LogInformation("Fetched {0} entities from Overpass.", jsn.elements.Count);
+        do
+        {
+            try {
+                ++attempt;
+                var res = await new HttpClient().GetAsync(url);
+                var txt = await res.Content.ReadAsStringAsync();
 
-        return jsn;
+                result = JsonSerializer.Deserialize<Response>(txt);
+            }
+            catch (Exception) { logger.LogError("Failed to fetch, {0} attempt.", attempt); }
+        } while (result == null && attempt < 3);
+
+        result ??= new() { elements = new() };
+        logger.LogInformation("Fetched {0} entities from Overpass.", result.elements.Count);
+
+        return result;
     }
 
     private static Dictionary<long, Point> Extract(ILogger logger, Response obj)
@@ -64,6 +79,9 @@ internal static class OverpassLocatorFactory
     }
 }
 
+/// <summary>
+/// Currently not used in favor of more stable Overpass API.
+/// </summary>
 internal static class SophoxLocatorFactory
 {
     private class Value

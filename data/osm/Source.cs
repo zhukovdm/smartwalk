@@ -47,25 +47,25 @@ internal class Source : IEnumerable<Place>
 
 internal static class SourceFactory
 {
-    private static OsmStreamSource ToStream(string file)
+    private static OsmStreamSource ToStream(string fileName)
     {
         FileStream fStream;
-        var path = string.Join(Path.DirectorySeparatorChar, new[] { Constants.ASSETS_BASE_ADDR, "osm-maps", file });
+        var path = PathBuilder.GetOsmFilePath(fileName);
 
         try
         {
             fStream = File.OpenRead(path);
         }
-        catch (Exception) { throw new Exception($"Cannot create file stream at ${file}."); }
+        catch (Exception) { throw new Exception($"Cannot create file stream at ${fileName}."); }
 
         Func<OsmStreamSource> func = null;
 
-        if (file.EndsWith(".pbf"))
+        if (fileName.EndsWith(".pbf"))
         {
             func = new(() => { return new PBFOsmStreamSource(fStream); });
         }
 
-        if (file.EndsWith(".osm"))
+        if (fileName.EndsWith(".osm"))
         {
             func = new(() => { return new XmlOsmStreamSource(fStream); });
         }
