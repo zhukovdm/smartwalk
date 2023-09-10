@@ -8,7 +8,7 @@ type ResultRoutesState = {
   resultFilters: boolean[];
 };
 
-const initialState = (): ResultRoutesState => ({
+export const initialResultRoutesState = (): ResultRoutesState => ({
   index: 0,
   result: [],
   resultFilters: []
@@ -16,9 +16,9 @@ const initialState = (): ResultRoutesState => ({
 
 export const resultRoutesSlice = createSlice({
   name: "result/routes",
-  initialState: initialState(),
+  initialState: initialResultRoutesState(),
   reducers: {
-    resetResultRoutes: () => initialState(),
+    resetResultRoutes: () => initialResultRoutesState(),
     setResultRoutes: (state, action: PayloadAction<UiRoute[]>) => {
       const r = action.payload;
       state.result = r;

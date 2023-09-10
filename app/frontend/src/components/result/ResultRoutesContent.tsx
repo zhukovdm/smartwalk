@@ -6,7 +6,7 @@ import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
-import type { UiPlace, UiRoute } from "../../domain/types";
+import type { UiPlace } from "../../domain/types";
 import { SEARCH_DIRECS_ADDR } from "../../domain/routing";
 import IdGenerator from "../../utils/idGenerator";
 import {
@@ -33,17 +33,10 @@ import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
 import TraversableDistance from "../_shared/TraversableDistance";
 import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
 
-export type ResultRoutesContentProps = {
-
-  /** **Non-empty** list of routes.*/
-  result: UiRoute[];
-};
-
 /**
  * Component presenting the content of a route search result.
  */
-export default function ResultRoutesContent(
-  { result }: ResultRoutesContentProps): JSX.Element {
+export default function ResultRoutesContent(): JSX.Element {
 
   const { storage } = useContext(AppContext);
 
@@ -51,6 +44,7 @@ export default function ResultRoutesContent(
   const dispatch = useAppDispatch();
   const {
     index,
+    result,
     resultFilters: filterList
   } = useAppSelector((state) => state.resultRoutes);
 

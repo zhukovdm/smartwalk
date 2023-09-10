@@ -20,7 +20,7 @@ export default function ResultRoutesPanel(): JSX.Element {
         {(loaded)
           ? <Box>
               {result.length > 0
-                ? <ResultRoutesContent result={result} />
+                ? <ResultRoutesContent />
                 : <Alert severity={"warning"}>
                     The result appears to be empty. Try different search parameters.
                   </Alert>
