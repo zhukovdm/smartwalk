@@ -6,10 +6,14 @@ function queryBuilder(key: string, page: number): string {
   return `https://taginfo.openstreetmap.org/api/4/key/values?key=${key}&page=${page}&rp=100&filter=all&lang=en&sortname=count&sortorder=desc&qtype=value&format=json`;
 };
 
+const wait = (seconds: number): Promise<void> => (
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000.0)));
+
 export default async function fetch(key: string, page: number, reporter: Logger): Promise<ValueObject> {
+  let result: ValueObject | undefined = undefined;
 
   let attempt = 0;
-  let result: ValueObject | undefined = undefined;
+  wait(3);
 
   do {
     ++attempt;
@@ -18,7 +22,7 @@ export default async function fetch(key: string, page: number, reporter: Logger)
     }
     catch (ex) {
       reporter.logFailedFetchAttempt(key, page, attempt, ex);
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await wait(10);
     }
   } while (result === undefined && attempt < 3);
 

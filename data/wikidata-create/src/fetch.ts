@@ -81,12 +81,16 @@ const constructFromEntity = (entity: any): Item => ({
   wikidata: entity.wikidata.substring(3) as string // cut `wd:`
 });
 
+const wait = (seconds: number): Promise<void> => (
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000.0)));
+
 async function fetchSquare(logger: Logger, cat: string, bbox: Bbox): Promise<Item[]> {
   let result: Item[] | undefined = undefined;
   logger.logCategoryBbox(cat, bbox);
 
   let attempt = 0;
   const query = wikidataQuery(cat, bbox);
+  await wait(3);
 
   do {
     ++attempt;
@@ -96,7 +100,7 @@ async function fetchSquare(logger: Logger, cat: string, bbox: Bbox): Promise<Ite
     }
     catch (ex) {
       logger.logFailedFetchAttempt(attempt, ex);
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await wait(10);
     }
   } while (result === undefined && attempt < 3);
 
@@ -117,7 +121,6 @@ export async function fetchCat(logger: Logger, cat: string, bbox: Bbox, rows: nu
   
   for (let row = 0; row < rows; ++row) {
     for (let col = 0; col < cols; ++col) {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       const s = round(xS + rowStep * row);
       const n = round(s + rowStep);

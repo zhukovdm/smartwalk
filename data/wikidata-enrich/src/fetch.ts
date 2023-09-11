@@ -404,11 +404,15 @@ function constructFromEntity(entity: any): any {
   return object;
 }
 
+const wait = (seconds: number): Promise<void> => (
+  new Promise((resolve) => setTimeout(resolve, seconds * 1000.0)));
+
 export async function fetch(logger: Logger, items: string[]): Promise<any[]> {
   let result: any[] | undefined = undefined;
 
   let attempt = 0;
   const query = wikidataQuery(items);
+  await wait(3);
 
   do {
     ++attempt;
@@ -418,7 +422,7 @@ export async function fetch(logger: Logger, items: string[]): Promise<any[]> {
     }
     catch (ex) {
       logger.logFailedFetchAttempt(attempt, ex);
-      await new Promise((resolve) => setTimeout(resolve, 10000));
+      await wait(10);
     }
   } while (result === undefined && attempt < 3);
 
