@@ -1,11 +1,22 @@
-import consola, { type ConsolaInstance } from "consola";
+import {
+  createLogger,
+  format,
+  transports,
+  type Logger as WinstonLogger
+} from "winston";
 
 export default class Logger {
 
-  private readonly logger: ConsolaInstance;
+  private readonly logger: WinstonLogger;
 
   constructor() {
-    this.logger = consola.create({});
+    this.logger = createLogger({
+      level: "info",
+      format: format.combine(format.colorize(), format.simple()),
+      transports: [
+        new transports.Console()
+      ]
+    });
   }
 
   public logCategory(cat: string) {

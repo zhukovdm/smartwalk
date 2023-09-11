@@ -1,21 +1,21 @@
+import Logger from "./logger";
 import Model from "./model";
 import { parseArgs } from "./parse";
-import Reporter from "./reporter";
 
 async function init() {
 
   const { conn } = parseArgs();
 
   const model = new Model(conn);
-  const reporter = new Reporter();
+  const logger = new Logger();
 
   try {
     await model.dropDatabase();
     await model.createDatabase();
 
-    reporter.reportFinished();
+    logger.reportFinished();
   }
-  catch (ex) { reporter.reportError(ex); }
+  catch (ex) { logger.reportError(ex); }
   finally {
     await model.dispose();
   }
