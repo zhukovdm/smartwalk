@@ -1,6 +1,6 @@
 {
   "name": "wikidata-enrich",
-  "description": "Fetch extended data items from Wikidata SPARQL endpoint and enrich stubs.",
+  "description": "Fetch extended data items from Wikidata SPARQL endpoint and enrich entities.",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {

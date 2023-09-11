@@ -16,8 +16,9 @@ async function wikidataEnrich() {
     logger.logPayloadLength(payload.length);
 
     while (payload.length > 0) {
-      const piece = payload.slice(0, WINDOW);
-      await model.enrich(logger, await fetch(logger, piece));
+      const slice = payload.slice(0, WINDOW);
+      const items = await fetch(logger, slice);
+      await model.enrich(logger, items);
       payload = payload.slice(WINDOW);
     }
     logger.logFinished();

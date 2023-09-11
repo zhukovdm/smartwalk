@@ -354,7 +354,7 @@ function handleYoutube(value: string | undefined) {
 }
 
 function constructFromEntity(entity: any): any {
-  const object = { } as any;
+  const object = {} as any;
 
   const keywords = ([] as string[])
     .concat(handleKeywordArray(entity.genre))
@@ -417,7 +417,7 @@ export async function fetch(logger: Logger, items: string[]): Promise<any[]> {
   do {
     ++attempt;
     try {
-      result = ((await fetchFromWikidata(query)) as any)
+      result = ((await fetchFromWikidata(query)) as any[])
         .map((entity: any) => constructFromEntity(entity));
     }
     catch (ex) {

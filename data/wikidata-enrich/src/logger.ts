@@ -27,7 +27,7 @@ export default class Logger {
   }
 
   public logItemsEnriched(batchEnriched: number, totalEnriched: number) {
-    this.logger.info(`> Enriched ${batchEnriched} from this batch, enriched total ${totalEnriched} entities.`)
+    this.logger.info(`> Enriched ${batchEnriched} from this batch, enriched total ${totalEnriched} entities.`);
   }
 
   public logFinished() {
