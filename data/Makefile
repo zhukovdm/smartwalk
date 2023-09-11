@@ -93,8 +93,8 @@ database-wikidata-enrich:
 	@cd ./wikidata-enrich/ && npm ci && npm run build && npm run start -- \
 		--conn $(M_URL)
 
-database-dbpedia-enrich:
-	@cd ./dbpedia-enrich/ && npm ci && npm run build && npm run start -- \
+database-dbpedia:
+	@cd ./dbpedia/ && npm ci && npm run build && npm run start -- \
 		--conn $(M_URL)
 
 advice:
