@@ -19,12 +19,12 @@ export class Logger {
     });
   }
 
-  logKeys(keys: string[]) {
-    this.logger.info(`Started processing OSM keys ${keys.join(", ")}.`);
+  logKeys() {
+    this.logger.info(`Started processing OSM keys...`);
   }
 
   logKeyProcessing(key: string) {
-    this.logger.info(`> Processing key ${key}.`);
+    this.logger.info(`> Processing key "${key}"...`);
   }
 
   logPageProcessing(page: number) {
@@ -32,12 +32,12 @@ export class Logger {
   }
 
   logFailedFetchAttempt(key: string, page: number, attempt: number, err: unknown) {
-    this.logger.warn(`> Failed to fetch: key ${key}, page ${page}, attempt ${attempt}.`);
+    this.logger.warn(`>   Failed to fetch: key ${key}, page ${page}, attempt ${attempt}.`);
     this.logger.info(err);
   }
 
   logFinishedKey(key: string, length: number) {
-    this.logger.info(`> Finished processing key ${key}, extracted ${length} objects.`);
+    this.logger.info(`> Finished processing key "${key}", extracted ${length} objects.`);
   }
 
   logFinished() {

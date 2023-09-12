@@ -13,7 +13,7 @@ export default async function fetch(key: string, page: number, reporter: Logger)
   let result: ValueObject | undefined = undefined;
 
   let attempt = 0;
-  wait(3);
+  await wait(1);
 
   do {
     ++attempt;

@@ -1,6 +1,6 @@
-import { ValueItem } from "./types";
-import { Logger } from "./logger";
 import fetch from "./fetch";
+import { Logger } from "./logger";
+import { ValueItem } from "./types";
 import writeToFile from "./write";
 
 /** Extracted value should occur at least `COUNT_LIMIT` times. */
@@ -13,7 +13,7 @@ const COUNT_PAGES = 5;
 const KEYWORD_LENGTH_LIMIT_MIN = 3;
 
 /** Extracted value should have lehgth at most `MAX` chars. */
-const KEYWORD_LENGTH_LIMIT_MAX = 30;
+const KEYWORD_LENGTH_LIMIT_MAX = 50;
 
 /**
  * All extracted keywords should comply with the snake_case-without-underscores
@@ -24,8 +24,8 @@ const KEYWORD_PATTERN = /^[a-z]+(?:[ ][a-z]+)*$/;
 function isValidKeyword(keyword: string) {
   return KEYWORD_PATTERN.test(keyword)
     && keyword.length >= KEYWORD_LENGTH_LIMIT_MIN
-    && keyword.length <= KEYWORD_LENGTH_LIMIT_MAX
-};
+    && keyword.length <= KEYWORD_LENGTH_LIMIT_MAX;
+}
 
 const FORBIDDEN_VALUES = new Set<string>([
   "abandoned",
@@ -138,27 +138,25 @@ const FORBIDDEN_VALUES = new Set<string>([
 /**
  * Extract valid values.
  */
-function reducer(acc: Map<string, number>, item: ValueItem) {
+function reducer(coll: Map<string, number>, item: ValueItem) {
 
-  item.value
+  return item.value
     .split(/[\s;,]+/)
     .map((value) => value.toLowerCase().replace('_', ' '))
     .filter((value) => isValidKeyword(value) && !FORBIDDEN_VALUES.has(value))
-    .forEach((value) => {
+    .reduce((acc, value) => {
       if (!acc.has(value)) { acc.set(value, 0); }
-      acc.set(value, acc.get(value)! + item.count);
-    });
-
-  return acc;
+      return acc.set(value, acc.get(value)! + item.count);
+    }, coll);
 }
 
 /**
  * Prepare for write to file. Note that Map does not maintain
  * lexicographic order!
  */
-function transform(map: Map<string, number>): ValueItem[] {
-  return Array.from(map.keys())
-    .map((key) => ({ value: key, count: map.get(key)! }))
+function transform(coll: Map<string, number>): ValueItem[] {
+  return Array.from(coll.keys())
+    .map((key) => ({ value: key, count: coll.get(key)! }))
     .sort((l, r) => r.count - l.count)
     .filter(pair => pair.count >= COUNT_LIMIT);
 }
@@ -169,30 +167,30 @@ function transform(map: Map<string, number>): ValueItem[] {
  * https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
  */
 async function get(keys: string[]) {
-  const reporter = new Logger();
+  const logger = new Logger();
 
   try {
-    reporter.logKeys(keys);
+    logger.logKeys();
 
     for (const key of keys) {
 
-      reporter.logKeyProcessing(key);
+      logger.logKeyProcessing(key);
       const result = new Map<string, number>();
 
       for (let page = 1; page <= COUNT_PAGES; ++page) {
-        reporter.logPageProcessing(page);
+        logger.logPageProcessing(page);
 
-        (await fetch(key, page, reporter)).data
+        (await fetch(key, page, logger)).data
           .reduce((acc, item) => (reducer(acc, item)), result);
       }
 
       const list = transform(result);
       writeToFile(key, list);
-      reporter.logFinishedKey(key, list.length);
+      logger.logFinishedKey(key, list.length);
     }
-    reporter.logFinished();
+    logger.logFinished();
   }
-  catch (ex) { reporter.logError(ex); }
+  catch (ex) { logger.logError(ex); }
 }
 
 get(process.argv.slice(2));
