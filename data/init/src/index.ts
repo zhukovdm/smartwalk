@@ -6,8 +6,8 @@ async function init() {
 
   const { conn } = parseArgs();
 
-  const model = new Model(conn);
   const logger = new Logger();
+  const model = new Model(logger, conn);
 
   try {
     await model.dropDatabase();

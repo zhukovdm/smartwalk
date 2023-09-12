@@ -1,22 +1,27 @@
 import { MongoClient } from "mongodb";
+import Logger from "./logger";
+
+const DATABASE_NAME = "smartwalk";
+const COLLECTION_NAME = "place";
 
 export default class Model {
 
+  private readonly logger: Logger;
   private readonly client: MongoClient;
-  private readonly databaseName = "smartwalk";
-  private readonly collectionName = "place";
 
-  constructor(conn: string) {
+  constructor(logger: Logger, conn: string) {
+    this.logger = logger;
     this.client = new MongoClient(conn);
   }
 
-  public dropDatabase(): Promise<boolean> {
-    return this.client.db(this.databaseName).dropDatabase();
+  async dropDatabase(): Promise<void> {
+    try {
+      await this.client.db(DATABASE_NAME).dropDatabase();
+    } catch (ex) { this.logger.reportError(ex); }
   }
 
-  public async createDatabase(): Promise<void> {
-    const coll = this.client.db(this.databaseName)
-      .collection(this.collectionName);
+  async createDatabase(): Promise<void> {
+    const coll = this.client.db(DATABASE_NAME).collection(COLLECTION_NAME);
 
     await coll.createIndex({ "linked.osm": 1 });
     await coll.createIndex({ "linked.wikidata": 1 });
@@ -26,5 +31,5 @@ export default class Model {
   /**
    * Release allocated resources gracefully.
    */
-  public async dispose(): Promise<void> { this.client.close(); }
+  async dispose(): Promise<void> { this.client.close(); }
 }
