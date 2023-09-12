@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "outDir": "./dist",
+    "skipLibCheck": true,
+    "strict": true
+  },
+  "include": [
+    "./src/**/*"
+  ]
+}

@@ -13,7 +13,7 @@ REGION_W=14.18
 
 A_DIR=${PWD}/assets
 
-NODE_DIRS=advice dbpedia init taginfo wikidata-create wikidata-enrich
+NODE_DIRS=advice dbpedia dump init taginfo wikidata-create wikidata-enrich
 DATA_DIRS=database routing-engine taginfo
 
 # routing engine
@@ -27,7 +27,7 @@ I_URL=http://localhost:9200
 
 ################################################################################
 
-.PHONY: advice check-clean init taginfo
+.PHONY: advice check-clean dump init taginfo
 
 init-data-dirs:
 	@for dir in $(DATA_DIRS); do mkdir -p $(A_DIR)/$$dir; done
@@ -105,6 +105,13 @@ database-dbpedia:
 advice:
 	@cd ./advice && npm run build && npm run start -- \
 		--conn $(M_URL)
+
+dump:
+	@cd ./dump && npm run build && npm run start -- \
+		--conn $(M_URL)
+
+restore:
+	echo "DONE!"
 
 check-clean:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
