@@ -1,0 +1,83 @@
+import Logger from "./logger";
+
+export default class Extractor {
+  
+  private processedTot = 0;
+  private processedCur = 0;
+  private readonly logger: Logger;
+
+  constructor(logger: Logger) {
+    this.logger = logger;
+  }
+
+  private static getBaseItem(keyword: string): Item {
+    return {
+      keyword: keyword,
+      count: 0,
+      attributeList: new Set<string>().add("name"), // non-empty!
+      numerics: {},
+      collects: {}
+    };
+  }
+
+  extract(place: Place, keywords: Map<string, Item>): void {
+    place.keywords.forEach((keyword) => {
+
+      if (!keywords.has(keyword)) {
+        keywords.set(keyword, Extractor.getBaseItem(keyword));
+      }
+  
+      const item = keywords.get(keyword)!;
+      const numerics = item.numerics;
+      const collects = item.collects;
+  
+      // count
+  
+      ++item.count;
+  
+      // attributes
+  
+      Object.keys(place.attributes).forEach((key) => {
+        item.attributeList.add(key);
+      });
+  
+      // numerics
+  
+      (["capacity", "elevation", "minimumAge", "rating", "year"] as NumericLabel[]).forEach((label) => {
+        const num = place.attributes[label];
+  
+        if (num !== undefined) {
+          const numeric = numerics[label] ?? {
+            min: Number.MAX_VALUE,
+            max: Number.MIN_VALUE
+          };
+          numeric.min = Math.min(numeric.min, num);
+          numeric.max = Math.max(numeric.max, num);
+          numerics[label] = numeric;
+        }
+      });
+  
+      // collects
+  
+      (["clothes", "cuisine", "denomination", "payment", "rental"] as CollectLabel[]).forEach((label) => {
+        const col = place.attributes[label];
+  
+        if (col !== undefined) {
+          const collect = collects[label] ?? new Set<string>();
+          col.forEach((atom: string) => { collect.add(atom); });
+          collects[label] = collect;
+        }
+      });
+    });
+
+    if (++this.processedCur >= 10000) {
+      this.processedTot += this.processedCur;
+      this.logger.logProcessedCur(this.processedTot);
+      this.processedCur = 0;
+    }
+  }
+
+  reportProcessedTot() {
+    this.logger.logProcessedTot(this.processedTot + this.processedCur);
+  }
+}
