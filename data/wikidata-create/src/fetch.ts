@@ -4,7 +4,8 @@ import Logger from "./logger";
 
 const LOCATION_PRECISION = 7;
 
-const round = (num: number): number => (parseFloat(num.toFixed(LOCATION_PRECISION)));
+const roundCoordinate = (num: number): number => (
+  parseFloat(num.toFixed(LOCATION_PRECISION)));
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 const WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql?query=";
@@ -71,8 +72,8 @@ function extractLocation(location: string): WgsPoint {
   const re = /^Point\((?<lon>-?\d+(\.\d+)?) (?<lat>-?\d+(\.\d+)?)\)$/i;
   const { lon, lat } = re.exec(location)!.groups!;
   return {
-    lon: round(parseFloat(lon!)),
-    lat: round(parseFloat(lat!))
+    lon: roundCoordinate(parseFloat(lon!)),
+    lat: roundCoordinate(parseFloat(lat!))
   };
 }
 
@@ -86,7 +87,7 @@ const wait = (seconds: number): Promise<void> => (
 
 async function fetchSquare(logger: Logger, cat: string, bbox: Bbox): Promise<Item[]> {
   let result: Item[] | undefined = undefined;
-  logger.logCategoryBbox(cat, bbox);
+  logger.logCategoryBbox(bbox);
 
   let attempt = 0;
   const query = wikidataQuery(cat, bbox);
@@ -122,11 +123,11 @@ export async function fetchCat(logger: Logger, cat: string, bbox: Bbox, rows: nu
   for (let row = 0; row < rows; ++row) {
     for (let col = 0; col < cols; ++col) {
 
-      const s = round(xS + rowStep * row);
-      const n = round(s + rowStep);
+      const s = roundCoordinate(xS + rowStep * row);
+      const n = roundCoordinate(s + rowStep);
 
-      const w = round(xW + colStep * col);
-      const e = round(w + colStep);
+      const w = roundCoordinate(xW + colStep * col);
+      const e = roundCoordinate(w + colStep);
 
       (await fetchSquare(logger, cat, { w: w, n: n, e: e, s: s })).forEach((item) => {
         result.set(item.wikidata, item);

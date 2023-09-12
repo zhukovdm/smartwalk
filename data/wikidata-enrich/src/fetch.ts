@@ -5,6 +5,12 @@ import Logger from "./logger";
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 const WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql";
 
+const KEYWORD_LENGTH_LIMIT_MIN = 3;
+
+const KEYWORD_LENGTH_LIMIT_MAX = 50;
+
+const KEYWORD_PATTERN = /^[a-z]+(?:[ ][a-z]+)*$/;
+
 /**
  * Note that {`@container`: `@language`} is a valid definition even though d.ts
  * does not recognize it.
@@ -291,12 +297,6 @@ async function fetchFromWikidata(query: string) {
   const jsn = await jsonld.compact(arr, WIKIDATA_JSONLD_CONTEXT);
   return jsn["@graph"] ?? [];
 }
-
-const KEYWORD_LENGTH_LIMIT_MIN = 3;
-
-const KEYWORD_LENGTH_LIMIT_MAX = 30;
-
-const KEYWORD_PATTERN = /^[a-z]+(?:[ ][a-z]+)*$/;
 
 function isValidKeyword(keyword: string) {
   return KEYWORD_PATTERN.test(keyword)

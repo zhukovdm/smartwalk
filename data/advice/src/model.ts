@@ -8,6 +8,12 @@ import {
 } from "mongodb";
 import Logger from "./logger";
 
+const DATABASE_NAME = "smartwalk";
+const PLACE_COLLECTION = "place";
+const KEYWD_COLLECTION = "keyword";
+
+const set2arr = (set: Set<string> | undefined) => (set ? Array.from(set).sort() : undefined);
+
 class ModelIterator implements AsyncIterator<Place> {
 
   private readonly cursor: FindCursor<WithId<Place>>;
@@ -36,55 +42,52 @@ export default class Model implements AsyncIterable<Place> {
   private readonly database: Db;
 
   private readonly placeColl: Collection;
-
   private readonly keywdColl: Collection;
-  private readonly keywdCollHandle: string;
 
   constructor(logger: Logger, conn: string) {
     this.logger = logger;
 
     this.client = new MongoClient(conn);
-    this.database = this.client.db("smartwalk");
+    this.database = this.client.db(DATABASE_NAME);
 
-    this.placeColl = this.database.collection("place");
-
-    this.keywdCollHandle = "keyword";
-    this.keywdColl = this.database.collection(this.keywdCollHandle);
+    this.placeColl = this.database.collection(PLACE_COLLECTION);
+    this.keywdColl = this.database.collection(KEYWD_COLLECTION);
   }
 
   [Symbol.asyncIterator](): AsyncIterator<Place> {
     return new ModelIterator(this.placeColl.find());
   }
 
-  async dropCollection(): Promise<void> {
+  async safeDropCollection(): Promise<void> {
     try {
-      await this.database.dropCollection(this.keywdCollHandle);
-      this.logger.logCollectionDropped(this.keywdCollHandle);
+      await this.database.dropCollection(KEYWD_COLLECTION);
+      this.logger.logCollectionDropped(KEYWD_COLLECTION);
     } catch (ex) { this.logger.logError(ex); }
   }
 
   async create(item: Item): Promise<void> {
-    const set2arr = (set: Set<string> | undefined) => set ? Array.from(set).sort() : undefined;
-
-    const {
-      attributeList,
-      collects: cs
-    } = item;
+    const { attributeList, collectBounds } = item;
 
     try {
-      await this.keywdColl.insertOne({
+      const obj = {
         ...item,
         attributeList: set2arr(attributeList),
-        collects: (["clothes", "cuisine", "denomination", "payment", "rental"] as CollectLabel[]).reduce((acc, label) => {
-          acc[label] = set2arr(cs[label]);
+        collectBounds: (["clothes", "cuisine", "denomination", "payment", "rental"] as CollectBoundLabel[]).reduce((acc, label) => {
+          acc[label] = set2arr(collectBounds[label]);
           return acc;
-        }, {} as { [key: string]: string[] | undefined })
-      }, {
+        }, {} as { [key in CollectBoundLabel]?: string[]; })
+      };
+
+      const options = {
         ignoreUndefined: true
-      });
+      };
+
+      await this.keywdColl.insertOne(obj, options);
       ++this.createdTot;
     }
-    catch (ex) { this.logger.logFailedCreate(item.keyword, ex); }
+    catch (ex) {
+      this.logger.logFailedCreate(item.keyword, ex);
+    }
   }
 
   reportCreatedTot() {

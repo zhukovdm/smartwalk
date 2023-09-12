@@ -19,7 +19,7 @@ export class Logger {
     });
   }
 
-  logKeys() {
+  logStarted() {
     this.logger.info(`Started processing OSM keys...`);
   }
 

@@ -5,6 +5,13 @@ import {
   type Logger as WinstonLogger
 } from "winston";
 
+const paddedWithZeros = (num: number) => (String(num).padStart(2, "0"));
+
+function getTimestamp() {
+  const date = new Date();
+  return `${paddedWithZeros(date.getHours())}:${paddedWithZeros(date.getMinutes())}:${paddedWithZeros(date.getSeconds())}`;
+};
+
 export default class Logger {
 
   private readonly logger: WinstonLogger;
@@ -19,35 +26,43 @@ export default class Logger {
     });
   }
 
-  public logCategory(cat: string) {
+  logStarted() {
+    this.logger.info("Started processing categories...");
+  }
+
+  logCategory(cat: string) {
     this.logger.info(`> Processing category ${cat}...`);
   }
 
-  public logCategoryBbox(cat: string, { w, n, e ,s }: Bbox) {
-    this.logger.info(`>  Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s} and category ${cat}.`);
+  logCategoryBbox({ w, n, e, s }: Bbox) {
+    this.logger.info(`>  [${getTimestamp()}] Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s}...`);
   }
 
-  public logFailedFetchAttempt(attempt: number, err: unknown) {
-    this.logger.warn(`>  Failed to fetch, ${attempt} attempt.`);
+  logFailedFetchAttempt(attempt: number, err: unknown) {
+    this.logger.warn(`>   Failed to fetch, ${attempt} attempt.`);
     this.logger.info(err);
   }
 
-  public logFetchedEntities(cat: string, count: number) {
-    this.logger.info(`> Fetched ${count} entities for ${cat} category.`);
+  logFetchedEntities(cat: string, count: number) {
+    this.logger.info(`>  Fetched ${count} entities for ${cat} category.`);
   }
 
-  public logFailedCreate(wikidata: string, err: unknown) {
-    this.logger.warn(`>  Failed to create an item with ${wikidata} identifier.`);
+  logCreatingObjects() {
+    this.logger.info(">  Creating objects for fetched batch...");
+  }
+
+  logFailedCreate(wikidataId: string, err: unknown) {
+    this.logger.warn(`>  Failed to create an item with ${wikidataId} identifier.`);
     this.logger.info(err);
   }
 
-  public logItemsCreated(batchCreated: number, totalCreated: number) {
-    this.logger.info(`> Created ${batchCreated} from this batch, created total ${totalCreated} entities.`)
+  logItemsCreated(batchCreated: number, totalCreated: number) {
+    this.logger.info(`>  Created ${batchCreated} from this batch, created total ${totalCreated} entities.`)
   }
 
-  public logFinished() {
-    this.logger.info(`Finished processing. Exiting...`);
+  logFinished() {
+    this.logger.info(`Finished processing categories.`);
   }
 
-  public logError(err: unknown) { this.logger.error(err); }
+  logError(err: unknown) { this.logger.error(err); }
 }

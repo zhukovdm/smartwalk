@@ -15,8 +15,8 @@ export default class Extractor {
       keyword: keyword,
       count: 0,
       attributeList: new Set<string>().add("name"), // non-empty!
-      numerics: {},
-      collects: {}
+      numericBounds: {},
+      collectBounds: {}
     };
   }
 
@@ -28,8 +28,8 @@ export default class Extractor {
       }
   
       const item = keywords.get(keyword)!;
-      const numerics = item.numerics;
-      const collects = item.collects;
+      const numerics = item.numericBounds;
+      const collects = item.collectBounds;
   
       // count
   
@@ -43,7 +43,7 @@ export default class Extractor {
   
       // numerics
   
-      (["capacity", "elevation", "minimumAge", "rating", "year"] as NumericLabel[]).forEach((label) => {
+      (["capacity", "elevation", "minimumAge", "rating", "year"] as NumericBoundLabel[]).forEach((label) => {
         const num = place.attributes[label];
   
         if (num !== undefined) {
@@ -59,7 +59,7 @@ export default class Extractor {
   
       // collects
   
-      (["clothes", "cuisine", "denomination", "payment", "rental"] as CollectLabel[]).forEach((label) => {
+      (["clothes", "cuisine", "denomination", "payment", "rental"] as CollectBoundLabel[]).forEach((label) => {
         const col = place.attributes[label];
   
         if (col !== undefined) {

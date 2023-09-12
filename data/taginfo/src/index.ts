@@ -170,7 +170,7 @@ async function get(keys: string[]) {
   const logger = new Logger();
 
   try {
-    logger.logKeys();
+    logger.logStarted();
 
     for (const key of keys) {
 
@@ -188,6 +188,7 @@ async function get(keys: string[]) {
       writeToFile(key, list);
       logger.logFinishedKey(key, list.length);
     }
+
     logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }

@@ -2,6 +2,7 @@ import Extractor from "./extractor";
 import Logger from "./logger";
 import Model from "./model";
 import { parseArgs } from "./parse";
+import writeToFile from "./write";
 
 async function advice() {
   
@@ -11,10 +12,11 @@ async function advice() {
   const model = new Model(logger, conn);
   const extractor = new Extractor(logger);
 
-  await model.dropCollection();
+  logger.logStarted();
+  await model.safeDropCollection();
 
   try {
-    logger.logCollectingHasBeenStarted();
+    logger.logCollecting();
     const keywords = new Map<string, Item>();
 
     for await (const place of model) {
@@ -22,10 +24,18 @@ async function advice() {
     }
     extractor.reportProcessedTot();
 
-    for (const item of Array.from(keywords.values())) {
+    const items = Array.from(keywords.values())
+      .sort((l, r) => (r.count - l.count));
+
+    for (const item of items) {
       await model.create(item);
     }
     model.reportCreatedTot();
+
+    logger.logWriteKeywordsToFile();
+    writeToFile(items.map(({ keyword }) => keyword));
+
+    logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }
   finally {

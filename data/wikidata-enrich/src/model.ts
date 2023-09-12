@@ -4,15 +4,18 @@ import Logger from "./logger";
 export default class Model {
 
   private totalEnriched = 0;
+
+  private readonly logger: Logger;
   private readonly client: MongoClient;
   private readonly collection: Collection;
 
-  constructor(conn: string) {
+  constructor(logger: Logger, conn: string) {
+    this.logger = logger;
     this.client = new MongoClient(conn);
     this.collection = this.client.db("smartwalk").collection("place");
   }
 
-  public async getPayload(): Promise<string[]> {
+  async getPayload(): Promise<string[]> {
     const target = "linked.wikidata";
 
     const payload = await this.collection
@@ -20,49 +23,50 @@ export default class Model {
       .project({ [target]: 1 })
       .toArray();
 
+    this.logger.logPayloadLength(payload.length);
     return payload.map((doc) => `wd:${doc.linked.wikidata}`) as string[];
   }
 
-  public async enrich(logger: Logger, items: any[]): Promise<void> {
-    const batchEnriched = this.totalEnriched;
+  async enrich(objs: any[]): Promise<void> {
+    let batchEnriched = 0;
 
-    for (const item of items) {
+    for (const obj of objs) {
       try {
         const filter = {
           "linked.wikidata": {
-            $eq: item.wikidata
+            $eq: obj.wikidata
           }
         };
 
         const update: Record<string, any> = {
           $set: {
-            "name": item.name,
-            "attributes.description": item.description,
-            "attributes.image": item.image,
-            "attributes.email": item.email,
-            "attributes.phone": item.phone,
-            "attributes.website": item.website,
-            "attributes.capacity": item.capacity,
-            "attributes.elevation": item.elevation,
-            "attributes.minimumAge": item.minimumAge,
-            "attributes.year": item.year,
-            "attributes.address.country": item.country,
-            "attributes.address.place": item.street,
-            "attributes.address.house": item.house,
-            "attributes.address.postalCode": item.postalCode,
-            "attributes.socialNetworks.facebook": item.facebook,
-            "attributes.socialNetworks.instagram": item.instagram,
-            "attributes.socialNetworks.linkedin": item.linkedin,
-            "attributes.socialNetworks.pinterest": item.pinterest,
-            "attributes.socialNetworks.telegram": item.telegram,
-            "attributes.socialNetworks.twitter": item.twitter,
-            "attributes.socialNetworks.youtube": item.youtube,
-            "linked.mapycz": item.mapycz,
-            "linked.geonames": item.geonames
+            "name": obj.name,
+            "attributes.description": obj.description,
+            "attributes.image": obj.image,
+            "attributes.email": obj.email,
+            "attributes.phone": obj.phone,
+            "attributes.website": obj.website,
+            "attributes.capacity": obj.capacity,
+            "attributes.elevation": obj.elevation,
+            "attributes.minimumAge": obj.minimumAge,
+            "attributes.year": obj.year,
+            "attributes.address.country": obj.country,
+            "attributes.address.place": obj.street,
+            "attributes.address.house": obj.house,
+            "attributes.address.postalCode": obj.postalCode,
+            "attributes.socialNetworks.facebook": obj.facebook,
+            "attributes.socialNetworks.instagram": obj.instagram,
+            "attributes.socialNetworks.linkedin": obj.linkedin,
+            "attributes.socialNetworks.pinterest": obj.pinterest,
+            "attributes.socialNetworks.telegram": obj.telegram,
+            "attributes.socialNetworks.twitter": obj.twitter,
+            "attributes.socialNetworks.youtube": obj.youtube,
+            "linked.mapycz": obj.mapycz,
+            "linked.geonames": obj.geonames
           },
           $addToSet: {
             "keywords": {
-              $each: item.keywords
+              $each: obj.keywords
             }
           }
         };
@@ -72,15 +76,16 @@ export default class Model {
         }
 
         await this.collection.updateMany(filter, update, options);
-        ++this.totalEnriched;
+        ++batchEnriched;
       }
       catch (ex) {
-        logger.logFailedEnrich(item.wikidata, ex);
+        this.logger.logFailedEnrich(obj.wikidata, ex);
       }
     }
 
-    logger.logItemsEnriched(this.totalEnriched - batchEnriched, this.totalEnriched);
+    this.totalEnriched += batchEnriched;
+    this.logger.logItemsEnriched(batchEnriched, this.totalEnriched);
   }
 
-  public async dispose(): Promise<void> { this.client.close(); }
+  async dispose(): Promise<void> { this.client.close(); }
 }

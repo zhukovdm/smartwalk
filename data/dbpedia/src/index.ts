@@ -8,19 +8,21 @@ async function dbpediaEnrich() {
   const WINDOW = 100;
   const { conn } = parseArgs();
 
-  const model = new Model(conn);
   const logger = new Logger();
+  const model = new Model(logger, conn);
 
   try {
+    logger.logStarted();
+
     let payload = await model.getPayload();
-    logger.logPayloadLength(payload.length);
 
     while (payload.length > 0) {
       const slice = payload.slice(0, WINDOW);
       const items = await fetch(logger, slice);
-      await model.enrich(logger, items);
+      await model.enrich(items);
       payload = payload.slice(WINDOW);
     }
+
     logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }

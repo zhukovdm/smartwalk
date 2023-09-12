@@ -41,7 +41,7 @@ export function useSearchKeywordsAdvice(
             minimumAge,
             rating,
             year
-          } = item.bounds;
+          } = item.numericBounds;
 
           if (!!capacity) {
             capacity.min = Math.max(capacity.min, 0);

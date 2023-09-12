@@ -19,9 +19,9 @@ export default class Logger {
     });
   }
 
-  public reportFinished() {
+  reportFinished() {
     this.logger.info("Finished setting up database.");
   }
 
-  public reportError(err: unknown) { this.logger.error(err); }
+  reportError(err: unknown) { this.logger.error(err); }
 }

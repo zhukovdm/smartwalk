@@ -19,31 +19,35 @@ export default class Logger {
     });
   }
 
-  public logPayloadLength(payloadLength: number) {
-    this.logger.info(`Constructed payload with ${payloadLength} items.`);
+  logStarted() {
+    this.logger.info("Started processing entities...");
   }
 
-  public logFailedFetchAttempt(attempt: number, err: unknown) {
+  logPayloadLength(payloadLength: number) {
+    this.logger.info(`> Constructed payload with ${payloadLength} unique identifiers.`);
+  }
+
+  logFailedFetchAttempt(attempt: number, err: unknown) {
     this.logger.warn(`>  Failed to fetch, ${attempt} attempt.`);
     this.logger.info(err);
   }
 
-  public logFetchedEntities(fetched: number, given: number) {
+  logFetchedEntities(fetched: number, given: number) {
     this.logger.info(`> Fetched ${fetched} entities for given ${given} identifiers.`);
   }
 
-  public logFailedEnrich(wikidata: string, err: unknown) {
-    this.logger.warn(`>  Failed to enrich an item with ${wikidata} identifier.`);
+  logFailedEnrich(wikidataId: string, err: unknown) {
+    this.logger.warn(`>  Failed to enrich an item with ${wikidataId} identifier.`);
     this.logger.info(err);
   }
 
-  public logItemsEnriched(batchEnriched: number, totalEnriched: number) {
+  logItemsEnriched(batchEnriched: number, totalEnriched: number) {
     this.logger.info(`> Enriched ${batchEnriched} from this batch, enriched total ${totalEnriched} entities.`);
   }
 
-  public logFinished() {
-    this.logger.info(`Finished processing. Exiting...`);
+  logFinished() {
+    this.logger.info("Finished processing entities.");
   }
 
-  public logError(err: unknown) { this.logger.error(err); }
+  logError(err: unknown) { this.logger.error(err); }
 }

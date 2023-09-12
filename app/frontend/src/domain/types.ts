@@ -1,23 +1,12 @@
 /**
  * Recognized entities.
  */
-export type SomethingKind
-  = "direction"
-  | "place"
-  | "route"
-  ;
+export type SomethingKind = "direction" | "place" | "route";
 
 /**
  * Recognized kinds of places (color schemata).
  */
-export type PlaceKind
-  = "stored"
-  | "common"
-  | "source"
-  | "target"
-  | "center"
-  | "action"
-  ;
+export type PlaceKind = "stored" | "common" | "source" | "target" | "center" | "action";
 
 /**
  * Point in [WGS84] CRS with web mercator bounds.
@@ -327,10 +316,7 @@ export type AttributeFilters = {
   cs?: AttributeFilterCollects;
 };
 
-/**
- * Bounds for numeric attributes.
- */
-type BoundNumeric = {
+type NumericBound = {
 
   /** lower bound */
   min: number;
@@ -339,44 +325,29 @@ type BoundNumeric = {
   max: number;
 };
 
+type NumericBoundLabel = "capacity" | "elevation" | "minimumAge" | "rating" | "year";
+
 /**
- * Current bounds limiting user input fields.
+ * Bounds for numeric attributes.
  */
-export type Bounds = {
+export type NumericBounds = {
 
-  /** Capacity of a facility */
-  capacity: BoundNumeric;
+  [key in NumericBoundLabel]?: NumericBound;
+};
 
-  /** Elevation above sea level */
-  elevation: BoundNumeric;
+type CollectBound = string[];
 
-  /** Minimum allowed age */
-  minimumAge: BoundNumeric;
+type CollectBoundLabel = "clothes" | "cuisine" | "denomination" | "payment" | "rental";
 
-  /** Rating determined by visitors */
-  rating: BoundNumeric;
-
-  /** Year of opening, establishing, etc. */
-  year: BoundNumeric;
-
-  /** List of clothes kinds sold */
-  clothes: string[];
-
-  /** Cuisine of a restaurant, etc. */
-  cuisine: string[];
-
-  /** Religious subgroup */
-  denomination: string[];
-
-  /** Payment methods */
-  payment: string[];
-
-  /** Kinds of items that can be rent */
-  rental: string[];
+/**
+ * Bounds for collect attributes.
+ */
+export type CollectBounds = {
+  [key in CollectBoundLabel]?: CollectBound;
 };
 
 /**
- * Keyword and keyword-specific attributes.
+ * Keyword, keyword-specific attributes, and keyword-specific bounds.
  */
 export type KeywordAdviceItem = {
 
@@ -386,8 +357,11 @@ export type KeywordAdviceItem = {
   /** Options of attributes specific for a keyword */
   attributeList: string[];
 
-  /** Bounds imposed by a keyword and its attributes */
-  bounds: Bounds;
+  /** Numeric bounds imposed by a keyword and its attributes. */
+  numericBounds: NumericBounds;
+
+  /** Collect bounds imposed by a keyword and its attributes. */
+  collectBounds: CollectBounds;
 };
 
 /**

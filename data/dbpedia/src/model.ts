@@ -4,15 +4,18 @@ import Logger from "./logger";
 export default class Model {
 
   private totalEnriched = 0;
+
+  private readonly logger: Logger;
   private readonly client: MongoClient;
   private readonly collection: Collection;
 
-  constructor(conn: string) {
+  constructor(logger: Logger, conn: string) {
+    this.logger = logger;
     this.client = new MongoClient(conn);
     this.collection = this.client.db("smartwalk").collection("place");
   }
 
-  public async getPayload(): Promise<string[]> {
+  async getPayload(): Promise<string[]> {
     const target = "linked.wikidata";
 
     const payload = await this.collection
@@ -20,11 +23,12 @@ export default class Model {
       .project({ [target]: 1 })
       .toArray();
 
+    this.logger.logPayloadLength(payload.length);
     return payload.map((doc) => `wd:${doc.linked.wikidata}`) as string[];
   }
 
-  public async enrich(logger: Logger, objs: any[]): Promise<void> {
-    const batchEnriched = this.totalEnriched;
+  async enrich(objs: any[]): Promise<void> {
+    let batchEnriched = 0;
 
     for (const obj of objs) {
       try {
@@ -51,15 +55,16 @@ export default class Model {
         }
 
         await this.collection.updateMany(filter, update, options);
-        ++this.totalEnriched;
+        ++batchEnriched;
       }
       catch (ex) {
-        logger.logFailedEnrich(obj.wikidata, ex);
+        this.logger.logFailedEnrich(obj.wikidata, ex);
       }
     }
 
-    logger.logItemsEnriched(this.totalEnriched - batchEnriched, this.totalEnriched);
+    this.totalEnriched += batchEnriched;
+    this.logger.logItemsEnriched(batchEnriched, this.totalEnriched);
   }
 
-  public async dispose(): Promise<void> { this.client.close(); }
+  async dispose(): Promise<void> { this.client.close(); }
 }

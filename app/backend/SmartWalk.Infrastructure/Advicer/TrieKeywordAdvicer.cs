@@ -50,7 +50,8 @@ internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
                 {
                     keyword = item.keyword,
                     attributeList = item.attributeList,
-                    bounds = item.bounds
+                    numericBounds = item.numericBounds,
+                    collectBounds = item.collectBounds
                 },
                 item.count
             );

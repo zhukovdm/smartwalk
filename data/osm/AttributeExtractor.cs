@@ -118,7 +118,7 @@ internal static class AttributeExtractor
         bool predicate(string str)
         {
             return str is not null
-                && str.Length >= 5 && str.Length <= 30
+                && str.Length >= 5 && str.Length <= 50
                 && str.All(l => _comp.Contains(l));
         }
 

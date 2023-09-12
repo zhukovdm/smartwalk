@@ -1,7 +1,6 @@
 #!/bin/bash
 
-cd ./wikidata-create/
-npm ci
+cd ./wikidata-create
 npm run build
 npm run start -- \
   --w $1    \

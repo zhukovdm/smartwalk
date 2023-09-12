@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
@@ -41,6 +42,7 @@ internal static class OverpassLocatorFactory
     private static async Task<List<Item>> FetchSquare(ILogger logger, (double, double, double, double) bbox)
     {
         List<Item> result = null;
+        Thread.Sleep(1_000);
 
         var attempt = 0;
         var (w, n, e, s) = bbox;
@@ -55,7 +57,10 @@ internal static class OverpassLocatorFactory
                 var txt = await res.Content.ReadAsStringAsync();
                 result = JsonSerializer.Deserialize<Response>(txt).elements;
             }
-            catch (Exception) { logger.LogWarning("Failed to fetch, {0} attempt.", attempt); }
+            catch (Exception) {
+                logger.LogWarning("Failed to fetch, {0} attempt.", attempt);
+                Thread.Sleep(10_000);
+            }
         } while (result == null && attempt < 3);
 
         result ??= new();
@@ -108,7 +113,7 @@ internal static class OverpassLocatorFactory
 }
 
 /// <summary>
-/// Currently not used in favor of more stable Overpass API.
+/// Currently NOT USED in favor of more stable Overpass API.
 /// </summary>
 internal static class SophoxLocatorFactory
 {

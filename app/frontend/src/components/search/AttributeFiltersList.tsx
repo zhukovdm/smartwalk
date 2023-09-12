@@ -29,6 +29,12 @@ type AttributeFiltersListProps = {
 
 /**
  * Renders five different types of attributes in a `type-unsafe` manner.
+ * 
+ * Note that object members of numeric and collect bounds can be undefined.
+ * It is assumed that if a bound is associated with a keyword, then bound object
+ * should have this object member as well. In particular, the property `bound`
+ * for both AttributeFilterViewNumeric and AttributeFilterViewCollect is always
+ * defined if the component is rendered.
  */
 export default function AttributeFiltersList(
   { adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
@@ -146,7 +152,7 @@ export default function AttributeFiltersList(
                   aria-label={camelCaseToLabel(attr)}
                 >
                   <AttributeFilterViewNumeric
-                    bound={(adviceItem.bounds as any)[attr] as AttributeFilterNumeric}
+                    bound={(adviceItem.numericBounds as any)[attr] as AttributeFilterNumeric}
                     initial={(filters.ns ?? {})[attr]}
                     label={attr}
                     setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[attr] = v; }}
@@ -217,7 +223,7 @@ export default function AttributeFiltersList(
                   aria-label={camelCaseToLabel(attr)}
                 >
                   <AttributeFilterViewCollect
-                    bound={(adviceItem.bounds as any)[attr] as string[]}
+                    bound={(adviceItem.collectBounds as any)[attr] as string[]}
                     initial={(filters.cs ?? {})[attr]}
                     label={attr}
                     setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[attr] = v; }}

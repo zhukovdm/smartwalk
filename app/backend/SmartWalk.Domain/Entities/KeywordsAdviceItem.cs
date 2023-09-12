@@ -17,7 +17,7 @@ public sealed class NumericBound
 }
 
 [BsonIgnoreExtraElements]
-public sealed class Bounds
+public sealed class NumericBounds
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public NumericBound capacity { get; init; }
@@ -33,7 +33,10 @@ public sealed class Bounds
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public NumericBound year { get; init; }
+}
 
+public class CollectBounds
+{
     /// <example>["men"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public CollectBound clothes { get; init; }
@@ -66,5 +69,8 @@ public class KeywordsAdviceItem
     public List<string> attributeList { get; init; }
 
     [Required]
-    public Bounds bounds { get; init; }
+    public NumericBounds numericBounds { get; init; }
+
+    [Required]
+    public CollectBounds collectBounds { get; init; }
 }
