@@ -41,6 +41,9 @@ services:
     image: smartwalk/backend:v1.0.0
     build: ../app/backend/
     container_name: smartwalk-backend
+    environment:
+      - SMARTWALK_MONGO_CONN_STR=mongodb://smartwalk-database:27017
+      - SMARTWALK_OSRM_BASE_URL=http://smartwalk-routing:5000
     ports:
       - 5017:80
     networks:
