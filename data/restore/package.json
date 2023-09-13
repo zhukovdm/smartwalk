@@ -1,6 +1,6 @@
 {
-  "name": "dump",
-  "description": "Store data from object store and index to dump files.",
+  "name": "restore",
+  "description": "Restore object store and index from dump files.",
   "version": "1.0.0",
   "main": "dist/index.js",
   "scripts": {

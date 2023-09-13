@@ -13,7 +13,7 @@ REGION_W=14.18
 
 A_DIR=${PWD}/assets
 
-NODE_DIRS=advice dbpedia dump init taginfo wikidata-create wikidata-enrich
+NODE_DIRS=advice dbpedia dump init restore taginfo wikidata-create wikidata-enrich
 DATA_DIRS=database routing-engine taginfo
 
 # routing engine
@@ -27,7 +27,7 @@ I_URL=http://localhost:9200
 
 ################################################################################
 
-.PHONY: advice check-clean dump init taginfo
+.PHONY: advice check-clean dump init restore taginfo
 
 init-data-dirs:
 	@for dir in $(DATA_DIRS); do mkdir -p $(A_DIR)/$$dir; done
@@ -110,11 +110,17 @@ dump:
 	@cd ./dump && npm run build && npm run start -- \
 		--conn $(M_URL)
 
-restore:
-	echo "DONE!"
+check-restore-files:
+	@for file in keyword place ; do \
+		[ -f $(A_DIR)/dump/$$file.txt ] || { echo "File $$file.txt has not been found..."; exit 1; } \
+	done
+
+restore: check-restore-files
+	@cd ./restore && npm run build && npm run start -- \
+		--conn $(M_URL)
 
 check-clean:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
 
 clean: check-clean
-	@for dir in $(EXTRA_DIRS) ; do sudo rm -rf $(A_DIR)/$$dir ; done
+	@for dir in $(EXTRA_DIRS); do sudo rm -rf $(A_DIR)/$$dir ; done
