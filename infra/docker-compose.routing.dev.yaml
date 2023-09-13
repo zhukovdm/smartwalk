@@ -1,0 +1,25 @@
+version: '3.8'
+name: smartwalk-routing
+services:
+  routing:
+    image: smartwalk/routing:v5.24.0
+    build:
+      context: ./
+      dockerfile: Dockerfile.routing
+    container_name: smartwalk-routing
+    environment:
+      REGION_FILE: czech-republic-latest
+    ports:
+      - 5000:5000
+    volumes:
+      - ../data/assets/routing:/data
+    entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${REGION_FILE}.osrm
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 2m
+networks:
+  default:
+    name: net

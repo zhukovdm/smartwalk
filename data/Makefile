@@ -4,20 +4,20 @@
 
 REGION_FILE=czech-republic-latest
 
+REGION_W=14.18
 REGION_N=50.20
 REGION_E=14.80
 REGION_S=49.90
-REGION_W=14.18
 
 ################################################################################
 
 A_DIR=${PWD}/assets
 
 NODE_DIRS=advice dbpedia dump init restore taginfo wikidata-create wikidata-enrich
-DATA_DIRS=database routing-engine taginfo
+DATA_DIRS=database routing taginfo
 
 # routing engine
-R_CMD=docker run --rm -t -v $(A_DIR)/routing-engine:/data osrm/osrm-backend:v5.24.0
+R_CMD=docker run --rm -t -v $(A_DIR)/routing:/data osrm/osrm-backend:v5.24.0
 
 # entity store
 M_URL=mongodb://localhost:27017
@@ -27,7 +27,7 @@ I_URL=http://localhost:9200
 
 ################################################################################
 
-.PHONY: advice check-clean dump init restore taginfo
+.PHONY: advice check-clean dump init restore routing taginfo
 
 init-data-dirs:
 	@for dir in $(DATA_DIRS); do mkdir -p $(A_DIR)/$$dir; done
@@ -41,12 +41,12 @@ check-region-file:
 
 init: init-data-dirs init-node-dirs check-region-file
 
-routing-engine:
-	@cp $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf $(A_DIR)/routing-engine && \
+routing:
+	@cp $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf $(A_DIR)/routing && \
 	$(R_CMD) osrm-extract -p /opt/foot.lua /data/$(REGION_FILE).osm.pbf && \
 	$(R_CMD) osrm-partition /data/$(REGION_FILE).osrm && \
 	$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm && \
-	rm $(A_DIR)/routing-engine/$(REGION_FILE).osm.pbf
+	rm $(A_DIR)/routing/$(REGION_FILE).osm.pbf
 
 taginfo:
 	@cd ./taginfo && npm run build && npm run start -- \
