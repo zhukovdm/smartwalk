@@ -1,0 +1,63 @@
+version: '3.8'
+name: smartwalk
+services:
+  database:
+    image: mongo:4.4.23
+    container_name: smartwalk-database
+    ports:
+      - 27017:27017
+    volumes:
+      - ../data/assets/database:/data/db
+    networks:
+      - database-net
+    healthcheck:
+      test: mongo --eval 'db.runCommand({ping:1}).ok' localhost:27017/smartwalk --quiet
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 1m
+  routing:
+    image: smartwalk/routing:v5.24.0
+    build:
+      context: ./
+      dockerfile: Dockerfile.routing
+    container_name: smartwalk-routing
+    environment:
+      REGION_FILE: czech-republic-latest
+    ports:
+      - 5000:5000
+    volumes:
+      - ../data/assets/routing:/data
+    networks:
+      - routing-net
+    entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${REGION_FILE}.osrm
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 2m
+  backend:
+    image: smartwalk/backend:v1.0.0
+    build: ../app/backend/
+    container_name: smartwalk-backend
+    ports:
+      - 5017:80
+    networks:
+      - database-net
+      - routing-net
+    depends_on:
+      database:
+        condition: service_healthy
+      routing:
+        condition: service_healthy
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider 'http://localhost:80/healthcheck' || exit 1
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 2m
+networks:
+  database-net:
+  frontend-net:
+  routing-net:

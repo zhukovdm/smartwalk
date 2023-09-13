@@ -1,9 +1,9 @@
 version: '3.8'
-name: smartwalk-database-dev
+name: smartwalk-database
 services:
   database:
     image: mongo:4.4.23
-    container_name: smartwalk-database-dev
+    container_name: smartwalk-database
     ports:
       - 27017:27017
     volumes:
@@ -11,9 +11,9 @@ services:
     healthcheck:
       test: mongo --eval 'db.runCommand({ping:1}).ok' localhost:27017/smartwalk --quiet
       interval: 15s
-      timeout: 10s
+      timeout: 15s
       retries: 10
       start_period: 1m
 networks:
   default:
-    name: smartwalk-database-dev-net
+    name: net
