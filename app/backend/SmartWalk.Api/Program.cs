@@ -34,7 +34,7 @@ public class Program
         builder.Services.AddHealthChecks();
 
         builder.Services.AddSwaggerGen((g) => {
-            g.SwaggerDoc("v1", new OpenApiInfo()
+            g.SwaggerDoc("v1", new OpenApiInfo
             {
                 Title = "SmartWalk.Api",
                 Version = "1.0.0",
@@ -75,10 +75,10 @@ public class Program
 
         if (wapp.Environment.IsDevelopment())
         {
-            wapp.UseSwagger()
-                .UseSwaggerUI(u => {
-                    u.SwaggerEndpoint("v1/swagger.yaml", "SmartWalk.Api");
-                });
+            wapp.UseSwagger().UseSwaggerUI(u =>
+            {
+                u.SwaggerEndpoint("v1/swagger.yaml", "SmartWalk.Api");
+            });
         }
 
         wapp.UseCors(_policy)

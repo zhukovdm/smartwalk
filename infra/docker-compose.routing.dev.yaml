@@ -2,13 +2,11 @@ version: '3.8'
 name: smartwalk-routing
 services:
   routing:
-    image: smartwalk/routing:v5.24.0
+    image: smartwalk/routing:v1.0.0
     build:
       context: ./
       dockerfile: Dockerfile.routing
     container_name: smartwalk-routing
-    environment:
-      REGION_FILE: czech-republic-latest
     ports:
       - 5000:5000
     volumes:

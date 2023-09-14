@@ -1,24 +1,18 @@
 {
-  "id": "/smartwalk/",
   "short_name": "SmartWalk",
   "name": "SmartWalk | Explore your local area",
   "description": "Web application for keyword-aware walking route search",
   "version": "1.0.0",
   "icons": [
     {
-      "purpose": "any maskable",
-      "sizes": "any",
-      "src": "assets/logo/logo.svg",
-      "type": "image/svg+xml"
-    },
-    {
       "sizes": "512x512",
       "src": "assets/logo/logo.png",
       "type": "image/png"
     }
   ],
-  "start_url": ".",
+  "id": "/index.html",
+  "start_url": "/index.html",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#1769aa",
   "background_color": "#ffffff"
 }

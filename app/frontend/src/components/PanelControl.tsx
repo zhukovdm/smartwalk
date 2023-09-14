@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import {
-  HashRouter,
+  BrowserRouter,
   Navigate,
   Route,
   Routes
@@ -64,7 +64,7 @@ export default function PanelControl(): JSX.Element {
   useEffect(() => { dispatch(showPanel()); }, [dispatch]);
 
   return (
-    <HashRouter>
+    <BrowserRouter>
       <Box sx={{ position: "absolute", top: "10px", left: "10px" }}>
         <Fab
           color={"primary"}
@@ -125,6 +125,6 @@ export default function PanelControl(): JSX.Element {
           <Route path={"*"} element={<NotFoundPanel />} />
         </Routes>
       </Drawer>
-    </HashRouter>
+    </BrowserRouter>
   );
 }

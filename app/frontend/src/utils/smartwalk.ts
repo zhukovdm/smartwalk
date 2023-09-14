@@ -13,7 +13,7 @@ import {
 } from "../domain/types";
 import OsrmProjectFetcher from "./osrmProject";
 
-const SMARTWALK_BASE_URL = process.env.REACT_APP_API_ADDRESS!;
+const SMARTWALK_BASE_URL = `${window.location.origin}/api`;
 
 // advice service
 
