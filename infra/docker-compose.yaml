@@ -5,7 +5,7 @@ services:
     image: mongo:4.4.23
     container_name: smartwalk-database
     ports:
-      - 27017:27017
+      - '27017:27017'
     volumes:
       - ../data/assets/database:/data/db
     networks:
@@ -17,15 +17,13 @@ services:
       retries: 10
       start_period: 1m
   routing:
-    image: smartwalk/routing:v5.24.0
+    image: smartwalk/routing:v1.0.0
     build:
       context: ./
       dockerfile: Dockerfile.routing
     container_name: smartwalk-routing
-    environment:
-      REGION_FILE: czech-republic-latest
     ports:
-      - 5000:5000
+      - '5000:5000'
     volumes:
       - ../data/assets/routing:/data
     networks:
@@ -45,9 +43,12 @@ services:
       - SMARTWALK_MONGO_CONN_STR=mongodb://smartwalk-database:27017
       - SMARTWALK_OSRM_BASE_URL=http://smartwalk-routing:5000
     ports:
-      - 5017:80
+      - '5017:80'
+    volumes:
+      - ./backend/keys/:/root/.aspnet/DataProtection-Keys/
     networks:
       - database-net
+      - frontend-net
       - routing-net
     depends_on:
       database:
@@ -55,11 +56,28 @@ services:
       routing:
         condition: service_healthy
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider 'http://localhost:80/healthcheck' || exit 1
+      test: wget --no-verbose --tries=1 --spider 'http://localhost:5017/healthcheck' || exit 1
       interval: 15s
       timeout: 15s
       retries: 10
       start_period: 2m
+  frontend:
+    image: smartwalk/frontend:v1.0.0
+    build: ../app/frontend/
+    container_name: smartwalk-frontend
+    ports:
+      - '3000:80'
+    networks:
+      - frontend-net
+    depends_on:
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: curl --fail http://localhost:80/ || exit 1
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 3m
 networks:
   database-net:
   frontend-net:

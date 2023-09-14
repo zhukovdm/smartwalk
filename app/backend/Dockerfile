@@ -24,6 +24,7 @@ RUN dotnet publish --use-current-runtime --self-contained false --no-restore -o 
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
+ENV ASPNETCORE_URLS=""
 RUN apt-get update ; apt-get -y install wget
 
 WORKDIR /opt/app/
