@@ -42,6 +42,7 @@ export default function MapControl(): JSX.Element {
       center={cnt}
       scrollWheelZoom={true}
       zoom={11}
+      maxZoom={18}
       zoomControl={false}
     >
       <TileLayer url={url} attribution={att} />
