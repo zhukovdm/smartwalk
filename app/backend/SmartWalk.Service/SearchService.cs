@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -30,6 +31,11 @@ public static class SearchService
     #endregion
 
     #region Routes
+
+    /// <summary>
+    /// Time span the server is allowed to spend on route calculation (in milliseconds).
+    /// </summary>
+    private static readonly int ROUTE_CALCULATION_TIME_LIMIT_MS = 1_000;
 
     private sealed class SolverPlaceComparer : IComparer<SolverPlace>
     {
@@ -82,7 +88,8 @@ public static class SearchService
                 return acc;
             });
 
-        while (true)
+        var startedAt = DateTime.Now;
+        do
         {
             var seq = SolverFactory.GetSolver()
                 .Solve(solverSource, solverTarget, solverPlaces, distMatrix, precMatrix);
@@ -104,7 +111,11 @@ public static class SearchService
                     // ensure only satisfied categories!
                     acc.Add(new()
                     {
-                        smartId = p.smartId, name = p.name, location = p.location, keywords = p.keywords, categories = new() { sp.cat }
+                        smartId = p.smartId,
+                        name = p.name,
+                        location = p.location,
+                        keywords = p.keywords,
+                        categories = new() { sp.cat }
                     });
                     return acc;
                 })
@@ -120,7 +131,7 @@ public static class SearchService
             }
 
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
-        }
+        } while ((DateTime.Now - startedAt).TotalMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
 
         result.Sort(new RouteComparer());
         return result;
