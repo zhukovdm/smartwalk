@@ -65,6 +65,7 @@ export function renderWithProviders(
   ui: ReactNode, { preloadedState, context, ...renderOptions }: AppRenderOptions) {
 
   const store = setupStore(preloadedState);
+
   return {
     store: store,
     ...render(withContext(withStore(withRouter(ui), store), context), { ...renderOptions })
