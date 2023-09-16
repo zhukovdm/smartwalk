@@ -22,8 +22,13 @@ using Direc = ShortestPath;
 [Route("api/search")]
 public sealed class SearchController : ControllerBase
 {
-    private static ProblemDetails GetProblemDetails(int status, string detail)
-        => new() { Status = status, Detail = detail };
+    private static ValidationProblemDetails GetValidationProblemDetails(string detail)
+    {
+        return new(new Dictionary<string, string[]>
+        {
+            { "query", new string[] { detail } }
+        });
+    }
 
     private static bool VerifyDistance(WgsPoint source, WgsPoint target, double maxDistance)
         => Spherical.HaversineDistance(source, target) <= maxDistance && maxDistance <= 30_000;
@@ -119,7 +124,7 @@ public sealed class SearchController : ControllerBase
     [Route("direcs", Name = "SearchDirecs")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] DirecsRequest request)
     {
@@ -129,7 +134,7 @@ public sealed class SearchController : ControllerBase
         {
             dq = DeserializeQuery<DirecsQuery>(request.query, _direcsSchema);
         }
-        catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
+        catch (Exception ex) { return BadRequest(GetValidationProblemDetails(ex.Message)); }
 
         try
         {
@@ -178,7 +183,7 @@ public sealed class SearchController : ControllerBase
     [Route("places", Name = "SearchPlaces")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] PlacesRequest request)
     {
@@ -188,7 +193,7 @@ public sealed class SearchController : ControllerBase
         {
             pq = DeserializeQuery<PlacesQuery>(request.query, _placesSchema);
         }
-        catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
+        catch (Exception ex) { return BadRequest(GetValidationProblemDetails(ex.Message)); }
 
         try
         {
@@ -244,7 +249,7 @@ public sealed class SearchController : ControllerBase
     [Route("routes", Name = "SearchRoutes")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] RoutesRequest request)
     {
@@ -258,17 +263,17 @@ public sealed class SearchController : ControllerBase
             rq = DeserializeQuery<RoutesQuery>(request.query, _routesSchema);
 
             if (!VerifyPrecedence(rq.precedence, rq.categories.Count)) {
-                throw new Exception("Malformed precedence graph");
+                throw new Exception("Malformed precedence graph.");
             }
 
             s = rq.source.AsWgs();
             t = rq.target.AsWgs();
 
             if (!VerifyDistance(s, t, rq.maxDistance.Value)) {
-                throw new Exception("Malformed point-distance configuration");
+                throw new Exception("Malformed point-distance configuration.");
             }
         }
-        catch (Exception ex) { return BadRequest(GetProblemDetails(400, ex.Message)); }
+        catch (Exception ex) { return BadRequest(GetValidationProblemDetails(ex.Message)); }
 
         var precedence = rq.precedence
             .Select(p => new PrecedenceEdge(p.fr.Value, p.to.Value)).ToList();

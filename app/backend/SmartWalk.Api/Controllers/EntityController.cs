@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -35,14 +36,17 @@ public sealed class EntityController : ControllerBase
     [Route("places/{smartId}", Name = "GetPlace")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
         if (!VerifySmartId(smartId))
         {
-            return BadRequest(new ProblemDetails() { Status = 400, Detail = "Malformed smartId" });
+            return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
+            {
+                { "smartId", new string[] { "Malformed identifier." } }
+            }));
         }
 
         try
