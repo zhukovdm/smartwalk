@@ -5,13 +5,13 @@ import { updateItemImmutable } from "../utils/functions";
 type ResultRoutesState = {
   index: number;
   result: UiRoute[];
-  resultFilters: boolean[];
+  categoryFilters: boolean[];
 };
 
 export const initialResultRoutesState = (): ResultRoutesState => ({
   index: 0,
   result: [],
-  resultFilters: []
+  categoryFilters: []
 });
 
 export const resultRoutesSlice = createSlice({
@@ -22,7 +22,7 @@ export const resultRoutesSlice = createSlice({
     setResultRoutes: (state, action: PayloadAction<UiRoute[]>) => {
       const r = action.payload;
       state.result = r;
-      state.resultFilters = r[0]?.categories.map(() => true) ?? [];
+      state.categoryFilters = r[0]?.categories.map(() => true) ?? [];
     },
     updateResultRoute: (state, action: PayloadAction<{ route: UiRoute, index: number }>) => {
       const { route, index } = action.payload;
@@ -30,7 +30,7 @@ export const resultRoutesSlice = createSlice({
     },
     toggleResultRoutesFilter: (state, action: PayloadAction<number>) => {
       const i = action.payload;
-      state.resultFilters = updateItemImmutable(state.resultFilters, !state.resultFilters[i], i);
+      state.categoryFilters = updateItemImmutable(state.categoryFilters, !state.categoryFilters[i], i);
     },
     setResultRoutesIndex: (state, action: PayloadAction<number>) => {
       state.index = action.payload;

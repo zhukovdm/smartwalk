@@ -45,7 +45,7 @@ export default function ResultRoutesContent(): JSX.Element {
   const {
     index,
     result,
-    resultFilters: filterList
+    categoryFilters: filterList
   } = useAppSelector((state) => state.resultRoutes);
 
   const [showM, setShowM] = useState(false);
@@ -109,10 +109,7 @@ export default function ResultRoutesContent(): JSX.Element {
     <Stack direction={"column"} gap={2.5}>
       <Stack gap={1}>
         <Typography>
-          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with
-          distances of at most <strong>{maxDistance}</strong>&nbsp;km, visiting at least one place from each
-          of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged
-          by <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
+          Found a total of <strong>{result.length}</strong> route{result.length > 1 ? "s" : ""} with {result.length > 1 ? "distances" : "a distance"} of at most <strong>{maxDistance}</strong>&nbsp;km, visiting at least one place from {(categories.length > 1) ? "each of the following categories" : "the following category"} (arranged by <ArrowsLinkButton onClick={() => { setShowP(true); }} />):
         </Typography>
         <CategoryFilterList
           categories={categories}

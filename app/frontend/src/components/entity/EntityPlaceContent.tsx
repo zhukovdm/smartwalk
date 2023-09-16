@@ -242,7 +242,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 className={"entity-place"}
                 titleAccess={"Address"}
               />
-              <Typography noWrap>{composeAddress(address)}</Typography>
+              <Typography>{composeAddress(address)}</Typography>
             </Stack>
           }
           {website &&
@@ -254,16 +254,21 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               <OpenInNewIcon
                 aria-hidden
                 className={"entity-place"}
-                titleAccess={"Webpage"}
+                titleAccess={"Website"}
               />
-              <Link
-                href={website}
-                rel={"noopener noreferrer"}
-                target={"_blank"}
-                underline={"none"}
+              <Typography
+                noWrap={true}
+                sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                <Typography>{website}</Typography>
-              </Link>
+                <Link
+                  href={website}
+                  rel={"noopener noreferrer"}
+                  target={"_blank"}
+                  underline={"none"}
+                >
+                  {website}
+                </Link>
+              </Typography>
             </Stack>
           }
           {phone &&
@@ -277,14 +282,19 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 className={"entity-place"}
                 titleAccess={"Phone number"}
               />
-              <Link
-                href={`tel:${phone}`}
-                rel={"noopener noreferrer"}
-                target={"_top"}
-                underline={"none"}
+              <Typography
+                noWrap={true}
+                sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                <Typography>{phone}</Typography>
-              </Link>
+                <Link
+                  href={`tel:${phone}`}
+                  rel={"noopener noreferrer"}
+                  target={"_top"}
+                  underline={"none"}
+                >
+                  {phone}
+                </Link>
+              </Typography>
             </Stack>
           }
           {email &&
@@ -298,14 +308,19 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 className={"entity-place"}
                 titleAccess={"Email"}
               />
-              <Link
-                href={`mailto:${email}`}
-                rel={"noopener noreferrer"}
-                target={"_top"}
-                underline={"none"}
+              <Typography
+                noWrap={true}
+                sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                <Typography>{email}</Typography>
-              </Link>
+                <Link
+                  href={`mailto:${email}`}
+                  rel={"noopener noreferrer"}
+                  target={"_top"}
+                  underline={"none"}
+                >
+                  {email}
+                </Link>
+              </Typography>
             </Stack>
           }
           {socialNetworks &&

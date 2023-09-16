@@ -162,15 +162,16 @@ export const getRoute = (): UiRoute => ({
   name: "",
   source: {
     ...getPlace(),
-    name: "Source",
+    name: "Source S",
     placeId: "1", // stored!
     smartId: "S"
   },
   target: {
     ...getPlace(),
-    name: "Target"
+    placeId: "2", // stored!
+    name: "Target T"
   },
-  maxDistance: 5.0,
+  maxDistance: 5,
   categories: [
     { keyword: "castle", filters: {} },
     { keyword: "museum", filters: {} },
@@ -189,28 +190,28 @@ export const getRoute = (): UiRoute => ({
     // common & repeated
     {
       ...getPlace(),
-      name: "Medieval castle",
+      name: "Place A",
       smartId: "A",
       categories: [0, 1]
     },
     // common
     {
       ...getPlace(),
-      name: "Old statue",
+      name: "Place B",
       smartId: "B",
       categories: [2]
     },
     // stored
     {
       ...getPlace(),
-      name: "Flea market",
+      name: "Place C",
       smartId: "C",
       categories: [3]
     },
     // common
     {
       ...getPlace(),
-      name: "Movie theater",
+      name: "Place D",
       smartId: "D",
       categories: [4]
     }

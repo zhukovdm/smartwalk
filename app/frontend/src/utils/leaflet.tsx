@@ -8,8 +8,6 @@ import L, {
   PointExpression
 } from "leaflet";
 import "leaflet.markercluster";
-import "leaflet.markercluster/dist/MarkerCluster.css";
-import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import * as ReactDOMServer from "react-dom/server";
 import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { IMap, IPin } from "../domain/interfaces";
