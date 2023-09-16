@@ -13,9 +13,14 @@ namespace SmartWalk.Infrastructure.EntityIndex;
 
 using Filter = FilterDefinition<ExtendedPlace>;
 
-internal sealed class MongoEntityIndex : MongoService, IEntityIndex
+internal sealed class MongoEntityIndex : IEntityIndex
 {
-    private MongoEntityIndex(IMongoDatabase database) : base(database) { }
+    private readonly IMongoCollection<ExtendedPlace> _collection;
+
+    private MongoEntityIndex(IMongoCollection<ExtendedPlace> collection)
+    {
+        _collection = collection;
+    }
 
     private static IEnumerable<T> Deserialize<T>(List<BsonDocument> docs)
         => docs.Select((doc) => BsonSerializer.Deserialize<T>(doc));
@@ -28,8 +33,7 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
     /// <returns>List of places that satisfy at least one category filter.</returns>
     private async Task<List<Place>> FetchPlaces(Filter filter, int? categoryId)
     {
-        var docs = await _database
-            .GetCollection<ExtendedPlace>(MongoDatabaseFactory.PLACE_COLL)
+        var docs = await _collection
             .Find(filter)
             .Project(Builders<ExtendedPlace>.Projection
                 .Exclude(p => p.linked)
@@ -80,5 +84,6 @@ internal sealed class MongoEntityIndex : MongoService, IEntityIndex
         return FetchCategories(wf, categories);
     }
 
-    public static IEntityIndex GetInstance(IMongoDatabase database) => new MongoEntityIndex(database);
+    public static IEntityIndex GetInstance(IMongoCollection<ExtendedPlace> collection)
+        => new MongoEntityIndex(collection);
 }

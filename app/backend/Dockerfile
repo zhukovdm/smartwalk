@@ -30,6 +30,6 @@ RUN apt-get update ; apt-get -y install wget
 WORKDIR /opt/app/
 COPY --from=build /opt/app/ ./
 
-ENTRYPOINT [ "dotnet", "SmartWalk.Api.dll" ]
+ENTRYPOINT ["dotnet", "SmartWalk.Api.dll"]
 
 EXPOSE 80

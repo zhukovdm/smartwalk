@@ -7,10 +7,9 @@ using Item = TrieKeywordsAdvicer.Item;
 
 internal sealed class MongoKeywordsAdvicer
 {
-    internal static IKeywordsAdvicer GetInstance(IMongoDatabase database)
+    internal static IKeywordsAdvicer GetInstance(IMongoCollection<Item> collection)
     {
-        var docs = database
-            .GetCollection<Item>("keyword")
+        var docs = collection
             .Find(FilterDefinition<Item>.Empty)
             .ToEnumerable(); // synchronous!
 

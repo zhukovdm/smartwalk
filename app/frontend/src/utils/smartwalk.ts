@@ -13,21 +13,21 @@ import {
 } from "../domain/types";
 import OsrmProjectFetcher from "./osrmProject";
 
-const SMARTWALK_BASE_URL = `${window.location.origin}/api`;
+const SMARTWALK_API_BASE_URL = `${process.env.REACT_APP_SMARTWALK_API_ORIGIN}/api`;
 
 // advice service
 
-const SMARTWALK_ADVICE_URL = SMARTWALK_BASE_URL + "/advice";
+const SMARTWALK_ADVICE_URL = SMARTWALK_API_BASE_URL + "/advice";
 const SMARTWALK_ADVICE_KEYWORDS_URL = SMARTWALK_ADVICE_URL + "/keywords?";
 
 // entity service
 
-const SMARTWALK_ENTITY_URL = SMARTWALK_BASE_URL + "/entity";
+const SMARTWALK_ENTITY_URL = SMARTWALK_API_BASE_URL + "/entity";
 const SMARTWALK_ENTITY_PLACES_URL = SMARTWALK_ENTITY_URL + "/places";
 
 // search service
 
-const SMARTWALK_SEARCH_URL = SMARTWALK_BASE_URL + "/search";
+const SMARTWALK_SEARCH_URL = SMARTWALK_API_BASE_URL + "/search";
 // const SMARTWALK_SEARCH_DIRECS_URL = SMARTWALK_SEARCH_URL + "/direcs?query=";
 const SMARTWALK_SEARCH_PLACES_URL = SMARTWALK_SEARCH_URL + "/places?query=";
 const SMARTWALK_SEARCH_ROUTES_URL = SMARTWALK_SEARCH_URL + "/routes?query=";
