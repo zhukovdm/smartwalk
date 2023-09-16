@@ -1,4 +1,4 @@
-import { Db, MongoClient } from "mongodb";
+import { Db, MongoClient, ObjectId } from "mongodb";
 import Logger from "./logger";
 
 const DATABASE_NAME = "smartwalk";
@@ -17,9 +17,9 @@ export default class Model {
   private objects: any[] = [];
 
   private async write(coll: ObjectKind): Promise<void> {
-    await this.database.collection(coll).bulkWrite(this.objects.map((object) => ({
+    await this.database.collection(coll).bulkWrite(this.objects.map(({ _id, ...rest }) => ({
       insertOne: {
-        document: object
+        document: { ...rest, _id: new ObjectId(_id) }
       }
     })));
     this.objects = [];
@@ -33,7 +33,6 @@ export default class Model {
   }
 
   async createPlace(object: any): Promise<void> {
-
     if (this.objects.push(object) >= 1000) {
       await this.write("place");
     }
