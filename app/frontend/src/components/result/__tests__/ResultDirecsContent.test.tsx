@@ -5,12 +5,14 @@ import {
   within
 } from "@testing-library/react";
 import { LeafletMap } from "../../../utils/leaflet";
-import { getDirec } from "../../../utils/testData";
+import { getDirec, getPlace } from "../../../utils/testData";
 import {
   AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
+import InmemStorage from "../../../utils/inmemStorage";
 import { context } from "../../../features/context";
+import { initialFavoritesState } from "../../../features/favoritesSlice";
 import { initialResultDirecsState } from "../../../features/resultDirecsSlice";
 import ResultDirecsContent from "../ResultDirecsContent";
 
@@ -34,21 +36,26 @@ describe("<ResultDirecsContent />", () => {
     expect(container).toBeTruthy();
   });
 
-  it("should generate header for =1 direction", () => {
-    const { getByText } = render({
-      preloadedState: {
-        resultDirecs: {
-          ...initialResultDirecsState(),
-          result: [getDirec()]
-        }
-      }
-    });
-    expect(getByText("Found a total of", { exact: false })).toHaveTextContent("Found a total of 1 direction.");
-  });
+  describe("header", () => {
 
-  it("should generate header for >1 directions", () => {
-    const { getByText } = render();
-    expect(getByText("Found a total of", { exact: false })).toHaveTextContent("Found a total of 3 directions.");
+    it("should generate header for =1 direction", () => {
+      const { getByText } = render({
+        preloadedState: {
+          resultDirecs: {
+            ...initialResultDirecsState(),
+            result: [
+              getDirec()
+            ]
+          }
+        }
+      });
+      expect(getByText("Found a total of", { exact: false })).toHaveTextContent("Found a total of 1 direction.");
+    });
+
+    it("should generate header for >1 directions", () => {
+      const { getByText } = render();
+      expect(getByText("Found a total of", { exact: false })).toHaveTextContent("Found a total of 3 directions.");
+    });
   });
 
   describe("pagination", () => {
@@ -115,23 +122,26 @@ describe("<ResultDirecsContent />", () => {
     });
   });
 
-  it("should generate alert for stored direction", () => {
-    const { getByText } = render({
-      preloadedState: {
-        resultDirecs: {
-          ...initialResultDirecsState(),
-          result: [
-            { ...getDirec(), direcId: "1", name: "Direction A" }
-          ]
-        }
-      }
-    });
-    expect(getByText("Saved as", { exact: false })).toHaveTextContent("Saved as Direction A.");
-  });
+  describe("alert", () => {
 
-  it("should generate alert for unstored direction", () => {
-    const { getByText } = render();
-    expect(getByText("This direction is not in your Favorites yet.")).toBeInTheDocument();
+    it("should generate alert for unstored direction", () => {
+      const { getByText } = render();
+      expect(getByText("This direction is not in your Favorites yet.")).toBeInTheDocument();
+    });
+
+    it("should generate alert for stored direction", () => {
+      const { getByText } = render({
+        preloadedState: {
+          resultDirecs: {
+            ...initialResultDirecsState(),
+            result: [
+              { ...getDirec(), direcId: "1", name: "Direction A" }
+            ]
+          }
+        }
+      });
+      expect(getByText("Saved as", { exact: false })).toHaveTextContent("Saved as Direction A.");
+    });
   });
 
   it("should generate distance without trailing zeros", () => {
@@ -144,38 +154,74 @@ describe("<ResultDirecsContent />", () => {
     expect(getByRole("list", { name: "Waypoints" })).toBeInTheDocument();
   });
 
-  it("should refresh map for every direction", () => {
-    const map = new LeafletMap();
-    const clear = jest.spyOn(map, "clear").mockImplementation(jest.fn());
-    const flyTo = jest.spyOn(map, "flyTo").mockImplementation(jest.fn());
-    const addCommon = jest.spyOn(map, "addCommon").mockImplementation(jest.fn());
-    const drawPolyline = jest.spyOn(map, "drawPolyline").mockImplementation(jest.fn());
+  describe("map", () => {
 
-    const { getByRole } = render({
-      ...getState(),
-      context: { ...context, map: map }
+    it("should draw stored and unstored waypoints", () => {
+      const map = new LeafletMap();
+      const addStored = jest.spyOn(map, "addStored").mockImplementation(jest.fn());
+      const addCommon = jest.spyOn(map, "addCommon").mockImplementation(jest.fn());
+
+      const { } = render({
+        preloadedState: {
+          ...getState().preloadedState,
+          favorites: {
+            ...initialFavoritesState(),
+            places: [
+              {
+                ...getPlace(),
+                name: "Place X",
+                placeId: "2",
+                smartId: "B"
+              },
+              {
+                ...getPlace(),
+                name: "Place Y",
+                placeId: "4",
+                smartId: "D"
+              }
+            ]
+          }
+        },
+        context: { ...context, map: map }
+      });
+
+      expect(addStored).toHaveBeenCalledTimes(2);
+      expect(addCommon).toHaveBeenCalledTimes(3);
     });
 
-    [
-      [clear, 1],
-      [flyTo, 0],
-      [addCommon, 5],
-      [drawPolyline, 1]
-    ].forEach(([spy, times]) => {
-      expect(spy).toHaveBeenCalledTimes(times as number);
+    it("should refresh map for every direction", () => {
+      const map = new LeafletMap();
+      const clear = jest.spyOn(map, "clear").mockImplementation(jest.fn());
+      const flyTo = jest.spyOn(map, "flyTo").mockImplementation(jest.fn());
+      const addCommon = jest.spyOn(map, "addCommon").mockImplementation(jest.fn());
+      const drawPolyline = jest.spyOn(map, "drawPolyline").mockImplementation(jest.fn());
+  
+      const { getByRole } = render({
+        ...getState(),
+        context: { ...context, map: map }
+      });
+  
+      [
+        [clear, 1],
+        [flyTo, 0],
+        [addCommon, 5],
+        [drawPolyline, 1]
+      ].forEach(([spy, times]) => {
+        expect(spy).toHaveBeenCalledTimes(times as number);
+      });
+  
+      fireEvent.click(getByRole("button", { name: "Go to page 2" }));
+  
+      [
+        [clear, 2],
+        [flyTo, 0],
+        [addCommon, 10],
+        [drawPolyline, 2]
+      ].forEach(([spy, times]) => {
+        expect(spy).toHaveBeenCalledTimes(times as number);
+      });
     });
-
-    fireEvent.click(getByRole("button", { name: "Go to page 2" }));
-
-    [
-      [clear, 2],
-      [flyTo, 0],
-      [addCommon, 10],
-      [drawPolyline, 2]
-    ].forEach(([spy, times]) => {
-      expect(spy).toHaveBeenCalledTimes(times as number);
-    });
-  });
+  })
 
   test("control menu has only Save option", () => {
     const { getAllByRole, getByRole } = render();
@@ -222,9 +268,12 @@ describe("<ResultDirecsContent />", () => {
     expect(saveButton).not.toHaveAttribute("disabled");
   });
 
-  it("should update state upon Save", async () => {
-
-    const { getByRole, getByText, queryByRole, store } = render();
+  it("should update `state` and `context` upon Save", async () => {
+    const storage = new InmemStorage();
+    const { getByRole, getByText, queryByRole, store } = render({
+      ...getState(),
+      context: { ...context, storage: storage }
+    });
 
     expect(store.getState().favorites.direcs).toHaveLength(0);
 
@@ -238,7 +287,9 @@ describe("<ResultDirecsContent />", () => {
     await waitFor(() => {
       expect(queryByRole("dialog", { name: "Save direction" })).not.toBeInTheDocument();
     });
+
     expect(getByText("Direction A")).toBeInTheDocument();
+    expect(await storage.getDirecIdentifiers()).toHaveLength(1);
     expect(store.getState().favorites.direcs).toHaveLength(1);
   });
 

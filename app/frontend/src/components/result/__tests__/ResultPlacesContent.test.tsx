@@ -281,6 +281,36 @@ describe("<ResultPlacesContent />", () => {
         .getAllByRole("listitem")).toHaveLength(4);
       expect(getByRole("button", { name: "page 1" })).toBeInTheDocument();
     });
+
+    it("should deactivate filter if no place was found", () => {
+      const { getByRole } = render({
+        result: {
+          ...getProps().result,
+          places: [
+            {
+              ...getPlace(),
+              smartId: "A",
+              keywords: ["a", "k"],
+              categories: [0],
+              name: "Place A",
+            },
+            {
+              ...getPlace(),
+              smartId: "C",
+              keywords: ["c", "m"],
+              categories: [2],
+              name: "Place C"
+            }
+          ]
+        }
+      });
+      ["2: b"].forEach((name) => {
+        expect(within(getByRole("listitem", { name: name })).getByRole("checkbox")).toHaveAttribute("disabled");
+      });
+      ["1: a", "3: c"].forEach((name) => {
+        expect(within(getByRole("listitem", { name: name })).getByRole("checkbox")).not.toHaveAttribute("disabled");
+      });
+    });
   });
 
   describe("pagination", () => {
@@ -324,14 +354,14 @@ describe("<ResultPlacesContent />", () => {
 
   describe("rows per page", () => {
 
-    test("set to <10 per page", () => {
+    test("setting to <10 items per page should adjust list", () => {
       const { getAllByText, getByRole } = render();
       fireEvent.mouseDown(getByRole("button", { name: "10" }));
       fireEvent.click(getByRole("option", { name: "5" }));
       expect(getAllByText("Place ", { exact: false })).toHaveLength(5);
     });
 
-    test("set to >10 per page", () => {
+    test("setting to >10 items per page should adjust list", () => {
       const { getAllByText, getByRole } = render();
       fireEvent.mouseDown(getByRole("button", { name: "10" }));
       fireEvent.click(getByRole("option", { name: "50" }));
@@ -355,6 +385,20 @@ describe("<ResultPlacesContent />", () => {
       expect(within(getByRole("navigation", { name: "pagination navigation" }))
         .getAllByRole("listitem")).toHaveLength(7);
       expect(getByRole("button", { name: "page 1" })).toBeInTheDocument();
+    });
+
+    test("setting to <10 items per page should alter pagination", () => {
+      const { getByRole } = render();
+      fireEvent.mouseDown(getByRole("button", { name: "10" }));
+      fireEvent.click(getByRole("option", { name: "5" }));
+      expect(within(getByRole("navigation", { name: "pagination navigation" })).getAllByRole("listitem")).toHaveLength(3 + 2);
+    });
+
+    test("setting to >10 items per page should alter pagination", () => {
+      const { getByRole } = render();
+      fireEvent.mouseDown(getByRole("button", { name: "10" }));
+      fireEvent.click(getByRole("option", { name: "50" }));
+      expect(within(getByRole("navigation", { name: "pagination navigation" })).getAllByRole("listitem")).toHaveLength(1 + 2);
     });
   });
 

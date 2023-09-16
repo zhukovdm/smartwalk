@@ -10,6 +10,7 @@ import {
   AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
+import InmemStorage from "../../../utils/inmemStorage";
 import { context } from "../../../features/context";
 import { initialSearchDirecsState } from "../../../features/searchDirecsSlice";
 import { type ExtraArrayLabel } from "../ExtraArray";
@@ -20,11 +21,11 @@ import EntityPlaceContent, {
 
 jest.mock("../EntityPlaceHelmet");
 
-const getDefault = (): EntityPlaceContentProps => ({
+const getProps = (): EntityPlaceContentProps => ({
   place: getExtendedPlace()
 });
 
-function render(props = getDefault(), options: AppRenderOptions = {}) {
+function render(props = getProps(), options: AppRenderOptions = {}) {
   return renderWithProviders(<EntityPlaceContent {...props} />, options);
 }
 
@@ -42,7 +43,7 @@ describe("<EntityPlaceContent />", () => {
 
   it("should render name in the header", () => {
     const { getByText } = render();
-    expect(getByText(getDefault().place.name)).toBeInTheDocument();
+    expect(getByText(getProps().place.name)).toBeInTheDocument();
   });
 
   it("should draw point and polygon", () => {
@@ -54,7 +55,7 @@ describe("<EntityPlaceContent />", () => {
     const addCommon = jest.spyOn(map, "addCommon").mockImplementation(jest.fn());
     const addStored = jest.spyOn(map, "addStored").mockImplementation(jest.fn());
 
-    render(getDefault(), { context: { ...context, map: map } });
+    render(getProps(), { context: { ...context, map: map } });
 
     expect(clear).toHaveBeenCalled();
     expect(flyTo).toHaveBeenCalled();
@@ -73,7 +74,7 @@ describe("<EntityPlaceContent />", () => {
     const addCommon = jest.spyOn(map, "addCommon").mockImplementation(jest.fn());
     const addStored = jest.spyOn(map, "addStored").mockImplementation(jest.fn());
 
-    const { store, getByRole } = render(getDefault(), { context: { ...context, map: map } });
+    const { store, getByRole } = render(getProps(), { context: { ...context, map: map } });
     expect(addCommon).toHaveBeenCalledTimes(1);
     expect(addStored).toHaveBeenCalledTimes(0);
     expect(store.getState().favorites.places).toHaveLength(0);
@@ -92,8 +93,30 @@ describe("<EntityPlaceContent />", () => {
     expect(addStored).toHaveBeenCalledTimes(1);
   });
 
+  it("should update `state` and `storage` upon Save", async () => {
+    const storage = new InmemStorage();
+    const { getByRole, queryByRole, store } = render(getProps(), {
+      context: { ...context, storage: storage }
+    });
+
+    expect(store.getState().favorites.places).toHaveLength(0);
+
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Save" }));
+    act(() => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+    await waitFor(() => {
+      expect(queryByRole("dialog", { name: "Save place" })).not.toBeInTheDocument();
+    });
+
+    expect(within(getByRole("alert")).getByText("Medieval castle")).toBeInTheDocument();
+    expect(store.getState().favorites.places).toHaveLength(1);
+    expect(await storage.getPlaceIdentifiers()).toHaveLength(1);
+  });
+
   it("should Append place to the direction sequence state", async () => {
-    const { store, getByRole, queryByRole } = render(getDefault(), {
+    const { store, getByRole, queryByRole } = render(getProps(), {
       preloadedState: {
         searchDirecs: {
           ...initialSearchDirecsState(),
@@ -128,7 +151,7 @@ describe("<EntityPlaceContent />", () => {
 
   it("should generate website", () => {
     const { getByRole, getByTitle } = render();
-    expect(getByTitle("Webpage")).toBeInTheDocument();
+    expect(getByTitle("Website")).toBeInTheDocument();
     expect(getByRole("link", { name: "https://www.medieval.com/" })).toBeInTheDocument();
   });
 
@@ -184,7 +207,7 @@ describe("<EntityPlaceContent />", () => {
 
   it("should generate description", () => {
     const { getByLabelText } = render();
-    expect(within(getByLabelText("Description")).getByText(getDefault().place.attributes.description!)).toBeInTheDocument();
+    expect(within(getByLabelText("Description")).getByText(getProps().place.attributes.description!)).toBeInTheDocument();
   });
 
   it("should generate rating stars", () => {
@@ -208,7 +231,7 @@ describe("<EntityPlaceContent />", () => {
     });
   });
 
-  it("should generate facts", () => {
+  it("should generate fact chips", () => {
     const { getByRole } = render();
     const facts = getByRole("region", { name: "Facts" });
     [
