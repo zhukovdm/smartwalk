@@ -7,6 +7,9 @@ import L, {
   Marker,
   PointExpression
 } from "leaflet";
+import "leaflet.markercluster";
+import "leaflet.markercluster/dist/MarkerCluster.css";
+import "leaflet.markercluster/dist/MarkerCluster.Default.css";
 import * as ReactDOMServer from "react-dom/server";
 import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { IMap, IPin } from "../domain/interfaces";
@@ -173,9 +176,20 @@ export class LeafletMap implements IMap {
   private readonly fillOpacity: number = 0.2;
 
   private readonly map?: Map;
+  private mrkLayer: LayerGroup;
   private readonly shpLayer: LayerGroup;
-  private readonly mrkLayer: LayerGroup;
   private pins: LeafletPin[];
+
+  private cluster() {
+    this.map?.removeLayer(this.mrkLayer);
+    this.mrkLayer = L.markerClusterGroup();
+
+    this.pins.forEach((pin) => { pin.marker.addTo(this.mrkLayer); });
+
+    if (!!this.map) {
+      this.mrkLayer = this.mrkLayer.addTo(this.map);
+    }
+  }
 
   private addMarker(point: WgsPoint, icon: Icon<any>, draggable: boolean): Marker<any> {
     return L.marker(new LatLng(point.lat, point.lon), { icon: icon, draggable: draggable }).addTo(this.mrkLayer);
@@ -191,6 +205,9 @@ export class LeafletMap implements IMap {
   }
 
   private addPlace(place: UiPlace, categories: PlaceCategory[], icon: Icon<any>, draggable: boolean): IPin {
+    if (this.pins.length >= 100 && !(this.mrkLayer instanceof L.MarkerClusterGroup)) {
+      this.cluster();
+    }
     return this.appendPin(this.generatePin(place, categories, icon, draggable));
   }
 
@@ -211,7 +228,13 @@ export class LeafletMap implements IMap {
   public clear(): void {
     this.pins = [];
     this.shpLayer.clearLayers();
-    this.mrkLayer.clearLayers();
+
+    this.map?.removeLayer(this.mrkLayer);
+    this.mrkLayer = L.layerGroup();
+
+    if (!!this.map) {
+      this.mrkLayer = this.mrkLayer.addTo(this.map);
+    }
   }
 
   public clearShapes(): void {
