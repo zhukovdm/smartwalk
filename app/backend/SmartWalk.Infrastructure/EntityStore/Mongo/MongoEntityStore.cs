@@ -5,17 +5,22 @@ using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Infrastructure.EntityStore;
 
-internal sealed class MongoEntityStore : MongoService, IEntityStore
+internal sealed class MongoEntityStore : IEntityStore
 {
-    private MongoEntityStore(IMongoDatabase database) : base(database) { }
+    private readonly IMongoCollection<ExtendedPlace> _collection;
 
-    public async Task<ExtendedPlace> GetPlace(string smartId)
+    private MongoEntityStore(IMongoCollection<ExtendedPlace> collection)
     {
-        return await _database
-            .GetCollection<ExtendedPlace>(MongoDatabaseFactory.PLACE_COLL)
+        _collection = collection;
+    }
+
+    public Task<ExtendedPlace> GetPlace(string smartId)
+    {
+        return _collection
             .Find(place => place.smartId == smartId)
             .FirstOrDefaultAsync();
     }
 
-    public static IEntityStore GetInstance(IMongoDatabase database) => new MongoEntityStore(database);
+    public static IEntityStore GetInstance(IMongoCollection<ExtendedPlace> collection)
+        => new MongoEntityStore(collection);
 }

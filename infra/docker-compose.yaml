@@ -65,6 +65,8 @@ services:
     image: smartwalk/frontend:v1.0.0
     build: ../app/frontend/
     container_name: smartwalk-frontend
+    environment:
+      - REACT_APP_SMARTWALK_API_ORIGIN=http://localhost:3000
     ports:
       - '3000:80'
     networks:

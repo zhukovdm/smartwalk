@@ -1,5 +1,5 @@
 version: '3.8'
-name: smartwalk
+name: smartwalk-database
 services:
   database:
     image: mongo:4.4.23
@@ -14,6 +14,3 @@ services:
       timeout: 15s
       retries: 10
       start_period: 1m
-networks:
-  default:
-    name: smartwalk-net

@@ -18,6 +18,3 @@ services:
       timeout: 15s
       retries: 10
       start_period: 2m
-networks:
-  default:
-    name: net

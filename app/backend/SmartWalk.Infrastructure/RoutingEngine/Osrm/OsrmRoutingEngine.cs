@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SmartWalk.Domain.Entities;
@@ -9,6 +10,7 @@ namespace SmartWalk.Infrastructure.RoutingEngine;
 internal sealed class OsrmRoutingEngine : IRoutingEngine
 {
     private readonly string _addr;
+
     private OsrmRoutingEngine(string addr) { _addr = addr; }
 
     public async Task<List<ShortestPath>> GetShortestPaths(List<WgsPoint> waypoints)
@@ -17,5 +19,6 @@ internal sealed class OsrmRoutingEngine : IRoutingEngine
     public async Task<IDistanceMatrix> GetDistanceMatrix(List<WgsPoint> waypoints)
         => await DistanceMatrixFetcher.Fetch(_addr, waypoints);
 
-    public static IRoutingEngine GetInstance() => new OsrmRoutingEngine(OsrmPrimitives.BASE_URL);
+    public static IRoutingEngine GetInstance()
+        => new OsrmRoutingEngine(Environment.GetEnvironmentVariable("SMARTWALK_OSRM_BASE_URL"));
 }

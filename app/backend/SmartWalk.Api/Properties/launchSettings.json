@@ -12,18 +12,18 @@
     "SmartWalk.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "swagger",
       "externalUrlConfiguration": true,
-      "applicationUrl": "https://localhost:7268;http://localhost:5017",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "SMARTWALK_MONGO_CONN_STR": "mongodb://localhost:27017",
+        "SMARTWALK_OSRM_BASE_URL": "http://localhost:5000"
       }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "swagger",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
