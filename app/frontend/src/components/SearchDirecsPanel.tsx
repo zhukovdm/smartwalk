@@ -60,7 +60,11 @@ export default function SearchDirecsPanel(): JSX.Element {
     >
       <LogoCloseBar />
       <PanelSelector panel={2} />
-      <Stack direction="column" gap={4} sx={{ mx: 2, my: 4 }}>
+      <Stack
+        direction={"column"}
+        gap={3}
+        sx={{ mx: 2, my: 4 }}
+      >
         <Typography>
           Define a sequence of points (at least two), and find the fastest routes visiting them in order.
         </Typography>

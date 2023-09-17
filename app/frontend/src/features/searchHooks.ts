@@ -13,7 +13,7 @@ import {
 import { useAppDispatch } from "./storeHooks";
 
 /**
- * Obtain keyword advice from the server.
+ * Obtain keyword advice from a SmartWalk endpoint.
  */
 export function useSearchKeywordsAdvice(
   input: string, value: KeywordAdviceItem | null): { loading: boolean; options: KeywordAdviceItem[] } {
@@ -30,51 +30,57 @@ export function useSearchKeywordsAdvice(
     const cached = adviceKeywords.get(prefix);
     if (cached) { setOptions(cached); return; }
 
-    const load = async () => {
+    let ignore = false;
+
+    const loadFromSmartwalkApi = async () => {
       setLoading(true);
+
       try {
         const items = await SmartWalkFetcher.adviceKeywords(prefix);
 
-        items.forEach((item) => {
-          const {
-            capacity,
-            minimumAge,
-            rating,
-            year
-          } = item.numericBounds;
-
-          if (!!capacity) {
-            capacity.min = Math.max(capacity.min, 0);
-            capacity.max = Math.min(capacity.max, 300);
+        if (!ignore) {
+          items.forEach((item) => {
+            const {
+              capacity,
+              minimumAge,
+              rating,
+              year
+            } = item.numericBounds;
+  
+            if (!!capacity) {
+              capacity.min = Math.max(capacity.min, 0);
+              capacity.max = Math.min(capacity.max, 300);
+            }
+  
+            if (!!minimumAge) {
+              minimumAge.min = Math.max(minimumAge.min, 0);
+              minimumAge.max = Math.min(minimumAge.max, 150);
+            }
+  
+            if (!!rating) {
+              rating.min = Math.max(rating.min, 0);
+              rating.max = Math.min(rating.max, 5);
+            }
+  
+            if (!!year) {
+              year.max = Math.min(year.max, new Date().getFullYear());
+            }
+          });
+  
+          if (items.length > 0) {
+            setOptions(items);
+            adviceKeywords.set(prefix, items);
           }
-
-          if (!!minimumAge) {
-            minimumAge.min = Math.max(minimumAge.min, 0);
-            minimumAge.max = Math.min(minimumAge.max, 150);
-          }
-
-          if (!!rating) {
-            rating.min = Math.max(rating.min, 0);
-            rating.max = Math.min(rating.max, 5);
-          }
-
-          if (!!year) {
-            year.max = Math.min(year.max, new Date().getFullYear());
-          }
-        });
-
-        if (items.length > 0) {
-          adviceKeywords.set(prefix, items);
-          setOptions(items);
         }
       }
       catch (ex) { alert(ex); }
       finally {
-        setLoading(false);
+        if (!ignore) { setLoading(false); }
       }
     };
 
-    load();
+    loadFromSmartwalkApi();
+    return () => { ignore = true; };
   }, [input, value, adviceKeywords]);
 
   return { loading, options };

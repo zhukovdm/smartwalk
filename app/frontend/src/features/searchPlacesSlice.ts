@@ -21,6 +21,9 @@ export const placesSlice = createSlice({
     setSearchPlacesRadius: (state, action: PayloadAction<number>) => {
       state.radius = action.payload;
     },
+    appendSearchPlacesCategory: (state, action: PayloadAction<KeywordCategory>) => {
+      state.categories.push(action.payload);
+    },
     deleteSearchPlacesCategory: (state, action: PayloadAction<number>) => {
       state.categories = deleteItemImmutable(state.categories, action.payload);
     },
@@ -35,6 +38,7 @@ export const {
   resetSearchPlaces,
   setSearchPlacesCenter,
   setSearchPlacesRadius,
+  appendSearchPlacesCategory,
   deleteSearchPlacesCategory,
   updateSearchPlacesCategory
 } = placesSlice.actions;

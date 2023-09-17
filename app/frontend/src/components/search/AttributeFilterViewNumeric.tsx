@@ -1,58 +1,55 @@
-import { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
-import Checkbox from "@mui/material/Checkbox";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
 import { AttributeFilterNumeric } from "../../domain/types";
-import { camelCaseToLabel } from "../../utils/functions";
+import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
-type AttributeFilterViewNumericProps = {
+export type AttributeFilterViewNumericProps = {
 
-  /** Name of a filter. */
+  /** Name of a filter */
   label: string;
 
   /** Numeric lower and upper bounds */
   bound: AttributeFilterNumeric;
 
-  /** Value setter. */
-  setter: (v: AttributeFilterNumeric | undefined) => void;
+  /** Current value */
+  value: AttributeFilterNumeric | undefined;
 
-  /** Initial value. */
-  initial: AttributeFilterNumeric | undefined;
+  /** Callback setting new value */
+  setter: (v: AttributeFilterNumeric | undefined) => void;
 };
 
 /**
  * Range-based numeric filter view.
  */
 export default function AttributeFilterViewNumeric(
-  { label, bound, setter, initial }: AttributeFilterViewNumericProps): JSX.Element {
+  { label, bound, value, setter }: AttributeFilterViewNumericProps): JSX.Element {
 
-  const [check, setCheck] = useState(!!initial);
-  const [value, setValue] = useState(initial ? [initial.min, initial.max] : [bound.min, bound.max]);
+  const defined = value !== undefined;
 
-  const toggle = () => { setCheck(!check); };
-
-  const change = (_: Event, v: number | number[]) => { setValue(v as number[]); };
-
-  useEffect(() => {
-    setter(check ? { min: value[0], max: value[1] } : undefined);
-  }, [check, value, setter]);
+  const { min: curMin, max: curMax } = defined ? value : bound;
 
   return (
     <Stack rowGap={2}>
-      <FormControlLabel
-        control={<Checkbox checked={check} onChange={toggle} />}
-        label={`${camelCaseToLabel(label)} between ${value[0]} and ${value[1]}`}
+      <AttributeFilterCheckBox
+        label={`${label} between ${curMin} and ${curMax}`}
+        checked={defined}
+        onToggle={() => { setter(defined ? undefined : bound); }}
       />
-      <Box display={"flex"} justifyContent={"center"}>
+      <Box
+        display={"flex"}
+        justifyContent={"center"}
+      >
         <Slider
           step={1}
           min={bound.min}
           max={bound.max}
-          value={value}
-          disabled={!check}
-          onChange={change}
+          value={[curMin, curMax]}
+          disabled={!defined}
+          onChange={(_, v) => {
+            const [min, max] = v as number[];
+            setter({ min, max });
+          }}
           getAriaLabel={(i) => `${i === 0 ? "Lower" : "Upper"} bound`}
           sx={{ width: "94%" }}
           valueLabelDisplay={"auto"}

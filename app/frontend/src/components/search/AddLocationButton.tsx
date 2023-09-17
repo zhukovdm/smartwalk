@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 export type AddLocationButtonKind = "common" | "source" | "target" | "center";
 
-type AddLocationButtonProps = {
+export type AddLocationButtonProps = {
 
   /** Kind of a location to be added */
   kind: AddLocationButtonKind;
@@ -31,7 +31,7 @@ export default function AddLocationButton(
 
   useEffect(() => {
     if (!disabled) { return; }
-    const h = setTimeout(() => setDisabled(false), 300);
+    const h = setTimeout(() => setDisabled(false), 500);
     return () => clearTimeout(h);
   }, [disabled]);
 

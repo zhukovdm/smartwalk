@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
@@ -39,7 +38,7 @@ function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompletePr
   )
 }
 
-type AttributeFilterViewCollectProps = {
+export type AttributeFilterViewCollectProps = {
 
   /** Name of a filter */
   label: string;
@@ -47,28 +46,24 @@ type AttributeFilterViewCollectProps = {
   /** Possible items in the collection */
   bound: string[];
 
-  /** Action setting new value */
-  setter: (v: AttributeFilterCollect | undefined) => void;
+  /** Current value */
+  value: AttributeFilterCollect | undefined;
 
-  /** Initial value */
-  initial: AttributeFilterCollect | undefined;
+  /** Callback setting new value */
+  setter: (v: AttributeFilterCollect | undefined) => void;
 }
+
+const getDefault = (): AttributeFilterCollect => ({ inc: [], exc: [] });
 
 /**
  * Collection-specific filter view.
  */
 export default function AttributeFilterViewCollect(
-  { label, bound, setter, initial }: AttributeFilterViewCollectProps): JSX.Element {
+  { label, bound, value, setter }: AttributeFilterViewCollectProps): JSX.Element {
 
-  const [check, setCheck] = useState(!!initial);
-  const [includes, setIncludes] = useState(initial ? initial.inc : []);
-  const [excludes, setExcludes] = useState(initial ? initial.exc : []);
+  const defined = value !== undefined;
 
-  const toggle = () => { setCheck(!check); };
-
-  useEffect(() => {
-    setter(check ? { inc: includes, exc: excludes } : undefined);
-  }, [check, includes, excludes, setter]);
+  const { inc: curInc, exc: curExc } = defined ? value : getDefault();
 
   return (
     <Stack
@@ -77,22 +72,22 @@ export default function AttributeFilterViewCollect(
     >
       <AttributeFilterCheckBox
         label={label}
-        checked={check}
-        toggle={toggle}
+        checked={defined}
+        onToggle={() => { setter(defined ? undefined : getDefault()) }}
       />
       <CollectAutocomplete
         label={"Includes"}
-        value={includes}
+        value={defined ? curInc : []}
         options={bound}
-        disabled={!check}
-        onChange={(v) => { setIncludes(v); }}
+        disabled={!defined}
+        onChange={(v) => { setter({ inc: v, exc: curExc }); }}
       />
       <CollectAutocomplete
         label={"Excludes"}
-        value={excludes}
+        value={defined ? curExc : []}
         options={bound}
-        disabled={!check}
-        onChange={(v) => { setExcludes(v); }}
+        disabled={!defined}
+        onChange={(v) => { setter({ inc: curInc, exc: v }); }}
       />
     </Stack>
   );

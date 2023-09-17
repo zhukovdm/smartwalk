@@ -199,123 +199,6 @@ export type ExtendedPlace = Place & {
   attributes: EntityAttributes;
 };
 
-/**
- * Filter for checking attribute existence.
- */
-export type AttributeFilterExisten = { };
-
-/**
- * Possible attributes checked for existence.
- */
-type AttributeFilterExistens = {
-  description?: AttributeFilterExisten;
-  image?: AttributeFilterExisten;
-  website?: AttributeFilterExisten;
-  address?: AttributeFilterExisten;
-  email?: AttributeFilterExisten;
-  phone?: AttributeFilterExisten;
-  socialNetworks?: AttributeFilterExisten;
-  charge?: AttributeFilterExisten;
-  openingHours?: AttributeFilterExisten;
-};
-
-/**
- * Filter for boolean attributes.
- */
-export type AttributeFilterBoolean = boolean;
-
-/**
- * Possible boolean attributes.
- */
-type AttributeFilterBooleans = {
-  fee?: AttributeFilterBoolean;
-  delivery?: AttributeFilterBoolean;
-  drinkingWater?: AttributeFilterBoolean;
-  internetAccess?: AttributeFilterBoolean;
-  shower?: AttributeFilterBoolean;
-  smoking?: AttributeFilterBoolean;
-  takeaway?: AttributeFilterBoolean;
-  toilets?: AttributeFilterBoolean;
-  wheelchair?: AttributeFilterBoolean;
-};
-
-/**
- * Filter for numeric attributes.
- */
-export type AttributeFilterNumeric = {
-  min: number;
-  max: number;
-};
-
-/**
- * Possible numeric attributes.
- */
-type AttributeFilterNumerics = {
-  capacity?: AttributeFilterNumeric;
-  elevation?: AttributeFilterNumeric;
-  minimumAge?: AttributeFilterNumeric;
-  rating?: AttributeFilterNumeric;
-  year?: AttributeFilterNumeric;
-};
-
-/**
- * Filter for textual attributes with "contains" semantics.
- */
-export type AttributeFilterTextual = string;
-
-/**
- * Possible textual attributes.
- */
-type AttributeFilterTextuals = {
-  name?: AttributeFilterTextual;
-};
-
-/**
- * Filter for collections with "include" and "exclude" semantics.
- */
-export type AttributeFilterCollect = {
-
-  /** Include any of */
-  inc: string[];
-
-  /** Exclude all of */
-  exc: string[];
-};
-
-/**
- * Possible collections in the attributes.
- */
-type AttributeFilterCollects = {
-  clothes?: AttributeFilterCollect;
-  cuisine?: AttributeFilterCollect;
-  denomination?: AttributeFilterCollect;
-  payment?: AttributeFilterCollect;
-  rental?: AttributeFilterCollect;
-};
-
-/**
- * All possible attribute filters, setting filter means this particular
- * attribute shall exist on the object, and its value shall be within the
- * range defined by the filter.
- */
-export type AttributeFilters = {
-
-  /** existential filters */
-  es?: AttributeFilterExistens;
-
-  /** boolean filters */
-  bs?: AttributeFilterBooleans;
-
-  /** numeric filters */
-  ns?: AttributeFilterNumerics;
-
-  /** textual filters */
-  ts?: AttributeFilterTextuals;
-
-  /** collection filters */
-  cs?: AttributeFilterCollects;
-};
-
 type NumericBound = {
 
   /** lower bound */
@@ -325,19 +208,34 @@ type NumericBound = {
   max: number;
 };
 
-type NumericBoundLabel = "capacity" | "elevation" | "minimumAge" | "rating" | "year";
+export const numericBoundLabels = [
+  "capacity",
+  "elevation",
+  "minimumAge",
+  "rating",
+  "year"
+] as const;
+
+type NumericBoundLabel = typeof numericBoundLabels[number];
 
 /**
  * Bounds for numeric attributes.
  */
 export type NumericBounds = {
-
   [key in NumericBoundLabel]?: NumericBound;
 };
 
 type CollectBound = string[];
 
-type CollectBoundLabel = "clothes" | "cuisine" | "denomination" | "payment" | "rental";
+export const collectBoundLabels = [
+  "clothes",
+  "cuisine",
+  "denomination",
+  "payment",
+  "rental"
+] as const;
+
+type CollectBoundLabel = typeof collectBoundLabels[number];
 
 /**
  * Bounds for collect attributes.
@@ -364,6 +262,138 @@ export type KeywordAdviceItem = {
   collectBounds: CollectBounds;
 };
 
+export const attributeFilterExistenLabels = [
+  "description",
+  "image",
+  "website",
+  "address",
+  "email",
+  "phone",
+  "socialNetworks",
+  "charge",
+  "openingHours"
+] as const;
+
+export type AttributeFilterExistenLabel = typeof attributeFilterExistenLabels[number];
+
+/**
+ * Filter for checking attribute existence.
+ */
+export type AttributeFilterExisten = { };
+
+/**
+ * Possible attributes checked for existence.
+ */
+type AttributeFilterExistens = {
+  [key in AttributeFilterExistenLabel]?: AttributeFilterExisten;
+};
+
+export const attributeFilterBooleanLabels = [
+  "fee",
+  "delivery",
+  "drinkingWater",
+  "internetAccess",
+  "shower",
+  "smoking",
+  "takeaway",
+  "toilets",
+  "wheelchair"
+] as const;
+
+export type AttributeFilterBooleanLabel = typeof attributeFilterBooleanLabels[number];
+
+/**
+ * Filter for boolean attributes.
+ */
+export type AttributeFilterBoolean = boolean;
+
+/**
+ * Possible boolean attributes.
+ */
+type AttributeFilterBooleans = {
+  [key in AttributeFilterBooleanLabel]?: AttributeFilterBoolean;
+};
+
+export const attributeFilterNumericLabels = numericBoundLabels;
+
+export type AttributeFilterNumericLabel = typeof attributeFilterNumericLabels[number];
+
+/**
+ * Filter for numeric attributes.
+ */
+export type AttributeFilterNumeric = NumericBound;
+
+/**
+ * Possible numeric attributes.
+ */
+type AttributeFilterNumerics = {
+  [key in AttributeFilterNumericLabel]?: AttributeFilterNumeric;
+};
+
+export const attributeFilterTextualLabels = [
+  "name"
+] as const;
+
+export type AttributeFilterTextualLabel = typeof attributeFilterTextualLabels[number];
+
+/**
+ * Filter for textual attributes with "contains" semantics.
+ */
+export type AttributeFilterTextual = string;
+
+/**
+ * Possible textual attributes.
+ */
+type AttributeFilterTextuals = {
+  [key in AttributeFilterTextualLabel]?: AttributeFilterTextual;
+};
+
+export const attributeFilterCollectLabels = collectBoundLabels;
+
+export type AttributeFilterCollectLabel = typeof attributeFilterCollectLabels[number];
+
+/**
+ * Filter for collections with "include" and "exclude" semantics.
+ */
+export type AttributeFilterCollect = {
+
+  /** Include any of */
+  inc: string[];
+
+  /** Exclude all of */
+  exc: string[];
+};
+
+/**
+ * Possible collections in the attributes.
+ */
+type AttributeFilterCollects = {
+  [key in AttributeFilterCollectLabel]?: AttributeFilterCollect;
+};
+
+/**
+ * All possible attribute filters, setting filter means this particular
+ * attribute shall exist on the object, and its value shall be within the
+ * range defined by the filter.
+ */
+export type AttributeFilters = {
+
+  /** Existential filters */
+  es?: AttributeFilterExistens;
+
+  /** Boolean filters */
+  bs?: AttributeFilterBooleans;
+
+  /** Numeric filters */
+  ns?: AttributeFilterNumerics;
+
+  /** Textual filters */
+  ts?: AttributeFilterTextuals;
+
+  /** Collection filters */
+  cs?: AttributeFilterCollects;
+};
+
 /**
  * Category enabling a place to be found.
  */
@@ -375,8 +405,6 @@ export type PlaceCategory = {
   /** Filters further specifying objects having a keyword */
   filters: AttributeFilters;
 };
-
-
 
 /**
  * User-defined category restricting search.
