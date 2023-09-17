@@ -11,12 +11,13 @@ import {
   setResultRoutes
 } from "../features/resultRoutesSlice";
 import {
-  resetSearchRoutes,
-  deleteSearchRoutesCategory,
-  updateSearchRoutesCategory,
-  setSearchRoutesMaxDistance,
-  deleteSearchRoutesPrecEdge,
+  appendSearchRoutesCategory,
   appendSearchRoutesPrecEdge,
+  deleteSearchRoutesCategory,
+  deleteSearchRoutesPrecEdge,
+  resetSearchRoutes,
+  setSearchRoutesMaxDistance,
+  updateSearchRoutesCategory,
 } from "../features/searchRoutesSlice";
 import { usePlace, useStoredPlaces } from "../features/sharedHooks";
 import {
@@ -82,7 +83,11 @@ export default function SearchRoutesPanel(): JSX.Element {
     >
       <LogoCloseBar />
       <PanelSelector panel={0} />
-      <Stack direction={"column"} gap={4} sx={{ mx: 2, my: 4 }}>
+      <Stack
+        direction={"column"}
+        gap={3}
+        sx={{ mx: 2, my: 4 }}
+      >
         <Typography>Find routes between two points:</Typography>
         <SourceTargetBox
           map={map}
@@ -105,8 +110,9 @@ export default function SearchRoutesPanel(): JSX.Element {
         </Typography>
         <CategoryBox
           categories={categories}
-          deleteCategory={(i) => dispatch(deleteSearchRoutesCategory(i))}
-          updateCategory={(category, i) => dispatch(updateSearchRoutesCategory({ category: category, i: i }))}
+          onAppend={(category) => { dispatch(appendSearchRoutesCategory(category)); }}
+          onDelete={(i) => dispatch(deleteSearchRoutesCategory(i))}
+          onUpdate={(category, i) => dispatch(updateSearchRoutesCategory({ category, i }))}
         />
         <Typography>
           Categories could appear on a route in <strong>any</strong> order. Add arrows to impose a specific arrangement.

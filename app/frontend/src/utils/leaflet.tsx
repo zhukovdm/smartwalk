@@ -171,11 +171,13 @@ export class LeafletMap implements IMap {
   };
 
   private readonly color: string = "green";
-  private readonly fillOpacity: number = 0.2;
+  private readonly fillOpacity: number = 0.15;
 
   private readonly map?: Map;
+
   private mrkLayer: LayerGroup;
   private readonly shpLayer: LayerGroup;
+
   private pins: LeafletPin[];
 
   private cluster() {

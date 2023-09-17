@@ -1,55 +1,25 @@
+import {
+  attributeFilterBooleanLabels,
+  attributeFilterCollectLabels,
+  attributeFilterExistenLabels,
+  attributeFilterNumericLabels,
+  attributeFilterTextualLabels
+} from "../domain/types";
+
 /**
  * Extract supported attributes in case the server releases extended data model.
  */
 export default class AttributeGrouper {
 
-  private static supportedEs = new Set([
-    "description",
-    "image",
-    "website",
-    "address",
-    "email",
-    "phone",
-    "socialNetworks",
-    "charge",
-    "openingHours"
-  ]);
+  private static supportedEs = new Set(attributeFilterExistenLabels);
+  private static supportedBs = new Set(attributeFilterBooleanLabels);
+  private static supportedNs = new Set(attributeFilterNumericLabels);
+  private static supportedTs = new Set(attributeFilterTextualLabels);
+  private static supportedCs = new Set(attributeFilterCollectLabels);
 
-  private static supportedBs = new Set([
-    "fee",
-    "delivery",
-    "drinkingWater",
-    "internetAccess",
-    "shower",
-    "smoking",
-    "takeaway",
-    "toilets",
-    "wheelchair"
-  ]);
-
-  private static supportedNs = new Set([
-    "capacity",
-    "elevation",
-    "minimumAge",
-    "rating",
-    "year"
-  ]);
-
-  private static supportedTs = new Set([
-    "name"
-  ]);
-
-  private static supportedCs = new Set([
-    "clothes",
-    "cuisine",
-    "denomination",
-    "payment",
-    "rental"
-  ]);
-
-  private static union(s1: Set<string>, s2: Set<string>): Set<string> {
-    return Array.from(s1)
-      .reduce((s, item) => (s2.has(item) ? s.add(item) : s), new Set<string>());
+  private static union<T>(s1: Set<T & string>, s2: Set<string>) {
+    return Array.from(s1).reduce((s, item) => (
+      s2.has(item) ? s.add(item) : s), new Set<T & string>());
   }
 
   public static group(attributes: string[]) {

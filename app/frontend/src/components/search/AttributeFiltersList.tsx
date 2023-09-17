@@ -5,8 +5,18 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import {
+import type {
+  AttributeFilterBoolean,
+  AttributeFilterBooleanLabel,
+  AttributeFilterCollect,
+  AttributeFilterCollectLabel,
+  AttributeFilterExisten,
+  AttributeFilterExistenLabel,
   AttributeFilterNumeric,
+  AttributeFilterNumericLabel,
+  AttributeFilterTextual,
+  AttributeFilterTextualLabel,
+  AttributeFilters,
   KeywordAdviceItem
 } from "../../domain/types";
 import { camelCaseToLabel } from "../../utils/functions";
@@ -23,8 +33,33 @@ type AttributeFiltersListProps = {
   /** Autocomplete confguration for a particular word. */
   adviceItem: KeywordAdviceItem;
 
-  /** Latest known filters. */
-  filters: any; // !
+  /** Copy of the latest known filters */
+  filters: AttributeFilters; // !
+
+  /**
+   * State-changing setter for `existen` attributes
+   */
+  onExistenUpdate: (attr: AttributeFilterExistenLabel, value: AttributeFilterExisten | undefined) => void;
+
+  /**
+   * State-changing setter for `boolean` attributes
+   */
+  onBooleanUpdate: (attr: AttributeFilterBooleanLabel, value: AttributeFilterBoolean | undefined) => void;
+
+  /**
+   * State-changing setter for `numeric` attributes
+   */
+  onNumericUpdate: (attr: AttributeFilterNumericLabel, value: AttributeFilterNumeric | undefined) => void;
+
+  /**
+   * State-changing setter for `textual` attributes
+   */
+  onTextualUpdate: (attr: AttributeFilterTextualLabel, value: AttributeFilterTextual | undefined) => void;
+
+  /**
+   * State-changing setter for `collect` attributes
+   */
+  onCollectUpdate: (attr: AttributeFilterCollectLabel, value: AttributeFilterCollect | undefined) => void;
 };
 
 /**
@@ -36,15 +71,24 @@ type AttributeFiltersListProps = {
  * for both AttributeFilterViewNumeric and AttributeFilterViewCollect is always
  * defined if the component is rendered.
  */
-export default function AttributeFiltersList(
-  { adviceItem, filters }: AttributeFiltersListProps): JSX.Element {
+export default function AttributeFiltersList(props: AttributeFiltersListProps): JSX.Element {
 
   const {
-    es,
-    bs,
-    ns,
-    ts,
-    cs
+    adviceItem,
+    filters,
+    onExistenUpdate,
+    onBooleanUpdate,
+    onNumericUpdate,
+    onTextualUpdate,
+    onCollectUpdate
+  } = props;
+
+  const {
+    es: esAttrs,
+    bs: bsAttrs,
+    ns: nsAttrs,
+    ts: tsAttrs,
+    cs: csAttrs
   } = AttributeGrouper.group(adviceItem.attributeList);
 
   const [esExpanded, setEsExpanded] = useState(true);
@@ -55,7 +99,7 @@ export default function AttributeFiltersList(
 
   return(
     <Box>
-      {(es.length > 0) &&
+      {(esAttrs.length > 0) &&
         <Accordion
           expanded={esExpanded}
           onChange={(_, v) => { setEsExpanded(v); }}
@@ -65,7 +109,7 @@ export default function AttributeFiltersList(
             aria-controls={"search-es-attributes-cont"}
             expandIcon={<ExpandSectionIcon expanded={esExpanded} />}
           >
-            <Typography>Should have</Typography>
+            <Typography>Has</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Stack
@@ -77,15 +121,15 @@ export default function AttributeFiltersList(
               role={"list"}
               aria-labelledby={"search-es-attributes-head"}
             >
-              {es.map((e, i) => (
+              {esAttrs.map((e, i) => (
                 <Box
                   key={i}
                   role={"listitem"}
                 >
                   <AttributeFilterViewExisten
-                    initial={(filters.es ?? {})[e]}
                     label={e}
-                    setter={(v) => { filters.es = filters.es ?? {}; filters.es[e] = v; }}
+                    value={(filters.es ?? {})[e]}
+                    setter={(v) => { onExistenUpdate(e, v); }}
                   />
                 </Box>
               ))}
@@ -93,7 +137,7 @@ export default function AttributeFiltersList(
           </AccordionDetails>
         </Accordion>
       }
-      {(bs.length > 0) &&
+      {(bsAttrs.length > 0) &&
         <Accordion
           expanded={bsExpanded}
           onChange={(_, v) => { setBsExpanded(v); }}
@@ -111,15 +155,15 @@ export default function AttributeFiltersList(
               role={"list"}
               aria-labelledby={"search-bs-attributes-head"}
             >
-              {bs.map((b, i) => (
+              {bsAttrs.map((b, i) => (
                 <Box
                   key={i}
                   role={"listitem"}
                 >
                   <AttributeFilterViewBoolean
-                    initial={(filters.bs ?? {})[b]}
                     label={b}
-                    setter={(v) => { filters.bs = filters.bs ?? {}; filters.bs[b] = v; }}
+                    value={(filters.bs ?? {})[b]}
+                    setter={(v) => { onBooleanUpdate(b, v); }}
                   />
                 </Box>
               ))}
@@ -127,7 +171,7 @@ export default function AttributeFiltersList(
           </AccordionDetails>
         </Accordion>
       }
-      {(ns.length > 0) &&
+      {(nsAttrs.length > 0) &&
         <Accordion
           expanded={nsExpanded}
           onChange={(_, v) => { setNsExpanded(v); }}
@@ -145,17 +189,17 @@ export default function AttributeFiltersList(
               role={"list"}
               aria-labelledby={"search-ns-attributes-head"}
             >
-              {ns.map((attr, i) => (
+              {nsAttrs.map((n, i) => (
                 <Box
                   key={i}
                   role={"listitem"}
-                  aria-label={camelCaseToLabel(attr)}
+                  aria-label={camelCaseToLabel(n)}
                 >
                   <AttributeFilterViewNumeric
-                    bound={(adviceItem.numericBounds as any)[attr] as AttributeFilterNumeric}
-                    initial={(filters.ns ?? {})[attr]}
-                    label={attr}
-                    setter={(v) => { filters.ns = filters.ns ?? {}; (filters.ns)[attr] = v; }}
+                    label={n}
+                    bound={((adviceItem.numericBounds)[n])!} // assumption!
+                    value={(filters.ns ?? {})[n]}
+                    setter={(v) => { onNumericUpdate(n, v); }}
                   />
                 </Box>
               ))}
@@ -163,7 +207,7 @@ export default function AttributeFiltersList(
           </AccordionDetails>
         </Accordion>
       }
-      {(ts.length > 0) &&
+      {(tsAttrs.length > 0) &&
         <Accordion
           expanded={tsExpanded}
           onChange={(_, v) => { setTsExpanded(v); }}
@@ -181,16 +225,16 @@ export default function AttributeFiltersList(
               role={"list"}
               aria-labelledby={"search-ts-attributes-head"}
             >
-              {ts.map((attr, i) => (
+              {tsAttrs.map((t, i) => (
                 <Box
                   key={i}
                   role={"listitem"}
-                  aria-label={camelCaseToLabel(attr)}
+                  aria-label={camelCaseToLabel(t)}
                 >
                   <AttributeFilterViewTextual
-                    initial={(filters.ts ?? {})[attr]}
-                    label={attr}
-                    setter={(v) => { filters.ts = filters.ts ?? {}; filters.ts[attr] = v; }}
+                    label={t}
+                    value={(filters.ts ?? {})[t]}
+                    setter={(v) => { onTextualUpdate(t, v); }}
                   />
                 </Box>
               ))}
@@ -198,7 +242,7 @@ export default function AttributeFiltersList(
           </AccordionDetails>
         </Accordion>
       }
-      {(cs.length > 0) &&
+      {(csAttrs.length > 0) &&
         <Accordion
           expanded={csExpanded}
           onChange={(_, v) => { setCsExpanded(v); }}
@@ -216,17 +260,17 @@ export default function AttributeFiltersList(
               role={"list"}
               aria-labelledby={"search-cs-attributes-head"}
             >
-              {cs.map((attr, i) => (
+              {csAttrs.map((c, i) => (
                 <Box
                   key={i}
                   role={"listitem"}
-                  aria-label={camelCaseToLabel(attr)}
+                  aria-label={camelCaseToLabel(c)}
                 >
                   <AttributeFilterViewCollect
-                    bound={(adviceItem.collectBounds as any)[attr] as string[]}
-                    initial={(filters.cs ?? {})[attr]}
-                    label={attr}
-                    setter={(v) => { filters.cs = filters.cs ?? {}; filters.cs[attr] = v; }}
+                    label={c}
+                    bound={(adviceItem.collectBounds)[c]!}
+                    value={(filters.cs ?? {})[c]}
+                    setter={(v) => { onCollectUpdate(c, v); }}
                   />
                 </Box>
               ))}

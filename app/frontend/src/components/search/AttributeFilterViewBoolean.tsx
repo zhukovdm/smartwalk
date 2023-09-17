@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import FormControl from "@mui/material/FormControl";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
@@ -7,32 +6,25 @@ import Stack from "@mui/material/Stack";
 import { AttributeFilterBoolean } from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
-type AttributeFilterViewBooleanProps = {
+export type AttributeFilterViewBooleanProps = {
 
-  /** Name of a filter. */
+  /** Name of a filter */
   label: string;
 
-  /** Action setting new value. */
-  setter: (v: AttributeFilterBoolean | undefined) => void;
+  /** Current value */
+  value: AttributeFilterBoolean | undefined;
 
-  /** Initial value. */
-  initial: AttributeFilterBoolean | undefined;
+  /** Callback setting new value */
+  setter: (v: AttributeFilterBoolean | undefined) => void;
 };
 
 /**
  * Boolean-specific filter view.
  */
 export default function AttributeFilterViewBoolean(
-  { label, setter, initial }: AttributeFilterViewBooleanProps): JSX.Element {
+  { label, value, setter }: AttributeFilterViewBooleanProps): JSX.Element {
 
-  const flag = initial === undefined;
-
-  const [check, setCheck] = useState(!flag);
-  const [value, setValue] = useState((flag || !!initial) ? 1 : 0);
-
-  const toggle = () => { setCheck(!check); };
-
-  useEffect(() => { setter(check ? (!!value) : undefined) }, [check, value, setter]);
+  const defined = value !== undefined;
 
   return (
     <Stack
@@ -41,25 +33,25 @@ export default function AttributeFilterViewBoolean(
       justifyContent={"space-between"}
     >
       <AttributeFilterCheckBox
+        checked={defined}
         label={label}
-        checked={check}
-        toggle={toggle}
+        onToggle={() => { setter(defined ? undefined : true); }}
       />
       <FormControl>
         <RadioGroup
           row={true}
-          value={value}
-          onChange={(e) => { setValue(parseInt(e.target.value)); }}
+          value={defined ? (value ? "1" : "0") : "1"}
+          onChange={(e) => { setter(e.target.value === "1"); }}
         >
           <FormControlLabel
-            disabled={!check}
-            value={1}
+            disabled={!defined}
+            value={"1"}
             control={<Radio />}
             label={"Yes"}
           />
           <FormControlLabel
-            disabled={!check}
-            value={0}
+            disabled={!defined}
+            value={"0"}
             control={<Radio />}
             label={"No"}
           />

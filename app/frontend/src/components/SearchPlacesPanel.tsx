@@ -10,6 +10,7 @@ import {
   setResultPlaces
 } from "../features/resultPlacesSlice";
 import {
+  appendSearchPlacesCategory,
   deleteSearchPlacesCategory,
   resetSearchPlaces,
   setSearchPlacesRadius,
@@ -57,7 +58,7 @@ export default function SearchPlacesPanel(): JSX.Element {
       const places = await SmartWalkFetcher.searchPlaces({
         center: center!,
         radius: radius,
-        categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters }))
+        categories: categories.map(({ keyword, filters }) => ({ keyword, filters }))
       });
       dispatch(resetResultPlaces());
       dispatch(setResultPlaces(places));
@@ -78,7 +79,7 @@ export default function SearchPlacesPanel(): JSX.Element {
       <PanelSelector panel={1} />
       <Stack
         direction={"column"}
-        gap={4}
+        gap={3}
         sx={{ mx: 2, my: 4 }}
       >
         <Box>
@@ -108,8 +109,9 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Typography>
         <CategoryBox
           categories={categories}
-          deleteCategory={(i) => dispatch(deleteSearchPlacesCategory(i))}
-          updateCategory={(category, i) => dispatch(updateSearchPlacesCategory({ category: category, i: i }))}
+          onAppend={(category) => { dispatch(appendSearchPlacesCategory(category)); }}
+          onDelete={(i) => { dispatch(deleteSearchPlacesCategory(i)); }}
+          onUpdate={(category, i) => dispatch(updateSearchPlacesCategory({ category, i }))}
         />
         <BottomButtons
           disabled={!center}

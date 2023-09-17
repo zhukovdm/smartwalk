@@ -1,38 +1,33 @@
-import { useEffect, useState } from "react";
 import FormGroup from "@mui/material/FormGroup";
 import { AttributeFilterExisten } from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
-type AttributeFilterViewExistenProps = {
+export type AttributeFilterViewExistenProps = {
 
-  /** Name of a filter. */
+  /** Name of a filter */
   label: string;
 
-  /** Value setter. */
-  setter: (v: AttributeFilterExisten | undefined) => void;
+  /** Current value */
+  value: AttributeFilterExisten | undefined;
 
-  /** Initial value. */
-  initial: AttributeFilterExisten | undefined;
+  /** Callback setting new value */
+  setter: (v: AttributeFilterExisten | undefined) => void;
 };
 
 /**
  * Filter telling if an attribute exists on an entity.
  */
 export default function AttributeFilterViewExisten(
-  { label, setter, initial }: AttributeFilterViewExistenProps): JSX.Element {
+  { label, value, setter }: AttributeFilterViewExistenProps): JSX.Element {
 
-  const [check, setCheck] = useState(!!initial);
-
-  const toggle = () => { setCheck(!check); };
-
-  useEffect(() => { setter(check ? {} : undefined) }, [check, setter]);
-
+  const defined = value !== undefined;
+  
   return (
     <FormGroup sx={{ display: "inline-block" }}>
       <AttributeFilterCheckBox
+        checked={defined}
         label={label}
-        checked={check}
-        toggle={toggle}
+        onToggle={() => { setter(defined ? undefined : {}); }}
       />
     </FormGroup>
   );

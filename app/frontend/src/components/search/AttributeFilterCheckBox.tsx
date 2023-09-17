@@ -2,28 +2,28 @@ import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { camelCaseToLabel } from "../../utils/functions";
 
-type AttributeFilterCheckBoxProps = {
+export type AttributeFilterCheckBoxProps = {
 
   /** Filter name */
   label: string;
 
   /** Action (un-)setting filter. */
-  toggle: () => void;
+  onToggle: () => void;
 
   /** Checked indicator. */
   checked: boolean;
 };
 
 /**
- * Represent (un-)selected filters.
+ * Represent (un-)selected filter.
  */
 export default function AttributeFilterCheckBox(
-  { label, toggle, checked }: AttributeFilterCheckBoxProps): JSX.Element {
+  { label, onToggle, checked }: AttributeFilterCheckBoxProps): JSX.Element {
 
   return (
     <FormControlLabel
       label={camelCaseToLabel(label)}
-      control={<Checkbox checked={checked} onChange={toggle} />}
+      control={<Checkbox checked={checked} onChange={onToggle} />}
     />
   );
 }

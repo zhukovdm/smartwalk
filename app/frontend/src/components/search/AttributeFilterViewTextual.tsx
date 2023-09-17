@@ -6,30 +6,23 @@ import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 type AttributeFilterViewTextualProps = {
 
-  /** Label of an attribute. */
+  /** Name of a filter */
   label: string;
 
-  /** Callback setting new value. */
-  setter: (v: AttributeFilterTextual | undefined) => void;
+  /** Current value */
+  value: AttributeFilterTextual | undefined;
 
-  /** Initial value. */
-  initial: AttributeFilterTextual | undefined;
+  /** Callback setting new value */
+  setter: (v: AttributeFilterTextual | undefined) => void;
 };
 
 /**
  * Text-based filter view (substring matching).
  */
 export default function AttributeFilterViewTextual(
-  { label, setter, initial }: AttributeFilterViewTextualProps) {
+  { label, setter, value }: AttributeFilterViewTextualProps) {
 
-  const [check, setCheck] = useState(!!initial);
-  const [value, setValue] = useState(initial ?? "");
-
-  const toggle = () => { setCheck(!check); };
-
-  useEffect(() => {
-    setter((check && value.length > 0) ? value : undefined);
-  }, [check, value, setter]);
+  const defined = value !== undefined;
 
   return (
     <Stack
@@ -37,16 +30,16 @@ export default function AttributeFilterViewTextual(
       columnGap={2}
     >
       <AttributeFilterCheckBox
-        checked={check}
+        checked={defined}
         label={label}
-        toggle={toggle}
+        onToggle={() => { setter(defined ? undefined : ""); }}
       />
       <TextField
-        disabled={!check}
+        disabled={!defined}
         fullWidth
-        onChange={(e) => { setValue(e.target.value); }}
+        onChange={(e) => { setter(e.target.value); }}
         size={"small"}
-        value={value}
+        value={defined ? value : ""}
         label={"Text"}
       />
     </Stack>

@@ -29,7 +29,7 @@ export function fromToItemImmutable<T>(arr: T[], fr: number, to: number): T[] {
 }
 
 /**
- * Convert `aB` to `a b`.
+ * Convert `aB...` to `a b...`
  */
 export function camelCaseToLabel(token: string): string {
   const res = [];

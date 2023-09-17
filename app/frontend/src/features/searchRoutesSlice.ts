@@ -30,6 +30,9 @@ export const searchRoutesSlice = createSlice({
     setSearchRoutesMaxDistance: (state, action: PayloadAction<number>) => {
       state.maxDistance = action.payload;
     },
+    appendSearchRoutesCategory: (state, action: PayloadAction<KeywordCategory>) => {
+      state.categories.push(action.payload);
+    },
     deleteSearchRoutesCategory: (state, action: PayloadAction<number>) => {
       const i = action.payload;
       state.categories = deleteItemImmutable(state.categories, i);
@@ -53,6 +56,7 @@ export const {
   setSearchRoutesSource,
   setSearchRoutesTarget,
   setSearchRoutesMaxDistance,
+  appendSearchRoutesCategory,
   deleteSearchRoutesCategory,
   updateSearchRoutesCategory,
   appendSearchRoutesPrecEdge,
