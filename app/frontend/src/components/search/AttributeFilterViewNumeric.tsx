@@ -1,13 +1,16 @@
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import Stack from "@mui/material/Stack";
-import { AttributeFilterNumeric } from "../../domain/types";
+import type {
+  AttributeFilterNumeric,
+  AttributeFilterNumericLabel
+} from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 export type AttributeFilterViewNumericProps = {
 
   /** Name of a filter */
-  label: string;
+  label: AttributeFilterNumericLabel;
 
   /** Numeric lower and upper bounds */
   bound: AttributeFilterNumeric;

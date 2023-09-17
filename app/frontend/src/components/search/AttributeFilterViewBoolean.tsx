@@ -3,13 +3,16 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import Stack from "@mui/material/Stack";
-import { AttributeFilterBoolean } from "../../domain/types";
+import {
+  AttributeFilterBoolean,
+  AttributeFilterBooleanLabel
+} from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 export type AttributeFilterViewBooleanProps = {
 
   /** Name of a filter */
-  label: string;
+  label: AttributeFilterBooleanLabel;
 
   /** Current value */
   value: AttributeFilterBoolean | undefined;
