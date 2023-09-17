@@ -1,12 +1,15 @@
 import Autocomplete from "@mui/material/Autocomplete";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { AttributeFilterCollect } from "../../domain/types";
+import type {
+  AttributeFilterCollect,
+  AttributeFilterCollectLabel
+} from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 type CollectAutocompleteProps = {
 
-  /** Name of a filter */
+  /** Name of a field */
   label: string;
 
   /** Current value on the filter */
@@ -29,6 +32,8 @@ function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompletePr
   return (
     <Autocomplete
       {...rest}
+      role={"region"}
+      aria-label={label}
       fullWidth
       multiple
       onChange={(_, v) => onChange(v)}
@@ -41,7 +46,7 @@ function CollectAutocomplete({ label, onChange, ...rest }: CollectAutocompletePr
 export type AttributeFilterViewCollectProps = {
 
   /** Name of a filter */
-  label: string;
+  label: AttributeFilterCollectLabel;
 
   /** Possible items in the collection */
   bound: string[];

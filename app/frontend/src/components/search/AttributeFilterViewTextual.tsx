@@ -1,13 +1,15 @@
-import { useEffect, useState } from "react";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
-import { AttributeFilterTextual } from "../../domain/types";
+import type {
+  AttributeFilterTextual,
+  AttributeFilterTextualLabel
+} from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
-type AttributeFilterViewTextualProps = {
+export type AttributeFilterViewTextualProps = {
 
   /** Name of a filter */
-  label: string;
+  label: AttributeFilterTextualLabel;
 
   /** Current value */
   value: AttributeFilterTextual | undefined;

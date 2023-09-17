@@ -1,11 +1,14 @@
 import FormGroup from "@mui/material/FormGroup";
-import { AttributeFilterExisten } from "../../domain/types";
+import type {
+  AttributeFilterExisten,
+  AttributeFilterExistenLabel
+} from "../../domain/types";
 import AttributeFilterCheckBox from "./AttributeFilterCheckBox";
 
 export type AttributeFilterViewExistenProps = {
 
   /** Name of a filter */
-  label: string;
+  label: AttributeFilterExistenLabel;
 
   /** Current value */
   value: AttributeFilterExisten | undefined;
