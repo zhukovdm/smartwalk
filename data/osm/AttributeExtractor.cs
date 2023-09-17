@@ -429,7 +429,7 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(k, out var v) && double.TryParse(v, out var n))
             {
-                attributes.elevation = n;
+                attributes.elevation = Math.Round(n);
                 return;
             }
         }
