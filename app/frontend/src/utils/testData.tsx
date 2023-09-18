@@ -1,5 +1,7 @@
 import type {
+  AttributeFilters,
   ExtendedPlace,
+  KeywordAdviceItem,
   Path,
   UiDirec,
   UiPlace,
@@ -223,4 +225,51 @@ export const getRoute = (): UiRoute => ({
     { smartId: "C", category: 3 }, // market
     { smartId: "D", category: 4 }, // cinema
   ]
+});
+
+export const getKeywordAdviceItem = (): KeywordAdviceItem => ({
+  keyword: "Keyword A",
+  attributeList: [
+    "website", // e
+    "delivery", // b
+    "capacity", // n
+    "name", // t
+    "cuisine" // c
+  ],
+  numericBounds: {
+    capacity: {
+      min: 0,
+      max: 100
+    }
+  },
+  collectBounds: {
+    cuisine: [
+      "a",
+      "b"
+    ]
+  }
+});
+
+export const getAttributeFilters = (): AttributeFilters => ({
+  es: {
+    website: {}
+  },
+  bs: {
+    delivery: false
+  },
+  ns: {
+    capacity: {
+      min: 20,
+      max: 80
+    }
+  },
+  ts: {
+    name: "Abc"
+  },
+  cs: {
+    cuisine: {
+      inc: ["a"],
+      exc: ["b"]
+    }
+  }
 });

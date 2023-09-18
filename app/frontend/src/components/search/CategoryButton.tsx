@@ -15,7 +15,7 @@ export default function CategoryButton({ onAppend }: CategoryButtonProps): JSX.E
   const [showDialog, setShowDialog] = useState(false);
 
   return (
-    <Box>
+    <Box role={"none"}>
       <Button
         sx={{ width: "100%" }}
         size={"large"}

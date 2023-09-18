@@ -104,6 +104,7 @@ export default function CategoryDialog(
         <Autocomplete
           value={value}
           disabled={!!category}
+          clearOnBlur={false}
           options={options}
           loading={loading}
           filterOptions={(x) => x}
@@ -112,9 +113,18 @@ export default function CategoryDialog(
             setValue(v);
           }}
           onInputChange={(_, v) => {
+            /**
+             * This reset callback works because onChange gets called strictly
+             * after onInputChange!
+             * 
+             * https://github.com/mui/material-ui/issues/18656#issuecomment-560561237
+             */
+            if (!category) {
+              setValue(null);
+            }
             setInput(v.trimStart());
           }}
-          getOptionLabel={(o) => (o.keyword ?? "")}
+          getOptionLabel={(o) => (o.keyword)}
           renderInput={(params) => (
             <TextField
               {...params}

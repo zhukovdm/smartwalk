@@ -4,7 +4,7 @@ import LoadingButton from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAppSelector } from "../../features/storeHooks";
 
-type BottomButtonsProps = {
+export type BottomButtonsProps = {
 
   /** Flag disabling `search` button. */
   disabled: boolean;

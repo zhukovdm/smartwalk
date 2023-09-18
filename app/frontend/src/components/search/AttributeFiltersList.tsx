@@ -28,7 +28,7 @@ import AttributeFilterViewNumeric from "./AttributeFilterViewNumeric";
 import AttributeFilterViewTextual from "./AttributeFilterViewTextual";
 import AttributeFilterViewCollect from "./AttributeFilterViewCollect";
 
-type AttributeFiltersListProps = {
+export type AttributeFiltersListProps = {
 
   /** Autocomplete confguration for a particular word. */
   adviceItem: KeywordAdviceItem;
@@ -97,6 +97,15 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
   const [tsExpanded, setTsExpanded] = useState(true);
   const [csExpanded, setCsExpanded] = useState(true);
 
+  const [
+    [esHeadId, esContId],
+    [bsHeadId, bsContId],
+    [nsHeadId, nsContId],
+    [tsHeadId, tsContId],
+    [csHeadId, csContId]
+  ] = ["es", "bs", "ns", "ts", "cs"]
+    .map((coll) => (["head", "cont"].map((part) => (`smartwalk-search-${coll}-attributes-${part}`))));
+
   return(
     <Box>
       {(esAttrs.length > 0) &&
@@ -105,8 +114,9 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
           onChange={(_, v) => { setEsExpanded(v); }}
         >
           <AccordionSummary
-            id={"search-es-attributes-head"}
-            aria-controls={"search-es-attributes-cont"}
+            aria-label={"Has"}
+            id={esHeadId}
+            aria-controls={esContId}
             expandIcon={<ExpandSectionIcon expanded={esExpanded} />}
           >
             <Typography>Has</Typography>
@@ -119,7 +129,7 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
               justifyContent={"center"}
               columnGap={1}
               role={"list"}
-              aria-labelledby={"search-es-attributes-head"}
+              aria-labelledby={esHeadId}
             >
               {esAttrs.map((e, i) => (
                 <Box
@@ -143,8 +153,9 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
           onChange={(_, v) => { setBsExpanded(v); }}
         >
           <AccordionSummary
-            id={"search-bs-attributes-head"}
-            aria-controls={"search-bs-attributes-cont"}
+            aria-label={"Yes / No"}
+            id={bsHeadId}
+            aria-controls={bsContId}
             expandIcon={<ExpandSectionIcon expanded={bsExpanded} />}
           >
             <Typography>Yes / No</Typography>
@@ -153,7 +164,7 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
             <Stack
               rowGap={1}
               role={"list"}
-              aria-labelledby={"search-bs-attributes-head"}
+              aria-labelledby={bsHeadId}
             >
               {bsAttrs.map((b, i) => (
                 <Box
@@ -177,8 +188,9 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
           onChange={(_, v) => { setNsExpanded(v); }}
         >
           <AccordionSummary
-            id={"search-ns-attributes-head"}
-            aria-controls={"search-ns-attributes-cont"}
+            aria-label={"Numeric"}
+            id={nsHeadId}
+            aria-controls={nsContId}
             expandIcon={<ExpandSectionIcon expanded={nsExpanded} />}
           >
             <Typography>Numeric</Typography>
@@ -187,7 +199,7 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
             <Stack
               rowGap={2.5}
               role={"list"}
-              aria-labelledby={"search-ns-attributes-head"}
+              aria-labelledby={nsHeadId}
             >
               {nsAttrs.map((n, i) => (
                 <Box
@@ -213,17 +225,18 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
           onChange={(_, v) => { setTsExpanded(v); }}
         >
           <AccordionSummary
-            id={"search-ts-attributes-head"}
-            aria-controls={"search-ts-attributes-cont"}
+            aria-label={"Contain text"}
+            id={tsHeadId}
+            aria-controls={tsContId}
             expandIcon={<ExpandSectionIcon expanded={tsExpanded} />}
           >
-            <Typography>Contains text</Typography>
+            <Typography>Contain text</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Stack
               rowGap={1}
               role={"list"}
-              aria-labelledby={"search-ts-attributes-head"}
+              aria-labelledby={tsHeadId}
             >
               {tsAttrs.map((t, i) => (
                 <Box
@@ -248,8 +261,9 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
           onChange={(_, v) => { setCsExpanded(v); }}
         >
           <AccordionSummary
-            id={"search-cs-attributes-head"}
-            aria-controls={"search-cs-attributes-cont"}
+            aria-label={"Include any / Exclude all"}
+            id={csHeadId}
+            aria-controls={csContId}
             expandIcon={<ExpandSectionIcon expanded={csExpanded} />}
           >
             <Typography>Include any / Exclude all</Typography>
@@ -258,7 +272,7 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
             <Stack
               rowGap={2}
               role={"list"}
-              aria-labelledby={"search-cs-attributes-head"}
+              aria-labelledby={csHeadId}
             >
               {csAttrs.map((c, i) => (
                 <Box
@@ -268,7 +282,7 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
                 >
                   <AttributeFilterViewCollect
                     label={c}
-                    bound={(adviceItem.collectBounds)[c]!}
+                    bound={(adviceItem.collectBounds)[c]!} // assumption
                     value={(filters.cs ?? {})[c]}
                     setter={(v) => { onCollectUpdate(c, v); }}
                   />

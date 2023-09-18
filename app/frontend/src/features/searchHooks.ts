@@ -20,7 +20,7 @@ export function useSearchKeywordsAdvice(
 
   const { adviceKeywords } = useContext(AppContext).smart;
 
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState<KeywordAdviceItem[]>([]);
 
   useEffect(() => {
@@ -33,7 +33,8 @@ export function useSearchKeywordsAdvice(
     let ignore = false;
 
     const loadFromSmartwalkApi = async () => {
-      setLoading(true);
+
+      if (!ignore) { setLoading(true); }
 
       try {
         const items = await SmartWalkFetcher.adviceKeywords(prefix);
