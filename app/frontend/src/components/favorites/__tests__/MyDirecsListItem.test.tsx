@@ -26,7 +26,7 @@ jest.mock(rrdModule, () => ({
   useNavigate: () => mockUseNavigate
 }));
 
-const getDefault = (): MyDirecsListItemProps => ({
+const getProps = (): MyDirecsListItemProps => ({
   index: 1,
   direc: {
     ...getDirec(),
@@ -56,7 +56,7 @@ const getDefault = (): MyDirecsListItemProps => ({
   ])
 });
 
-function render(props = getDefault(), options: AppRenderOptions = {}) {
+function render(props = getProps(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyDirecsListItem {...props} />, options);
 }
 
@@ -89,7 +89,7 @@ describe("<MyDirecsListItem />", () => {
     jest.spyOn(map, "drawPolyline").mockImplementation(drawPolyline);
     jest.spyOn(map, "flyTo").mockImplementation(flyTo);
 
-    const { getByRole } = render(getDefault(), { context: ctx });
+    const { getByRole } = render(getProps(), { context: ctx });
     fireEvent.click(getByRole("button", { name: "Draw direction" }));
 
     expect(clear).toHaveBeenCalled();
@@ -100,7 +100,7 @@ describe("<MyDirecsListItem />", () => {
   });
 
   test("View sets direction and redirect", () => {
-    const d = getDefault();
+    const d = getProps();
 
     const { store, getByRole } = render(d);
     fireEvent.click(getByRole("button", { name: "Menu" }));
@@ -110,14 +110,18 @@ describe("<MyDirecsListItem />", () => {
     expect(store.getState().viewer.direc).toBe(d.direc);
   });
 
-  test("Edit updates storage and state", async () => {
+  test("Edit updates `state` and `storage`", async () => {
     const storage = new InmemStorage();
-    const ctx = {
-      ...context,
-      storage: storage
-    };
 
-    const { store, getByRole } = render(getDefault(), { context: ctx });
+    const { store, getByRole } = render(getProps(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.direcs).toHaveLength(0);
+
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "Edit" }));
     fireEvent.change(getByRole("textbox"), { target: { value: "Direction B" } });
@@ -129,8 +133,42 @@ describe("<MyDirecsListItem />", () => {
 
     await waitFor(() => {
       expect(store.getState().favorites.direcs[1]?.name === "Direction B");
-      expect(storage.getDirec("1")).toBeTruthy();
     });
+
+    expect(await storage.getDirec("1")).toBeTruthy();
+    expect(store.getState().favorites.direcs).toHaveLength(1);
+  });
+
+  it("should not update `state` if `storage` fails on Save", async () => {
+    const alert = jest.spyOn(window, "alert").mockImplementation();
+
+    const storage = new InmemStorage();
+    jest.spyOn(storage, "updateDirec").mockImplementation(() => { throw new Error(); });
+
+    const { getByRole, store } = render(getProps(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.direcs).toHaveLength(0);
+
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    fireEvent.change(getByRole("textbox"), { target: { value: "Direction B" } });
+
+    // multiple update ~> fails without async!
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+
+    await waitFor(() => {
+      expect(alert).toHaveBeenCalled();
+      expect(getByRole("button", { name: "Save" })).not.toHaveAttribute("disabled");
+    });
+
+    expect(store.getState().favorites.direcs).toHaveLength(0);
   });
 
   test("name in Edit dialog gets updated upon Save", async () => {
@@ -151,7 +189,7 @@ describe("<MyDirecsListItem />", () => {
 
   test("Modify replace direction sequence and redirects", () => {
 
-    const { store, getByRole } = render(getDefault(), {
+    const { store, getByRole } = render(getProps(), {
       preloadedState: {
         searchDirecs: {
           waypoints: [
@@ -182,7 +220,7 @@ describe("<MyDirecsListItem />", () => {
       storage: storage
     };
 
-    const { store, getByRole } = render(getDefault(), {
+    const { store, getByRole } = render(getProps(), {
       preloadedState: {
         favorites: {
           ...initialFavoritesState(),

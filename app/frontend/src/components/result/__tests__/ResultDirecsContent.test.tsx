@@ -268,7 +268,7 @@ describe("<ResultDirecsContent />", () => {
     expect(saveButton).not.toHaveAttribute("disabled");
   });
 
-  it("should update `state` and `context` upon Save", async () => {
+  it("should update `state` and `storage` upon Save", async () => {
     const storage = new InmemStorage();
     const { getByRole, getByText, queryByRole, store } = render({
       ...getState(),
@@ -289,8 +289,39 @@ describe("<ResultDirecsContent />", () => {
     });
 
     expect(getByText("Direction A")).toBeInTheDocument();
-    expect(await storage.getDirecIdentifiers()).toHaveLength(1);
     expect(store.getState().favorites.direcs).toHaveLength(1);
+    expect(await storage.getDirecIdentifiers()).toHaveLength(1);
+  });
+
+  it("should not update `state` if `storage` fails on Save", async () => {
+    const alert = jest.spyOn(window, "alert").mockImplementation();
+
+    const storage = new InmemStorage();
+    jest.spyOn(storage, "createDirec").mockImplementation(() => { throw new Error(); });
+
+    const { getByRole, store } = render({
+      ...getState(),
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.direcs).toHaveLength(0);
+
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Save" }));
+    fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Direction A" } });
+
+    act(() => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+    await waitFor(() => {
+      expect(alert).toHaveBeenCalled();
+      expect(getByRole("button", { name: "Save" })).not.toHaveAttribute("disabled");
+    });
+
+    expect(store.getState().favorites.direcs).toHaveLength(0);
   });
 
   test("saved direction cannot be repeatedly saved", () => {

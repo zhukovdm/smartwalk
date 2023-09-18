@@ -9,7 +9,9 @@ import {
   renderWithProviders,
 } from "../../../utils/testUtils";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
-import MyRoutesListItem, { type MyRoutesListItemProps } from "../MyRoutesListItem";
+import MyRoutesListItem, {
+  type MyRoutesListItemProps
+} from "../MyRoutesListItem";
 
 const mockUseNavigate = jest.fn();
 
@@ -115,14 +117,16 @@ describe("<MyRoutesListItem />", () => {
     expect(store.getState().viewer.route).toBe(r.route);
   });
 
-  test("Edit updates storage and state", async () => {
+  test("Edit updates `storage` and `state`", async () => {
     const storage = new InmemStorage();
-    const ctx = {
-      ...context,
-      storage: storage
-    };
 
-    const { store, getByRole } = render(getDefault(), { context: ctx });
+    const { store, getByRole } = render(getDefault(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "Edit" }));
     fireEvent.change(getByRole("textbox"), { target: { value: "Route B" } });
@@ -136,6 +140,38 @@ describe("<MyRoutesListItem />", () => {
       expect(store.getState().favorites.routes[1]?.name === "Route B");
       expect(storage.getRoute("1")).toBeTruthy();
     });
+  });
+
+  it("it should not update `state` if `storage` fails on Save", async () => {
+    const alert = jest.spyOn(window, "alert").mockImplementation();
+
+    const storage = new InmemStorage();
+    jest.spyOn(storage, "updateRoute").mockImplementation(() => { throw new Error(); });
+
+    const { store, getByRole } = render(getDefault(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.routes).toHaveLength(0);
+
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    fireEvent.change(getByRole("textbox"), { target: { value: "Route B" } });
+
+    // multiple update ~> fails without async!
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+
+    await waitFor(() => {
+      expect(alert).toHaveBeenCalled();
+      expect(getByRole("button", { name: "Save" })).not.toHaveAttribute("disabled");
+    });
+
+    expect(store.getState().favorites.routes).toHaveLength(0);
   });
 
   test("name in Edit dialog gets updated upon Save", async () => {

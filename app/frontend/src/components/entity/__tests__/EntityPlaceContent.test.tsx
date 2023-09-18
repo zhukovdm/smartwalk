@@ -93,10 +93,14 @@ describe("<EntityPlaceContent />", () => {
     expect(addStored).toHaveBeenCalledTimes(1);
   });
 
-  it("should update `state` and `storage` upon Save", async () => {
+  it("should update `state` and `storage` on Save", async () => {
     const storage = new InmemStorage();
+
     const { getByRole, queryByRole, store } = render(getProps(), {
-      context: { ...context, storage: storage }
+      context: {
+        ...context,
+        storage: storage
+      }
     });
 
     expect(store.getState().favorites.places).toHaveLength(0);
@@ -113,6 +117,34 @@ describe("<EntityPlaceContent />", () => {
     expect(within(getByRole("alert")).getByText("Medieval castle")).toBeInTheDocument();
     expect(store.getState().favorites.places).toHaveLength(1);
     expect(await storage.getPlaceIdentifiers()).toHaveLength(1);
+  });
+
+  it("should not update `state` if `storage` fails on Save", async () => {
+    const alert = jest.spyOn(window, "alert").mockImplementation();
+
+    const storage = new InmemStorage();
+    jest.spyOn(storage, "createPlace").mockImplementation(() => { throw new Error(); })
+
+    const { getByRole, store } = render(getProps(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.places).toHaveLength(0);
+
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Save" }));
+    act(() => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+    await waitFor(() => {
+      expect(alert).toHaveBeenCalled();
+      expect(getByRole("button", { name: "Save" })).not.toHaveAttribute("disabled");
+    });
+
+    expect(store.getState().favorites.places).toHaveLength(0);
   });
 
   it("should Append place to the direction sequence state", async () => {
