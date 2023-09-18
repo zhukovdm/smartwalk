@@ -25,7 +25,7 @@ jest.mock(rrdModule, () => ({
   useNavigate: () => mockUseNavigate
 }));
 
-const getDefault = (): MyPlacesListItemProps => ({
+const getProps = (): MyPlacesListItemProps => ({
   index: 1,
   place: {
     ...getPlace(),
@@ -34,7 +34,7 @@ const getDefault = (): MyPlacesListItemProps => ({
   }
 });
 
-function render(props = getDefault(), options: AppRenderOptions = {}) {
+function render(props = getProps(), options: AppRenderOptions = {}) {
   return renderWithProviders(<MyPlacesListItem {...props} />, options);
 }
 
@@ -60,7 +60,7 @@ describe("<MyPlacesListItem />", () => {
     jest.spyOn(map, "addStored").mockImplementation(ads);
     jest.spyOn(map, "flyTo").mockImplementation(fly);
 
-    const { getByRole } = render(getDefault(), { context: ctx });
+    const { getByRole } = render(getProps(), { context: ctx });
     fireEvent.click(getByRole("button", { name: "Draw place" }));
 
     expect(clr).toHaveBeenCalled();
@@ -69,7 +69,7 @@ describe("<MyPlacesListItem />", () => {
   });
 
   test("View sets place and redirect", () => {
-    const p = getDefault();
+    const p = getProps();
 
     const { store, getByRole } = render(p);
     fireEvent.click(getByRole("button", { name: "Menu" }));
@@ -79,14 +79,18 @@ describe("<MyPlacesListItem />", () => {
     expect(store.getState().viewer.place).toBe(p.place);
   });
 
-  test("Edit updates storage and state", async () => {
+  test("Edit updates `storage` and `state`", async () => {
     const storage = new InmemStorage();
-    const ctx = {
-      ...context,
-      storage: storage
-    };
 
-    const { store, getByRole } = render(getDefault(), { context: ctx });
+    const { store, getByRole } = render(getProps(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.places).toHaveLength(0);
+
     fireEvent.click(getByRole("button", { name: "Menu" }));
     fireEvent.click(getByRole("menuitem", { name: "Edit" }));
     fireEvent.change(getByRole("textbox"), { target: { value: "Place B" } });
@@ -98,8 +102,42 @@ describe("<MyPlacesListItem />", () => {
 
     await waitFor(() => {
       expect(store.getState().favorites.places[1]?.name === "Place B");
-      expect(storage.getPlace("1")).toBeTruthy();
     });
+
+    expect(await storage.getPlace("1")).toBeTruthy();
+    expect(store.getState().favorites.places).toHaveLength(1);
+  });
+
+  it("should not update `state` if `storage` fails on Save", async () => {
+    const alert = jest.spyOn(window, "alert").mockImplementation();
+
+    const storage = new InmemStorage();
+    jest.spyOn(storage, "updatePlace").mockImplementation(() => { throw new Error(); });
+
+    const { store, getByRole } = render(getProps(), {
+      context: {
+        ...context,
+        storage: storage
+      }
+    });
+
+    expect(store.getState().favorites.places).toHaveLength(0);
+
+    fireEvent.click(getByRole("button", { name: "Menu" }));
+    fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+    fireEvent.change(getByRole("textbox"), { target: { value: "Place B" } });
+
+    // multiple update ~> fails without async!
+    await act(async () => {
+      fireEvent.click(getByRole("button", { name: "Save" }));
+    });
+
+    await waitFor(() => {
+      expect(alert).toHaveBeenCalled();
+      expect(getByRole("button", { name: "Save" })).not.toHaveAttribute("disabled");
+    });
+
+    expect(store.getState().favorites.places).toHaveLength(0);
   });
 
   test("name in Edit dialog gets updated upon Save", async () => {
@@ -121,7 +159,7 @@ describe("<MyPlacesListItem />", () => {
 
   test("Append extends current direction sequence by a place", () => {
 
-    const { store, getByRole } = render(getDefault(), {
+    const { store, getByRole } = render(getProps(), {
       preloadedState: {
         searchDirecs: {
           waypoints: [
@@ -151,7 +189,7 @@ describe("<MyPlacesListItem />", () => {
       storage: storage
     };
 
-    const { store, getByRole } = render(getDefault(), {
+    const { store, getByRole } = render(getProps(), {
       preloadedState: {
         favorites: {
           ...initialFavoritesState(),

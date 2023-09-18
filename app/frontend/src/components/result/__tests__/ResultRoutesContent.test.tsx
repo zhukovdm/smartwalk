@@ -18,7 +18,7 @@ import ResultRoutesContent from "../ResultRoutesContent";
 import { LeafletMap } from "../../../utils/leaflet";
 
 jest.mock("vis-network", () => ({
-  Network: jest.fn().mockImplementation(() => { })
+  Network: jest.fn().mockImplementation()
 }));
 
 const mockUseNavigate = jest.fn();
@@ -492,6 +492,36 @@ describe("<ResultRoutesContent />", () => {
       expect(getByText("Route A")).toBeInTheDocument(); // alert is updated!
       expect(await storage.getRouteIdentifiers()).toHaveLength(1);
       expect(store.getState().favorites.routes).toHaveLength(1);
+    });
+
+    it("should not update `state` if `storage` fails on Save", async () => {
+      const alert = jest.spyOn(window, "alert").mockImplementation();
+
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "createRoute").mockImplementation(() => { throw new Error(); });
+
+      const { getByRole, store } = render({
+        ...getState(),
+        context: {
+          ...context,
+          storage: storage
+        }
+      });
+
+      expect(store.getState().favorites.routes).toHaveLength(0);
+
+      fireEvent.click(getByRole("button", { name: "Menu" }));
+      fireEvent.click(getByRole("menuitem", { name: "Save" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Route A" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+      await waitFor(() => {
+        expect(alert).toHaveBeenCalled();
+        expect(getByRole("button", { name: "Save" })).not.toHaveAttribute("disabled");
+      });
+
+      expect(store.getState().favorites.routes).toHaveLength(0);
     });
 
     it("should update `state` upon Modify and `navigate`", async () => {
