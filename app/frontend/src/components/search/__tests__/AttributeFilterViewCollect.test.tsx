@@ -38,9 +38,9 @@ describe("<AttributeFilterViewCollect />", () => {
     expect(getByRole("checkbox")).toHaveProperty("checked", true);
   });
 
-  it("should render `includes` and `excludes`", () => {
+  it("should render `Include` and `Exclude`", () => {
     const { getByRole } = render();
-    ["Includes", "Excludes"].forEach((name) => {
+    ["Include", "Exclude"].forEach((name) => {
       expect(getByRole("combobox", { name })).toBeInTheDocument();
     });
     ["a", "b"].forEach((name) => {
@@ -77,24 +77,24 @@ describe("<AttributeFilterViewCollect />", () => {
     expect(setter).toHaveBeenCalledWith(undefined);
   });
 
-  it("should attempt to extend `includes` upon selection", () => {
+  it("should attempt to extend `include` upon selection", () => {
     const setter = jest.fn();
     const { getByRole, getByText } = render({
       ...getProps(),
       setter: setter
     });
-    fireEvent.click(within(getByRole("region", { name: "Includes" })).getByRole("button", { name: "Open" }));
+    fireEvent.click(within(getByRole("region", { name: "Include" })).getByRole("button", { name: "Open" }));
     fireEvent.click(getByText("c"));
     expect(setter).toHaveBeenCalledWith({ inc: ["a", "c"], exc: ["b"] });
   });
 
-  it("should attempt to extend `excludes` upon selection", () => {
+  it("should attempt to extend `exclude` upon selection", () => {
     const setter = jest.fn();
     const { getByRole, getByText } = render({
       ...getProps(),
       setter: setter
     });
-    fireEvent.click(within(getByRole("region", { name: "Excludes" })).getByRole("button", { name: "Open" }));
+    fireEvent.click(within(getByRole("region", { name: "Exclude" })).getByRole("button", { name: "Open" }));
     fireEvent.click(getByText("c"));
     expect(setter).toHaveBeenCalledWith({ inc: ["a"], exc: ["b", "c"] });
   });
