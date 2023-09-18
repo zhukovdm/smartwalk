@@ -32,7 +32,7 @@ export default function CategoryChip(
         variant={"filled"}
         label={`${index + 1}: ${category.keyword}`}
         onClick={() => { setShowDialog(true); }}
-        onDelete={() => { onDelete(); }}
+        onDelete={onDelete}
       />
       {showDialog /* hard reset */ &&
         <CategoryDialog

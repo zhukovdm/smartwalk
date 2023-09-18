@@ -81,14 +81,14 @@ export default function AttributeFilterViewCollect(
         onToggle={() => { setter(defined ? undefined : getDefault()) }}
       />
       <CollectAutocomplete
-        label={"Includes"}
+        label={"Include"}
         value={defined ? curInc : []}
         options={bound}
         disabled={!defined}
         onChange={(v) => { setter({ inc: v, exc: curExc }); }}
       />
       <CollectAutocomplete
-        label={"Excludes"}
+        label={"Exclude"}
         value={defined ? curExc : []}
         options={bound}
         disabled={!defined}

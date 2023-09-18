@@ -22,7 +22,7 @@ import { camelCaseToLabel } from "../../utils/functions";
 type CategoryFilterCollectProps = {
 
   /** Collection category. */
-  label: string;
+  label: "Include" | "Exclude";
 
   /** Items associated with the category. */
   items: string[];
@@ -172,15 +172,15 @@ export default function CategoryFilterDialog(
           }
           {csKeys.length > 0 &&
             <Stack direction={"column"} gap={1}>
-              <Typography>Includes any / Excludes all</Typography>
+              <Typography>Include any / Exclude all</Typography>
               <Stack direction={"column"} gap={1}>
                 {csKeys.map((c, i) => {
                   const { inc, exc } = ((cs as any)[c]) as AttributeFilterCollect;
                   return (
                     <Stack key={i} direction={"column"} gap={1}>
                       <Typography>{camelCaseToLabel(c)}</Typography>
-                      <CategoryFilterCollect label={"Includes"} items={inc} />
-                      <CategoryFilterCollect label={"Excludes"} items={exc} />
+                      <CategoryFilterCollect label={"Include"} items={inc} />
+                      <CategoryFilterCollect label={"Exclude"} items={exc} />
                     </Stack>
                   );
                 })}
