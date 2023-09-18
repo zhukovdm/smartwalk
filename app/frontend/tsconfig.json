@@ -22,6 +22,7 @@
   },
   "include": [
     "src",
-    "jest.env.setup.ts"
+    "jest.env.setup.ts",
+    "jest.frm.setup.ts"
   ]
 }
