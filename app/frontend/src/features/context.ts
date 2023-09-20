@@ -1,6 +1,9 @@
 import { Map as LeafletRawMap } from "leaflet"
 import { LeafletMap } from "../utils/leaflet";
-import { ExtendedPlace, KeywordAdviceItem } from "../domain/types";
+import type {
+  ExtendedPlace,
+  KeywordAdviceItem
+} from "../domain/types";
 import { IMap, IStorage } from "../domain/interfaces";
 import LocalStorage from "../utils/localStorage";
 

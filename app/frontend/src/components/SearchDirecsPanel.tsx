@@ -5,7 +5,7 @@ import Typography from "@mui/material/Typography";
 import {
   RESULT_DIRECS_ADDR
 } from "../domain/routing";
-import SmartWalkFetcher from "../utils/smartwalk";
+import { fetchSearchDirecs } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultDirecs,
@@ -40,8 +40,7 @@ export default function SearchDirecsPanel(): JSX.Element {
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      const direcs = await SmartWalkFetcher
-        .searchDirecs(waypoints.map(([w, _]) => (w)));
+      const direcs = await fetchSearchDirecs(waypoints.map(([w, _]) => (w)));
 
       dispatch(resetResultDirecs());
       dispatch(setResultDirecs(direcs));

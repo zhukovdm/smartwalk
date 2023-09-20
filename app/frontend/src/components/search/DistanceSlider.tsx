@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
-type DistanceSliderProps = {
+export type DistanceSliderProps = {
 
   /** Upper bound. */
   max: number;
@@ -31,7 +31,10 @@ export default function DistanceSlider(
   const marks = seq.map((m) => ({ value: m, label: m }));
 
   return (
-    <Box display={"flex"} justifyContent={"center"}>
+    <Box
+      display={"flex"}
+      justifyContent={"center"}
+    >
       <Box sx={{ width: "94%" }}>
         <Slider
           {...rest}

@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { AppContext } from "../App";
 import {
   StoredDirec,
@@ -13,14 +13,15 @@ import {
   setFavoriteDirecs,
   setFavoritePlaces,
   setFavoriteRoutes,
-  setFavoritesLoaded
+  setFavoritesLoaded,
+  setFavoritesLoadedRatio
 } from "./favoritesSlice";
 
 /**
  * Load the entire collection of Favorites from the current storage to the
  * application state.
  */
-export function useFavorites() {
+export function useFavorites(): void {
 
   const { storage } = useContext(AppContext);
 
@@ -29,12 +30,10 @@ export function useFavorites() {
     loaded: favoritesLoaded
   } = useAppSelector((state) => state.favorites);
 
-  const [loadedRatio, setLoadedRatio] = useState(0);
-
   useEffect(() => {
     let ignore = false;
 
-    const load = async () => {
+    const loadEntitiesFromStorage = async () => {
       if (!ignore && !favoritesLoaded) {
         try {
           await storage.init();
@@ -56,7 +55,7 @@ export function useFavorites() {
               direcs.push(direc);
             };
             if (!ignore) {
-              setLoadedRatio((++cur) / tot);
+              dispatch(setFavoritesLoadedRatio((++cur) / tot));
             }
           }
 
@@ -66,7 +65,7 @@ export function useFavorites() {
               places.push(place);
             }
             if (!ignore) {
-              setLoadedRatio((++cur) / tot);
+              dispatch(setFavoritesLoadedRatio((++cur) / tot));
             }
           }
 
@@ -76,7 +75,7 @@ export function useFavorites() {
               routes.push(route);
             }
             if (!ignore) {
-              setLoadedRatio((++cur) / tot);
+              dispatch(setFavoritesLoadedRatio((++cur) / tot));
             }
           }
 
@@ -91,9 +90,7 @@ export function useFavorites() {
       }
     };
 
-    load();
+    loadEntitiesFromStorage();
     return () => { ignore = true; };
   }, [storage, dispatch, favoritesLoaded]);
-
-  return loadedRatio;
 }

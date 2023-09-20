@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { RESULT_PLACES_ADDR } from "../domain/routing";
-import SmartWalkFetcher from "../utils/smartwalk";
+import { fetchSearchPlaces } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultPlaces,
@@ -18,7 +18,8 @@ import {
 } from "../features/searchPlacesSlice";
 import {
   usePlace,
-  useStoredPlaces
+  useStoredPlaces,
+  useStoredSmarts
 } from "../features/sharedHooks";
 import {
   useAppDispatch,
@@ -41,21 +42,20 @@ export default function SearchPlacesPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const storedPlaces = useStoredPlaces();
   const {
-    center: storedCenter,
+    center: centerFromStore,
     radius,
     categories
   } = useAppSelector((state) => state.searchPlaces);
 
-  const center = usePlace(storedCenter, storedPlaces, new Map());
+  const center = usePlace(centerFromStore, useStoredPlaces(), useStoredSmarts());
 
   const map = useSearchPlacesMap(center, radius);
 
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      const places = await SmartWalkFetcher.searchPlaces({
+      const places = await fetchSearchPlaces({
         center: center!,
         radius: radius,
         categories: categories.map(({ keyword, filters }) => ({ keyword, filters }))

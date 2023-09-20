@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { IMap } from "../domain/interfaces";
 import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { point2place } from "../utils/functions";
-import SmartWalkFetcher from "../utils/smartwalk";
+import { fetchAdviceKeywords } from "../utils/smartwalk";
 import { AppContext } from "../App";
 import { updateSearchDirecsPlace } from "./searchDirecsSlice";
 import { setSearchPlacesCenter } from "./searchPlacesSlice";
@@ -37,7 +37,7 @@ export function useSearchKeywordsAdvice(
       if (!ignore) { setLoading(true); }
 
       try {
-        const items = await SmartWalkFetcher.adviceKeywords(prefix);
+        const items = await fetchAdviceKeywords(prefix);
 
         if (!ignore) {
           items.forEach((item) => {
