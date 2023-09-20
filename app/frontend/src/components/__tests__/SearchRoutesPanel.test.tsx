@@ -1,236 +1,647 @@
-import { cleanup, fireEvent } from "@testing-library/react";
+import { act, fireEvent, waitFor, within } from "@testing-library/react";
+import { getKeywordAdviceItem, getPlace } from "../../utils/testData";
 import {
   type AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
-import { initialFavoritesState } from "../../features/favoritesSlice";
+import { LeafletMap } from "../../utils/leaflet";
+import { context } from "../../features/context";
 import { initialSearchRoutesState } from "../../features/searchRoutesSlice";
+import * as smartwalkApi from "../../utils/smartwalk";
 import SearchRoutesPanel from "../SearchRoutesPanel";
+import { getAccessFor } from "@inrupt/solid-client/dist/access/universal";
 
-function render(options: AppRenderOptions = {}) {
-  return renderWithProviders(<SearchRoutesPanel />, options);
+global.alert = jest.fn();
+global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
+
+jest.mock("axios");
+jest.mock("vis-network");
+
+const getProps = (): {} => ({});
+
+const getOptions = (): AppRenderOptions => ({});
+
+function render(props = getProps(), options: AppRenderOptions = getOptions()) {
+  return renderWithProviders(<SearchRoutesPanel {...props} />, options);
 }
 
 describe("<SearchRoutesPanel />", () => {
 
-  beforeEach(cleanup);
-
   test("render", () => {
-    const { container } = render();
-    expect(container).toBeTruthy();
+    expect(render().container).toBeTruthy();
   });
 
-  describe("source", () => {
+  describe("source box", () => {
 
-    test("source button opens select dialog", () => {
-      const { getByRole } = render();
-      fireEvent.click(getByRole("button", { name: "Select starting point" }));
-      expect(getByRole("dialog", { name: "Select point" })).toBeVisible();
-    });
+    /**
+     * Point selection, dialog, ane name replacement are tested
+     * in PanelDrawer.test.tsx
+     */
 
-    test("source description opens select dialog", () => {
-      const { getByRole, getByText } = render();
-      fireEvent.click(getByText("Select starting point..."));
-      expect(getByRole("dialog", { name: "Select point" })).toBeVisible();
-    });
+    //
 
-    test("simple source is rendered", () => {
-      const name = "0.000000N, 0.000000E";
-      const { getByRole, getByText } = render({
+    it("should render link-based label for places with smartId", () => {
+      const { getByRole } = render(getProps(), {
         preloadedState: {
           searchRoutes: {
             ...initialSearchRoutesState(),
             source: {
-              name: name,
-              location: {
-                lon: 0.0,
-                lat: 0.0
-              },
-              keywords: [],
-              categories: []
-            }
-          }
-        }
-      });
-      expect(getByRole("button", { name: "Fly to" })).toBeInTheDocument();
-      expect(getByText(name)).toBeInTheDocument();
-      expect(getByRole("button", { name: "Remove point" })).toBeInTheDocument();
-    });
-
-    it("should remove source upon clicking on the remove button", () => {
-      const { getByRole, getByText } = render({
-        preloadedState: {
-          searchRoutes: {
-            ...initialSearchRoutesState(),
-            source: {
-              name: "",
-              location: {
-                lon: 0.0,
-                lat: 0.0
-              },
-              keywords: [],
-              categories: []
-            }
-          }
-        }
-      });
-      fireEvent.click(getByRole("button", { name: "Remove point" }));
-      expect(getByRole("button", { name: "Select starting point" })).toBeInTheDocument();
-      expect(getByText("Select starting point...")).toBeInTheDocument();
-    });
-
-    it("should replace source name by favorite with the same placeId", () => {
-      const { getByText } = render({
-        preloadedState: {
-          searchRoutes: {
-            ...initialSearchRoutesState(),
-            source: {
-              placeId: "1",
+              ...getPlace(),
               name: "Place A",
-              location: {
-                lon: 0.0,
-                lat: 0.0
-              },
-              keywords: [],
-              categories: []
+              placeId: "1",
+              smartId: "A"
             }
-          },
-          favorites: {
-            ...initialFavoritesState(),
-            places: [
-              {
-                placeId: "1",
-                name: "Place B",
-                location: {
-                  lon: 0.0,
-                  lat: 0.0
-                },
-                keywords: [],
-                categories: []
-              }
-            ]
           }
         }
       });
-      expect(getByText("Place B")).toBeInTheDocument();
+      expect(within(getByRole("region", { name: "Starting point" }))
+        .getByRole("link", { name: "Place A" })).toBeInTheDocument();
     });
 
-    it("should render source name as a link in the presence of smartId", () => {
-      const name = "Place A";
-      const { getByRole } = render({
+    it("should render text-based label for places without smartId", () => {
+      const { getByRole } = render(getProps(), {
         preloadedState: {
           searchRoutes: {
             ...initialSearchRoutesState(),
             source: {
-              smartId: "1",
-              name: name,
-              location: {
-                lon: 0.0,
-                lat: 0.0
-              },
-              keywords: [],
-              categories: []
+              ...getPlace(),
+              name: "Place A",
+              placeId: "1"
             }
           }
         }
       });
-      expect(getByRole("link", { name: name })).toBeInTheDocument();
-    });
-  });
+      const region = getByRole("region", { name: "Starting point" });
 
-  describe("target", () => {
-
-    test("target button opens select dialog", () => {
-      const { getByRole } = render();
-      fireEvent.click(getByRole("button", { name: "Select destination" }));
-      expect(getByRole("dialog", { name: "Select point" })).toBeVisible();
+      expect(within(region).getByText("Place A")).toBeInTheDocument();
+      expect(within(region).queryByRole("link")).not.toBeInTheDocument();
     });
 
-    test("target description opens select dialog", () => {
-      const { getByRole, getByText } = render();
+    it("should remove added location upon clicking on the Remove", () => {
 
-      fireEvent.click(getByText("Select destination..."));
-      expect(getByRole("dialog", { name: "Select point" })).toBeVisible();
-    });
-  });
-
-  describe("swap", () => {
-
-    test("swap does nothing when both slots are empty", () => {
-      const { getByRole } = render();
-      fireEvent.click(getByRole("button", { name: "Swap points" }));
-      expect(getByRole("button", { name: "Select starting point" })).toBeInTheDocument();
-      expect(getByRole("button", { name: "Select destination" })).toBeInTheDocument();
-    });
-
-    it("should move source to the target free slot", () => {
-      const name = "Place A";
-      const { getByRole, getByText } = render({
+      const { getByRole, getByText } = render(getProps(), {
         preloadedState: {
           searchRoutes: {
             ...initialSearchRoutesState(),
             source: {
-              name: name,
-              location: {
-                lon: 0.0,
-                lat: 0.0
-              },
-              keywords: [],
-              categories: []
+              ...getPlace(),
+              name: "Place A"
             }
           }
         }
       });
-      fireEvent.click(getByRole("button", { name: "Swap points" }));
-      expect(getByRole("button", { name: "Select starting point" })).toBeInTheDocument();
+
+      fireEvent.click(within(getByRole("region", { name: "Starting point" }))
+        .getByRole("button", { name: "Remove point" }));
+
       expect(getByText("Select starting point...")).toBeInTheDocument();
-      expect(getByRole("button", { name: "Fly to" })).toBeInTheDocument();
-      expect(getByText("Place A")).toBeInTheDocument();
     });
 
-    it("should swap source and target", () => {
-      const nameS = "Place A";
-      const nameT = "Place B";
-      const source = {
-        name: nameS,
-        location: {
-          lon: 0.0,
-          lat: 0.0
-        },
-        keywords: [],
-        categories: []
-      };
-      const target = {
-        name: nameT,
-        location: {
-          lon: 0.0,
-          lat: 0.0
-        },
-        keywords: [],
-        categories: []
-      }
-      const { getByRole, store } = render({
+    it("should fly towards location upon clicking on Fly to", () => {
+      const map = new LeafletMap();
+
+      const flyTo = jest.spyOn(map, "flyTo").mockImplementation();
+      const addSource = jest.spyOn(map, "addSource").mockImplementation(() => ({
+        withDrag: jest.fn(),
+        withCirc: jest.fn()
+      }));
+
+      const { getByRole } = render(getProps(), {
         preloadedState: {
           searchRoutes: {
             ...initialSearchRoutesState(),
-            source: source,
-            target: target,
-            
+            source: {
+              ...getPlace(),
+              name: "Place A"
+            }
           }
-        }
+        },
+        context: { ...context, map }
       });
-      fireEvent.click(getByRole("button", { name: "Swap points" }));
-      const { source: s, target: t } = store.getState().searchRoutes;
 
-      expect(s).toBe(target);
-      expect(t).toBe(source);
+      expect(flyTo).toHaveBeenCalledTimes(0);
+      expect(addSource).toHaveBeenCalledTimes(1);
+
+      fireEvent.click(within(getByRole("region", { name: "Starting point" }))
+        .getByRole("button", { name: "Fly to" }));
       
+      expect(flyTo).toHaveBeenCalledTimes(1);
+      expect(addSource).toHaveBeenCalledTimes(1);
     });
   });
 
-  describe("categories", () => { });
+  describe("target box", () => {
 
-  describe("precedence", () => { });
+    /**
+     * Point selection, dialog, ane name replacement are tested
+     * in PanelDrawer.test.tsx
+     */
 
-  describe("search", () => { });
+    //
+
+    it("should render link-based label for places with smartId", () => {
+      const { getByRole } = render(getProps(), {
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            target: {
+              ...getPlace(),
+              name: "Place A",
+              placeId: "1",
+              smartId: "A"
+            }
+          }
+        }
+      });
+      expect(within(getByRole("region", { name: "Destination" }))
+        .getByRole("link", { name: "Place A" })).toBeInTheDocument();
+    });
+
+    it("should render text-based label for places without smartId", () => {
+      const { getByRole } = render(getProps(), {
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            target: {
+              ...getPlace(),
+              name: "Place A",
+              placeId: "1"
+            }
+          }
+        }
+      });
+      const region = getByRole("region", { name: "Destination" });
+
+      expect(within(region).getByText("Place A")).toBeInTheDocument();
+      expect(within(region).queryByRole("link")).not.toBeInTheDocument();
+    });
+
+    it("should remove added location upon clicking on the Remove", () => {
+
+      const { getByRole, getByText } = render(getProps(), {
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            target: {
+              ...getPlace(),
+              name: "Place A"
+            }
+          }
+        }
+      });
+
+      fireEvent.click(within(getByRole("region", { name: "Destination" }))
+        .getByRole("button", { name: "Remove point" }));
+
+      expect(getByText("Select destination...")).toBeInTheDocument();
+    });
+
+    it("should fly towards location upon clicking on Fly to", () => {
+      const map = new LeafletMap();
+
+      const flyTo = jest.spyOn(map, "flyTo").mockImplementation();
+      const addTarget = jest.spyOn(map, "addTarget").mockImplementation(() => ({
+        withDrag: jest.fn(),
+        withCirc: jest.fn()
+      }));
+
+      const { getByRole } = render(getProps(), {
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            target: {
+              ...getPlace(),
+              name: "Place A"
+            }
+          }
+        },
+        context: { ...context, map }
+      });
+
+      expect(flyTo).toHaveBeenCalledTimes(0);
+      expect(addTarget).toHaveBeenCalledTimes(1);
+
+      fireEvent.click(within(getByRole("region", { name: "Destination" }))
+        .getByRole("button", { name: "Fly to" }));
+      
+      expect(flyTo).toHaveBeenCalledTimes(1);
+      expect(addTarget).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  describe("swap button", () => {
+
+    it("does nothing when both slots are empty", () => {
+      const { getByRole } = render();
+      fireEvent.click(getByRole("button", { name: "Swap points" }));
+
+      expect(within(getByRole("region", { name: "Starting point" }))
+        .getByText("Select starting point...")).toBeInTheDocument();
+
+      expect(within(getByRole("region", { name: "Destination" }))
+        .getByText("Select destination...")).toBeInTheDocument();
+    });
+
+    it("should swap vacant and occupied slots", () => {
+
+      const { getByRole } = render(getProps(), {
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            source: {
+              ...getPlace(),
+              name: "Place A"
+            }
+          }
+        }
+      });
+      expect(within(getByRole("region", { name: "Starting point" })).getByText("Place A"));
+      expect(within(getByRole("region", { name: "Destination" })).getByText("Select destination..."));
+
+      fireEvent.click(getByRole("button", { name: "Swap points" }));
+
+      expect(within(getByRole("region", { name: "Starting point" })).getByText("Select starting point..."));
+      expect(within(getByRole("region", { name: "Destination" })).getByText("Place A"));
+    });
+
+    it("should swap two points", () => {
+      const { getByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            source: {
+              ...getPlace(),
+              name: "Source"
+            },
+            target: {
+              ...getPlace(),
+              name: "Target"
+            }
+          }
+        }
+      });
+      expect(within(getByRole("region", { name: "Starting point" })).getByText("Source"));
+      expect(within(getByRole("region", { name: "Destination" })).getByText("Target"));
+
+      fireEvent.click(getByRole("button", { name: "Swap points" }));
+
+      expect(within(getByRole("region", { name: "Starting point" })).getByText("Target"));
+      expect(within(getByRole("region", { name: "Destination" })).getByText("Source"));
+    });
+  });
+
+  describe("distance slider", () => {
+
+    it("should change value", () => {
+      const { getByRole } = render();
+      const slider = getByRole("slider", { name: "Maximum walking distance of a route" });
+      expect(slider).toHaveValue("5")
+      act(() => {
+        fireEvent.change(slider, { target: { value: 7 } });
+      });
+      expect(slider).toHaveValue("7");
+    });
+  });
+
+  describe("categories", () => {
+
+    const getPreloadedState = () => ({
+      searchRoutes: {
+        ...initialSearchRoutesState(),
+        categories: [
+          {
+            ...getKeywordAdviceItem(),
+            keyword: "cafe",
+            filters: {}
+          }
+        ]
+      }
+    });
+
+    it("should allow to create new category", async () => {
+      jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce([
+        { ...getKeywordAdviceItem(), keyword: "cafe" },
+        { ...getKeywordAdviceItem(), keyword: "castle" }
+      ]);
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+
+      const list = getByRole("list", { name: "Categories" });
+      expect(within(list).getAllByRole("listitem")).toHaveLength(1);
+
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Add category" }));
+      });
+      act(() => {
+        fireEvent.change(getByRole("combobox", { name: "Keyword" }), { target: { value: "c" } });
+      });
+      await waitFor(() => {
+        expect(queryByRole("progressbar")).not.toBeInTheDocument();
+      });
+      fireEvent.click(getByRole("option", { name: "castle" }));
+      fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+      expect(within(list).getByText("2: castle"));
+      expect(within(list).getAllByRole("listitem")).toHaveLength(2);
+    });
+
+    it("should allow to create two identical categories", async () => {
+      jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce([
+        { ...getKeywordAdviceItem(), keyword: "cafe" },
+        { ...getKeywordAdviceItem(), keyword: "castle" }
+      ]);
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+
+      const list = getByRole("list", { name: "Categories" });
+      expect(within(list).getAllByRole("listitem")).toHaveLength(1);
+
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Add category" }));
+      });
+      act(() => {
+        fireEvent.change(getByRole("combobox", { name: "Keyword" }), { target: { value: "c" } });
+      });
+      await waitFor(() => {
+        expect(queryByRole("progressbar")).not.toBeInTheDocument();
+      });
+      fireEvent.click(getByRole("option", { name: "cafe" }));
+      fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+      expect(within(list).getByText("2: cafe"));
+      expect(within(list).getAllByRole("listitem")).toHaveLength(2);
+    });
+
+    it("should allow to modify category filters", async () => {
+      const { getByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+
+      fireEvent.click(getByRole("button", { name: "1: cafe" }));
+      expect(getByRole("checkbox", { name: "website" })).toHaveProperty("checked", false);
+
+      fireEvent.click(getByRole("checkbox", { name: "website" }));
+      expect(getByRole("checkbox", { name: "website" })).toHaveProperty("checked", true);
+
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+      });
+
+      fireEvent.click(getByRole("button", { name: "1: cafe" }));
+      await waitFor(() => {
+        expect(getByRole("checkbox", { name: "website" })).toHaveProperty("checked", true);
+      });
+    }, 10000);
+
+    it("should discard filter changes if not confirmed", async () => {
+      const { getByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+      fireEvent.click(getByRole("button", { name: "1: cafe" }));
+      expect(getByRole("checkbox", { name: "website" })).toHaveProperty("checked", false);
+
+      fireEvent.click(getByRole("checkbox", { name: "website" }));
+      expect(getByRole("checkbox", { name: "website" })).toHaveProperty("checked", true);
+
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Discard" }));
+      });
+
+      fireEvent.click(getByRole("button", { name: "1: cafe" }));
+
+      await waitFor(() => {
+        expect(getByRole("checkbox", { name: "website" })).toHaveProperty("checked", false);
+      });
+    }, 10000);
+
+    it("should allow to delete category", () => {
+      const { getByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+      const list = getByRole("list", { name: "Categories" });
+      expect(within(list).getAllByRole("listitem")).toHaveLength(1);
+
+      fireEvent.keyUp(getByRole("button", { name: "1: cafe" }), { key: "Delete" });
+
+      expect(within(list).queryAllByRole("listitem")).toHaveLength(0);
+    });
+  });
+
+  describe("precedence", () => {
+
+    const getPreloadedState = () => ({
+      searchRoutes: {
+        ...initialSearchRoutesState(),
+        categories: ["bridge", "castle", "museum", "statue"].map((keyword) => ({
+          ...getKeywordAdviceItem(),
+          keyword,
+          filters: {}
+        })),
+        precedence: [
+          {
+            fr: 0,
+            to: 1
+          },
+          {
+            fr: 2,
+            to: 3
+          }
+        ]
+      }
+    });
+
+    it("should allow to create a new arrow", async () => {
+      const { getByRole, getByLabelText } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+
+      const list = getByRole("list", { name: "Arrows" });
+      expect(within(list).queryAllByRole("listitem")).toHaveLength(2);
+
+      fireEvent.click(getByRole("button", { name: "Add arrow" }));
+
+      fireEvent.mouseDown(within(getByLabelText("this category")).getByRole("button"));
+      fireEvent.click(getByRole("option", { name: "2: castle" }));
+
+      fireEvent.mouseDown(within(getByLabelText("that category")).getByRole("button"));
+      fireEvent.click(getByRole("option", { name: "3: museum" }));
+
+      fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+      await waitFor(() => {
+        expect(within(list).queryAllByRole("listitem")).toHaveLength(3);
+        expect(within(list).queryByText("1 → 2")).toBeInTheDocument();
+        expect(within(list).queryByText("2 → 3")).toBeInTheDocument(); // new
+        expect(within(list).queryByText("3 → 4")).toBeInTheDocument();
+      });
+    }, 10000);
+
+    it("should reject repeated arrows", async () => {
+      const alert = jest.spyOn(window, "alert");
+
+      const { getByRole, getByLabelText } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+
+      fireEvent.click(getByRole("button", { name: "Add arrow" }));
+
+      fireEvent.mouseDown(within(getByLabelText("this category")).getByRole("button"));
+      fireEvent.click(getByRole("option", { name: "1: bridge" }));
+
+      fireEvent.mouseDown(within(getByLabelText("that category")).getByRole("button"));
+      fireEvent.click(getByRole("option", { name: "2: castle" }));
+
+      fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+      expect(getByRole("dialog", { name: "Add arrow" })).toBeVisible();
+      expect(alert).toHaveBeenCalledWith("Repeated arrow 1 → 2 detected, try another one.");
+    }, 10000);
+
+    it("should reject cyclic arrows", async () => {
+      const alert = jest.spyOn(window, "alert");
+
+      const { getByRole, getByLabelText } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+
+      fireEvent.click(getByRole("button", { name: "Add arrow" }));
+
+      fireEvent.mouseDown(within(getByLabelText("this category")).getByRole("button"));
+      fireEvent.click(getByRole("option", { name: "2: castle" }));
+
+      fireEvent.mouseDown(within(getByLabelText("that category")).getByRole("button"));
+      fireEvent.click(getByRole("option", { name: "1: bridge" }));
+
+      fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+      expect(getByRole("dialog", { name: "Add arrow" })).toBeVisible();
+      expect(alert).toHaveBeenCalledWith("Cycle 1 → 2 → 1 detected, try another arrow.");
+    });
+
+    it("should remove all arrows if any category is removed", () => {
+      const { getByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState()
+      });
+      const arrows = getByRole("list", { name: "Arrows" });
+
+      expect(within(arrows).queryAllByRole("listitem")).toHaveLength(2);
+      fireEvent.keyUp(within(getByRole("list", { name: "Categories" }))
+        .getByRole("button", { name: "4: statue" }), { key: "Delete" });
+      expect(within(arrows).queryAllByRole("listitem")).toHaveLength(0);
+    })
+  });
+
+  describe("bottom buttons", () => {
+
+    const getPreloadedState = () => ({
+      searchRoutes: {
+        source: {
+          ...getPlace(),
+          name: "Source"
+        },
+        target: {
+          ...getPlace(),
+          name: "Target"
+        },
+        categories: ["bridge", "castle"].map((keyword) => ({
+          ...getKeywordAdviceItem(),
+          keyword,
+          filters: {}
+        })),
+        precedence: [
+          { fr: 0, to: 1 }
+        ],
+        maxDistance: 3.1,
+      }
+    })
+
+    it("should reset the entire search form upon Clear", () => {
+      const { getByRole, getByText } = render(getProps(), {
+        preloadedState: getPreloadedState()
+      });
+
+      const arrList = getByRole("list", { name: "Arrows" });
+      const catList = getByRole("list", { name: "Categories" });
+
+      expect(getByText("Source")).toBeVisible();
+      expect(getByText("Target")).toBeVisible();
+      expect(getByRole("slider", { name: "Maximum walking distance of a route" })).toHaveValue("3.1");
+      expect(within(catList).queryAllByRole("listitem")).toHaveLength(2);
+      expect(within(arrList).queryAllByRole("listitem")).toHaveLength(1);
+
+      fireEvent.click(getByRole("button", { name: "Clear" }));
+
+      expect(getByText("Select starting point...")).toBeVisible();
+      expect(getByText("Select destination...")).toBeVisible();
+      expect(getByRole("slider", { name: "Maximum walking distance of a route" })).toHaveValue("5");
+      expect(within(catList).queryAllByRole("listitem")).toHaveLength(0);
+      expect(within(arrList).queryAllByRole("listitem")).toHaveLength(0);
+    });
+
+    it("should disable Search button if source is missing", () => {
+
+      const { getByRole } = render(getProps(), {
+        preloadedState: getPreloadedState()
+      });
+
+      expect(getByRole("button", { name: "Search" })).toBeEnabled();
+
+      fireEvent.click(within(getByRole("region", { name: "Starting point" }))
+        .getByRole("button", { name: "Remove point" }));
+
+      expect(getByRole("button", { name: "Search" })).toBeDisabled();
+    });
+
+    it("should disable Search button if target is missing", () => {
+
+      const { getByRole } = render(getProps(), {
+        preloadedState: getPreloadedState()
+      });
+
+      expect(getByRole("button", { name: "Search" })).toBeEnabled();
+
+      fireEvent.click(within(getByRole("region", { name: "Destination" }))
+        .getByRole("button", { name: "Remove point" }));
+
+      expect(getByRole("button", { name: "Search" })).toBeDisabled();
+    });
+
+    it("should disable Search button if no category is left", () => {
+
+      const { getByRole } = render(getProps(), {
+        preloadedState: getPreloadedState()
+      });
+
+      expect(getByRole("button", { name: "Search" })).toBeEnabled();
+
+      ["bridge", "castle"].forEach((keyword) => {
+        fireEvent.keyUp(getByRole("button", { name: `1: ${keyword}` }), { key: "Delete" })
+      });
+
+      expect(getByRole("button", { name: "Search" })).toBeDisabled();
+    });
+
+    it("should left Search button enabled if no arrow is left", () => {
+
+      const { getByRole } = render(getProps(), {
+        preloadedState: getPreloadedState()
+      });
+
+      expect(getByRole("button", { name: "Search" })).toBeEnabled();
+      fireEvent.keyUp(within(getByRole("list", { name: "Arrows" })).getByRole("button"), { key: "Delete" });
+      expect(getByRole("button", { name: "Search" })).toBeEnabled();
+    });
+  });
 });

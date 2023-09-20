@@ -1,19 +1,21 @@
+import axios from "axios";
 import {
   act,
   cleanup,
   fireEvent,
   waitFor
 } from "@testing-library/react";
-import { KeywordAdviceItem } from "../../../domain/types";
+import type { KeywordAdviceItem } from "../../../domain/types";
 import { getKeywordAdviceItem } from "../../../utils/testData";
 import {
   AppRenderOptions,
   renderWithProviders
 } from "../../../utils/testUtils";
-import SmartWalkFetcher from "../../../utils/smartwalk";
+import * as smartwalkApi from "../../../utils/smartwalk";
 import CategoryDialog, {
   type CategoryDialogProps
 } from "../CategoryDialog";
+import { context } from "../../../features/context";
 
 /**
  * All tests in this test pack are terminated by the `cleanup` process. Without
@@ -23,12 +25,12 @@ import CategoryDialog, {
  * https://github.com/testing-library/react-testing-library/issues/1051#issuecomment-1183303965
  */
 
-//
+/* For some reasons, axios bypass jest spy and does an actual call. The next
+ * row resolves this problem by mocking the entire module. */
+jest.mock("axios");
 
 global.alert = jest.fn();
 global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
-
-jest.mock("../../../utils/smartwalk");
 
 const getProps = (): CategoryDialogProps => ({
   category: {
@@ -127,18 +129,51 @@ describe("<CategoryDialog />", () => {
       category: undefined
     });
     expect(getByRole("button", { name: "Confirm" })).toHaveAttribute("disabled");
+
+    cleanup();
+  });
+
+  it("should not update application state if fetch throws an error", async () => {
+    const alertSpy = jest.spyOn(window, "alert").mockImplementation();
+    const fetchSpy = jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockRejectedValueOnce(new Error());
+
+    const adviceKeywords = new Map<string, KeywordAdviceItem[]>();
+
+    const { getByRole, queryByRole } = render({
+      ...getProps(),
+      category: undefined
+    }, {
+      context: {
+        ...context,
+        smart: { ...context.smart, adviceKeywords }
+      }
+    });
+
+    act(() => {
+      fireEvent.change(getByRole("combobox", { name: "Keyword" }), { target: { value: "m" } });
+    });
+    await waitFor(() => {
+      expect(queryByRole("progressbar")).not.toBeInTheDocument();
+    });
+
+    expect(fetchSpy).toHaveBeenCalledWith("m");
+    expect(alertSpy).toHaveBeenCalledTimes(1);
+    expect(adviceKeywords.size).toBe(0);
+
+    alertSpy.mockRestore();
+    fetchSpy.mockRestore();
     cleanup();
   });
 
   it("should attempt to fetch for entered prefix", async () => {
     const names = ["A", "B", "C"];
-    SmartWalkFetcher.adviceKeywords = jest.fn().mockImplementation(() => (
-      Promise.resolve<KeywordAdviceItem[]>(names.map((name) => (
-        {
-          ...getKeywordAdviceItem(),
-          keyword: `Keyword ${name}`
-        }
-      )))));
+
+    const fetchSpy = jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce(
+      names.map((name) => ({
+        ...getKeywordAdviceItem(),
+        keyword: `Keyword ${name}`
+      })));
+
     const { getByRole, queryByRole } = render({
       ...getProps(),
       category: undefined
@@ -149,15 +184,18 @@ describe("<CategoryDialog />", () => {
     await waitFor(() => {
       expect(queryByRole("progressbar")).not.toBeInTheDocument();
     });
-    expect(SmartWalkFetcher.adviceKeywords).toHaveBeenCalledTimes(1);
     names.forEach((name) => {
       expect(getByRole("option", { name: `Keyword ${name}` })).toBeInTheDocument();
     });
+    expect(fetchSpy).toHaveBeenCalledWith("m");
+
+    fetchSpy.mockRestore();
     cleanup();
   });
 
-  it("should should not attempt to fetch for whitespace prefix (trimStart)", async () => {
-    SmartWalkFetcher.adviceKeywords = jest.fn().mockImplementation(() => Promise.resolve<KeywordAdviceItem[]>([]));
+  it("should not attempt to fetch for whitespace prefix (trimStart)", async () => {
+    const fetchSpy = jest.spyOn(smartwalkApi, "fetchAdviceKeywords");
+
     const { getByRole, queryByRole } = render({
       ...getProps(),
       category: undefined
@@ -168,13 +206,16 @@ describe("<CategoryDialog />", () => {
     await waitFor(() => {
       expect(queryByRole("progressbar")).not.toBeInTheDocument();
     });
-    expect(SmartWalkFetcher.adviceKeywords).toHaveBeenCalledTimes(0);
+    expect(fetchSpy).toHaveBeenCalledTimes(0);
+
+    fetchSpy.mockRestore();
     cleanup();
   });
 
   it("should cut off trailing whitespaces before api call", async () => {
-    SmartWalkFetcher.adviceKeywords = jest.fn().mockImplementation(() => Promise.resolve<KeywordAdviceItem[]>([]));
-    const { getByRole, queryByRole } = render({
+    const fetchSpy = jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce([]);
+
+    const { getByRole, queryByRole, debug } = render({
       ...getProps(),
       category: undefined
     });
@@ -184,19 +225,22 @@ describe("<CategoryDialog />", () => {
     await waitFor(() => {
       expect(queryByRole("progressbar")).not.toBeInTheDocument();
     });
-    expect(SmartWalkFetcher.adviceKeywords).toHaveBeenCalledWith("a");
+    expect(fetchSpy).toHaveBeenCalledWith("a");
+
+    fetchSpy.mockRestore();
     cleanup();
   });
 
   it("should show filters for a selected option", async () => {
     const names = ["A", "B", "C"];
-    SmartWalkFetcher.adviceKeywords = jest.fn().mockImplementation(() => (
-      Promise.resolve<KeywordAdviceItem[]>(names.map((name) => (
+    const fetchSpy = jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce(
+      names.map((name) => (
         {
           ...getKeywordAdviceItem(),
           keyword: `Keyword ${name}`
         }
-      )))));
+      )));
+
     const { getByRole, queryByRole } = render({
       ...getProps(),
       category: undefined
@@ -216,24 +260,28 @@ describe("<CategoryDialog />", () => {
     ["website", "delivery", "capacity between 0 and 100", "name", "cuisine"].forEach((attr) => {
       expect(getByRole("checkbox", { name: attr })).toBeInTheDocument();
     });
+
+    fetchSpy.mockRestore();
     cleanup();
   });
 
   it("should configure filters for an option and confirm", async () => {
     const names = ["A", "B", "C"];
-    SmartWalkFetcher.adviceKeywords = jest.fn().mockImplementation(() => (
-      Promise.resolve<KeywordAdviceItem[]>(names.map((name) => (
+    const fetchSpy = jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce(
+      names.map((name) => (
         {
           ...getKeywordAdviceItem(),
           keyword: `Keyword ${name}`
         }
-      )))));
+      )));
     const onInsert = jest.fn();
+
     const { getByRole, queryAllByRole, queryByRole } = render({
       ...getProps(),
       category: undefined,
       onInsert: onInsert
     });
+
     act(() => {
       fireEvent.change(getByRole("combobox", { name: "Keyword" }), { target: { value: "m" } });
     });
@@ -276,6 +324,8 @@ describe("<CategoryDialog />", () => {
         }
       }
     });
+
+    fetchSpy.mockRestore();
     cleanup();
   });
 });
