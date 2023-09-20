@@ -1,15 +1,22 @@
-import { act, fireEvent, waitFor, within } from "@testing-library/react";
-import { getKeywordAdviceItem, getPlace } from "../../utils/testData";
+import {
+  act,
+  fireEvent,
+  waitFor,
+  within
+} from "@testing-library/react";
+import {
+  getKeywordAdviceItem,
+  getPlace
+} from "../../utils/testData";
 import {
   type AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
 import { LeafletMap } from "../../utils/leaflet";
+import * as smartwalkApi from "../../utils/smartwalk";
 import { context } from "../../features/context";
 import { initialSearchRoutesState } from "../../features/searchRoutesSlice";
-import * as smartwalkApi from "../../utils/smartwalk";
 import SearchRoutesPanel from "../SearchRoutesPanel";
-import { getAccessFor } from "@inrupt/solid-client/dist/access/universal";
 
 global.alert = jest.fn();
 global.structuredClone = (obj: any) => JSON.parse(JSON.stringify(obj));
@@ -34,7 +41,7 @@ describe("<SearchRoutesPanel />", () => {
   describe("source box", () => {
 
     /**
-     * Point selection, dialog, ane name replacement are tested
+     * Point selection, dialog, and name replacement are tested
      * in PanelDrawer.test.tsx
      */
 
