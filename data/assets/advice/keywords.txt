@@ -1,1557 +1,1557 @@
-garden
-bench
-tourism
-civic
-industrial
-information
-cabin
-barn
-pitch
-restaurant
-apartments
-bicycle parking
-historic
-vending machine
-playground
-warehouse
-commercial
-hotel
-memorial
-house
-building
-commemorative plaque
-shelter
-post box
-statue
-park
-sculpture
-internet access
-school
-cafe
-convenience
-public art
-tennis
-artwork
-villa
-kindergarten
-fast food
-roof
-wayside cross
-healthcare
-atm
-parcel locker
-shed
-swimming pool
-clothes
-pub
-fountain
-soccer
-bar
-bridge
-fire hydrant
-viewpoint
-hairdresser
-footbridge
-hut
-supermarket
-homestead
-war memorial
-toilets
-sports centre
-retail
-pharmacy
-road bridge
-baroque architecture
-picnic table
-post office
-office
-chapel
-multi
-railway bridge
-bank
-church building
-tram stop
-waste disposal
-attraction
-fitness
-drinking water
-square
-fitness station
-car repair
-florist
-aeroway
-destroyed building or structure
-craft
-charging station
-bakery
-subway
-clock
-bungalow
-primary school
-church
-museum
-navigationaid
-newsagent
-functionalism
-peak
-garages
-neoclassical architecture
-car
-tenement
-building complex
-theatre
-gift
-basketball
-station
-chemist
-beauty
-company
-jewelry
-shoes
-townhall
-hostel
-government
-greenhouse
-police
-renaissance architecture
-castle
-butcher
-palace
-hunting stand
-university
-library
-track
-monument
-cemetery
-volleyball
-car wash
-stone
-renaissance revival architecture
-school building
-relief sculpture
-bicycle
-doctors
-electronics
-picnic site
-public bookcase
-animal
-wayside shrine
-clinic
-optician
-hospital
-spring
-guest house
-delivery mail
-doctor
-farm auxiliary
-alcohol
-confectionery
-table tennis
-gothic architecture
-kiosk
-books
-apartment building
-fitness centre
-fire station
-pet
-diplomatic
-watermill
-college
-phone
-ruins
-sports
-art nouveau architecture
-insurance
-mural
-veterinary
-research institution
-stationery
-furniture
-gymnasium
-railway station
-dentist
-embassy
-beachvolleyball
-tomb
-small bell tower
-dog park
-factory
-running
-swimming
-nightclub
-dormitory
-community centre
-transformer tower
-terrace
-fish pond
-deli
-metro station
-greengrocer
-street
-firepit
-secondary school
-clergy house
-ice cream
-massage
-climbing
-wine
-social facility
-equestrian
-trolley bay
-hardware
-former entity
-mosaic
-biergarten
-department store
-ticket
-art nouveau
-grave yard
-hotel building
-toys
-computer
-baroque
-monastery
-doityourself
-outdoor seating
-sokol house
-mobile phone
-gate
-administrative building
-outdoor
-pension
-rail transport electrical substation
-sports venue
-pastry
-cosmetics
-gallery
-skateboard
-athletics
-travel agency
-bust
-highway bridge
-library branch
-cycling
-shrine
-vacant
-research
-romanesque architecture
-tobacco
-copyshop
-group of sculptures
-siren
-golf
-laundry
-bell tower
-institute
-houseware
-fortified house
-baroque revival
-defibrillator
-grocery
-car parts
-brewery
-mall
-garden centre
-cinema
-shopping center
-estate agent
-event venue
-apartment
-stadium
-gothic revival
-office building
-catholic cemetery
-research institute
-policlinic
-tailor
-paint
-train station
-arts centre
-city gate
-ramp
-railway stop
-loading dock
-bbq
-sports hall
-trade
-culvert
-kitchen
-enterprise
-art museum
-antiques
-interior decoration
-business
-beach
-rathaus
-allotment house
-cemetery cross
-camp site
-bunker
-vehicle inspection
-aircraft
-classicism
-coffee
-bag
-university dormitory
-marina
-handball
-bleachers
-ferry terminal
-movie theater
-car rental
-second hand
-childcare
-compressed air
-cubism
-synagogue
-variety store
-fabric
-beverages
-medical supply
-nature reserve
-crucifix
-sundial
-public
-modern architecture
-stumbling stone
-museum building
-educational institution
-primary art school
-miniature golf
-protected area
-locksmith
-installation
-shooting
-golf course
-historicism
-house sign
-art
-casino
-club
-organization
-sauna
-tea
-vacuum cleaner
-proposed building or structure
-former church
-educational trail
-archaeological site
-marketplace
-driving school
-hillfort
-observation tower
-boules
-secondary education
-post office partner
-tram bridge
-publisher
-baby goods
-watches
-natural monument in the czech republic
-zoo
-tower
-orchard
-slipway
-glaziery
-cultural center
-motorcycle
-faculty
-shoemaker
-wholesale
-music
-holy card
-ensemble of small monuments
-photo
-fishing
-tyres
-facility
-pavilion
-interchange
-buried watercourse
-station located underground
-lawyer
-musical instrument
-rondocubism
-column with statue
-cave entrance
-cheese
-bed
-bus station
-shower
-brutalism
-storage rental
-neoclassicism
-housing estate
-games
-farm
-bicycle rental
-house of prayer
-key cutter
-baseball
-dual education system
-gazebo
-brewery building
-dry cleaning
-art gallery
-boundary stone
-taxi
-technical monument
-travel agent
-jewish cemetery
-sport
-maria column
-access point
-field hockey
-water tower
-constructivist architecture
-constructivism
-theatre company
-electronics repair
-horse riding
-architect
-weapons
-tram depot
-hospital building
-memorable paving
-historicist architecture
-railway building
-granary
-tree shrine
-balloon loop
-station building
-retention basin
-brothel
-tattoo
-stable
-bathroom furnishing
-erotic
-bookmaker
-theme park
-chess
-softball
-world war i and ii memorial
-reservoir
-driveway
-squash
-coffeehouse
-castle ruin
-funeral directors
-hill
-yoga
-feeding place
-retirement home
-painting
-lido
-romanesque revival architecture
-cemetery chapel
-gatehouse
-urban park
-purism
-former railway station
-memorial stone
-road tunnel
-mountain
-photographer
-pet grooming
-game feeding
-canoe
-carpet
-music school
-perfumery
-telecommunication
-health food
-association football venue
-gothic
-rotunda
-public building
-mill building
-model aerodrome
-agricultural building
-apartment hotel
-covered passageway
-sugar refinery
-pavement
-railway tunnel
-scenic viewpoint
-gymnastics
-events venue
-plumber
-lighting
-rental
-sewing
-winery
-boat rental
-chocolate
-badminton
-fashion accessories
-sample collection
-water tank
-skyscraper
-renaissance
-rococo
-storage tank
-botanical garden
-defensive wall
-medical facility
-spring box
-junction
-urban forest
-pipeline bridge
-theatrical troupe
-employment agency
-microbrewery
-music venue
-food court
-human
-obelisk
-house of culture
-ngo
-psychotherapist
-plastic artwork
-disc golf
-doors
-courthouse
-ice hockey
-religious community
-guardhouse
-ice rink
-primary education
-ship
-column
-water well
-lock
-architectural structure
-gas
-skiing
-drinking fountain
-scuba diving
-window construction
-cannabis
-frame
-grit bin
-photo booth
-seafood
-electrician
-vocational school
-archery
-flooring
-dance
-smoking area
-graffiti
-boundary marker
-bmx
-ice skating
-convention center
-university building
-chalet
-fortification
-chimney
-garage
-former railway stop
-business park
-grave
-wildlife overpass
-menhir
-motel
-association
-watchmaker
-stroke unit
-aerialway
-national museum
-fortified tower
-work of art
-ambulance station
-gambling
-dressmaker
-video games
-bowling alley
-plague column
-karting
-traffic park
-gardener
-terminal
-maze
-prison
-houseboat
-long jump
-barracks
-waterworks
-eclectic architecture
-religious building
-architectural sculpture
-aerial lift
-government agency
-studio
-shoe repair
-geographical feature
-household linen
-concert hall
-auditorium
-military surplus
-brickworks
-animal training
-art deco architecture
-curtain
-educational organization
-financial
-aerodrome
-language school
-taxon
-appliance
-nutrition supplements
-ticket validator
-social centre
-medical organization
-ministry of the czech republic
-residential building
-animal shelter
-community center
-carport
-nursing home
-football
-former bridge
-atelier
-proposal
-transmitter station
-small monument
-tramway tunnel
-bicycle bridge
-ski
-caravan site
-equestrian statue
-curve
-hazard
-amusement arcade
-law enforcement agency in the czech republic
-rehabilitation
-conservatory
-pawnbroker
-exercise
-photographic laboratory
-billiards
-water park
-food
-hvac
-university cafeteria
-outpost
-coworking
-modernism
-party
-advertising agency
-physiotherapist
-highwater mark
-stained glass
-workout
-empire style
-consulting
-tanning salon
-repair
-laboratory
-weighbridge
-locker
-bell
-opera house
-basilica
-minor basilica
-grass
-higher education institution
-bank building
-astronomical observatory
-grandstand
-motor
-motocross
-velodrome
-maison de plaisance
-student accommodation
-church school
-castle chapel
-inland port
-electrical substation
-gasworks
-covered bridge
-weir
-water pipeline
-block of houses
-poetry jukebox
-puppetry company
-public bath
-canteen
-musical
-leather
-model
-rugby union
-portrait at bust length
-cultural institution
-dojo
-physician
-pylon
-streetlight
-archive
-window blind
-table
-landing site
-radiotechnics
-dressing room
-stage
-mortuary
-nature reserve in the czech republic
-financial advisor
-research center
-gym
-archive building
-trampoline
-netball
-cathedral
-castle park
-distribution substation
-art school
-horse racing
-floorball
-association football club
-religious
-swimming center
-paintball
-arch bridge
-sports club
-rc car
-check in
-tent
-deserted farmyard
-metro depot
-terrace house
-market hall
-post office building
-smithy
-industrial park
-stone cross
-tombstone
-wall
-viaduct
-water reservoir
-church bell
-funicular station
-government organization
-academic publisher
-coworking space
-roller skating
-romantic architecture
-battlefield
-battle
-elevator
-performing arts
-stonemason
-hifi
-video
-charity
-babies
-hackerspace
-boxing
-wastewater treatment plant
-money lender
-hunting
-manufacture
-karate
-escape game
-conference centre
-carpenter
-joiner
-public toilet
-lottery
-wine column
-spa
-relief
-herbalist
-fodder rack
-tourism office
-climbing adventure
-electrical
-rowing
-nonprofit organization
-astronomical clock
-caterer
-sylvan theater
-frozen food
-geographic location
-tax advisor
-tool hire
-pilates
-tourist attraction
-agrarian
-vaccination centre
-sawmill
-parkour
-counselling
-indoor play
-architecture
-cloakroom
-moorish revival architecture
-arena
-hockey
-crematorium
-mannerism
-czech baroque architecture
-custom house
-czech gothic architecture
-dog racing
-residenz
-parking lot
-limnigraph
-sty
-combined heat and power station
-bandstand
-minigolf
-airport
-university institute
-hall
-youth detention center
-gate tower
-watering place
-shopping
-static caravan
-hammer throw
-shrubbery
-convent
-campus
-distillery
-filling station
-medical school
-morgue
-hunting lodge
-passing loop
-building or structure under construction
-sanatorium
-ventilation tower
-tollbooth
-stairs
 abandoned village
-tumulus
-skyway
-bridge over railway line
-levee
-stations of the cross
-ford
-railway test track
-girder bridge
-beuron art school
-fresco
-church gate
-suspension bridge
-decorative wall
-day care
-lodging
-protestant faculty of theology
-guide
-podiatrist
-dive centre
-ski rental
-stables
-water sports
-religion
-entrance
-victims of communism memorial
-gorge
-puppet
-campsite
-dining room
-fireworks
-gothic art
-biographical museum
-music club
-calvary
-national police
-public university
-university library
-stripclub
-stream
-exhibition centre
-amusement park
-motorcycle repair
-aikido
-bowls
-through station
-central station
-station located on surface
-rail transport
-visual arts
-education
-academic institution
-tinsmith
-fireplace
-animal boarding
-water point
-literature
-haberdashery
-private collection
-dairy
-streetart
-darts
-cooperative
-management consulting company
-management consulting
-pottery
-jeweller
-training
-specialized archives
-shop
-amusement ride
-cleaning
-spices
-space agency
-builder
-optometrist
-corporation
-baby hatch
-security
-animal breeding
-historical event
-aquarium
-military affairs
-money transfer
-energy supplier
-trampoline park
-beach resort
-give box
-scout
-citywalls
-skating
-socialist realism
-hydrometeorology
-air pollution
-shooting range
-rugby
-american football
-commercial building
-deconstructivism
-funeral hall
-inn
-rugby league
-art deco
-university hospital
-academy of commerce
-music education
-burgrave house
-manor
-human settlement
-boathouse
-futsal
-stone bridge
-hydroelectric power station
-dog training
-chancery
-heritage
-wayside chapel
-cricket
-designated
-commerce
-practice pitch
-swimming area
-institution
 abbey
-faculty of law
-intelligence agency
-tourist destination
-mausoleum
-rose garden
-main library
-psychiatric hospital
-jesuit
-erbgericht
-amphitheatre
-consulate
-steam mill
-request stop
-weather station
-gloriette
-silo
-international style
-monumental cross
-bus stop
-shipyard
-church ruin
-railway roundhouse
-power station
-workshop
-klubovna
-log house
-birth house
-jesuit residence
-sala terrena
-city walls
-multifamily residential
-library building
-sculpturalism
-classical architecture
-gord
-hamlet
-parallel marker
-cornerstone
-fingerpost
-temporal entity
-triangulation station
-railway line
-meteorological column
-urban monument zone
-street furniture
-dam
-wharf
-skatepark
-lime kiln
-aqueduct
-association football pitch
-wooden bridge
-mill race
-roundabout
-foreshore bridge
-observation deck
-flagpole
-windmill
-architectural ensemble
-adit
-tunnel
-canal
-artificial whitewater
-floodgate
-religious art
-nursery
-art collection
-hoard
-wikimedia duplicated page
-top station
-station in a landfield
-casemate
-online database
-biological database
-bathroom
-beverage serving activities
-palace hotel
-highest point
-other
-kayak
-snowboard
-handicraft
-tiles
-rock formation
-basket maker
-sculptor
-oppidum
-bear pit
-national library
-military operation
-film school
-energy
-kickboxing
-free flying
-website
-brand
-division
-police museum
-aviation accident
-bookbinder
-camping
-board games
-sex museum
-notary
-unit of volume
-supplements
-restoration
-kinetic art
-bronze sculpture
-solitary
-remarkable tree
-picture gallery
-confectionary
-jazz
-swing music
-stream gauge
-postal museum
-etching technique
-baroque art
-film museum
-scientific library
-statue of jesus
-clothed statue
-biological anthropology
-theatre festival
-drama school
-high school
-duty free
-monastic library
-business school
-painter
-pet food
-wine cellar
-nuts
-taipei representative office
-de facto embassy
-piano
-automobile museum
-hearing aids
-short story
-flash fiction
-pritcha
-novel
-belletristic literature
-modernist literature
-existentialism
-prague german literature
-agricultural museum
-wikimedia chapter
-investment firm
+abbey church
+abreuvoir
 academic department
-resistance during world war ii
-military service
-rapid transit
-czech literature
-pragensia
-therapist
-fallout shelter
-wikimedia disambiguation page
-upholsterer
-logistics
-landfill
-jumping
-ancient slavic gords
-surveyor
-wrestling
-well
-river source
-newspaper
-commercial organization
-floorer
-wilderness hut
-museum archives
-river
-halt
-funeral
-revenue service
-youth movement
-honey
-wine bar
-lifeguard
-central bank
-candles
-letter box
-physical sign
-binoculars
-infant equipment
-amnesty bin
-airsoft
-charitable organization
-pillory
-caravan
-political party
-accountant
-printer ink
-geodesist
-blood donation
-engineering school
-car pooling
-camera
-oriental studies
-plant
-table soccer
-blacksmith
-chimney sweeper
-payment centre
-payment terminal
-ski jumping
-social
-fire extinguisher
-engineer
-bouldering
-printer
-centre
-student
-country store
-property management
-lounger
-martial arts
-planetarium
-ministry of culture
-hobby
-panoramic painting
-type of sport
-sports discipline
-house of mirrors
-execution site
-catholic theological faculty
-provost
-synagogue desecrated
-eastern orthodox cathedral
+academic institution
+academic library
+academic publisher
+academy of commerce
 academy of sciences
-eastern orthodox church building
-russian revival architecture
-news agency
-state media
-mass media
-radio station
-jesuit church
-chapel of loreto
-chamber music
-organisational unit of the state
-branch
-music museum
+access point
+accountant
+adit
+administrative building
+adventure park
+advertising agency
+aerial lift
+aerial tramway
+aerialway
+aerodrome
+aeroway
+agrarian
+agricultural building
+agricultural museum
+aikido
+air base
+air pollution
+aircraft
+airport
+airsoft
+alcohol
+alley
+allotment house
+altar painting
+ambulance station
+american football
+amnesty bin
+amphitheatre
+amusement arcade
+amusement park
+amusement ride
+ancient slavic gords
+animal
+animal boarding
+animal breeding
+animal shelter
+animal training
+annex
+antiques
+apartment
+apartment building
+apartment hotel
+apartments
+apostolic nunciature
+appliance
+aquarium
+aqueduct
+arboretum
+arcade
+arch bridge
+archaeological site
+archery
+architect
+architectural element
+architectural ensemble
+architectural sculpture
+architectural structure
+architecture
 architecture school
-jewish town hall
+archival library
+archive
+archive building
+arena
+arm
+arsenal
+art
+art collection
+art deco
+art deco architecture
+art gallery
+art museum
+art nouveau
+art nouveau architecture
+art of painting
+art of sculpture
+art school
+artificial pond
+artificial whitewater
+arts centre
+artwork
+association
+association football club
+association football pitch
+association football venue
+astronomical clock
+astronomical observatory
+atelier
+athletics
+atm
+atrium
+attraction
+auditorium
+auslandsschule
+auto show
+automobile museum
+aviation accident
+aviation museum
+babies
+baby goods
+baby hatch
+badminton
+bag
+bakery
+balloon loop
+bandstand
+bank
+bank building
+bar
+barn
+baroque
+baroque architecture
+baroque art
+baroque revival
+barracks
+baseball
+basilica
+basket maker
+basketball
+bastion
+bathroom
+bathroom furnishing
+battle
+battlefield
+bbq
+beach
+beach resort
+beachvolleyball
+bear pit
+beauty
+bed
+bed and breakfast
+bedrock
+beer museum
+bell
+bell tower
+belletristic literature
+belvedere
+bench
+benedictine nunnery
+bergfried
+beuron art school
+beverage serving activities
+beverages
+bibliography
+bicycle
+bicycle bridge
+bicycle parking
+bicycle rental
+biergarten
+big city
+bikepark
+billiards
+binoculars
+biographical museum
+biological anthropology
+biological database
+birth house
+bistro
+blacksmith
+bleachers
+block of houses
+blood donation
+bmx
+board games
+boardwalk
+boat
+boat rental
+boathouse
+bobsleigh
+body armor
+boiler house
+bookbinder
+bookmaker
+books
+botanical garden
+botel
+bouldering
+boules
+boundary marker
+boundary stone
+bowling alley
+bowls
+box girder bridge
+boxing
+branch
+brand
+brewery
+brewery building
+brickworks
+bridge
+bridge group
+bridge over railway line
+bronze sculpture
+brothel
+brussels style
+brutalism
+builder
+building
+building complex
+building materials
+building or structure under construction
+bungalow
+bunker
+burgrave house
+buried watercourse
+bus station
+bus stop
+business
+business park
+business school
+bust
+butcher
+cabin
+cafe
+calvary
+camera
+camp site
+camping
+campsite
+campus
+canal
+candelabra
+candles
+cannabis
+canoe
+canteen
+capital city
+capital of region
+capitular library
+car
+car parts
+car pooling
+car rental
+car repair
+car wash
+caravan
+caravan site
+carillon
+carousel
+carpenter
+carpet
+carport
+carthusian monastery
+cascade
+casemate
+casino
+castle
+castle chapel
+castle park
+castle ruin
+caterer
+cathedral
+catholic cathedral
+catholic cemetery
+catholic library
 catholic seminary
-temple
-gas holder
+catholic theological faculty
+cave entrance
+cement plant
+cemetery
+cemetery chapel
+cemetery cross
+cenotaph
+central bank
+central station
+centre
+chalet
+chalupa
+chamber music
+chancery
+chapel
+chapel of loreto
+chaplain houses
+charging station
+charitable organization
+charity
+check in
+cheese
+chemist
+chess
+childcare
+chimney
+chimney sweeper
+chocolate
+church
+church bell
+church building
+church gate
+church ruin
+church school
+church tower
+churchyard wall
+cinema
+cinematheque
+city gate
+city walls
+citywalls
+civic
+classical architecture
+classicism
+cleaning
+clergy house
+climbing
+climbing adventure
+clinic
+cloakroom
+clock
+clothed statue
+clothes
+club
+codex
+coffee
+coffeehouse
+collection of images on a page
+college
+collegiate church
+column
+column with statue
+combined heat and power station
+comedy film
+commandry
+commemorative plaque
+commerce
+commercial
+commercial building
+commercial organization
+commercial traffic aerodrome
+common
+community center
+community centre
+company
+compressed air
+computer
+concert hall
+conciliation cross
+concrete plant
+confectionary
+confectionery
+conference centre
+conservatory
+construction
+constructivism
+constructivist architecture
+consulate
+consulting
+container
+contemporary
+contextual architecture
+control room
+convenience
+convent
+convention center
+convitto
+cooling tower
+cooperative
+copy
+copyshop
+cornerstone
+corporate headquarters
+corporation
+cosmetics
+counselling
+counterintelligence
+country store
+courthouse
+courtyard
+covered bridge
+covered passageway
+coworking
+coworking space
+craft
+creative residency
+crematorium
+cricket
+cricket field
+cross
+crucifix
+cubism
+cultural center
+cultural education
+cultural institution
+cultural monument of the czech republic
+culvert
+curling
+curtain
+curve
+custom house
+cybernetics
+cycling
+czech baroque architecture
+czech gothic architecture
+czech literature
+czech municipality with expanded powers
+czech public research institution
+dairy
+dam
+dance
+dance studio
+dancing
+darts
+data center
+database
+day care
+de facto embassy
+decentralised agency of the european union
+deck arch bridge
+deconstructivism
+decorative grille
+decorative wall
+defensive wall
+defibrillator
+defunct organization
+deli
+delivery mail
+dentist
+department store
+deserted farmyard
+design modernism
+designated
+destroyed artwork
+destroyed building or structure
+dining room
+diplomatic
+diplomatic mission
+disc golf
+disc golf course
+distillery
+distribution substation
+district court in the czech republic
+district of the czech republic
+district town
+dive centre
+division
+doctor
+doctors
+documentary film
+dog park
+dog racing
+dog training
+doityourself
+dojo
+domestic airport
+doors
+dormitory
+drama school
+drawing
+dressing room
+dressmaker
+drinking fountain
+drinking water
+driveway
+driving school
+dry cleaning
+dual education system
+duty free
+earth bank
+eastern orthodox cathedral
+eastern orthodox church building
+eclectic architecture
+education
+educational institution
+educational organization
+educational trail
+electoral district
+electrical
+electrical substation
+electrician
+electronics
+electronics repair
+elevated way
+elevator
+embassy
+empire style
+employment agency
+enclave
+energy
+energy supplier
+engineer
+engineering school
+ensemble of small monuments
+enterprise
+entrance
 environment ministry
 environmental protection
-justice ministry
-hospice
-dancing
-juridical person
-cultural education
-abbey church
-military archive
-simultaneum
-golf club
-french formal garden
-stadium seating
-vineyard house
-botel
-holy trinity column
-museum storage
-grinding mill
-bedrock
-holy sepulchre chapel
-realism
-paleontological site
-valley
-quarry
-parish
-heritage site
-wikimedia list article
-ossuary
-fell
-belvedere
-curling
-late baroque
-metal construction
-funeral parlour
-bobsleigh
-monastic garden
-horse racing venue
-meridian
-building materials
-hiking trail
-data center
-romanesque
-informatics
-robotics
-cybernetics
-service center
-decentralised agency of the european union
+equestrian
+equestrian statue
+erbgericht
+erotic
+escape game
+estate agent
+etching technique
 european union space programme
-bergfried
-kinetic object
-television tower
-racetrack
+event venue
+events venue
 execution
-festival grounds
-imax theatre
-common
-statistical service
-boat
-ice hockey arena
-waldorf education
-soccer golf
-model runway
-horseshoes
-earth bank
-pole vault
-international school
-auslandsschule
-private school
-ger
-mtb
-paddling pool
-container
-frauenstift
-finance ministry
-ministry of industry
-ministry of trade
-parliament building
-regional court in the czech republic
+execution site
+exercise
+exhibition
+exhibition centre
+exhibition industry
+existentialism
+fabric
+facility
+factory
+faculty
+faculty of law
 faculty of science
-mansion
-benedictine nunnery
-commercial traffic aerodrome
+faculty of social sciences
+fallout shelter
+farm
+farm auxiliary
+fashion accessories
+fast food
+feeding place
+fell
+ferris wheel
+ferry terminal
+festival grounds
+field hockey
+filling station
+film
+film archive
+film museum
+film school
+finance ministry
+financial
+financial advisor
+financial services
+fingerpost
+fire extinguisher
+fire hydrant
+fire station
+firepit
+fireplace
+fireworks
+fish pond
+fishing
+fitness
+fitness centre
+fitness station
+flagpole
+flash fiction
+floodgate
+floorball
+floorer
+flooring
+florist
+flowerpot
+fodder rack
+food
+food court
+football
+footbridge
+ford
+foreshore bridge
+forest
+former bridge
+former church
+former educational institution
+former entity
+former railway station
+former railway stop
+fortification
+fortified house
+fortified tower
+fortress
+foundry
+fountain
+frame
+frauenstift
+free flying
+french formal garden
+fresco
+frozen food
+functionalism
+funeral
+funeral directors
+funeral hall
+funeral parlour
+funicular
+funicular station
+furniture
+futsal
+gallery
+gambling
+game feeding
+games
+gap site
+garage
+garages
+garden
+garden centre
+garden house
+gardener
+gas
+gas holder
+gasworks
+gate
+gate tower
+gatehouse
+gazebo
+geodesist
+geographic location
+geographical feature
+ger
+gift
+girder bridge
+give box
+glassworks
+glaziery
+gloriette
+golf
+golf club
+golf course
+goods station
+gord
+gorge
+gothic
+gothic architecture
+gothic art
+gothic revival
+government
+government agency
+government building
+government organization
+graffiti
+granary
+grandstand
+grass
+grave
+grave field
+grave yard
+greengrocer
+greenhouse
+grinding mill
+grit bin
+grocery
+grotto
+group
+group of artificial physical objects
+group of sculptures
+guardhouse
+guest house
+guide
+guide book
+gym
+gymnasium
+gymnastics
+haberdashery
+hackerspace
+hair salon
+haircutting establishment
+hairdresser
+hall
+halt
+hamlet
+hammer throw
+handball
+handicraft
+hardware
+hazard
+health club
+health food
+healthcare
+hearing aids
+herbalist
+heritage
+heritage site
+hermitage
+hifi
+high school
+higher education institution
+highest point
+highwater mark
+highway bridge
+hiking trail
+hill
+hillfort
+historic
+historic site
+historical event
+historicism
+historicist architecture
+hoard
+hobby
+hockey
+holy card
+holy sepulchre chapel
+holy trinity column
+homestead
+honey
+horse racing
+horse racing venue
+horse riding
+horseshoes
+hospice
+hospital
+hospital building
+hostel
+hotel
+hotel building
+house
+house of culture
+house of mirrors
+house of prayer
+house sign
+houseboat
+household linen
+houseware
+housing estate
+human
+human settlement
+human torso
+hunting
+hunting lodge
+hunting stand
+hut
+hvac
+hydraulic structure
+hydroelectric power station
+hydrometeorology
+ice cream
+ice hockey
+ice hockey arena
+ice house
+ice rink
+ice skating
+imax theatre
+incinerator
+inclined elevator
+inclined tower
+indoor ice rink
+indoor play
+indoor swimming pool
+industrial
+industrial building
+industrial park
+industrial spur
+infant equipment
+informatics
+information
+information board
+inland port
+inn
+installation
+institute
+institution
+institutional complex
+insurance
+intelligence agency
+interchange
+interior decoration
 international airport
-arboretum
-air base
+international school
+international style
+internet access
+investment firm
+japanese garden
+jazz
+jazz club
+jesuit
+jesuit church
+jesuit college
+jesuit residence
+jeweller
+jewelry
+jewish cemetery
+jewish town hall
+joiner
+jumping
+jumping platform
+junction
+jungle gym
+juridical person
+justice ministry
+kamienica
+karate
+karting
+kayak
+key cutter
+kickboxing
+kindergarten
+kinetic art
+kinetic object
+kingdom hall
+kiosk
+kitchen
+klubovna
+laboratory
+landfill
+landing site
+language school
+laser
+last address plaque
+late baroque
+laundry
+law enforcement agency in the czech republic
+lawyer
+learned society
+leather
+ledger stone
+letter box
+levee
+lgbt
+lgbt archive
+lgbt history
+library
+library branch
+library building
+lido
+lifeguard
+light sculpture
+lighting
+lime kiln
+limnigraph
+linden tree
+literature
+livestock housing
+living street
+loading dock
+location of burial
+lock
+locker
+locksmith
+locomotive depot
+lodging
+log house
+logistics
+long jump
+lost sculpture
+lottery
+lounger
+main library
+maison de plaisance
+mall
+management consulting
+management consulting company
+mannerism
+manor
+mansion
+manufactory
+manufacture
+maria column
+marina
+market hall
+marketplace
+martial arts
+mass media
+massage
+maternity hospital
+mausoleum
+maze
+medical equipment
+medical facility
+medical organization
+medical school
+medical supply
+medicine
+memorable paving
+memorial
+memorial stone
+memorial tree
+menhir
+meridian
+metal construction
+meteorological column
+metro depot
+metro station
+microbrewery
+milestone
+military academy
+military affairs
+military archive
+military cemetery
+military church
+military operation
+military service
+military surplus
+mill building
+mill race
+miniature golf
+minigolf
+minimalism in architecture
+ministry of culture
+ministry of industry
 ministry of labour
 ministry of social affairs
-government building
-royal garden
-collegiate church
-contemporary
-maternity hospital
-fortress
-counterintelligence
-domestic airport
-speedway
-catholic cathedral
-artificial pond
-recreation ground
-seminary
-archival library
-parliamentary library
-catholic library
-academic library
-capitular library
-special library
-film archive
-cinematheque
-student center
-postal station
-medical equipment
-tower house
-bed and breakfast
-czech public research institution
-medicine
-laser
-jesuit college
-military academy
-staff college
-exhibition industry
-toy museum
-beer museum
-aviation museum
-faculty of social sciences
-well house
-moat
-courtyard
-chaplain houses
-municipal office building
-garden house
-residential child care community
-pheasantry
-forest
-chalupa
-inclined tower
-brussels style
-hermitage
-ventilation
-bistro
-jumping platform
-zentraldepot
-provost church
-carthusian monastery
-exhibition
-telephone exchange
-industrial building
-glassworks
-refinery
-spa town
-spring chapel
-bastion
-official residence
-creative residency
-contextual architecture
-stalinist architecture
-auto show
-recreation
-prison cell
-slaughterhouse
-boiler house
-revenue house
-goods station
+ministry of the czech republic
+ministry of trade
+minor basilica
 mission cross
-riding hall
-parliament
-church tower
-control room
-ice house
-livestock housing
-diplomatic mission
-minimalism in architecture
-romanesque art
-jazz club
-piarist school building
-monastery building
-financial services
-orphanage
-arsenal
-apostolic nunciature
-tram
-prefabricated building
-research structure
-district court in the czech republic
-sepulchral chapel
-health club
-indoor swimming pool
-kamienica
-wine room
-atrium
-project
-locomotive depot
-residential area
-living street
-haircutting establishment
-hair salon
-port
-incinerator
-military church
-cooling tower
-performing arts center
-corporate headquarters
-training facility
-manufactory
-spa building
-rococo revival
-annex
-rococo revival architecture
-multistorey car park
-kingdom hall
-palace theatre
-cement plant
-printery
-concrete plant
-design modernism
-foundry
-conciliation cross
-human torso
-memorial tree
-linden tree
-sgraffito
-information board
-replica
-wooden sculpture
-ledger stone
-monumental sculpture
-destroyed artwork
-lost sculpture
-military cemetery
-last address plaque
-cenotaph
-location of burial
-milestone
-whipping post
-poetry
-street art
-candelabra
-window
-historic site
-group
-cultural monument of the czech republic
-weighing scale
-carillon
-paper mill
-japanese garden
-proposed tunnel
-bikepark
-scattering meadow
-churchyard wall
-nuclear power plant
-pump track
-box girder bridge
-cascade
-road
-village green
-race track
-construction
-arcade
-inclined elevator
-observatory
-sluice
-truss bridge
-boardwalk
-pier
-underground structure
-institutional complex
-water supply
-gap site
-steel bridge
-through arch bridge
-notch
-indoor ice rink
-riding school
-elevated way
-abreuvoir
-ship canal
-arm
-jungle gym
-funicular
-carousel
-aerial tramway
-convitto
-deck arch bridge
-water pump
-hydraulic structure
-sports field
-commandry
-pedestrian tunnel
 mist maker
-spillway
-industrial spur
-architectural element
-walkway
-alley
-ferris wheel
-bridge group
-temporary bridge
-adventure park
-quarter
-outdoor playset
-disc golf course
-grotto
-grave field
-cricket field
-tailings dam
-cross
-altar painting
-flowerpot
-codex
-copy
-work
-light sculpture
-decorative grille
-photograph
-collection of images on a page
-street clock
-sports award
-guide book
-comedy film
-documentary film
-film
-planet trail
-capital city
-enclave
-capital of region
-municipality with authorized municipal office
-electoral district
-district town
-region of the czech republic
-district of the czech republic
-czech municipality with expanded powers
-municipality of the czech republic
-big city
-defunct organization
-dance studio
-former educational institution
-organizational unit
-sports school
-youth center
-religious school
+moat
+mobile phone
+model
+model aerodrome
+model runway
+modern architecture
+modernism
+modernist literature
+monastery
+monastery building
+monastic garden
+monastic library
+money lender
+money transfer
+monument
+monumental cross
+monumental sculpture
+moorish revival architecture
+morgue
+mortuary
+mosaic
+motel
+motocross
+motor
+motorcycle
+motorcycle repair
+mountain
+movie theater
+mtb
+multi
+multifamily residential
+multistorey car park
 municipal archive
-lgbt archive
-lgbt
-queer
-lgbt history
-oral history
+municipal office building
+municipality of the czech republic
+municipality with authorized municipal office
+mural
+museum
+museum archives
+museum building
+museum storage
+music
+music club
+music education
+music museum
+music school
+music venue
+musical
+musical instrument
+national library
+national museum
+national police
+natural monument in the czech republic
+nature reserve
+nature reserve in the czech republic
+navigationaid
+neoclassical architecture
+neoclassicism
+netball
+news agency
+newsagent
+newspaper
+ngo
+nightclub
+nonprofit organization
+notary
+notch
+novel
+nuclear power plant
 numismatics
-art of painting
-trivia
-drawing
-art of sculpture
-body armor
-public archive
-group of artificial physical objects
-signage system
+nursery
+nursing home
+nutrition supplements
+nuts
+obelisk
+observation deck
+observation tower
+observatory
 occurrence
+office
+office building
+official residence
+online database
+opera house
+oppidum
+optician
+optometrist
+oral history
+orchard
+organisational unit of the state
+organization
+organizational unit
+oriental studies
+orphanage
+ossuary
+other
+outdoor
+outdoor playset
+outdoor seating
+outpost
+paddling pool
+paint
+paintball
+painter
+painting
+palace
+palace hotel
+palace theatre
+paleontological site
+panoramic painting
+paper mill
+parallel marker
+parcel locker
+parish
+park
+parking lot
+parkour
+parliament
+parliament building
+parliamentary library
+party
+passing loop
+pastry
+pavement
+pavilion
+pawnbroker
+payment centre
+payment terminal
+peak
+pedestrian tunnel
+pension
+performing arts
+performing arts center
+perfumery
+pet
+pet food
+pet grooming
+pharmacy
+pheasantry
+phone
+photo
+photo booth
+photograph
+photographer
+photographic laboratory
+physical sign
+physician
+physiotherapist
+piano
+piarist school building
+picnic site
+picnic table
+picture gallery
+pier
+pilates
+pillory
+pipeline bridge
+pitch
+plague column
+planet trail
+planetarium
+plant
+plastic artwork
+playground
+plumber
+podiatrist
+poetry
+poetry jukebox
+pole vault
+police
+police museum
+policlinic
+political party
+port
+portrait at bust length
+post box
+post office
+post office building
+post office partner
+postal museum
+postal station
+pottery
+power station
+practice pitch
+pragensia
+prague german literature
+prefabricated building
+primary art school
+primary education
+primary school
+printer
+printer ink
+printery
+prison
+prison cell
+pritcha
+private collection
+private school
+project
+property management
+proposal
+proposed building or structure
+proposed tunnel
+protected area
+protestant faculty of theology
+provost
+provost church
+psychiatric hospital
+psychotherapist
+pub
+public
+public archive
+public art
+public bath
+public bookcase
+public building
+public toilet
+public university
+publisher
+pump track
+puppet
+puppetry company
+purism
+pylon
+quarry
+quarter
+queer
+race track
+racetrack
+radio station
+radiotechnics
+rail transport
+rail transport electrical substation
+railway bridge
+railway building
+railway line
+railway roundhouse
+railway station
+railway stop
+railway test track
+railway tunnel
+ramp
+rapid transit
+rathaus
+rc car
+realism
+recreation
+recreation ground
+refinery
+region of the czech republic
+regional court in the czech republic
+rehabilitation
+relief
+relief sculpture
+religion
+religious
+religious art
+religious building
+religious community
+religious school
+remarkable tree
+renaissance
+renaissance architecture
+renaissance revival architecture
+rental
+repair
+replica
+request stop
+research
+research center
+research institute
+research institution
+research structure
+reservoir
+residential area
+residential building
+residential child care community
+residenz
+resistance during world war ii
+restaurant
+restoration
+retail
+retention basin
+retirement home
+revenue house
+revenue service
+riding hall
+riding school
+river
+river source
+road
+road bridge
+road tunnel
+robotics
+rock formation
+rococo
+rococo revival
+rococo revival architecture
+roller skating
+romanesque
+romanesque architecture
+romanesque art
+romanesque revival architecture
+romantic architecture
+rondocubism
+roof
+rose garden
+rotunda
+roundabout
+rowing
+royal garden
+rugby
+rugby league
+rugby union
+ruins
+running
+russian revival architecture
+sala terrena
+sample collection
+sanatorium
+sauna
+sawmill
+scattering meadow
+scenic viewpoint
+school
+school building
+scientific library
+scout
+scuba diving
+sculptor
+sculpturalism
+sculpture
+seafood
+second hand
+secondary education
+secondary school
+security
+seminary
+sepulchral chapel
+service center
+sewing
+sex museum
+sgraffito
+shed
+shelter
+ship
+ship canal
+shipyard
+shoe repair
+shoemaker
+shoes
+shooting
+shooting range
+shop
+shopping
+shopping center
+short story
+shower
+shrine
+shrubbery
+signage system
+silo
+simultaneum
+siren
+skateboard
+skatepark
+skating
+ski
+ski jumping
+ski rental
+skiing
+skyscraper
+skyway
+slaughterhouse
+slipway
+sluice
+small bell tower
+small monument
+smithy
+smoking area
+snowboard
+soccer
+soccer golf
+social
+social centre
+social facility
+socialist realism
+softball
+sokol house
+solitary
+spa
+spa building
+spa town
+space agency
+special library
+specialized archives
+speedway
+spices
+spillway
+sport
+sports
+sports award
+sports centre
+sports club
+sports discipline
+sports field
+sports hall
+sports school
+sports venue
+spring
+spring box
+spring chapel
+square
+squash
+stable
+stables
+stadium
+stadium seating
+staff college
+stage
+stained glass
+stairs
+stalinist architecture
+state media
+static caravan
+station
+station building
+station in a landfield
+station located on surface
+station located underground
+stationery
+stations of the cross
+statistical service
+statue
+statue of jesus
+steam mill
+steel bridge
+stone
+stone bridge
+stone cross
+stonemason
+storage rental
+storage tank
+stream
+stream gauge
+street
+street art
+street clock
+street furniture
+streetart
+streetlight
+stripclub
+stroke unit
+student
+student accommodation
+student center
+studio
+stumbling stone
+sty
+subway
+sugar refinery
+sundial
+supermarket
+supplements
+surveyor
+suspension bridge
+swimming
+swimming area
+swimming center
+swimming pool
+swing music
+sylvan theater
+synagogue
+synagogue desecrated
+table
+table soccer
+table tennis
+tailings dam
+tailor
+taipei representative office
+tanning salon
+tattoo
+tax advisor
+taxi
+taxon
+tea
+technical monument
+telecommunication
+telephone exchange
+television tower
+temple
+temporal entity
+temporary bridge
+tenement
+tennis
+tent
+terminal
+terrace
+terrace house
+theatre
+theatre company
+theatre festival
+theatrical troupe
+theme park
+therapist
+through arch bridge
+through station
+ticket
+ticket validator
+tiles
+tinsmith
+tobacco
+toilets
+tollbooth
+tomb
+tombstone
+tool hire
+top station
+tourism
+tourism office
+tourist attraction
+tourist destination
+tower
+tower house
+townhall
+toy museum
+toys
+track
+trade
+traffic park
+train station
+training
+training facility
+tram
+tram bridge
+tram depot
+tram stop
+trampoline
+trampoline park
+tramway tunnel
+transformer tower
+transmitter station
+travel agency
+travel agent
+tree shrine
+triangulation station
+trivia
+trolley bay
+truss bridge
+tumulus
+tunnel
+type of sport
+tyres
+underground structure
+unit of volume
+university
+university building
+university cafeteria
+university dormitory
+university hospital
+university institute
+university library
+upholsterer
+urban forest
+urban monument zone
+urban park
+vacant
+vaccination centre
+vacuum cleaner
+valley
+variety store
+vehicle inspection
+velodrome
+vending machine
+ventilation
+ventilation tower
+veterinary
+viaduct
+victims of communism memorial
+video
+video games
+viewpoint
+villa
+village green
+vineyard house
+visual arts
+vocational school
+volleyball
+waldorf education
+walkway
+wall
+war memorial
+warehouse
+waste disposal
+wastewater treatment plant
+watches
+watchmaker
+water park
+water pipeline
+water point
+water pump
+water reservoir
+water sports
+water supply
+water tank
+water tower
+water well
+watering place
+watermill
+waterworks
+wayside chapel
+wayside cross
+wayside shrine
+weapons
+weather station
+website
+weighbridge
+weighing scale
+weir
+well
+well house
+wharf
+whipping post
+wholesale
+wikimedia chapter
+wikimedia disambiguation page
+wikimedia duplicated page
+wikimedia list article
 wikinews article
-bibliography
-database
-learned society
+wilderness hut
+wildlife overpass
+windmill
+window
+window blind
+window construction
+wine
+wine bar
+wine cellar
+wine column
+wine room
+winery
+wooden bridge
+wooden sculpture
+work
+work of art
+workout
+workshop
+world war i and ii memorial
+wrestling
+yoga
+youth center
+youth detention center
+youth movement
+zentraldepot
+zoo
