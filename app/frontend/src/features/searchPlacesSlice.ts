@@ -8,13 +8,16 @@ type SearchPlacesState = {
   categories: KeywordCategory[];
 };
 
-const initialState = (): SearchPlacesState => ({ radius: 3.0, categories: [] });
+export const initialSearchPlacesState = (): SearchPlacesState => ({
+  radius: 3.0,
+  categories: []
+});
 
 export const placesSlice = createSlice({
   name: "search/places",
-  initialState: initialState(),
+  initialState: initialSearchPlacesState(),
   reducers: {
-    resetSearchPlaces: () => initialState(),
+    resetSearchPlaces: () => initialSearchPlacesState(),
     setSearchPlacesCenter: (state, action: PayloadAction<UiPlace | undefined>) => {
       state.center = action.payload;
     },
