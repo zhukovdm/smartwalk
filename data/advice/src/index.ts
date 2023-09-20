@@ -25,7 +25,7 @@ async function advice() {
     extractor.reportProcessedTot();
 
     const items = Array.from(keywords.values())
-      .sort((l, r) => (r.count - l.count));
+      .sort((l, r) => (l.keyword.localeCompare(r.keyword)));
 
     for (const item of items) {
       await model.create(item);
