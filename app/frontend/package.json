@@ -65,7 +65,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "tests": "jest",
+    "tests": "jest --runInBand",
     "eject": "react-scripts eject",
     "style": "npx eslint src/**/*.ts src/**/*.tsx"
   },
