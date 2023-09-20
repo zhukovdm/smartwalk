@@ -28,12 +28,16 @@ type PrecedenceSelectorProps = {
 
   /** Callback for a selected option. */
   onSelect: (i: number) => void;
+
+  /** Accessible category label */
+  "aria-label": string;
 };
 
 /**
  * Category selector defining one side (cat from, or cat to) of a new arrow.
  */
-function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): JSX.Element {
+function PrecedenceSelector(
+  { categories, onSelect, "aria-label": ariaLabel }: PrecedenceSelectorProps): JSX.Element {
 
   const [value, setValue] = useState("");
 
@@ -45,7 +49,7 @@ function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): 
 
   return (
     <Select
-      aria-label={"category"}
+      aria-label={ariaLabel}
       fullWidth
       onChange={handleChange}
       size={"small"}
@@ -63,7 +67,7 @@ function PrecedenceSelector({ categories, onSelect }: PrecedenceSelectorProps): 
   )
 }
 
-type PrecedenceBoxProps = {
+export type PrecedenceBoxProps = {
 
   /** Configured categories */
   categories: PlaceCategory[];
@@ -104,14 +108,24 @@ export default function PrecedenceBox(
   };
 
   const confirmAction = () => {
-    const cycle = new CycleDetector(categories.length, [...precedence, edge!]).cycle();
 
-    if (cycle !== undefined) {
-      alert(`Cycle ${cycle.slice().map((v) => v + 1).join(" → ")} detected, try another arrow.`);
+    if (!edge) { return; }
+
+    const repeated = precedence.some((e) => (e.fr === edge.fr && e.to === edge.to));
+
+    if (repeated) {
+      alert(`Repeated arrow ${edge.fr + 1} → ${edge.to + 1} detected, try another one.`);
       return;
     }
 
-    appendEdge(edge!);
+    const cycle = new CycleDetector(categories.length, [...precedence, edge]).cycle();
+
+    if (cycle !== undefined) {
+      alert(`Cycle ${cycle.map((v) => v + 1).join(" → ")} detected, try another arrow.`);
+      return;
+    }
+
+    appendEdge(edge);
     discardAction();
   };
 
@@ -138,7 +152,9 @@ export default function PrecedenceBox(
         fullScreen={fullScreen}
       >
         <DialogTitle>Add arrow</DialogTitle>
-        <DialogContent>
+        <DialogContent
+          sx={{ display: "flex", justifyContent: "center" }}
+        >
           <Stack mt={0.5} gap={2} maxWidth={"360px"}>
             <PrecedenceDrawing
               edge={edge}
@@ -152,11 +168,13 @@ export default function PrecedenceBox(
               justifyContent={"space-between"}
             >
               <PrecedenceSelector
+                aria-label={"this category"}
                 categories={categories}
                 onSelect={(i: number) => { setEdgeFr(i); }}
               />
               <EastIcon titleAccess={"before"} />
               <PrecedenceSelector
+                aria-label={"that category"}
                 categories={categories}
                 onSelect={(i: number) => { setEdgeTo(i); }}
               />

@@ -14,7 +14,7 @@ import RemovablePlaceListItem from "../_shared/RemovablePlaceListItem";
 import VacantPlaceListItem from "../_shared/VacantPlaceListItem";
 import SelectPointDialog from "./SelectPointDialog";
 
-type SourceTargetBoxProps = {
+export type SourceTargetBoxProps = {
 
   /** Current map */
   map?: IMap;

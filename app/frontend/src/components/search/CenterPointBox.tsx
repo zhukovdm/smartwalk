@@ -10,7 +10,7 @@ import {
 import { useAppDispatch } from "../../features/storeHooks";
 import SelectPointDialog from "./SelectPointDialog";
 
-type CenterPointBoxProps = {
+export type CenterPointBoxProps = {
 
   /** Current map */
   map?: IMap;
@@ -23,7 +23,6 @@ export default function CenterPointBox(
   { map, center }: CenterPointBoxProps): JSX.Element {
 
   const dispatch = useAppDispatch();
-  
   const [selectDialog, setSelectDialog] = useState(false);
 
   return (

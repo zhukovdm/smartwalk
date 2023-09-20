@@ -24,9 +24,11 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import AddLocationButton, { AddLocationButtonKind } from "./AddLocationButton";
+import AddLocationButton, {
+  type AddLocationButtonKind
+} from "./AddLocationButton";
 
-type SelectPointDialogProps = {
+export type SelectPointDialogProps = {
 
   /** Set to open dialog. */
   show: boolean;
@@ -70,9 +72,11 @@ export default function SelectPointDialog(
   const { loaded, places } = useAppSelector((state) => state.favorites);
 
   const handleFavorites = () => {
-    setPlace(null);
-    onSelect(place!);
-    onHide();
+    if (!!place) {
+      setPlace(null);
+      onSelect(place);
+      onHide();
+    }
   };
 
   return (

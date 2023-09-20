@@ -10,6 +10,7 @@ import {
   AppContextValue,
   context as appContext
 } from "../features/context";
+import { AppRouterProps } from "../features/router";
 import {
   AppStore,
   StoreState,
@@ -20,8 +21,8 @@ function ContextWrapper({ children, context }: PropsWithChildren<{ context: AppC
   return (<AppContext.Provider value={context}>{children}</AppContext.Provider>);
 }
 
-function RouterWrapper({ children }: PropsWithChildren<{}>): JSX.Element {
-  return (<MemoryRouter>{children}</MemoryRouter>);
+function RouterWrapper({ children, routerProps }: PropsWithChildren<{ routerProps?: AppRouterProps }>): JSX.Element {
+  return (<MemoryRouter {...routerProps}>{children}</MemoryRouter>);
 }
 
 function StoreWrapper({ children, store }: PropsWithChildren<{ store: AppStore; }>): JSX.Element {
@@ -39,8 +40,8 @@ export function withContext(ui: ReactNode, context?: AppContextValue): JSX.Eleme
   })
 }
 
-export function withRouter(ui: ReactNode): JSX.Element {
-  return RouterWrapper({ children: ui });
+export function withRouter(ui: ReactNode, routerProps?: AppRouterProps): JSX.Element {
+  return RouterWrapper({ children: ui, routerProps });
 }
 
 export function withStore(ui: ReactNode, store: AppStore): JSX.Element {
@@ -52,22 +53,23 @@ export function withState(ui: ReactNode, preloadedState?: PreloadedState<StoreSt
 }
 
 export function withProviders(
-  ui: ReactNode, preloadedState?: PreloadedState<StoreState>, context?: AppContextValue): JSX.Element {
-  return withContext(withState(withRouter(ui), preloadedState), context);
+  ui: ReactNode, preloadedState?: PreloadedState<StoreState>, context?: AppContextValue, routerProps?: AppRouterProps): JSX.Element {
+  return withContext(withState(withRouter(ui, routerProps), preloadedState), context);
 }
 
 export type AppRenderOptions = Omit<RenderOptions, "queries"> & {
   context?: AppContextValue;
+  routerProps?: AppRouterProps;
   preloadedState?: PreloadedState<StoreState>;
 };
 
 export function renderWithProviders(
-  ui: ReactNode, { preloadedState, context, ...renderOptions }: AppRenderOptions) {
+  ui: ReactNode, { preloadedState, context, routerProps, ...renderOptions }: AppRenderOptions) {
 
   const store = setupStore(preloadedState);
 
   return {
     store: store,
-    ...render(withContext(withStore(withRouter(ui), store), context), { ...renderOptions })
+    ...render(withContext(withStore(withRouter(ui, routerProps), store), context), { ...renderOptions })
   };
 }

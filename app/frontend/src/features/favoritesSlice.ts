@@ -18,6 +18,7 @@ const compareRoutes = (l: StoredRoute, r: StoredRoute) => l.name.localeCompare(r
 
 type FavoritesState = {
   loaded: boolean;
+  loadedRatio: number;
   name: string;
   location?: WgsPoint;
   createExpanded: boolean;
@@ -31,6 +32,7 @@ type FavoritesState = {
 
 export const initialFavoritesState = (): FavoritesState => ({
   loaded: false,
+  loadedRatio: 0,
   name: "",
   createExpanded: false,
   direcs: [],
@@ -50,6 +52,9 @@ export const favoritesSlice = createSlice({
 
     setFavoritesLoaded: (state) => {
       state.loaded = true;
+    },
+    setFavoritesLoadedRatio: (state, action: PayloadAction<number>) => {
+      state.loadedRatio = action.payload;
     },
 
     // custom place
@@ -134,6 +139,7 @@ export const {
 
   resetFavorites,
   setFavoritesLoaded,
+  setFavoritesLoadedRatio,
 
   // custom
 

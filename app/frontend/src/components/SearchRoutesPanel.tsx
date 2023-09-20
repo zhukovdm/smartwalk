@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PrecedenceEdge } from "../domain/types";
 import { RESULT_ROUTES_ADDR } from "../domain/routing";
-import SmartWalkFetcher from "../utils/smartwalk";
+import { fetchSearchRoutes } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultRoutes,
@@ -19,7 +19,11 @@ import {
   setSearchRoutesMaxDistance,
   updateSearchRoutesCategory,
 } from "../features/searchRoutesSlice";
-import { usePlace, useStoredPlaces } from "../features/sharedHooks";
+import {
+  usePlace,
+  useStoredPlaces,
+  useStoredSmarts
+} from "../features/sharedHooks";
 import {
   useAppDispatch,
   useAppSelector
@@ -42,7 +46,6 @@ export default function SearchRoutesPanel(): JSX.Element {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
 
-  const storedPlaces = useStoredPlaces();
   const {
     source: storedSource,
     target: storedTarget,
@@ -51,15 +54,18 @@ export default function SearchRoutesPanel(): JSX.Element {
     precedence
   } = useAppSelector((state) => state.searchRoutes);
 
-  const source = usePlace(storedSource, storedPlaces, new Map());
-  const target = usePlace(storedTarget, storedPlaces, new Map());
+  const storedPlaces = useStoredPlaces();
+  const storedSmarts = useStoredSmarts();
+
+  const source = usePlace(storedSource, storedPlaces, storedSmarts);
+  const target = usePlace(storedTarget, storedPlaces, storedSmarts);
 
   const map = useSearchRoutesMap(source, target);
 
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
-      const routes = await SmartWalkFetcher.searchRoutes({
+      const routes = await fetchSearchRoutes({
         source: source!,
         target: target!,
         maxDistance: maxDistance,

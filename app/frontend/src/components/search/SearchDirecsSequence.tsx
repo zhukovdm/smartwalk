@@ -138,14 +138,14 @@ function DirecsPresentListItem({ waypoint: [w, s], index }: DirecsPresentListIte
   );
 }
 
-type SearchDirecsSequenceProps = {
+export type SearchDirecsSequenceProps = {
 
   /** Waypoints configured by the user. */
   waypoints: [UiPlace, boolean][];
 }
 
 /**
- * Component rendering sequence for searching directions.
+ * Component rendering sequence for searching directions (with pins on the map).
  */
 export default function SearchDirecsSequence({ waypoints }: SearchDirecsSequenceProps): JSX.Element {
 

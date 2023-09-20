@@ -4,9 +4,9 @@ import {
   useMemo,
   useState
 } from "react";
-import { AppContext } from "../App";
-import SmartWalkFetcher from "../utils/smartwalk";
 import { ExtendedPlace } from "../domain/types";
+import { fetchEntityPlaces } from "../utils/smartwalk";
+import { AppContext } from "../App";
 import { useAppSelector } from "./storeHooks";
 
 /**
@@ -25,7 +25,7 @@ export function useSmartPlace(smartId: string) {
     const loadFromServer = async () => {
       try {
         if (!place && !loaded) {
-          const p = await SmartWalkFetcher.entityPlaces(smartId);
+          const p = await fetchEntityPlaces(smartId);
           if (!ignore && p) {
             setPlace(p);
             entityPlaces.set(smartId, p);
