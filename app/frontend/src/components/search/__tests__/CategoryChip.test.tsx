@@ -53,6 +53,10 @@ describe("<CategoryChip />", () => {
       onDelete: onDelete
     });
 
+    /*
+     * Note that proper delete event is `keyUp` and not `keyDown`.
+     */
+
     fireEvent.keyUp(getByRole("button", { name: "1: Keyword A" }), { key: "Delete" });
     expect(onDelete).toHaveBeenCalledTimes(1);
   });

@@ -17,10 +17,7 @@ function render(props = getProps()) {
 
 describe("<AddLocationButton />", () => {
 
-  test("render", () => {
-    const { container } = render();
-    expect(container).toBeTruthy();
-  });
+  test("render", () => { expect(render().container).toBeTruthy(); });
 
   describe("button", () => {
 
