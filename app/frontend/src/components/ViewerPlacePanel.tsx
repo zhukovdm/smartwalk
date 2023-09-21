@@ -19,7 +19,7 @@ export default function ViewerPlacePanel(): JSX.Element {
       <Box sx={{ mx: 2, my: 4 }}>
         {loaded
           ? <Box>
-              {place
+              {(!!place)
                 ? <ViewerPlaceContent place={place} />
                 : <Alert severity={"warning"}>
                     There is nothing to show.

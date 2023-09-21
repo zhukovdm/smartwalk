@@ -19,7 +19,7 @@ export default function ViewerDirecPanel(): JSX.Element {
       <Box sx={{ mx: 2, my: 4 }}>
         {loaded
           ? <Box>
-              {direc
+              {(!!direc)
                 ? <ViewerDirecContent direc={direc} />
                 : <Alert severity={"warning"}>
                     There is nothing to show.
