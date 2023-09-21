@@ -1,37 +1,63 @@
-import { within } from "@testing-library/react";
-import { initialFavoritesState } from "../../features/favoritesSlice";
-import { getDirec, getPlace, getRoute } from "../../utils/testData";
+import {
+  act,
+  fireEvent,
+  waitFor,
+  within
+} from "@testing-library/react";
+import {
+  getDirec,
+  getPlace,
+  getRoute
+} from "../../utils/testData";
 import {
   type AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
+import InmemStorage from "../../utils/inmemStorage";
+import { context } from "../../features/context";
+import { initialFavoritesState } from "../../features/favoritesSlice";
 import FavoritesPanel, {
   type FavoritesPanelProps
 } from "../FavoritesPanel";
 
-const getDefault = (): FavoritesPanelProps => ({
+global.alert = jest.fn();
+
+const getProps = (): FavoritesPanelProps => ({
   loaded: true,
   loadedRatio: 0.5
 });
 
-function render(props = getDefault(), options: AppRenderOptions = {}) {
+const getOptions = (): AppRenderOptions => {
+  const tokens = [["A", "1"], ["B", "2"], ["C", "3"]];
+  return {
+    preloadedState: {
+      favorites: {
+        ...initialFavoritesState(),
+        direcs: tokens.map(([nameId, entityId]) => ({ ...getDirec(), name: `Direc ${nameId}`, direcId: entityId })),
+        places: tokens.map(([nameId, entityId]) => ({ ...getPlace(), name: `Place ${nameId}`, placeId: entityId })),
+        routes: tokens.map(([nameId, entityId]) => ({ ...getRoute(), name: `Route ${nameId}`, routeId: entityId }))
+      }
+    }
+  };
+};
+
+function render(props = getProps(), options: AppRenderOptions = getOptions()) {
   return renderWithProviders(<FavoritesPanel {...props} />, options);
 }
 
 describe("<FavoritesPanel />", () => {
 
   test("render", () => {
-    const { container } = render();
-    expect(container).toBeTruthy();
+    expect(render().container).toBeTruthy();
   });
 
-  test("render stub", () => {
-    const { getByText } = render({ ...getDefault(), loaded: false });
+  it("should render stub if loading is not finished", () => {
+    const { getByText } = render({ ...getProps(), loaded: false });
     expect(getByText("50%")).toBeInTheDocument();
   });
 
-  test("render empty panel", () => {
-    const { getByRole } = render();
+  it("should render empty panel", () => {
+    const { getByRole } = render(getProps(), {});
     expect(getByRole("alert")).toBeInTheDocument();
 
     expect(within(getByRole("region", { name: "My Directions" }))
@@ -44,19 +70,415 @@ describe("<FavoritesPanel />", () => {
       .getByRole("button", { name: "Search routes" })).toBeInTheDocument();
   });
 
-  test("render panel with items", () => {
-    const { getByRole } = render(getDefault(), {
-      preloadedState: {
-        favorites: {
-          ...initialFavoritesState(),
-          direcs: [{ ...getDirec(), name: "Direc A", direcId: "1" }],
-          places: [{ ...getPlace(), name: "Place B", placeId: "2" }],
-          routes: [{ ...getRoute(), name: "Route C", routeId: "3" }]
-        }
-      }
-    });
+  it("should render panel with items of all kinds", () => {
+    const { getByRole } = render();
     expect(getByRole("listitem", { name: "Direc A" })).toBeInTheDocument();
     expect(getByRole("listitem", { name: "Place B" })).toBeInTheDocument();
     expect(getByRole("listitem", { name: "Route C" })).toBeInTheDocument();
+  });
+
+  describe("direc", () => {
+
+    /**
+     * View and Append are tested in the PanelDrawer.test.tsx.
+     */
+
+    //
+
+    it("should edit name and sort items by name", async () => {
+      const storage = new InmemStorage();
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+
+      const region = getByRole("region", { name: "My Directions" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Direc B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Direc D" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      expect(await storage.getDirecIdentifiers()).toEqual(["2"]);
+
+      const direcs = within(region).queryAllByRole("listitem");
+
+      ["A", "C", "D"].forEach((suffix, i) => {
+        expect(within(direcs[i]).getByText(`Direc ${suffix}`)).toBeInTheDocument();
+      });
+      expect(direcs).toHaveLength(3);
+    });
+
+    it("should left an item intact if storage fails to update it", async () => {
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "updateDirec").mockRejectedValueOnce(new Error());
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+
+      const region = getByRole("region", { name: "My Directions" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Direc B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Direc D" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+
+      await waitFor(() => {
+        expect(getByRole("button", { name: "Save" })).toBeEnabled();
+      });
+
+      fireEvent.click(getByRole("button", { name: "Discard" }));
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      })
+
+      const direcs = within(region).queryAllByRole("listitem");
+
+      ["A", "B", "C"].forEach((suffix, i) => {
+        expect(within(direcs[i]).getByText(`Direc ${suffix}`)).toBeInTheDocument();
+      });
+      expect(direcs).toHaveLength(3);
+    }, 10000);
+
+    it("should allow to delete an item", async () => {
+      const { getByRole, queryByRole } = render();
+      const region = getByRole("region", { name: "My Directions" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Direc B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Delete" }));
+      });
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      const direcs = within(region).queryAllByRole("listitem");
+
+      ["A", "C"].forEach((suffix, i) => {
+        expect(within(direcs[i]).getByText(`Direc ${suffix}`)).toBeInTheDocument();
+      });
+      expect(direcs).toHaveLength(2);
+    });
+
+    it("should left an item intact if storage fails to delete it", async () => {
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "deleteDirec").mockRejectedValueOnce(new Error());
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+      const region = getByRole("region", { name: "My Directions" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Direc B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Delete" }));
+      });
+
+      await waitFor(() => {
+        expect(getByRole("button", { name: "Delete" })).toBeEnabled();
+      });
+
+      fireEvent.click(getByRole("button", { name: "Cancel" }));
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      const direcs = within(region).queryAllByRole("listitem");
+
+      ["A", "B", "C"].forEach((suffix, i) => {
+        expect(within(direcs[i]).getByText(`Direc ${suffix}`)).toBeInTheDocument();
+      });
+      expect(direcs).toHaveLength(3);
+    }, 10000);
+  });
+
+  describe("place", () => {
+
+    /**
+     * View, Append, Create and Menu state are tested in the PanelDrawer.test.tsx.
+     */
+
+    //
+
+    it("should edit name and sort items by name", async () => {
+      const storage = new InmemStorage();
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+
+      const region = getByRole("region", { name: "My Places" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      expect(await storage.getPlaceIdentifiers()).toEqual(["2"]);
+
+      const places = within(region).queryAllByRole("listitem");
+
+      ["A", "C", "D"].forEach((suffix, i) => {
+        expect(within(places[i]).getByText(`Place ${suffix}`)).toBeInTheDocument();
+      });
+      expect(places).toHaveLength(3);
+    });
+
+    it("should left an item intact if storage fails to update it", async () => {
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "updatePlace").mockRejectedValueOnce(new Error());
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+
+      const region = getByRole("region", { name: "My Places" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+
+      await waitFor(() => {
+        expect(getByRole("button", { name: "Save" })).toBeEnabled();
+      });
+
+      fireEvent.click(getByRole("button", { name: "Discard" }));
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      })
+
+      const places = within(region).queryAllByRole("listitem");
+
+      ["A", "B", "C"].forEach((suffix, i) => {
+        expect(within(places[i]).getByText(`Place ${suffix}`)).toBeInTheDocument();
+      });
+      expect(places).toHaveLength(3);
+    }, 10000);
+
+    it("should allow to delete an item", async () => {
+      const { getByRole, queryByRole } = render();
+      const region = getByRole("region", { name: "My Places" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Delete" }));
+      });
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      const places = within(region).queryAllByRole("listitem");
+
+      ["A", "C"].forEach((suffix, i) => {
+        expect(within(places[i]).getByText(`Place ${suffix}`)).toBeInTheDocument();
+      });
+      expect(places).toHaveLength(2);
+    });
+
+    it("should left an item intact if storage fails to delete it", async () => {
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "deletePlace").mockRejectedValueOnce(new Error());
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+      const region = getByRole("region", { name: "My Places" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Delete" }));
+      });
+
+      await waitFor(() => {
+        expect(getByRole("button", { name: "Delete" })).toBeEnabled();
+      });
+
+      fireEvent.click(getByRole("button", { name: "Cancel" }));
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      const places = within(region).queryAllByRole("listitem");
+
+      ["A", "B", "C"].forEach((suffix, i) => {
+        expect(within(places[i]).getByText(`Place ${suffix}`)).toBeInTheDocument();
+      });
+      expect(places).toHaveLength(3);
+    }, 10000);
+  });
+
+  describe("route", () => {
+
+    /**
+     * View and Append are tested in the PanelDrawer.test.tsx.
+     */
+
+    //
+
+    it("should edit name and sort items by name", async () => {
+      const storage = new InmemStorage();
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+
+      const region = getByRole("region", { name: "My Routes" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Route B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Route D" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      expect(await storage.getRouteIdentifiers()).toEqual(["2"]);
+
+      const routes = within(region).queryAllByRole("listitem");
+
+      ["A", "C", "D"].forEach((suffix, i) => {
+        expect(within(routes[i]).getByText(`Route ${suffix}`)).toBeInTheDocument();
+      });
+      expect(routes).toHaveLength(3);
+    });
+
+    it("should left an item intact if storage fails to update it", async () => {
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "updateRoute").mockRejectedValueOnce(new Error());
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+
+      const region = getByRole("region", { name: "My Routes" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Route B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+      fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Route D" } });
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Save" }));
+      });
+
+      await waitFor(() => {
+        expect(getByRole("button", { name: "Save" })).toBeEnabled();
+      });
+
+      fireEvent.click(getByRole("button", { name: "Discard" }));
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      })
+
+      const routes = within(region).queryAllByRole("listitem");
+
+      ["A", "B", "C"].forEach((suffix, i) => {
+        expect(within(routes[i]).getByText(`Route ${suffix}`)).toBeInTheDocument();
+      });
+      expect(routes).toHaveLength(3);
+    }, 10000);
+
+    it("should allow to delete an item", async () => {
+      const { getByRole, queryByRole } = render();
+      const region = getByRole("region", { name: "My Routes" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Route B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Delete" }));
+      });
+
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      const routes = within(region).queryAllByRole("listitem");
+
+      ["A", "C"].forEach((suffix, i) => {
+        expect(within(routes[i]).getByText(`Route ${suffix}`)).toBeInTheDocument();
+      });
+      expect(routes).toHaveLength(2);
+    });
+
+    it("should left an item intact if storage fails to delete it", async () => {
+      const storage = new InmemStorage();
+      jest.spyOn(storage, "deleteRoute").mockRejectedValueOnce(new Error());
+
+      const { getByRole, queryByRole } = render(getProps(), {
+        ...getOptions(),
+        context: { ...context, storage }
+      });
+      const region = getByRole("region", { name: "My Routes" });
+
+      fireEvent.click(within(within(region).getByRole("listitem", { name: "Route B" })).getByRole("button", { name: "Menu" }));
+
+      fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+      act(() => {
+        fireEvent.click(getByRole("button", { name: "Delete" }));
+      });
+
+      await waitFor(() => {
+        expect(getByRole("button", { name: "Delete" })).toBeEnabled();
+      });
+
+      fireEvent.click(getByRole("button", { name: "Cancel" }));
+      await waitFor(() => {
+        expect(queryByRole("dialog")).not.toBeInTheDocument();
+      });
+
+      const routes = within(region).queryAllByRole("listitem");
+
+      ["A", "B", "C"].forEach((suffix, i) => {
+        expect(within(routes[i]).getByText(`Route ${suffix}`)).toBeInTheDocument();
+      });
+      expect(routes).toHaveLength(3);
+    }, 10000);
   });
 });

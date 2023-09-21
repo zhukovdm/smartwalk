@@ -22,11 +22,7 @@ export type ViewerPlaceContentProps = {
 export default function ViewerPlaceContent(
   { place }: ViewerPlaceContentProps): JSX.Element {
 
-  const {
-    smartId,
-    name
-  } = place
-  
+  const { smartId, name } = place;
   const { map } = useContext(AppContext);
 
   useEffect(() => {
@@ -42,7 +38,10 @@ export default function ViewerPlaceContent(
           fontSize={"1.25rem"}
           fontWeight={"medium"}
         >
-          {!smartId ? name : <Link component={RouterLink} to={getSmartPlaceLink(smartId)!} underline={"hover"}>{name}</Link>}
+          {(!smartId)
+            ? name
+            : <Link component={RouterLink} to={getSmartPlaceLink(smartId)!} underline={"hover"}>{name}</Link>
+          }
         </Typography>
         <Divider sx={{ background: "lightgray" }} />
         <PlaceLocation
