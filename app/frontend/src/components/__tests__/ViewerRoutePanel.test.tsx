@@ -33,6 +33,12 @@ describe("<ViewerRoutePanel />", () => {
     expect(render().container).toBeTruthy();
   });
 
+  it("should render loading if favorites are not loaded yet", () => {
+
+    const { getByRole } = render(getProps(), {});
+    expect(getByRole("progressbar")).toBeVisible();
+  });
+
   it("should render alert if no route is provided", () => {
 
     const { getByRole } = render();

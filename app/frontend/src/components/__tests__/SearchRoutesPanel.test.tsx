@@ -4,6 +4,7 @@ import {
   waitFor,
   within
 } from "@testing-library/react";
+import type { PrecedenceEdge } from "../../domain/types";
 import {
   getKeywordAdviceItem,
   getPlace
@@ -428,23 +429,34 @@ describe("<SearchRoutesPanel />", () => {
       });
     }, 10000);
 
-    it("should allow to delete category", () => {
+    it("should allow to delete category (with relabel)", () => {
       const { getByRole } = render(getProps(), {
         ...getOptions(),
-        preloadedState: getPreloadedState()
+        preloadedState: {
+          searchRoutes: {
+            ...initialSearchRoutesState(),
+            categories: ["a", "b", "c"].map((keyword) => ({
+              ...getKeywordAdviceItem(),
+              keyword,
+              filters: {}
+            }))
+          }
+        }
       });
       const list = getByRole("list", { name: "Categories" });
-      expect(within(list).getAllByRole("listitem")).toHaveLength(1);
+      expect(within(list).getAllByRole("button")).toHaveLength(3);
 
-      fireEvent.keyUp(getByRole("button", { name: "1: cafe" }), { key: "Delete" });
+      fireEvent.keyUp(getByRole("button", { name: "2: b" }), { key: "Delete" });
 
-      expect(within(list).queryAllByRole("listitem")).toHaveLength(0);
+      expect(within(list).queryAllByRole("button")).toHaveLength(2);
+      expect(within(list).getByRole("button", { name: "1: a" }));
+      expect(within(list).getByRole("button", { name: "2: c" }));
     });
   });
 
   describe("precedence", () => {
 
-    const getPreloadedState = () => ({
+    const getPreloadedState = (precedence: PrecedenceEdge[]) => ({
       searchRoutes: {
         ...initialSearchRoutesState(),
         categories: ["bridge", "castle", "museum", "statue"].map((keyword) => ({
@@ -452,23 +464,17 @@ describe("<SearchRoutesPanel />", () => {
           keyword,
           filters: {}
         })),
-        precedence: [
-          {
-            fr: 0,
-            to: 1
-          },
-          {
-            fr: 2,
-            to: 3
-          }
-        ]
+        precedence
       }
     });
 
     it("should allow to create a new arrow", async () => {
       const { getByRole, getByLabelText } = render(getProps(), {
         ...getOptions(),
-        preloadedState: getPreloadedState()
+        preloadedState: getPreloadedState([
+          { fr: 0, to: 1 },
+          { fr: 2, to: 3 }
+        ])
       });
 
       const list = getByRole("list", { name: "Arrows" });
@@ -497,7 +503,10 @@ describe("<SearchRoutesPanel />", () => {
 
       const { getByRole, getByLabelText } = render(getProps(), {
         ...getOptions(),
-        preloadedState: getPreloadedState()
+        preloadedState: getPreloadedState([
+          { fr: 0, to: 1 },
+          { fr: 2, to: 3 }
+        ])
       });
 
       fireEvent.click(getByRole("button", { name: "Add arrow" }));
@@ -519,7 +528,10 @@ describe("<SearchRoutesPanel />", () => {
 
       const { getByRole, getByLabelText } = render(getProps(), {
         ...getOptions(),
-        preloadedState: getPreloadedState()
+        preloadedState: getPreloadedState([
+          { fr: 0, to: 1 },
+          { fr: 2, to: 3 }
+        ])
       });
 
       fireEvent.click(getByRole("button", { name: "Add arrow" }));
@@ -539,7 +551,10 @@ describe("<SearchRoutesPanel />", () => {
     it("should remove all arrows if any category is removed", () => {
       const { getByRole } = render(getProps(), {
         ...getOptions(),
-        preloadedState: getPreloadedState()
+        preloadedState: getPreloadedState([
+          { fr: 0, to: 1 },
+          { fr: 2, to: 3 }
+        ])
       });
       const arrows = getByRole("list", { name: "Arrows" });
 
@@ -547,7 +562,27 @@ describe("<SearchRoutesPanel />", () => {
       fireEvent.keyUp(within(getByRole("list", { name: "Categories" }))
         .getByRole("button", { name: "4: statue" }), { key: "Delete" });
       expect(within(arrows).queryAllByRole("listitem")).toHaveLength(0);
-    })
+    });
+
+    it("should allow to delete an arrow", () => {
+      const { getByRole } = render(getProps(), {
+        ...getOptions(),
+        preloadedState: getPreloadedState([
+          { fr: 0, to: 1 },
+          { fr: 1, to: 2 },
+          { fr: 2, to: 3 }
+        ])
+      });
+
+      const list = getByRole("list", { name: "Arrows" });
+      expect(within(list).getAllByRole("listitem")).toHaveLength(3);
+
+      fireEvent.keyUp(within(list).getByRole("button", { name: "2 → 3" }), { key: "Delete" });
+
+      expect(within(list).getAllByRole("listitem")).toHaveLength(2);
+      expect(within(list).getByRole("button", { name: "1 → 2" })).toBeInTheDocument();
+      expect(within(list).getByRole("button", { name: "3 → 4" })).toBeInTheDocument();
+    });
   });
 
   describe("bottom buttons", () => {
@@ -572,7 +607,7 @@ describe("<SearchRoutesPanel />", () => {
         ],
         maxDistance: 3.1,
       }
-    })
+    });
 
     it("should reset the entire search form upon Clear", () => {
       const { getByRole, getByText } = render(getProps(), {

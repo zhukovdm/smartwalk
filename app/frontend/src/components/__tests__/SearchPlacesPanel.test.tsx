@@ -263,17 +263,28 @@ describe("<SearchPlacesPanel />", () => {
       });
     }, 10000);
 
-    it("should allow to delete category", () => {
+    it("should allow to delete a category (with relabel)", () => {
       const { getByRole } = render(getProps(), {
         ...getOptions(),
-        preloadedState: getPreloadedState()
+        preloadedState: {
+          searchPlaces: {
+            ...initialSearchPlacesState(),
+            categories: ["a", "b", "c"].map((keyword) => ({
+              ...getKeywordAdviceItem(),
+              keyword,
+              filters: {}
+            }))
+          }
+        }
       });
       const list = getByRole("list", { name: "Categories" });
-      expect(within(list).getAllByRole("listitem")).toHaveLength(1);
+      expect(within(list).getAllByRole("button")).toHaveLength(3);
 
-      fireEvent.keyUp(getByRole("button", { name: "1: cafe" }), { key: "Delete" });
+      fireEvent.keyUp(getByRole("button", { name: "2: b" }), { key: "Delete" });
 
-      expect(within(list).queryAllByRole("listitem")).toHaveLength(0);
+      expect(within(list).queryAllByRole("button")).toHaveLength(2);
+      expect(within(list).getByRole("button", { name: "1: a" }));
+      expect(within(list).getByRole("button", { name: "2: c" }));
     });
   });
 
