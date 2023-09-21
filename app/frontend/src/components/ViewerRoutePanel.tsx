@@ -10,8 +10,8 @@ import ViewerRouteContent from "./viewer/ViewerRouteContent";
  */
 export default function ViewerRoutePanel(): JSX.Element {
 
-  const { loaded } = useAppSelector((state) => state.favorites);
   const { route } = useAppSelector((state) => state.viewer);
+  const { loaded } = useAppSelector((state) => state.favorites);
 
   return (
     <Box>
@@ -19,7 +19,7 @@ export default function ViewerRoutePanel(): JSX.Element {
       <Box sx={{ mx: 2, my: 4 }}>
         {loaded
           ? <Box>
-              {!!route
+              {(!!route)
                 ? <ViewerRouteContent route={route} />
                 : <Alert severity={"warning"}>
                     There is nothing to show.
