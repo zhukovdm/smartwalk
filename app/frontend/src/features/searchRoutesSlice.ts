@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { KeywordCategory, PrecedenceEdge, UiPlace } from "../domain/types";
 import { deleteItemImmutable, updateItemImmutable } from "../utils/functions";
 
-type SearchRoutesState = {
+export type SearchRoutesState = {
   source?: UiPlace;
   target?: UiPlace;
   maxDistance: number;

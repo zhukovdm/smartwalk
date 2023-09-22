@@ -24,7 +24,10 @@ export default function FavoritesPanel(
   { loaded, loadedRatio }: FavoritesPanelProps): JSX.Element {
 
   return (
-    <Box>
+    <Box
+      role={"region"}
+      aria-label={"Favorites"}
+    >
       <LogoCloseBar />
       <PanelSelector panel={3} />
       <Box sx={{ m: 2 }}>

@@ -8,7 +8,7 @@ import type {
   UiRoute
 } from "../domain/types";
 
-const getPath = (): Path => ({
+export const getPath = (): Path => ({
   distance: 3.1,
   duration: 900,
   polyline: [

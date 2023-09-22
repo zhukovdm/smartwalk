@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { KeywordCategory, UiPlace } from "../domain/types";
 import { deleteItemImmutable, updateItemImmutable } from "../utils/functions";
 
-type SearchPlacesState = {
+export type SearchPlacesState = {
   center?: UiPlace;
   radius: number;
   categories: KeywordCategory[];
