@@ -37,11 +37,9 @@ describe("<SearchPlacesPanel />", () => {
   describe("center box", () => {
 
     /**
-     * Point selection, dialog, and name replacement are tested
-     * in the PanelDrawer.test.tsx
+     * `Point selection`, and `Name replacement` are tested in the PanelDrawer.test.tsx
      */
-
-    //
+    ///
 
     it("should render link-based label for places with smartId", () => {
       const { getByRole } = render(getProps(), {
@@ -355,4 +353,8 @@ describe("<SearchPlacesPanel />", () => {
       expect(getByRole("button", { name: "Search" })).toBeEnabled();
     });
   });
+
+  /**
+   * Search is tested in the PanelDrawer.test.tsx
+   */
 });

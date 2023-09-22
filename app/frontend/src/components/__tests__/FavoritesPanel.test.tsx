@@ -33,9 +33,9 @@ const getOptions = (): AppRenderOptions => {
     preloadedState: {
       favorites: {
         ...initialFavoritesState(),
-        direcs: tokens.map(([nameId, entityId]) => ({ ...getDirec(), name: `Direc ${nameId}`, direcId: entityId })),
-        places: tokens.map(([nameId, entityId]) => ({ ...getPlace(), name: `Place ${nameId}`, placeId: entityId })),
-        routes: tokens.map(([nameId, entityId]) => ({ ...getRoute(), name: `Route ${nameId}`, routeId: entityId }))
+        direcs: tokens.map(([nameId, direcId]) => ({ ...getDirec(), name: `Direc ${nameId}`, direcId })),
+        places: tokens.map(([nameId, placeId]) => ({ ...getPlace(), name: `Place ${nameId}`, placeId })),
+        routes: tokens.map(([nameId, routeId]) => ({ ...getRoute(), name: `Route ${nameId}`, routeId }))
       }
     }
   };
@@ -80,10 +80,9 @@ describe("<FavoritesPanel />", () => {
   describe("direc", () => {
 
     /**
-     * View and Append are tested in the PanelDrawer.test.tsx.
+     * `View` and `Modify` are tested in the PanelDrawer.test.tsx.
      */
-
-    //
+    ///
 
     it("should edit name and sort items by name", async () => {
       const storage = new InmemStorage();
@@ -215,10 +214,10 @@ describe("<FavoritesPanel />", () => {
   describe("place", () => {
 
     /**
-     * View, Append, Create and Menu state are tested in the PanelDrawer.test.tsx.
+     * `View`, `Append`, `Create` and `Menu state` are tested in the
+     * PanelDrawer.test.tsx.
      */
-
-    //
+    ///
 
     it("should edit name and sort items by name", async () => {
       const storage = new InmemStorage();
@@ -345,15 +344,133 @@ describe("<FavoritesPanel />", () => {
       });
       expect(places).toHaveLength(3);
     }, 10000);
+
+    describe("user-defined place", () => {
+
+      it("should disable Create button if a location is missing", () => {
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true,
+              createExpanded: true,
+              name: "Place A"
+            }
+          }
+        });
+
+        expect(getByText("Select location...")).toBeInTheDocument();
+        expect(getByRole("textbox", { name: "Name" })).toHaveValue("Place A");
+        expect(getByRole("button", { name: "Create" })).toBeDisabled();
+      });
+
+      it("should disable Create button if a name is missing or whitespaced", () => {
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true,
+              createExpanded: true,
+              location: {
+                lon: 0.0,
+                lat: 0.0
+              }
+            }
+          }
+        });
+
+        const textbox = getByRole("textbox", { name: "Name" });
+
+        expect(getByText("0.000000N, 0.000000E")).toBeInTheDocument();
+        expect(textbox).toHaveValue("");
+        expect(getByRole("button", { name: "Create" })).toBeDisabled();
+
+        fireEvent.change(textbox, { target: { value: " \t " } });
+        expect(getByRole("button", { name: "Create" })).toBeDisabled();
+      });
+
+      it("should enable Create button if both location and name are defined", () => {
+
+        const { getByRole } = render(getProps(), {
+          preloadedState: {
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true,
+              createExpanded: true,
+              location: {
+                lon: 0.0,
+                lat: 0.0
+              },
+              name: "Place A"
+            }
+          }
+        });
+
+        expect(getByRole("button", { name: "Create" })).toBeEnabled();
+      });
+
+      test("Remove button removes only location", () => {
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true,
+              createExpanded: true,
+              location: {
+                lon: 0.0,
+                lat: 0.0
+              },
+              name: "Place A"
+            }
+          }
+        });
+  
+        expect(getByText("0.000000N, 0.000000E")).toBeInTheDocument();
+        expect(getByRole("textbox", { name: "Name" })).toHaveValue("Place A");
+  
+        fireEvent.click(getByRole("button", { name: "Remove point" }));
+  
+        expect(getByText("Select location...")).toBeInTheDocument();
+        expect(getByRole("textbox", { name: "Name" })).toHaveValue("Place A");
+      });
+  
+      test("Clear button removes both location and name", () => {
+  
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true,
+              createExpanded: true,
+              location: {
+                lon: 0.0,
+                lat: 0.0
+              },
+              name: "Place A"
+            }
+          }
+        });
+  
+        expect(getByText("0.000000N, 0.000000E")).toBeInTheDocument();
+        expect(getByRole("textbox", { name: "Name" })).toHaveValue("Place A");
+  
+        fireEvent.click(getByRole("button", { name: "Clear" }));
+  
+        expect(getByText("Select location...")).toBeInTheDocument();
+        expect(getByRole("textbox", { name: "Name" })).toHaveValue("");
+      });
+    });
   });
 
   describe("route", () => {
 
     /**
-     * View and Append are tested in the PanelDrawer.test.tsx.
+     * View and Modify are tested in the PanelDrawer.test.tsx.
      */
-
-    //
+    ///
 
     it("should edit name and sort items by name", async () => {
       const storage = new InmemStorage();
