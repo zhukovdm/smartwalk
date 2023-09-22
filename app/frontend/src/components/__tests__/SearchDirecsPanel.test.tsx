@@ -38,11 +38,10 @@ describe("<SearchDirecsPanel />", () => {
     const wait = async (ms: number) => new Promise((resolve) => { setTimeout(resolve, ms); });
 
     /**
-     * Point selection, dialog, and name replacement are tested
-     * in the PanelDrawer.test.tsx
+     * Point selection, and name replacement are tested in the
+     * PanelDrawer.test.tsx
      */
-
-    //
+    ///
 
     it("should render link-based label for places with smartId", async () => {
       const { getByRole } = render(getProps(), {
@@ -166,8 +165,7 @@ describe("<SearchDirecsPanel />", () => {
       /**
        * This test does not do actual testing, see Issue #5.
        */
-
-      //
+      ///
 
       const { getByRole } = render(getProps(), {
         preloadedState: {

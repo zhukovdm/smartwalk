@@ -1,35 +1,52 @@
 import { act, fireEvent, waitFor, within } from "@testing-library/react";
-import { getPlace } from "../../utils/testData";
+import type {
+  PlacesRequest,
+  RoutesRequest,
+  UiPlace
+} from "../../domain/types";
+import {
+  getDirec,
+  getKeywordAdviceItem,
+  getPath,
+  getPlace,
+  getRoute,
+} from "../../utils/testData";
 import {
   type AppRenderOptions,
   renderWithProviders
 } from "../../utils/testUtils";
+import * as smartwalkApi from "../../utils/smartwalk";
 import InmemStorage from "../../utils/inmemStorage";
 import { LeafletMap } from "../../utils/leaflet";
 import { context } from "../../features/context";
 import { initialPanelState } from "../../features/panelSlice";
 import { initialFavoritesState } from "../../features/favoritesSlice";
-import { initialSearchRoutesState } from "../../features/searchRoutesSlice";
+import { type SearchPlacesState } from "../../features/searchPlacesSlice";
+import { type SearchRoutesState } from "../../features/searchRoutesSlice";
 import PanelDrawer from "../PanelDrawer";
+
+global.alert = jest.fn();
 
 const getProps = (): {} => ({});
 
-const getOptions = (): AppRenderOptions => ({
-  preloadedState: {
-    panel: {
-      ...initialPanelState(),
-      show: true
-    },
-    favorites: {
-      ...initialFavoritesState(),
-      places: [["A", "1"], ["B", "2"], ["C", "3"]].map(([suffix, placeId]) => ({
-        ...getPlace(),
-        name: `Place ${suffix}`,
-        placeId
-      }))
+const getOptions = (): AppRenderOptions => {
+  const tokens = [["A", "1"], ["B", "2"], ["C", "3"]];
+  return {
+    preloadedState: {
+      panel: {
+        ...initialPanelState(),
+        show: true
+      },
+      favorites: {
+        ...initialFavoritesState(),
+        loaded: true,
+        direcs: tokens.map(([nameId, direcId]) => ({ ...getDirec(), name: `Direc ${nameId}`, direcId })),
+        places: tokens.map(([nameId, placeId]) => ({ ...getPlace(), name: `Place ${nameId}`, placeId })),
+        routes: tokens.map(([nameId, routeId]) => ({ ...getRoute(), name: `Route ${nameId}`, routeId }))
+      }
     }
   }
-})
+};
 
 function render(props = getProps(), options: AppRenderOptions = getOptions()) {
   return renderWithProviders(<PanelDrawer {...props} />, options);
@@ -41,271 +58,939 @@ describe("<PanelDrawer />", () => {
     expect(render().container).toBeTruthy();
   });
 
-  describe("search routes", () => {
+  describe("favorites", () => {
 
-    const getSearchRoutesOptions = () => ({
+    const getFavoritesOptions = (): AppRenderOptions => ({
       ...getOptions(),
       routerProps: {
-        initialEntries: ["/search/routes"]
+        initialEntries: ["/favorites"]
       }
     });
 
-    describe("source box", () => {
+    describe("direcs", () => {
 
-      describe("dialog", () => {
+      it("should allow to view direcs and navigate back", () => {
 
-        test("source button opens select dialog", () => {
-          const { getByRole } = render();
-          fireEvent.click(getByRole("button", { name: "Select starting point" }));
-          expect(getByRole("dialog", { name: "Select point" })).toBeVisible();
+        const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
+
+        ["A", "B", "C"].forEach((handle) => {
+          fireEvent.click(within(getByRole("listitem", { name: `Direc ${handle}` })).getByRole("button", { name: "Menu" }));
+          fireEvent.click(getByRole("menuitem", { name: "View" }));
+
+          expect(getByText(`Direc ${handle}`)).toBeInTheDocument();
+          expect(getByText("Walking distance", { exact: false })).toBeInTheDocument();
+
+          fireEvent.click(getByRole("button", { name: "Back" }));
+          expect(getByRole("button", { name: "My Directions" })).toBeInTheDocument();
         });
-  
-        test("source label opens select dialog", () => {
-          const { getByRole, getByText } = render();
-          fireEvent.click(getByText("Select starting point..."));
-          expect(getByRole("dialog", { name: "Select point" })).toBeVisible();
-        });
-  
-        it("should allow to add user-defined location", async () => {
-          const map = new LeafletMap();
-          const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
-  
-          const { getByRole, queryByRole } = render(getProps(), {
-            ...getSearchRoutesOptions(),
-            context: {
-              ...context, map
+      });
+
+      it("should replace current sequence by points of a direc ordered for modification", async () => {
+
+        const { getByRole, queryAllByRole } = render(getProps(), {
+          ...getFavoritesOptions(),
+          preloadedState: {
+            ...getFavoritesOptions().preloadedState,
+            searchDirecs: {
+              waypoints: [
+                { ...getPlace(), name: "Place Y" }
+              ]
             }
-          });
-  
-          fireEvent.click(getByRole("button", { name: "Select starting point" }));
-          fireEvent.click(getByRole("button", { name: "Select location" }));
-          await waitFor(() => {
-            expect(queryByRole("search", { name: "Routes" })).not.toBeInTheDocument();
-            expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
-          });
-          act(() => {
-            captureLocation.mock.calls[0][0]({ lat: 0.123456012, lon: 0.123456012 });
-          })
-          await waitFor(() => {
-            expect(getByRole("search", { name: "Routes" })).toBeInTheDocument();
-          });
-          const region = getByRole("region", { name: "Starting point" });
-  
-          expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
-          expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
+          }
         });
-  
-        it("should allow to add location from the storage", async () => {
-          const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
-  
-          fireEvent.click(getByRole("button", { name: "Select starting point" }));
-          fireEvent.click(getByRole("button", { name: "Open" }));
-          fireEvent.click(getByRole("option", { name: "Place B" }));
-          fireEvent.click(getByRole("button", { name: "Confirm" }));
-          await waitFor(() => {
-            expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
-          });
-          const region = getByRole("region", { name: "Starting point" });
-  
-          expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
-          expect(within(region).getByText("Place B")).toBeInTheDocument();
+
+        fireEvent.click(within(getByRole("listitem", { name: "Direc B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Modify" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+        await waitFor(() => {
+          expect(within(getByRole("list", { name: "Waypoints" })).queryAllByRole("listitem")).not.toHaveLength(0);
         });
+        const places = queryAllByRole("listitem");
+
+        ["A", "B", "C", "D", "E"].forEach((handle, i) => {
+          expect(within(places[i]).getByText(`Place ${handle}`)).toBeInTheDocument();
+        });
+        expect(places).toHaveLength(5);
       });
-
-      describe("name", () => {
-
-        it("should use name from store if a place is available (by placeId), and restore old if deleted", async () => {
-          const storage = new InmemStorage();
-          const { getByRole, queryByRole } = render(getProps(), {
-            preloadedState: {
-              panel: {
-                ...initialPanelState(),
-                show: true
-              },
-              favorites: {
-                ...initialFavoritesState(),
-                loaded: true,
-                places: [
-                  {
-                    ...getPlace(),
-                    name: "Place B",
-                    placeId: "1"
-                  }
-                ]
-              },
-              searchRoutes: {
-                ...initialSearchRoutesState(),
-                source: {
-                  ...getPlace(),
-                  name: "Place A",
-                  placeId: "1"
-                }
-              }
-            },
-            context: { ...context, storage }
-          });
-
-          expect(within(getByRole("region", { name: "Starting point" }))
-            .getByText("Place B")).toBeVisible();
-
-          fireEvent.click(getByRole("button", { name: "Favorites" }));
-
-          fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
-          fireEvent.click(getByRole("menuitem", { name: "Delete" }));
-          act(() => {
-            fireEvent.click(getByRole("button", { name: "Delete" }));
-          });
-          await waitFor(() => {
-            expect(queryByRole("dialog", { name: "Delete place" })).not.toBeInTheDocument();
-          });
-          fireEvent.click(within(getByRole("navigation", { name: "Panels" }))
-            .getByRole("button", { name: "Search routes" }));
-
-          expect(within(getByRole("region", { name: "Starting point" }))
-            .getByText("Place A")).toBeInTheDocument();
-        });
-
-        it("should use name from store if a place is available (by smartId), and restore old if deleted", async () => {
-
-          /*
-           * In the current implementation, this use-case is impossible
-           * because a source can be either a user-defined place with no `Id`,
-           * or a favorite place with a `placeId`.
-           */
-
-          const storage = new InmemStorage();
-          const { getByRole, queryByRole } = render(getProps(), {
-            preloadedState: {
-              panel: {
-                ...initialPanelState(),
-                show: true
-              },
-              favorites: {
-                ...initialFavoritesState(),
-                loaded: true,
-                places: [
-                  {
-                    ...getPlace(),
-                    name: "Place B",
-                    placeId: "2", // !== "1"
-                    smartId: "A"
-                  }
-                ]
-              },
-              searchRoutes: {
-                ...initialSearchRoutesState(),
-                target: {
-                  ...getPlace(),
-                  name: "Place A",
-                  placeId: "1", // !== "2"
-                  smartId: "A"
-                }
-              }
-            },
-            context: { ...context, storage }
-          });
-
-          expect(within(getByRole("region", { name: "Destination" }))
-            .getByText("Place B")).toBeVisible();
-
-          fireEvent.click(getByRole("button", { name: "Favorites" }));
-
-          fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
-          fireEvent.click(getByRole("menuitem", { name: "Delete" }));
-          act(() => {
-            fireEvent.click(getByRole("button", { name: "Delete" }));
-          });
-          await waitFor(() => {
-            expect(queryByRole("dialog", { name: "Delete place" })).not.toBeInTheDocument();
-          });
-          fireEvent.click(within(getByRole("navigation", { name: "Panels" }))
-            .getByRole("button", { name: "Search routes" }));
-
-          expect(within(getByRole("region", { name: "Destination" }))
-            .getByText("Place A")).toBeInTheDocument();
-        });
-      });
-
-      describe("state", () => {
-
-        it("should preserve configured state upon Hide", () => {
-          expect(false).toBeTruthy();
-        });
-
-        it("should preserve configured state upon Navigate", () => {
-          expect(false).toBeTruthy();
-        });
-      })
     });
 
-    describe("target box", () => {
+    describe("places", () => {
 
+      it("should allow to view places and navigate back", () => {
+        const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
+  
+        ["A", "B", "C"].forEach((handle) => {
+          fireEvent.click(within(getByRole("listitem", { name: `Place ${handle}` })).getByRole("button", { name: "Menu" }));
+          fireEvent.click(getByRole("menuitem", { name: "View" }));
+
+          expect(getByText(`Place ${handle}`)).toBeInTheDocument();
+          expect(getByText("0.000000N, 0.000000E")).toBeInTheDocument();
+
+          fireEvent.click(getByRole("button", { name: "Back" }));
+          expect(getByRole("button", { name: "My Places" })).toBeInTheDocument();
+        });
+      });
+  
+      it("should append a place to the current direction sequence", async () => {
+
+        const { getByRole, queryAllByRole, queryByRole } = render(getProps(), {
+          ...getFavoritesOptions(),
+          preloadedState: {
+            ...getFavoritesOptions().preloadedState,
+            searchDirecs: {
+              waypoints: [
+                { ...getPlace(), name: "Place Y" }
+              ]
+            }
+          }
+        });
+
+        fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Append" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+  
+        await waitFor(() => {
+          expect(queryByRole("dialog")).not.toBeInTheDocument();
+        });
+  
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Search directions" }));
+  
+        await waitFor(() => {
+          expect(queryAllByRole("listitem")).not.toHaveLength(0);
+        });
+        const places = queryAllByRole("listitem");
+  
+        ["Y", "B"].forEach((handle, i) => {
+          expect(within(places[i]).getByText(`Place ${handle}`)).toBeInTheDocument();
+        });
+      });
+  
+      it("should allow to create a user-defined place", async () => {
+        const map = new LeafletMap();
+        const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
+  
+        const storage = new InmemStorage();
+  
+        const { getByRole, getByText, queryByRole } = render(getProps(), {
+          ...getFavoritesOptions(),
+          context: { ...context, map, storage }
+        });
+  
+        fireEvent.click(within(getByRole("region", { name: "My Places" }))
+          .getByText("Create custom place"));
+  
+        fireEvent.click(getByRole("button", { name: "Select location" }));
+  
+        await waitFor(() => {
+          expect(queryByRole("region", { name: "Favorites" })).not.toBeInTheDocument();
+        });
+  
+        act(() => {
+          captureLocation.mock.calls[0][0]({ lon: 0.0, lat: 0.0 });
+        });
+  
+        await waitFor(() => {
+          expect(getByRole("region", { name: "Favorites" })).toBeInTheDocument();
+          expect(getByText("0.000000N, 0.000000E")).toBeInTheDocument();
+        });
+  
+        const region = getByRole("region", { name: "My Places" });
+  
+        fireEvent.change(within(region)
+          .getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+  
+        act(() => {
+          fireEvent.click(within(region).getByRole("button", { name: "Create" }))
+        });
+  
+        await waitFor(() => {
+          expect(within(region).getByRole("listitem", { name: "Place D" })).toBeInTheDocument();
+          expect(within(region).getByText("Select location..."));
+          expect(within(region).getByRole("textbox", { name: "Name" })).toHaveValue("");
+        });
+      }, 10_000);
+  
+      it("should preserve the state of `create place` dialog upon navigation", async () => {
+        const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
+  
+        fireEvent.click(getByText("Create custom place"));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place A" } });
+  
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Search routes" }));
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Favorites" }));
+  
+        expect(getByRole("textbox", { name: "Name" })).toHaveValue("Place A");
+      });
+  
+      it("should preserve the state of collapsible regions upon navigation", async () => {
+        const kinds = ["Directions", "Places", "Routes"];
+  
+        const { getByRole, queryByRole } = render(getProps(), getFavoritesOptions());
+  
+        kinds.forEach((kind) => {
+          fireEvent.click(getByRole("button", { name: `My ${kind}` }));
+        });
+  
+        await waitFor(() => {
+          kinds.forEach((kind) => {
+            expect(queryByRole("region", { name: `My ${kind}` })).not.toBeInTheDocument();
+          });
+        });
+  
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Search routes" }));
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Favorites" }));
+  
+        kinds.forEach((kind) => {
+          expect(queryByRole("region", { name: `My ${kind}` })).not.toBeInTheDocument();
+        });
+  
+        kinds.forEach((kind) => {
+          fireEvent.click(getByRole("button", { name: `My ${kind}` }));
+        });
+  
+        await waitFor(() => {
+          kinds.forEach((kind) => {
+            expect(queryByRole("region", { name: `My ${kind}` })).toBeInTheDocument();
+          });
+        });
+  
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Search routes" }));
+        fireEvent.click(within(getByRole("navigation", { name: "Panels" })).getByRole("button", { name: "Favorites" }));
+  
+        kinds.forEach((kind) => {
+          expect(queryByRole("region", { name: `My ${kind}` })).toBeInTheDocument();
+        });
+      }, 15_000);
     });
 
-    describe("state", () => {
+    describe("routes", () => {
 
-      it("should preserve state upon hiding the panel", () => {
+      it("should allow to view routes and navigate back", () => {
 
+        const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
+
+        ["A", "B", "C"].forEach((handle) => {
+          fireEvent.click(within(getByRole("listitem", { name: `Route ${handle}` })).getByRole("button", { name: "Menu" }));
+          fireEvent.click(getByRole("menuitem", { name: "View" }));
+
+          expect(getByText(`Route ${handle}`)).toBeInTheDocument();
+          expect(getByRole("list", { name: "Category filters" })).toBeInTheDocument();
+
+          fireEvent.click(getByRole("button", { name: "Back" }));
+          expect(getByRole("button", { name: "My Directions" })).toBeInTheDocument();
+        });
       });
 
-      it("should preserve state upon navigating to a different panel", () => {
+      it("should replace current sequence by points of a route ordered for modification", async () => {
 
+        const { getByRole, queryAllByRole } = render(getProps(), {
+          ...getFavoritesOptions(),
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true,
+              routes: [["A", "1"], ["B", "2"], ["C", "3"]].map(([nameId, routeId]) => ({ ...getRoute(), name: `Route ${nameId}`, routeId }))
+            },
+            searchDirecs: {
+              waypoints: [
+                { ...getPlace(), name: "Place Y" }
+              ]
+            }
+          }
+        });
+
+        fireEvent.click(within(getByRole("listitem", { name: "Route B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Modify" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+
+        await waitFor(() => {
+          expect(within(getByRole("list", { name: "Waypoints" })).queryAllByRole("listitem")).not.toHaveLength(0);
+        });
+        const places = queryAllByRole("listitem");
+
+        ["Source S", "Place B", "Place A", "Place A", "Place C", "Place D", "Target T"]
+          .forEach((name, i) => {
+            expect(within(places[i]).getByText(name)).toBeInTheDocument();
+          });
+        expect(places).toHaveLength(7);
       });
-    })
+    });
   });
 
-  describe("search places", () => {
+  describe("search", () => {
 
-    const getSearchPlacesOptions = () => ({
-      routerProps: {
-        initialEntries: ["/search/places"]
-      }
+    describe("direcs", () => {
+
+      const getSearchDirecsOptions = () => ({
+        ...getOptions(),
+        routerProps: {
+          initialEntries: ["/search/direcs"]
+        }
+      });
+
+      it("should allow to select a point on the map", async () => {
+
+        const map = new LeafletMap();
+        const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
+
+        const { getByRole, getByText, queryByRole } = render(getProps(), {
+          ...getSearchDirecsOptions(),
+          context: { ...context, map }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Select waypoint" }));
+        fireEvent.click(getByRole("button", { name: "Select location" }));
+        await waitFor(() => {
+          expect(queryByRole("search", { name: "Directions" })).not.toBeInTheDocument();
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        act(() => {
+          captureLocation.mock.calls[0][0]({ lat: 0.123456012, lon: 0.123456012 });
+        });
+        await waitFor(() => {
+          expect(getByRole("search", { name: "Directions" })).toBeInTheDocument();
+        });
+        expect(getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(getByText("0.123456N, 0.123456E")).toBeInTheDocument();
+      });
+
+      it("should allow to select a point from the store", async () => {
+        const { getByRole, getByText, queryByRole } = render(getProps(), getSearchDirecsOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select waypoint" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        expect(getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(getByText("Place B")).toBeInTheDocument();
+      });
+
+      it("should synchronize name of a point with store if similar object is available", async () => {
+
+        const { getByRole, queryByRole } = render(getProps(), getSearchDirecsOptions());
+
+        // append
+
+        fireEvent.click(getByRole("button", { name: "Select waypoint" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+
+        // rename
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search directions" }));
+        await waitFor(() => {
+          expect(getByRole("listitem", { name: "Place D" })).toBeInTheDocument();
+        });
+
+        // delete
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place D" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Delete" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search directions" }));
+        await waitFor(() => {
+          expect(getByRole("listitem", { name: "Place B" })).toBeInTheDocument();
+        });
+      }, 20_000);
+
+      it("should allow to search for directions visiting the sequence in order", async () => {
+
+        const direcsRequestObject: UiPlace[] = ["A", "B", "C"].map((handle) => ({
+          ...getPlace(),
+          name: `Place ${handle}`
+        }));
+
+        jest.spyOn(smartwalkApi, "fetchSearchDirecs").mockResolvedValueOnce(Array(3).fill(undefined).map(() => ({
+          waypoints: direcsRequestObject,
+          name: "",
+          path: getPath()
+        })));
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            searchDirecs: {
+              waypoints: direcsRequestObject
+            }
+          },
+          routerProps: {
+            initialEntries: ["/search/direcs"]
+          }
+        });
+
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Search" }));
+        });
+        await waitFor(() => {
+          expect(getByText("Found a total of", { exact: false })).toHaveTextContent("Found a total of 3 directions.");
+        });
+        fireEvent.click(getByRole("button", { name: "Back" }));
+        expect(getByRole("search", { name: "Directions" }));
+      });
+
+      it("should not redirect to the result if search fails", async () => {
+
+        const direcsRequestObject: UiPlace[] = ["A", "B", "C"].map((handle) => ({
+          ...getPlace(),
+          name: `Place ${handle}`
+        }));
+
+        const alertSpy = jest.spyOn(window, "alert");
+        jest.spyOn(smartwalkApi, "fetchSearchDirecs").mockRejectedValueOnce(new Error());
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            searchDirecs: {
+              waypoints: direcsRequestObject
+            }
+          },
+          routerProps: {
+            initialEntries: ["/search/direcs"]
+          }
+        });
+
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Search" }));
+        });
+        await waitFor(() => {
+          expect(getByRole("button", { name: "Search" })).toBeEnabled();
+        });
+        expect(alertSpy).toHaveBeenCalled();
+      });
     });
 
-    describe("source box", () => {
+    describe("places", () => {
 
+      const getSearchPlacesOptions = () => ({
+        ...getOptions(),
+        routerProps: {
+          initialEntries: ["/search/places"]
+        }
+      });
 
+      it("should allow to select center on the map", async () => {
+        const map = new LeafletMap();
+        const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
+
+        const { getByRole, queryByRole } = render(getProps(), {
+          ...getSearchPlacesOptions(),
+          context: { ...context, map }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Select center point" }));
+        fireEvent.click(getByRole("button", { name: "Select location" }));
+        await waitFor(() => {
+          expect(queryByRole("search", { name: "Places" })).not.toBeInTheDocument();
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        act(() => {
+          captureLocation.mock.calls[0][0]({ lat: 0.123456012, lon: 0.123456012 });
+        });
+        await waitFor(() => {
+          expect(getByRole("search", { name: "Places" })).toBeInTheDocument();
+        });
+        const region = getByRole("region", { name: "Center point" });
+
+        expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
+      });
+
+      it("should allow to select center from the store", async () => {
+        const { getByRole, queryByRole } = render(getProps(), getSearchPlacesOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select center point" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        const region = getByRole("region", { name: "Center point" });
+
+        expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(within(region).getByText("Place B")).toBeInTheDocument();
+      });
+
+      it("should synchronize name of the center with store if similar object is available", async () => {
+
+        const { getByRole, queryByRole } = render(getProps(), getSearchPlacesOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select center point" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+
+        // rename
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search places" }));
+        expect(within(getByRole("region", { name: "Center point" })).getByText("Place D"));
+
+        // delete
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place D" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Delete" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search places" }));
+        expect(within(getByRole("region", { name: "Center point" })).getByText("Place B"));
+      }, 20_000);
+
+      it("should allow to search for places around a center point", async () => {
+
+        const placesRequestObject: PlacesRequest = {
+          center: {
+            ...getPlace(),
+            name: "Center"
+          },
+          radius: 4.5,
+          categories: [
+            {
+              ...getKeywordAdviceItem(),
+              filters: {}
+            }
+          ]
+        };
+
+        jest.spyOn(smartwalkApi, "fetchSearchPlaces").mockResolvedValueOnce({
+          ...placesRequestObject,
+          places: ["A", "B", "C"].map((handle) => ({
+            ...getPlace(),
+            name: `Place ${handle}`,
+            smartId: handle,
+            categories: [0]
+          }))
+        });
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            searchPlaces: placesRequestObject as SearchPlacesState
+          },
+          routerProps: {
+            initialEntries: ["/search/places"]
+          }
+        });
+
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Search" }));
+        });
+        await waitFor(() => {
+          expect(getByText("Found a total of", { exact: false })).toBeInTheDocument();
+        });
+        expect(within(getByRole("list", { name: "Places found" })).getAllByRole("listitem")).toHaveLength(3);
+        fireEvent.click(getByRole("button", { name: "Back" }));
+        expect(getByRole("search", { name: "Places" }));
+      });
+
+      it("should not redirect to the result if search fails", async () => {
+
+        const placesRequestObject: PlacesRequest = {
+          center: {
+            ...getPlace(),
+            name: "Center"
+          },
+          radius: 4.5,
+          categories: [
+            {
+              ...getKeywordAdviceItem(),
+              filters: {}
+            }
+          ]
+        };
+
+        const alertSpy = jest.spyOn(window, "alert");
+        jest.spyOn(smartwalkApi, "fetchSearchPlaces").mockRejectedValueOnce(new Error());
+
+        const { getByRole } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            searchPlaces: placesRequestObject as SearchPlacesState
+          },
+          routerProps: {
+            initialEntries: ["/search/places"]
+          }
+        });
+
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Search" }));
+        });
+        await waitFor(() => {
+          expect(getByRole("button", { name: "Search" })).toBeEnabled();
+        });
+        expect(alertSpy).toHaveBeenCalled();
+      });
     });
 
-    describe("source box", () => {
+    describe("routes", () => {
 
-      
+      const getSearchRoutesOptions = () => ({
+        ...getOptions(),
+        routerProps: {
+          initialEntries: ["/search/routes"]
+        }
+      });
+
+      it("should allow to select source on the map", async () => {
+        const map = new LeafletMap();
+        const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
+
+        const { getByRole, queryByRole } = render(getProps(), {
+          ...getSearchRoutesOptions(),
+          context: { ...context, map }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Select starting point" }));
+        fireEvent.click(getByRole("button", { name: "Select location" }));
+        await waitFor(() => {
+          expect(queryByRole("search", { name: "Routes" })).not.toBeInTheDocument();
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        act(() => {
+          captureLocation.mock.calls[0][0]({ lat: 0.123456012, lon: 0.123456012 });
+        });
+        await waitFor(() => {
+          expect(getByRole("search", { name: "Routes" })).toBeInTheDocument();
+        });
+        const region = getByRole("region", { name: "Starting point" });
+
+        expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
+      });
+
+      it("should allow to select source from the store", async () => {
+        const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select starting point" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        const region = getByRole("region", { name: "Starting point" });
+
+        expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(within(region).getByText("Place B")).toBeInTheDocument();
+      });
+
+      it("should synchronize name of the source with store if similar object is available", async () => {
+
+        const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select starting point" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+
+        // rename
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search routes" }));
+        expect(within(getByRole("region", { name: "Starting point" })).getByText("Place D"));
+
+        // delete
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place D" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Delete" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search routes" }));
+        expect(within(getByRole("region", { name: "Starting point" })).getByText("Place B"));
+      }, 20_000);
+
+      it("should allow to select target on the map", async () => {
+        const map = new LeafletMap();
+        const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
+
+        const { getByRole, queryByRole } = render(getProps(), {
+          ...getSearchRoutesOptions(),
+          context: { ...context, map }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Select destination" }));
+        fireEvent.click(getByRole("button", { name: "Select location" }));
+        await waitFor(() => {
+          expect(queryByRole("search", { name: "Routes" })).not.toBeInTheDocument();
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        act(() => {
+          captureLocation.mock.calls[0][0]({ lat: 0.123456012, lon: 0.123456012 });
+        });
+        await waitFor(() => {
+          expect(getByRole("search", { name: "Routes" })).toBeInTheDocument();
+        });
+        const region = getByRole("region", { name: "Destination" });
+
+        expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
+      });
+
+      it("should allow to select target from the store", async () => {
+        const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select destination" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+        const region = getByRole("region", { name: "Destination" });
+
+        expect(within(region).getByRole("button", { name: "Fly to" })).toBeInTheDocument();
+        expect(within(region).getByText("Place B")).toBeInTheDocument();
+      });
+
+      it("should synchronize name of the target with store if similar object is available", async () => {
+
+        const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
+
+        fireEvent.click(getByRole("button", { name: "Select destination" }));
+        fireEvent.click(getByRole("button", { name: "Open" }));
+        fireEvent.click(getByRole("option", { name: "Place B" }));
+        fireEvent.click(getByRole("button", { name: "Confirm" }));
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Select point" })).not.toBeInTheDocument();
+        });
+
+        // rename
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place B" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Edit" }));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Place D" } });
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search routes" }));
+        expect(within(getByRole("region", { name: "Destination" })).getByText("Place D"));
+
+        // delete
+
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        fireEvent.click(within(getByRole("listitem", { name: "Place D" })).getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Delete" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Delete" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Edit place" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Search routes" }));
+        expect(within(getByRole("region", { name: "Destination" })).getByText("Place B"));
+      }, 20_000);
+
+      it("should allow to search for routes between source and target", async () => {
+
+        const routesRequestObject: RoutesRequest = {
+          source: {
+            ...getPlace(),
+            name: "Source"
+          },
+          target: {
+            ...getPlace(),
+            name: "Target"
+          },
+          maxDistance: 4.5,
+          categories: [
+            { ...getKeywordAdviceItem(), keyword: "castle", filters: {} },
+            { ...getKeywordAdviceItem(), keyword: "museum", filters: {} }
+          ],
+          precedence: []
+        };
+
+        jest.spyOn(smartwalkApi, "fetchSearchRoutes").mockResolvedValueOnce(Array(3).fill(undefined).map(() => (getRoute())));
+
+        const { getByRole, getByText } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            searchRoutes: routesRequestObject as SearchRoutesState
+          },
+          routerProps: {
+            initialEntries: ["/search/routes"]
+          }
+        });
+
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Search" }));
+        });
+        await waitFor(() => {
+          expect(getByText("Found a total of", { exact: false })).toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Back" }));
+        expect(getByRole("search", { name: "Routes" }));
+      });
+
+      it("should not redirect to the result if search fails", async () => {
+
+        const routesRequestObject: RoutesRequest = {
+          source: {
+            ...getPlace(),
+            name: "Source"
+          },
+          target: {
+            ...getPlace(),
+            name: "Target"
+          },
+          maxDistance: 4.5,
+          categories: [
+            {
+              ...getKeywordAdviceItem(),
+              filters: {}
+            }
+          ],
+          precedence: []
+        };
+
+        const alertSpy = jest.spyOn(window, "alert");
+        jest.spyOn(smartwalkApi, "fetchSearchRoutes").mockRejectedValueOnce(new Error());
+
+        const { getByRole } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show: true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            searchRoutes: routesRequestObject as SearchRoutesState
+          },
+          routerProps: {
+            initialEntries: ["/search/places"]
+          }
+        });
+
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Search" }));
+        });
+        await waitFor(() => {
+          expect(getByRole("button", { name: "Search" })).toBeEnabled();
+        });
+        expect(alertSpy).toHaveBeenCalled();
+      });
     });
-
-    describe("swap button", () => {
-
-      
-    });
-
-    describe("distance slider", () => {
-
-      
-    });
-
-    
   });
 
-  describe("search direcs", () => {
+  describe("result", () => {
 
-
-
-    describe("sequence", () => {
-
+    describe("direcs", () => {
+      // TODO
     });
 
-    describe("reverse button", () => {
-
-      
+    describe("places", () => {
+      // TODO
     });
 
-    describe("clear button", () => {
-
-      
+    describe("routes", () => {
+      // TODO
     });
+  });
 
-    describe("search button", () => {
-
-      
-    });
+  describe("entity", () => {
+    // TODO
   });
 });
