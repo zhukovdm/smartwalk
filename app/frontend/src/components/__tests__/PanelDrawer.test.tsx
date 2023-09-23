@@ -6,6 +6,7 @@ import type {
 } from "../../domain/types";
 import {
   getDirec,
+  getExtendedPlace,
   getKeywordAdviceItem,
   getPath,
   getPlace,
@@ -21,6 +22,8 @@ import { LeafletMap } from "../../utils/leaflet";
 import { context } from "../../features/context";
 import { initialPanelState } from "../../features/panelSlice";
 import { initialFavoritesState } from "../../features/favoritesSlice";
+import { initialResultDirecsState } from "../../features/resultDirecsSlice";
+import { initialSearchDirecsState } from "../../features/searchDirecsSlice";
 import { type SearchPlacesState } from "../../features/searchPlacesSlice";
 import { type SearchRoutesState } from "../../features/searchRoutesSlice";
 import PanelDrawer from "../PanelDrawer";
@@ -69,7 +72,7 @@ describe("<PanelDrawer />", () => {
 
     describe("direcs", () => {
 
-      it("should allow to view direcs and navigate back", () => {
+      it("should allow the user to view direcs and navigate back", () => {
 
         const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
 
@@ -117,7 +120,7 @@ describe("<PanelDrawer />", () => {
 
     describe("places", () => {
 
-      it("should allow to view places and navigate back", () => {
+      it("should allow the user to view places and navigate back", () => {
         const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
   
         ["A", "B", "C"].forEach((handle) => {
@@ -166,7 +169,7 @@ describe("<PanelDrawer />", () => {
         });
       });
   
-      it("should allow to create a user-defined place", async () => {
+      it("should allow the user to create a user-defined place", async () => {
         const map = new LeafletMap();
         const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
   
@@ -266,7 +269,7 @@ describe("<PanelDrawer />", () => {
 
     describe("routes", () => {
 
-      it("should allow to view routes and navigate back", () => {
+      it("should allow the user to view routes and navigate back", () => {
 
         const { getByRole, getByText } = render(getProps(), getFavoritesOptions());
 
@@ -333,7 +336,7 @@ describe("<PanelDrawer />", () => {
         }
       });
 
-      it("should allow to select a point on the map", async () => {
+      it("should allow the user to select a point on the map", async () => {
 
         const map = new LeafletMap();
         const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
@@ -359,7 +362,7 @@ describe("<PanelDrawer />", () => {
         expect(getByText("0.123456N, 0.123456E")).toBeInTheDocument();
       });
 
-      it("should allow to select a point from the store", async () => {
+      it("should allow the user to select a point from the store", async () => {
         const { getByRole, getByText, queryByRole } = render(getProps(), getSearchDirecsOptions());
 
         fireEvent.click(getByRole("button", { name: "Select waypoint" }));
@@ -421,7 +424,7 @@ describe("<PanelDrawer />", () => {
         });
       }, 20_000);
 
-      it("should allow to search for directions visiting the sequence in order", async () => {
+      it("should allow the user to search for directions visiting the sequence in order", async () => {
 
         const direcsRequestObject: UiPlace[] = ["A", "B", "C"].map((handle) => ({
           ...getPlace(),
@@ -511,7 +514,7 @@ describe("<PanelDrawer />", () => {
         }
       });
 
-      it("should allow to select center on the map", async () => {
+      it("should allow the user to select center on the map", async () => {
         const map = new LeafletMap();
         const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
 
@@ -538,7 +541,7 @@ describe("<PanelDrawer />", () => {
         expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
       });
 
-      it("should allow to select center from the store", async () => {
+      it("should allow the user to select center from the store", async () => {
         const { getByRole, queryByRole } = render(getProps(), getSearchPlacesOptions());
 
         fireEvent.click(getByRole("button", { name: "Select center point" }));
@@ -596,7 +599,7 @@ describe("<PanelDrawer />", () => {
         expect(within(getByRole("region", { name: "Center point" })).getByText("Place B"));
       }, 20_000);
 
-      it("should allow to search for places around a center point", async () => {
+      it("should allow the user to search for places around a center point", async () => {
 
         const placesRequestObject: PlacesRequest = {
           center: {
@@ -705,7 +708,7 @@ describe("<PanelDrawer />", () => {
         }
       });
 
-      it("should allow to select source on the map", async () => {
+      it("should allow the user to select source on the map", async () => {
         const map = new LeafletMap();
         const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
 
@@ -732,7 +735,7 @@ describe("<PanelDrawer />", () => {
         expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
       });
 
-      it("should allow to select source from the store", async () => {
+      it("should allow the user to select source from the store", async () => {
         const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
 
         fireEvent.click(getByRole("button", { name: "Select starting point" }));
@@ -790,7 +793,7 @@ describe("<PanelDrawer />", () => {
         expect(within(getByRole("region", { name: "Starting point" })).getByText("Place B"));
       }, 20_000);
 
-      it("should allow to select target on the map", async () => {
+      it("should allow the user to select target on the map", async () => {
         const map = new LeafletMap();
         const captureLocation = jest.spyOn(map, "captureLocation").mockImplementation();
 
@@ -817,7 +820,7 @@ describe("<PanelDrawer />", () => {
         expect(within(region).getByText("0.123456N, 0.123456E")).toBeInTheDocument();
       });
 
-      it("should allow to select target from the store", async () => {
+      it("should allow the user to select target from the store", async () => {
         const { getByRole, queryByRole } = render(getProps(), getSearchRoutesOptions());
 
         fireEvent.click(getByRole("button", { name: "Select destination" }));
@@ -875,7 +878,7 @@ describe("<PanelDrawer />", () => {
         expect(within(getByRole("region", { name: "Destination" })).getByText("Place B"));
       }, 20_000);
 
-      it("should allow to search for routes between source and target", async () => {
+      it("should allow the user to search for routes between source and target", async () => {
 
         const routesRequestObject: RoutesRequest = {
           source: {
@@ -960,7 +963,7 @@ describe("<PanelDrawer />", () => {
             searchRoutes: routesRequestObject as SearchRoutesState
           },
           routerProps: {
-            initialEntries: ["/search/places"]
+            initialEntries: ["/search/routes"]
           }
         });
 
@@ -978,19 +981,240 @@ describe("<PanelDrawer />", () => {
   describe("result", () => {
 
     describe("direcs", () => {
-      // TODO
-    });
 
-    describe("places", () => {
-      // TODO
+      it("should allow the user to create a local copy of a found direc", async () => {
+
+        const { getByRole, queryByRole } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show:true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            resultDirecs: {
+              ...initialResultDirecsState(),
+              result: Array(3).fill(undefined).map(() => (getDirec()))
+            }
+          },
+          routerProps: {
+            initialEntries: [
+              "/search/direcs", "/result/direcs"
+            ]
+          }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Save" }));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Direction A" } });
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Save direction" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Back" }));
+        fireEvent.click(getByRole("button", { name: "Favorites" }));
+        expect(within(getByRole("region", { name: "My Directions" })).getByText("Direction A")).toBeInTheDocument();
+      });
     });
 
     describe("routes", () => {
-      // TODO
+
+      it("should allow the user to create a local copy of a found route", async () => {
+
+        const { getByRole, queryByRole } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show:true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            resultRoutes: {
+              result: Array(3).fill(undefined).map(() => (getRoute())),
+              index: 0,
+              categoryFilters: Array(5).fill(true)
+            }
+          },
+          routerProps: {
+            initialEntries: [
+              "/favorites", "/result/routes"
+            ]
+          }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Save" }));
+        fireEvent.change(getByRole("textbox", { name: "Name" }), { target: { value: "Route A" } });
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog", { name: "Save route" })).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Back" }));
+        expect(within(getByRole("region", { name: "My Routes" })).getByText("Route A")).toBeInTheDocument();
+      });
+
+      it("should allow the user to copy a route as a direction sequence and modify (with redirect)", async () => {
+
+        const { getByRole } = render(getProps(), {
+          preloadedState: {
+            panel: {
+              ...initialPanelState(),
+              show:true
+            },
+            favorites: {
+              ...initialFavoritesState(),
+              loaded: true
+            },
+            resultRoutes: {
+              result: Array(3).fill(undefined).map(() => (getRoute())),
+              index: 0,
+              categoryFilters: Array(5).fill(true)
+            }
+          },
+          routerProps: {
+            initialEntries: [
+              "/result/routes"
+            ]
+          }
+        });
+
+        fireEvent.click(getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Modify" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Confirm" }));
+        });
+        await waitFor(() => {
+          expect(within(getByRole("list", { name: "Waypoints" })).queryAllByRole("listitem")).toHaveLength(7);
+        });
+      });
     });
   });
 
   describe("entity", () => {
-    // TODO
+
+    describe("places", () => {
+
+      type T = ReturnType<typeof renderWithProviders>;
+
+      const getEntityPlacesOptions = (termLocation: string): AppRenderOptions => ({
+        preloadedState: {
+          panel: {
+            ...initialPanelState(),
+            show: true
+          },
+          favorites: {
+            ...initialFavoritesState(),
+            loaded: true
+          },
+          searchDirecs: {
+            ...initialSearchDirecsState(),
+            waypoints: [
+              {
+                ...getPlace(),
+                name: "Modern bridge"
+              }
+            ]
+          }
+        },
+        routerProps: {
+          initialEntries: [
+            termLocation, "/entity/places/D"
+          ]
+        },
+        context: {
+          ...context,
+          smart: {
+            entityPlaces: new Map([["D", {
+              ...getExtendedPlace(),
+              smartId: "D"
+            }]]),
+            adviceKeywords: new Map()
+          }
+        }
+      });
+
+      it("should allow the user to create a local copy of a place", async () => {
+        let renderObject: T;
+
+        act(() => {
+          renderObject = render(getProps(), getEntityPlacesOptions("/favorites"));
+        })
+
+        await waitFor(() => {
+          expect(renderObject.getByRole("button", { name: "Menu" }));
+        });
+
+        const { getByRole, queryByRole } = renderObject!;
+
+        fireEvent.click(getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Save" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Save" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog")).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Back" }));
+        expect(within(getByRole("region", { name: "My Places" })).getByText("Medieval castle"));
+      });
+
+      it("should allow the user to append a place to the current direction sequence", async () => {
+        let renderObject: T;
+
+        act(() => {
+          renderObject = render(getProps(), getEntityPlacesOptions("/search/direcs"));
+        })
+
+        await waitFor(() => {
+          expect(renderObject.getByRole("button", { name: "Menu" }));
+        });
+
+        const { getByRole, queryByRole } = renderObject!;
+
+        fireEvent.click(getByRole("button", { name: "Menu" }));
+        fireEvent.click(getByRole("menuitem", { name: "Append" }));
+        act(() => {
+          fireEvent.click(getByRole("button", { name: "Confirm" }));
+        });
+        await waitFor(() => {
+          expect(queryByRole("dialog")).not.toBeInTheDocument();
+        });
+        fireEvent.click(getByRole("button", { name: "Back" }));
+
+        await waitFor(() => {
+          const places = within(getByRole("list", { name: "Waypoints" }))
+            .queryAllByRole("listitem");
+
+          ["Modern bridge", "Medieval castle"].forEach((name, i) => {
+            expect(within(places[i]).getByText(name)).toBeInTheDocument();
+          });
+        });
+      });
+    });
   });
+
+  describe("not found", () => {
+
+    describe("fallback", () => {
+
+      test("should appear for an unknown url paths", () => {
+        const { getByText } = render(getProps(), {
+          ...getOptions(),
+          routerProps: {
+            initialEntries: ["/unknown"]
+          }
+        });
+        expect(getByText("Oops! Unknown address...")).toBeInTheDocument();
+      })
+    })
+  });
+
 });
