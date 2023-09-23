@@ -153,7 +153,7 @@ describe("<FavoritesPanel />", () => {
       expect(direcs).toHaveLength(3);
     }, 10000);
 
-    it("should allow to delete an item", async () => {
+    it("should allow the user to delete an item", async () => {
       const { getByRole, queryByRole } = render();
       const region = getByRole("region", { name: "My Directions" });
 
@@ -288,7 +288,7 @@ describe("<FavoritesPanel />", () => {
       expect(places).toHaveLength(3);
     }, 10000);
 
-    it("should allow to delete an item", async () => {
+    it("should allow the user to delete an item", async () => {
       const { getByRole, queryByRole } = render();
       const region = getByRole("region", { name: "My Places" });
 
@@ -541,7 +541,7 @@ describe("<FavoritesPanel />", () => {
       expect(routes).toHaveLength(3);
     }, 10000);
 
-    it("should allow to delete an item", async () => {
+    it("should allow the user to delete an item", async () => {
       const { getByRole, queryByRole } = render();
       const region = getByRole("region", { name: "My Routes" });
 

@@ -160,7 +160,7 @@ describe("<SearchDirecsPanel />", () => {
       expect(addCommon).toHaveBeenCalledTimes(3);
     });
 
-    it("should allow to move a point to any position in the sequence", async () => {
+    it("should allow the user to move a point to any position in the sequence", async () => {
 
       /**
        * This test does not do actual testing, see Issue #5.

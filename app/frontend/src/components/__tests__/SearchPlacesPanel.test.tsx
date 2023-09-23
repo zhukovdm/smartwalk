@@ -160,7 +160,7 @@ describe("<SearchPlacesPanel />", () => {
       }
     });
 
-    it("should allow to create new category", async () => {
+    it("should allow the user to create new category", async () => {
       jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce([
         { ...getKeywordAdviceItem(), keyword: "cafe" },
         { ...getKeywordAdviceItem(), keyword: "castle" }
@@ -188,7 +188,7 @@ describe("<SearchPlacesPanel />", () => {
       expect(within(list).getAllByRole("listitem")).toHaveLength(2);
     });
 
-    it("should allow to create two identical categories", async () => {
+    it("should allow the user to create two identical categories", async () => {
       jest.spyOn(smartwalkApi, "fetchAdviceKeywords").mockResolvedValueOnce([
         { ...getKeywordAdviceItem(), keyword: "cafe" },
         { ...getKeywordAdviceItem(), keyword: "castle" }
@@ -217,7 +217,7 @@ describe("<SearchPlacesPanel />", () => {
       expect(within(list).getAllByRole("listitem")).toHaveLength(2);
     });
 
-    it("should allow to modify category filters", async () => {
+    it("should allow the user to modify category filters", async () => {
       const { getByRole } = render(getProps(), {
         ...getOptions(),
         preloadedState: getPreloadedState()
@@ -261,7 +261,7 @@ describe("<SearchPlacesPanel />", () => {
       });
     }, 10000);
 
-    it("should allow to delete a category (with relabel)", () => {
+    it("should allow the user to delete a category (with relabel)", () => {
       const { getByRole } = render(getProps(), {
         ...getOptions(),
         preloadedState: {
