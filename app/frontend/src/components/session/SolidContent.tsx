@@ -23,7 +23,10 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 import SolidStorage from "../../utils/solidStorage";
-import SolidProvider from "../../utils/solidProvider";
+import {
+  getAvailableSolidPods,
+  solidLogout
+} from "../../utils/solidProvider";
 
 /**
  * The content of the Solid panel upon login.
@@ -31,8 +34,9 @@ import SolidProvider from "../../utils/solidProvider";
 export default function SolidContent(): JSX.Element {
 
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
   const context = useContext(AppContext);
+
+  const dispatch = useAppDispatch();
   const {
     block,
     dialogBlock
@@ -49,7 +53,7 @@ export default function SolidContent(): JSX.Element {
     const load = async () => {
       if (!availablePods) {
         try {
-          const pods = await SolidProvider.getAvailablePods(webId);
+          const pods = await getAvailableSolidPods(webId);
           dispatch(setSolidAvailablePods(pods));
         }
         catch (ex) { alert(ex); }
@@ -83,7 +87,7 @@ export default function SolidContent(): JSX.Element {
   const logoutAction = async (): Promise<void> => {
     dispatch(setBlock(true));
     try {
-      await SolidProvider.logout();
+      await solidLogout();
     }
     catch (ex) { alert(ex); }
     finally {

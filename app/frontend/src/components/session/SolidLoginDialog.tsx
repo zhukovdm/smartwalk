@@ -15,10 +15,13 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
-import SolidProvider from "../../utils/solidProvider";
+import {
+  getSolidIdProviders,
+  solidLogin
+} from "../../utils/solidProvider";
 import SolidPodLink from "./SolidPodLink";
 
-type SolidLoginDialogProps = {
+export type SolidLoginDialogProps = {
 
   /** Show/hide dialog. */
   show: boolean;
@@ -52,7 +55,7 @@ export default function SolidLoginDialog(
   const loginAction = async () => {
     dispatch(setDialogBlock(true));
     try {
-      await SolidProvider.login(provider);
+      await solidLogin(provider);
     }
     catch (ex) { alert(ex); }
     finally {
@@ -74,7 +77,7 @@ export default function SolidLoginDialog(
             disabled={dialogBlock}
             value={provider}
             onInputChange={(_, v) => { setProvider(v); }}
-            options={SolidProvider.getIdProviders()}
+            options={getSolidIdProviders()}
             renderInput={(params) => (
               <TextField {...params} label={"Url"} />
             )}
