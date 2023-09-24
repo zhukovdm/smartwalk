@@ -37,7 +37,7 @@ describe("<SolidLoginDialog />", () => {
   });
 
   it("should call login and disable dialog modifications", async () => {
-    const loginSpy = jest.spyOn(solid, "loginSolid").mockImplementation();
+    const loginSpy = jest.spyOn(solid, "solidLogin").mockImplementation();
 
     const { getByRole } = render();
 
