@@ -11,7 +11,7 @@ public sealed class ShortestPath
     /// <example>1234.56</example>
     [Required]
     [Range(0, double.MaxValue)]
-    public double distance { get; set; }
+    public double distance { get; init; }
 
     /// <summary>
     /// Duration of the route in <b>seconds</b>.
@@ -19,11 +19,11 @@ public sealed class ShortestPath
     /// <example>300.00</example>
     [Required]
     [Range(0, double.MaxValue)]
-    public double duration { get; set; }
+    public double duration { get; init; }
 
     /// <summary>
     /// Ordered sequence of points representing connected linestring.
     /// </summary>
     [Required]
-    public List<WgsPoint> polyline { get; set; }
+    public List<WgsPoint> polyline { get; init; }
 }

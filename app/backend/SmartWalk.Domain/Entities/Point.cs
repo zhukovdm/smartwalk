@@ -7,10 +7,12 @@ namespace SmartWalk.Domain.Entities;
 /// </summary>
 public sealed class WgsPoint
 {
+    /// <example>0.0</example>
     [Required]
     [Range(-180.0, 180.0)]
     public double lon { get; }
 
+    /// <example>0.0</example>
     [Required]
     [Range(-85.06, 85.06)]
     public double lat { get; }

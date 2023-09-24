@@ -76,9 +76,15 @@ public sealed class AttributeFilterTextuals
 
 public sealed class AttributeFilterCollect
 {
+    /// <summary>
+    /// Collection shall include any of these items.
+    /// </summary>
     [Required]
     public SortedSet<string> inc { get; init; }
 
+    /// <summary>
+    /// Collection shall exclude all of these items.
+    /// </summary>
     [Required]
     public SortedSet<string> exc { get; init; }
 }

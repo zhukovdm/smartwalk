@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SmartWalk.Core.Algorithms;
 using SmartWalk.Core.Solvers;
 using SmartWalk.Domain.Entities;
+using SmartWalk.Domain.Extensions;
 using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Service;
