@@ -23,7 +23,7 @@ export default function EntityPlacePanel(): JSX.Element {
     <Box>
       <BackCloseBar />
       <Box sx={{ mx: 2, my: 4 }}>
-        {(favoritesLoaded && placeLoaded)
+        {(!!favoritesLoaded && !!placeLoaded)
           ? <Box>
               {(!!place)
                 ? <EntityPlaceContent place={place} />

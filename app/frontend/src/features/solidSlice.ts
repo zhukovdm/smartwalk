@@ -8,7 +8,7 @@ type SolidState = {
   webId: string;
 };
 
-const initialState = (): SolidState => ({
+export const initialSolidState = (): SolidState => ({
   activated: false,
   redirect: false,
   selectedPod: null,
@@ -17,9 +17,9 @@ const initialState = (): SolidState => ({
 
 export const solidSlice = createSlice({
   name: "solid",
-  initialState: initialState(),
+  initialState: initialSolidState(),
   reducers: {
-    resetSolid: () => initialState(),
+    resetSolid: () => initialSolidState(),
     activateSolid: (state) => {
       state.activated = true;
     },

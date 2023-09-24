@@ -27,7 +27,9 @@ import {
 } from "../features/solidSlice";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
 import LocalStorage from "../utils/localStorage";
-import SolidProvider from "../utils/solidProvider";
+import {
+  solidRedirect as solidRedirectCallback
+} from "../utils/solidProvider";
 import SolidLoginDialog from "./session/SolidLoginDialog";
 
 const ASSETS_FOLDER = process.env.PUBLIC_URL + "/assets";
@@ -43,7 +45,7 @@ const SessionButton = styled(Button)<ButtonProps>(() => ({
 /**
  * Menu and dialogs for supported remote storage providers (Solid, etc.).
  */
-export default function SessionProvider():JSX.Element {
+export default function SessionProvider(): JSX.Element {
 
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
@@ -74,14 +76,16 @@ export default function SessionProvider():JSX.Element {
 
   useEffect(() => {
     if (!solidRedirect) {
-      SolidProvider.redirect(
+      solidRedirectCallback(
         (webId: string) => {
           dispatch(setSessionLogin());
           dispatch(setSessionSolid());
           dispatch(setSolidWebId(webId));
           navigate(SESSION_SOLID_ADDR);
         },
-        (error: string | null) => { alert(`[Solid error] ${error}`); },
+        (error: string | null) => {
+          alert(`[Solid error] ${error}`);
+        },
         () => {
           dispatch(resetSolid());
           dispatch(resetSession());
@@ -117,7 +121,7 @@ export default function SessionProvider():JSX.Element {
     <Box
       sx={{ position: "absolute", top: "10px", right: "10px", zIndex: 1000 }}
     >
-      {!login
+      {(!login)
         ? <Box>
             <SessionButton
               id={bid}
