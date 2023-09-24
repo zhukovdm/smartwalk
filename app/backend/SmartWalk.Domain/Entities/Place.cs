@@ -18,16 +18,15 @@ public class Place
     [Required]
     public string name { get; init; }
 
-    /// <example>{"lon":0.0,"lat":0.0}</example>
     [Required]
     public WgsPoint location { get; init; }
 
-    /// <example>["keyword"]</example>
+    /// <example>["a", "b", "c"]</example>
     [Required]
     [MinLength(1)]
     public SortedSet<string> keywords { get; init; }
 
-    /// <example>[0, 1]</example>
+    /// <example>[0, 1, 2]</example>
     [Required]
     public SortedSet<int> categories { get; init; } = new();
 }

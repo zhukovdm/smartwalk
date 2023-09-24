@@ -5,17 +5,19 @@ VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartWalk.Domain", "SmartWalk.Domain\SmartWalk.Domain.csproj", "{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Domain.Test", "SmartWalk.Domain.Test\SmartWalk.Domain.Test.csproj", "{D3724C66-255F-42AD-A768-EC95D60DCDC9}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruningRadixTrie", "WolfGarbe.PruningRadixTrie\PruningRadixTrie\PruningRadixTrie.csproj", "{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api", "SmartWalk.Api\SmartWalk.Api.csproj", "{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Infrastructure", "SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj", "{93723F2C-B584-4DD9-9097-03CE0AD2CF9F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core", "SmartWalk.Core\SmartWalk.Core.csproj", "{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core.Test", "SmartWalk.Core.Test\SmartWalk.Core.Test.csproj", "{C2B24DBC-27E5-40BC-B50B-A8B954778E2A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Infrastructure", "SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj", "{93723F2C-B584-4DD9-9097-03CE0AD2CF9F}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Service", "SmartWalk.Service\SmartWalk.Service.csproj", "{95A89A8A-E918-4F2B-808E-DD79830C0268}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api", "SmartWalk.Api\SmartWalk.Api.csproj", "{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api.Test", "SmartWalk.Api.Test\SmartWalk.Api.Test.csproj", "{1742B954-6523-40EA-B212-6FFDC72BC1D4}"
 EndProject
@@ -29,6 +31,10 @@ Global
 		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3724C66-255F-42AD-A768-EC95D60DCDC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3724C66-255F-42AD-A768-EC95D60DCDC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3724C66-255F-42AD-A768-EC95D60DCDC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3724C66-255F-42AD-A768-EC95D60DCDC9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}.Release|Any CPU.ActiveCfg = Release|Any CPU

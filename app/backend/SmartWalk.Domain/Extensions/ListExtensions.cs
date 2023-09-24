@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Linq;
 using SmartWalk.Domain.Entities;
 
+namespace SmartWalk.Domain.Extensions;
+
 public static class ListExtensions
 {
     public static List<Place> WithMergedCategories(this List<Place> places)

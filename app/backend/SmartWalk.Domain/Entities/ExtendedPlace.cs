@@ -10,52 +10,59 @@ public sealed class PlaceAddress
 {
     /// <example>Czech Republic</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string country { get; set; }
+    public string country { get; init; }
 
     /// <example>Prague</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string settlement { get; set; }
+    public string settlement { get; init; }
 
     /// <example>Prague 1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string district { get; set; }
+    public string district { get; init; }
 
     /// <example>Malostranske namesti</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string place { get; set; }
+    public string place { get; init; }
 
-    /// <example>1</example>
+    /// <example>2</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string house { get; set; }
+    public string house { get; init; }
 
-    /// <example>100 00</example>
+    /// <example>118 00</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string postalCode { get; set; }
+    public string postalCode { get; init; }
 }
 
 [BsonIgnoreExtraElements]
 public sealed class PlaceSocialNetworks
 {
+    /// <example>https://www.facebook.com/facebookId</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string facebook { get; set; }
+    public string facebook { get; init; }
 
+    /// <example>https://www.instagram.com/instagramId/</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string instagram { get; set; }
+    public string instagram { get; init; }
 
+    /// <example>https://www.linkedin.com/in/linkedinId/</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string linkedin { get; set; }
+    public string linkedin { get; init; }
 
+    /// <example>https://www.pinterest.com/pinterestId/</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string pinterest { get; set; }
+    public string pinterest { get; init; }
 
+    /// <example>https://t.me/telegramId</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string telegram { get; set; }
+    public string telegram { get; init; }
 
+    /// <example>https://twitter.com/twitterId</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string twitter { get; set; }
+    public string twitter { get; init; }
 
+    /// <example>https://www.youtube.com/channel/youtubeId</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string youtube { get; set; }
+    public string youtube { get; init; }
 }
 
 [BsonIgnoreExtraElements]
@@ -72,117 +79,117 @@ public sealed class PlaceAttributes
     /// </example>
     [MinLength(4)]
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<WgsPoint> polygon { get; set; }
+    public List<WgsPoint> polygon { get; init; }
 
-    /// <example>Detailed object description</example>
+    /// <example>Detailed object description...</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string description { get; set; }
+    public string description { get; init; }
 
-    /// <example>http://www.image.com/1</example>
+    /// <example>http://www.image.com/1.png</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string image { get; set; }
+    public string image { get; init; }
 
     /// <example>http://www.example.com/</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string website { get; set; }
+    public string website { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PlaceAddress address { get; set; }
+    public PlaceAddress address { get; init; }
 
     /// <example>example@email.com</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string email { get; set; }
+    public string email { get; init; }
 
     /// <example>+420 123 456 789</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string phone { get; set; }
+    public string phone { get; init; }
 
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public PlaceSocialNetworks socialNetworks { get; set; }
+    public PlaceSocialNetworks socialNetworks { get; init; }
 
-    /// <example>100 CZK</example>
+    /// <example>["100 CZK on weekdays", "200 CZK on weekends"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string> charge { get; set; }
+    public List<string> charge { get; init; }
 
-    /// <example>Mo-Fr 09:00-18:00</example>
+    /// <example>["Mo-Fr 09:00-18:00", "Sa-Su 08:00-12:00"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public List<string> openingHours { get; set; }
-
-    /// <example>true</example>
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? fee { get; set; }
+    public List<string> openingHours { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? delivery { get; set; }
+    public bool? fee { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? drinkingWater { get; set; }
+    public bool? delivery { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? internetAccess { get; set; }
+    public bool? drinkingWater { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? shower { get; set; }
+    public bool? internetAccess { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? smoking { get; set; }
+    public bool? shower { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? takeaway { get; set; }
+    public bool? smoking { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? toilets { get; set; }
+    public bool? takeaway { get; init; }
 
     /// <example>true</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public bool? wheelchair { get; set; }
+    public bool? toilets { get; init; }
+
+    /// <example>true</example>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public bool? wheelchair { get; init; }
 
     /// <example>10</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? capacity { get; set; }
+    public double? capacity { get; init; }
 
     /// <example>10</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? elevation { get; set; }
+    public double? elevation { get; init; }
 
     /// <example>21</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? minimumAge { get; set; }
+    public double? minimumAge { get; init; }
 
     /// <example>5</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? rating { get; set; }
+    public double? rating { get; init; }
 
     /// <example>2023</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public double? year { get; set; }
+    public double? year { get; init; }
 
-    /// <example>["men"]</example>
+    /// <example>["men", "women", "children"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> clothes { get; set; }
+    public SortedSet<string> clothes { get; init; }
 
-    /// <example>["czech"]</example>
+    /// <example>["czech", "oriental"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> cuisine { get; set; }
+    public SortedSet<string> cuisine { get; init; }
 
-    /// <example>["catholic"]</example>
+    /// <example>["catholic", "protestant"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> denomination { get; set; }
+    public SortedSet<string> denomination { get; init; }
 
-    /// <example>["cash"]</example>
+    /// <example>["amex", "cash", "mastercard"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> payment { get; set; }
+    public SortedSet<string> payment { get; init; }
 
-    /// <example>["bike"]</example>
+    /// <example>["bike", "car", "equipment"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> rental { get; set; }
+    public SortedSet<string> rental { get; init; }
 }
 
 [BsonIgnoreExtraElements]
@@ -190,33 +197,35 @@ public sealed class PlaceLinked
 {
     /// <example>Example</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string dbpedia { get; set; }
+    public string dbpedia { get; init; }
 
     /// <example>1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string geonames { get; set; }
+    public string geonames { get; init; }
 
     /// <example>base&amp;id=1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string mapycz { get; set; }
+    public string mapycz { get; init; }
 
     /// <example>node/1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string osm { get; set; }
+    public string osm { get; init; }
 
     /// <example>Q1</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string wikidata { get; set; }
+    public string wikidata { get; init; }
 
     /// <example>Example</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public string yago { get; set; }
+    public string yago { get; init; }
 }
 
 [BsonIgnoreExtraElements]
 public sealed class ExtendedPlace : Place
 {
-    public PlaceLinked linked { get; set; }
+    [Required]
+    public PlaceLinked linked { get; init; }
 
-    public PlaceAttributes attributes { get; set; }
+    [Required]
+    public PlaceAttributes attributes { get; init; }
 }
