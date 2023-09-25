@@ -9,9 +9,18 @@ namespace SmartWalk.Core.Test;
 public class CycleDetectorTests
 {
     [TestMethod]
-    public void SingleVertex()
+    public void SingleVertexWithNoEdges()
     {
         Assert.IsNull(new CycleDetector(1).Cycle());
+    }
+
+    [TestMethod]
+    public void SingleVertexWithLoop()
+    {
+        var c = new CycleDetector(1)
+            .AddEdge(0, 0)
+            .Cycle();
+        Assert.IsTrue(c.SequenceEqual(new List<int> { 0, 0 }));
     }
 
     [TestMethod]
@@ -21,7 +30,7 @@ public class CycleDetectorTests
             .AddEdge(0, 1)
             .AddEdge(1, 0)
             .Cycle();
-        Assert.IsTrue(c.SequenceEqual(new List<int>{ 0, 1, 0 }));
+        Assert.IsTrue(c.SequenceEqual(new List<int> { 0, 1, 0 }));
     }
 
     [TestMethod]
@@ -57,16 +66,19 @@ public class CycleDetectorTests
     }
 
     [TestMethod]
-    public void AcyclicGraph()
+    public void LargeDirectedAcyclicGraph()
     {
-        var c = new CycleDetector(7)
-            .AddEdge(6, 0)
-            .AddEdge(2, 0)
-            .AddEdge(5, 6)
-            .AddEdge(4, 6)
-            .AddEdge(3, 2)
-            .AddEdge(1, 2)
-            .Cycle();
-        Assert.IsNull(c);
+        var N = 100;
+
+        var g = new CycleDetector(N);
+
+        for (int fr = N - 1; fr > 0; --fr)
+        {
+            for (int to = fr - 1; to >= 0; --to)
+            {
+                g.AddEdge(fr, to);
+            }
+        }
+        Assert.IsNull(g.Cycle());
     }
 }
