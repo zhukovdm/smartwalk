@@ -57,13 +57,13 @@ internal static class OgCategoryFormer
         result.Remove(sourceCat);
         result.Remove(targetCat);
 
-        // add edges between categories
+        // add edges between categories (terminal edges are skipped!)
 
         for (int fr = 0; fr < precMatrix.CsCount; ++fr)
         {
             for (int to = 0; to < precMatrix.CsCount; ++to)
             {
-                if (precMatrix.IsBefore(fr, to))
+                if (fr != sourceCat && to != targetCat && precMatrix.IsBefore(fr, to))
                 {
                     ensureCat(result, fr);
                     ensureCat(result, to);

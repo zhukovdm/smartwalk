@@ -14,17 +14,21 @@ public static class SolverFactory
      *
      ***************************************************************************
      */
+     //
 
     /// <summary>
     /// <b>Solver-specific</b> precedence matrix.
     /// </summary>
+    /// <param name="hasNonTerminalEdges">
+    /// Set <c>true</c> if the matrix has at least one edge with both vertices
+    /// different from the source and target.
+    /// </param>
     public static IPrecedenceMatrix GetPrecedenceMatrix(
-        IReadOnlyList<PrecedenceEdge> precedence, int catsCount, int sourceCat, int targetCat)
+        IEnumerable<PrecedenceEdge> precedence, int catsCount, bool hasNonTerminalEdges)
     {
-        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount, sourceCat, targetCat);
-        return OgSolver.GetPrecedenceMatrix(precedence, catsCount, sourceCat, targetCat);
+        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount, hasNonTerminalEdges);
+        return OgSolver.GetPrecedenceMatrix(precedence, catsCount, hasNonTerminalEdges);
     }
-
     public static ISolver GetSolver()
     {
         // return new IfSolver();
