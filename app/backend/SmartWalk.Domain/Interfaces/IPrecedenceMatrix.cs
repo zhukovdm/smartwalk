@@ -5,12 +5,12 @@ public interface IPrecedenceMatrix
     /// <summary>
     /// Number of categories in the matrix.
     /// </summary>
-    public int CsCount { get; }
+    int CsCount { get; }
 
     /// <summary>
-    /// Number of original edges in the matrix.
+    /// True whenever a matrix has at least one non-terminal edge.
     /// </summary>
-    public int EsCount { get; }
+    bool HasNonTerminalEdges { get; }
 
     /// <param name="l">L-category</param>
     /// <param name="r">R-category</param>
