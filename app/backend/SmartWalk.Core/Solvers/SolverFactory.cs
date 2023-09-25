@@ -19,15 +19,15 @@ public static class SolverFactory
     /// <summary>
     /// <b>Solver-specific</b> precedence matrix.
     /// </summary>
-    /// <param name="hasNonTerminalEdges">
+    /// <param name="hasArrows">
     /// Set <c>true</c> if the matrix has at least one edge with both vertices
     /// different from the source and target.
     /// </param>
     public static IPrecedenceMatrix GetPrecedenceMatrix(
-        IEnumerable<PrecedenceEdge> precedence, int catsCount, bool hasNonTerminalEdges)
+        IEnumerable<PrecedenceEdge> precedence, int catsCount, bool hasArrows)
     {
-        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount, hasNonTerminalEdges);
-        return OgSolver.GetPrecedenceMatrix(precedence, catsCount, hasNonTerminalEdges);
+        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount, hasArrows);
+        return OgSolver.GetPrecedenceMatrix(precedence, catsCount, hasArrows);
     }
     public static ISolver GetSolver()
     {

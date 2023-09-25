@@ -19,21 +19,16 @@ public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
         return matrix;
     }
 
-    private readonly bool _hasEdges;
     private readonly List<List<bool>> _matrix;
-
-    /// <param name="hasNonTerminalEdges">
-    /// Set <c>true</c> if the matrix has at least one edge with both vertices
-    /// different from the source and target.
-    /// </param>
-    public ListPrecedenceMatrix(List<List<bool>> matrix, bool hasNonTerminalEdges)
-    {
-        _matrix = matrix; _hasEdges = hasNonTerminalEdges;
-    }
 
     public int CsCount => _matrix.Count;
 
-    public bool IsEmpty() => (!_hasEdges);
+    public bool HasArrows { get; private set; }
 
     public bool IsBefore(int fr, int to) => (_matrix[fr][to]);
+
+    public ListPrecedenceMatrix(List<List<bool>> matrix, bool hasArrows)
+    {
+        _matrix = matrix; HasArrows = hasArrows;
+    }
 }

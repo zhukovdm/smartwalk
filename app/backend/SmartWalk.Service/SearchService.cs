@@ -81,7 +81,7 @@ public static class SearchService
                        select new PrecedenceEdge(fr, targetCat);
 
         var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(precedence.Concat(sourceEs).Concat(targetEs), totalCats, precedence.Count == 0);
+            .GetPrecedenceMatrix(precedence.Concat(sourceEs).Concat(targetEs), totalCats, precedence.Count > 0);
 
         var distMatrix = new HaversineDistanceMatrix(places);
 
