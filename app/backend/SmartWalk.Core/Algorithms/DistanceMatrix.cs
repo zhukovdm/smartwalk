@@ -5,7 +5,7 @@ using SmartWalk.Domain.Interfaces;
 namespace SmartWalk.Core.Algorithms;
 
 /// <summary>
-/// Simple wrapper over List-based distance matrix calculated by OSRM.
+/// Wrapper over list-based distance matrix calculated by a routing engine.
 /// </summary>
 public sealed class ListDistanceMatrix : IDistanceMatrix
 {
@@ -19,7 +19,7 @@ public sealed class ListDistanceMatrix : IDistanceMatrix
 }
 
 /// <summary>
-/// Scaled wrapper over Haversine formula.
+/// Scaled wrapper over the Haversine formula.
 /// </summary>
 public sealed class HaversineDistanceMatrix : IDistanceMatrix
 {
