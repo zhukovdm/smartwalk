@@ -1,0 +1,8 @@
+site_name: SmartWalk Docs
+docs_dir: content
+theme: readthedocs
+nav:
+  - Home: index.md
+  - User manual: usr.md
+  - Developer guide: dev.md
+  - Administration guide: adm.md
