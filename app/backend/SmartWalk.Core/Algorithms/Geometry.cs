@@ -11,6 +11,7 @@ namespace SmartWalk.Core.Algorithms;
 public static class Spherical
 {
     private static readonly double _deg2rad = Math.PI / 180.0;
+
     private static readonly double _rad2deg = 180.0 / Math.PI;
 
     /// <summary>
@@ -70,7 +71,7 @@ public static class Spherical
     {
         var lat = DegToRad(Midpoint(p1, p2).lat);
 
-        // offsets on (x, y)-axis given in radians
+        // offsets on (x, y)-axis given in radians!
 
         var x = DegToRad(p2.lon - p1.lon) * LonRadCost(lat);
         var y = DegToRad(p2.lat - p1.lat) * LatRadCost(lat);
@@ -79,7 +80,7 @@ public static class Spherical
     }
 
     /// <summary>
-    /// Round given coordinate to 7 fractional digits.
+    /// Round a given coordinate to 7 fractional digits.
     /// </summary>
     public static double Round(double coordinate) => Math.Round(coordinate, 7);
 
@@ -99,7 +100,8 @@ public static class Spherical
         var deltaLam = DegToRad(p2.lon - p1.lon);
         var deltaPhi = DegToRad(p2.lat - p1.lat);
 
-        var hav = Math.Pow((Math.Sin(deltaPhi / 2.0)), 2.0) + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow((Math.Sin(deltaLam / 2.0)), 2.0);
+        var hav = Math.Pow((Math.Sin(deltaPhi / 2.0)), 2.0)
+                + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow((Math.Sin(deltaLam / 2.0)), 2.0);
 
         var ang = 2.0 * Math.Atan2(Math.Sqrt(hav), Math.Sqrt(1.0 - hav));
 
@@ -115,8 +117,8 @@ public static class Spherical
     /// <param name="distance">Maximum walking distance (in meters).</param>
     public static List<WgsPoint> BoundingEllipse(WgsPoint f1, WgsPoint f2, double distance)
     {
-        var m = Spherical.Midpoint(f1, f2);
-        var c = Spherical.HaversineDistance(f1, f2) / 2.0;
+        var m = Midpoint(f1, f2);
+        var c = HaversineDistance(f1, f2) / 2.0;
 
         /* Construct a bounding ellipse with the center at the origin (0, 0).
          * Note that coordinates of the result are in meters! */
@@ -131,7 +133,7 @@ public static class Spherical
         // rotate ellipse
 
         var e2 = new AffineTransformation()
-            .Rotate(Spherical.RotAngle(f1, f2))
+            .Rotate(RotAngle(f1, f2))
             .Transform(e1);
 
         /* Transform the ellipse with respect to the parallel at the latitude
@@ -144,8 +146,8 @@ public static class Spherical
         {
             var pt = e2.Coordinates[i];
             cs[i] = new Coordinate(
-                Spherical.RadToDeg(pt.X / Spherical.LonRadLeng(lr)),
-                Spherical.RadToDeg(pt.Y / Spherical.LatRadLeng(lr)));
+                RadToDeg(pt.X / LonRadLeng(lr)),
+                RadToDeg(pt.Y / LatRadLeng(lr)));
         }
 
         // translate ellipse
