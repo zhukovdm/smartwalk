@@ -34,7 +34,7 @@ public static class SearchService
     #region Routes
 
     /// <summary>
-    /// Time span the server is allowed to spend on route calculation (in milliseconds).
+    /// Time span dedicated to route calculation (in milliseconds).
     /// </summary>
     private static readonly int ROUTE_CALCULATION_TIME_LIMIT_MS = 1_000;
 
@@ -60,14 +60,28 @@ public static class SearchService
         var sourceCat = categories.Count + 0;
         var targetCat = categories.Count + 1;
 
+        var totalCats = categories.Count + 2;
+
         var places = new List<Place>()
             .Concat(await entityIndex.GetWithin(ellipse, categories))
             .Concat(new[] { new Place() { location = source, categories = new() { sourceCat } } })
             .Concat(new[] { new Place() { location = target, categories = new() { targetCat } } })
             .ToList();
 
+        // source before all (no loops!)
+
+        var sourceEs = from to in Enumerable.Range(0, totalCats)
+                       where to != sourceCat
+                       select new PrecedenceEdge(sourceCat, to);
+
+        // all before target (no loops!)
+
+        var targetEs = from fr in Enumerable.Range(0, totalCats)
+                       where fr != targetCat
+                       select new PrecedenceEdge(fr, targetCat);
+
         var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(precedence, categories.Count, sourceCat, targetCat);
+            .GetPrecedenceMatrix(precedence.Concat(sourceEs).Concat(targetEs), totalCats, precedence.Count == 0);
 
         var distMatrix = new HaversineDistanceMatrix(places);
 

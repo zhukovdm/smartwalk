@@ -8,43 +8,32 @@ public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
     private static List<List<bool>> GetEmpty(int order)
         => Enumerable.Range(0, order).Select(_ => Enumerable.Repeat(false, order).ToList()).ToList();
 
-    public static List<List<bool>> GetPrecedence(IEnumerable<PrecedenceEdge> precedence, int order)
+    public static List<List<bool>> GetLists(IEnumerable<PrecedenceEdge> precedence, int order)
     {
         var matrix = GetEmpty(order);
-        foreach (var edge in precedence) { matrix[edge.fr][edge.to] = true; }
 
+        foreach (var edge in precedence)
+        {
+            matrix[edge.fr][edge.to] = true;
+        }
         return matrix;
     }
 
+    private readonly bool _hasEdges;
     private readonly List<List<bool>> _matrix;
-    private readonly int _sourceCat;
-    private readonly int _targetCat;
+
+    /// <param name="hasNonTerminalEdges">
+    /// Set <c>true</c> if the matrix has at least one edge with both vertices
+    /// different from the source and target.
+    /// </param>
+    public ListPrecedenceMatrix(List<List<bool>> matrix, bool hasNonTerminalEdges)
+    {
+        _matrix = matrix; _hasEdges = hasNonTerminalEdges;
+    }
 
     public int CsCount => _matrix.Count;
 
-    public int EsCount { get; }
+    public bool IsEmpty() => (!_hasEdges);
 
-    public ListPrecedenceMatrix(List<List<bool>> matrix, int esCount, int sourceCat, int targetCat)
-    {
-        _matrix = matrix; EsCount = esCount; _sourceCat = sourceCat; _targetCat = targetCat;
-    }
-
-    public bool IsBefore(int fr, int to)
-    {
-        // (implicit) source before any, any before target
-
-        if (fr == _sourceCat || to == _targetCat)
-        {
-            return true;
-        }
-
-        // (implicit) no after target, no before source
-
-        if (fr == _targetCat || to == _sourceCat)
-        {
-            return false;
-        }
-
-        return _matrix[fr][to];
-    }
+    public bool IsBefore(int fr, int to) => (_matrix[fr][to]);
 }

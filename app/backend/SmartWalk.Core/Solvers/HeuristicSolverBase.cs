@@ -17,7 +17,7 @@ internal abstract class HeuristicSolverBase : ISolver
     {
         var seq = SolveImpl(source, target, places, distMatrix, precMatrix);
 
-        if (precMatrix.EsCount == 0)
+        if (precMatrix.IsEmpty())
         {
             seq = TwoOptHeuristic.Refine(seq, distMatrix);
         }
