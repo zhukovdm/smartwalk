@@ -8,9 +8,9 @@ public interface IPrecedenceMatrix
     int CsCount { get; }
 
     /// <summary>
-    /// True whenever a matrix has at least one non-terminal edge.
+    /// True whenever a matrix has at least one user-defined edge.
     /// </summary>
-    bool HasNonTerminalEdges { get; }
+    bool HasArrows { get; }
 
     /// <param name="l">L-category</param>
     /// <param name="r">R-category</param>
