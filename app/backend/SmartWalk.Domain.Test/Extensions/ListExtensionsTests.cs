@@ -36,7 +36,8 @@ public class ListExtensionsTests
             "A",
             "A",
             "A"
-        }.Select((handle, i) => GetPlace(handle, i))
+        }
+        .Select((handle, i) => GetPlace(handle, i))
         .ToList()
         .WithMergedCategories();
 
@@ -52,7 +53,8 @@ public class ListExtensionsTests
             "A",
             "B",
             "C"
-        }.Select((handle, i) => GetPlace(handle, i))
+        }
+        .Select((handle, i) => GetPlace(handle, i))
         .ToList()
         .WithMergedCategories();
 

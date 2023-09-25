@@ -14,6 +14,6 @@ public class ListPrecedenceMatrixTests
             new() { true, true },
             new() { true, true },
         };
-        Assert.IsFalse(new ListPrecedenceMatrix(new(), false).HasNonTerminalEdges);
+        Assert.IsFalse(new ListPrecedenceMatrix(new(), false).HasArrows);
     }
 }
