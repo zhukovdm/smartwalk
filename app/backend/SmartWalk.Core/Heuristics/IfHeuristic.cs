@@ -5,16 +5,16 @@ using SmartWalk.Domain.Interfaces;
 
 namespace SmartWalk.Core.Heuristics;
 
-internal sealed class IfCategoryComparer : IComparer<List<SolverPlace>>
-{
-    /// <summary>
-    /// Categories with less items are more relevant.
-    /// </summary>
-    public int Compare(List<SolverPlace> l, List<SolverPlace> r) => l.Count.CompareTo(r.Count);
-}
-
 internal static class IfCategoryFormer
 {
+    internal sealed class CategoryComparer : IComparer<List<SolverPlace>>
+    {
+        /// <summary>
+        /// Categories with less items are more relevant.
+        /// </summary>
+        public int Compare(List<SolverPlace> l, List<SolverPlace> r) => l.Count.CompareTo(r.Count);
+    }
+
     /// <summary>
     /// Separate points by category.
     /// </summary>
@@ -45,7 +45,7 @@ internal static class IfCategoryFormer
     /// </summary>
     private static List<List<SolverPlace>> Sort(List<List<SolverPlace>> categories)
     {
-        categories.Sort(new IfCategoryComparer());
+        categories.Sort(new CategoryComparer());
         return categories;
     }
 
@@ -59,7 +59,7 @@ internal static class IfCategoryFormer
     }
 }
 
-internal static class IfCandidateFinder
+internal static class IfCandidateSelector
 {
     private static (SolverPlace, double, int) GetDefaults() => (null, double.MaxValue, -1);
 
@@ -72,7 +72,7 @@ internal static class IfCandidateFinder
             + distMatrix.GetDistance(place.idx,           seq[seqIdx].idx);
     }
 
-    public static (SolverPlace, double, int) FindBest(
+    public static (SolverPlace, double, int) SelectBest(
         IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix, double currDist)
     {
         (SolverPlace best, double lastDist, int seqIdx) = GetDefaults();
@@ -136,8 +136,8 @@ internal sealed class IfHeuristic
 
         foreach (var cat in cats)
         {
-            var (best, nextDist, seqIdx) = IfCandidateFinder
-                .FindBest(seq, cat, distMatrix, precMatrix, currDist);
+            var (best, nextDist, seqIdx) = IfCandidateSelector
+                .SelectBest(seq, cat, distMatrix, precMatrix, currDist);
 
             if (best is null) { break; } // no candidates left!
 
