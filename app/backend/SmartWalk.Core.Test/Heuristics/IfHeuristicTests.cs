@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartWalk.Core.Algorithms;
 using SmartWalk.Core.Heuristics;
 using SmartWalk.Domain.Entities;
 
@@ -58,21 +59,247 @@ public class IfCategoryFormerTests
     [TestMethod]
     public void ShouldPrioritizeCategoriesWithLessItems()
     {
+        var cats = IfCategoryFormer.Form(GetPlaces(), 0, N - 1);
 
+        for (int i = 0; i < N - 3; ++i)
+        {
+            Assert.IsTrue(cats[i].Count < cats[i + 1].Count);
+        }
+        Assert.AreEqual(cats[0][0].cat, N - 2);
+        Assert.AreEqual(cats[N - 3][0].cat, 1);
     }
 }
 
 [TestClass]
-public class IfCandidateFinderTests
+public class IfCandidateSelectorTests
 {
+    private static List<List<double>> GetUnitDistanceMatrix(int order)
+    {
+        var result = new List<List<double>>();
 
+        for (int row = 0; row < order; ++row)
+        {
+            result.Add(new());
+
+            for (int col = 0; col < order; ++col)
+            {
+                result[row].Add(row == col ? 0 : 1);
+            }
+        }
+        return result;
+    }
+
+    [TestMethod]
+    public void ShouldSelectIndexAfterAllBefore()
+    {
+        // [(0 -> 2), (1 -> 2)]
+
+        var seq = new List<SolverPlace>()
+        {
+            new(5, 5), // s
+            new(0, 0),
+            new(3, 3),
+            new(1, 1),
+            new(4, 4), // <-
+            new(6, 6), // t
+        };
+
+        var cat = new List<SolverPlace>()
+        {
+            new(2, 2)
+        };
+
+        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(7));
+
+        var closure = TransitiveClosure.Closure(new()
+        {
+            new() { false, false, true,  false, false, false, true  },
+            new() { false, false, true,  false, false, false, true  },
+            new() { false, false, false, false, false, false, true  },
+            new() { false, false, false, false, false, false, true  },
+            new() { false, false, false, false, false, false, true  },
+            new() { true,  true,  true,  true,  true,  false, true  },
+            new() { false, false, false, false, false, false, false },
+        });
+
+        var precMatrix = new ListPrecedenceMatrix(closure, true);
+
+        var (_, _, seqIdx) = IfCandidateSelector.SelectBest(seq, cat, distMatrix, precMatrix, 0.0);
+
+        Assert.AreEqual(4, seqIdx);
+    }
+
+    [TestMethod]
+    public void ShouldSelectIndexBeforeAllAfter()
+    {
+        // [(0 -> 1), (0 -> 2)]
+
+        var seq = new List<SolverPlace>()
+        {
+            new(3, 3), // s
+            new(1, 1), // <-
+            new(2, 2),
+            new(4, 4), // t
+        };
+
+        var cat = new List<SolverPlace>()
+        {
+            new(0, 0)
+        };
+
+        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(5));
+
+        var closure = TransitiveClosure.Closure(new()
+        {
+            new() { false, true,  true,  false, true  },
+            new() { false, false, false, false, true  },
+            new() { false, false, false, false, true  },
+            new() { true,  true,  true,  false, true  },
+            new() { false, false, false, false, false },
+        });
+
+        var precMatrix = new ListPrecedenceMatrix(closure, true);
+
+        var (_, _, seqIdx) = IfCandidateSelector.SelectBest(seq, cat, distMatrix, precMatrix, 0.0);
+
+        Assert.AreEqual(1, seqIdx);
+    }
+
+    [TestMethod]
+    public void ShouldSelectCertainIndex()
+    {
+        // [(0 -> 1), (1 -> 2)]
+
+        var seq = new List<SolverPlace>()
+        {
+            new(3, 3), // s
+            new(0, 0),
+            new(2, 2), // <-
+            new(4, 4), // t
+        };
+
+        var cat = new List<SolverPlace>()
+        {
+            new(1, 1)
+        };
+
+        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(5));
+
+        var closure = TransitiveClosure.Closure(new()
+        {
+            new() { false, true,  false, false, true  },
+            new() { false, false, true,  false, true  }, // <-
+            new() { false, false, false, false, true  },
+            new() { true,  true,  true,  false, true  },
+            new() { false, false, false, false, false },
+        });
+
+        var precMatrix = new ListPrecedenceMatrix(closure, true);
+
+        var (_, _, seqIdx) = IfCandidateSelector.SelectBest(seq, cat, distMatrix, precMatrix, 0.0);
+
+        Assert.AreEqual(2, seqIdx);
+    }
+
+    [TestMethod]
+    public void ShouldSelectCandidateWithTheSmallestImpactOnTheDistance()
+    {
+        // [(0 -> 1), (1 -> 2)]
+
+        var seq = new List<SolverPlace>()
+        {
+            new(4, 3), // s
+            new(0, 0),
+            new(3, 2), // <-
+            new(5, 4), // t
+        };
+
+        var cat = new List<SolverPlace>()
+        {
+            new(1, 1),
+            new(2, 1),
+        };
+
+        var matrix = GetUnitDistanceMatrix(6);
+        matrix[2][3] = 0.9;
+
+        var distMatrix = new ListDistanceMatrix(matrix);
+
+        var closure = TransitiveClosure.Closure(new()
+        {
+            new() { false, true,  false, false, true  },
+            new() { false, false, true,  false, true  },
+            new() { false, false, false, false, true  },
+            new() { true,  true,  true,  false, true  },
+            new() { false, false, false, false, false },
+        });
+
+        var precMatrix = new ListPrecedenceMatrix(closure, true);
+
+        var (best, _, _) = IfCandidateSelector.SelectBest(seq, cat, distMatrix, precMatrix, 0.0);
+
+        Assert.AreEqual(2, best.idx);
+    }
 }
 
 [TestClass]
 public class IfHeuristicTests
 {
-    [TestMethod]
-    public void Test()
+    private static List<List<double>> GetUnitDistanceMatrix(int order)
     {
+        var result = new List<List<double>>();
+
+        for (int row = 0; row < order; ++row)
+        {
+            result.Add(new());
+
+            for (int col = 0; col < order; ++col)
+            {
+                result[row].Add(row == col ? 0 : 1);
+            }
+        }
+        return result;
+    }
+
+    [TestMethod]
+    public void ShouldAdviceTotallyOrderedSequence()
+    {
+        // [(0 -> 1), (1 -> 2), (2 -> 3), (3 -> 4)]
+
+        var source = new SolverPlace(5, 5);
+        var target = new SolverPlace(6, 6);
+        var places = new List<SolverPlace>
+        {
+            new(2, 2),
+            new(1, 1),
+            new(0, 0),
+            new(4, 4),
+            new(3, 3),
+        };
+        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(7));
+
+        var closure = TransitiveClosure.Closure(new()
+        {
+            new() { false, true,  false, false, false, false, true  },
+            new() { false, false, true,  false, false, false, true  },
+            new() { false, false, false, true,  false, false, true  },
+            new() { false, false, false, false, true,  false, true  },
+            new() { false, false, false, false, false, false, true  },
+            new() { true,  true,  true,  true,  true,  false, true  },
+            new() { false, false, false, false, false, false, false },
+        });
+
+        var precMatrix = new ListPrecedenceMatrix(closure, true);
+
+        var seq = IfHeuristic.Advise(source, target, places, distMatrix, precMatrix);
+
+        var ans = new List<int> { 5, 0, 1, 2, 3, 4, 6 };
+
+        Assert.AreEqual(ans.Count, seq.Count);
+
+        for (int i = 0; i < ans.Count; ++i)
+        {
+            Assert.AreEqual(ans[i], seq[i].idx);
+        }
     }
 }
