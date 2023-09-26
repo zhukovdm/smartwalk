@@ -37,7 +37,7 @@ public sealed class SearchController : ControllerBase
     /// Check if edges define directed acyclic loop-free graph, repeated edges
     /// are tolerable.
     /// </summary>
-    private static bool VerifyPrecedence(List<WebPrecedenceEdge> edges, int order)
+    private static bool VerifyPrecedence(IReadOnlyList<WebPrecedenceEdge> edges, int order)
     {
         var g = new CycleDetector(order);
 
@@ -69,10 +69,12 @@ public sealed class SearchController : ControllerBase
     /// </summary>
     internal sealed class WebPoint
     {
+        /// <example>0.0</example>
         [Required]
         [Range(-180.0, +180.0)]
         public double? lon { get; init; }
 
+        /// <example>0.0</example>
         [Required]
         [Range(-85.06, +85.06)]
         public double? lat { get; init; }
@@ -82,10 +84,12 @@ public sealed class SearchController : ControllerBase
 
     internal sealed class WebPrecedenceEdge
     {
+        /// <example>0</example>
         [Required]
         [Range(0, int.MaxValue)]
         public int? fr { get; init; }
 
+        /// <example>1</example>
         [Required]
         [Range(0, int.MaxValue)]
         public int? to { get; init; }
@@ -96,7 +100,7 @@ public sealed class SearchController : ControllerBase
     public class DirecsRequest
     {
         /// <example>
-        ///   {"waypoints":[{"lon":14.4035264,"lat":50.0884344},{"lon":14.4057219,"lat":50.0919964}]}
+        /// {"waypoints":[{"lon":14.4035264,"lat":50.0884344},{"lon":14.4057219,"lat":50.0919964}]}
         /// </example>
         [Required]
         [MinLength(1)]
@@ -151,10 +155,10 @@ public sealed class SearchController : ControllerBase
     public sealed class PlacesRequest
     {
         /// <example>
-        ///   {"center":{"lon":14.4035264,"lat":50.0884344},"radius":100,"categories":[]}
+        /// {"center":{"lon":14.4035264,"lat":50.0884344},"radius":100,"categories":[]}
         /// </example>
         /// <example>
-        ///   {"center":{"lon":14.4035264,"lat":50.0884344},"radius":500,"categories":[{"keyword":"museum","filters":{}},{"keyword":"tourism","filters":{}}]}
+        /// {"center":{"lon":14.4035264,"lat":50.0884344},"radius":500,"categories":[{"keyword":"museum","filters":{}},{"keyword":"tourism","filters":{}}]}
         /// </example>
         [Required]
         [MinLength(1)]
@@ -210,7 +214,7 @@ public sealed class SearchController : ControllerBase
     public sealed class RoutesRequest
     {
         /// <example>
-        ///   {"source":{"lon":14.4035264,"lat":50.0884344},"target":{"lon":14.4039444,"lat":50.0894092},"distance":3000,"categories":[{"keyword":"castle","filters":{}},{"keyword":"restaurant","filters":{}},{"keyword":"tourism","filters":{}}],"precedence":[{"fr":0,"to":2}]}
+        /// {"source":{"lon":14.4035264,"lat":50.0884344},"target":{"lon":14.4039444,"lat":50.0894092},"distance":3000,"categories":[{"keyword":"castle","filters":{}},{"keyword":"restaurant","filters":{}},{"keyword":"tourism","filters":{}}],"precedence":[{"fr":0,"to":2}]}
         /// </example>
         [Required]
         [MinLength(1)]
