@@ -24,7 +24,7 @@ RUN dotnet publish --use-current-runtime --self-contained false --no-restore -o 
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0
 
-RUN apt-get update ; apt-get -y install wget
+RUN apt-get update ; apt-get -y install curl
 
 WORKDIR /opt/app/
 COPY --from=build /opt/app/ ./
