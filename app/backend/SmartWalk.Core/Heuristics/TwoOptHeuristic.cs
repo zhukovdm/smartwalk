@@ -12,9 +12,11 @@ namespace SmartWalk.Core.Heuristics;
 /// </summary>
 internal static class TwoOptHeuristic
 {
+    private static readonly double epsilon = 1E-03;
+
     /// <summary>
     /// Used as a refinement step for routes without precedence constraints.
-    /// The first and last items are never swapped.
+    /// The first and last items in the sequence are never swapped.
     /// </summary>
     public static List<SolverPlace> Refine(List<SolverPlace> seq, IDistanceMatrix matrix)
     {
@@ -23,9 +25,9 @@ internal static class TwoOptHeuristic
         {
             change = false;
 
-            for (int i = 0; i < seq.Count - 3; ++i)
+            for (int i = 0; i < seq.Count - 2; ++i)
             {
-                for (int j = i + 1; j < seq.Count - 2; ++j)
+                for (int j = i + 1; j < seq.Count - 1; ++j)
                 {
                     double diff = 0.0
                         - matrix.GetDistance(seq[i    ].idx, seq[i + 1].idx)
@@ -33,7 +35,7 @@ internal static class TwoOptHeuristic
                         + matrix.GetDistance(seq[i    ].idx, seq[j    ].idx)
                         + matrix.GetDistance(seq[i + 1].idx, seq[j + 1].idx);
 
-                    if (diff < -1.0)
+                    if (diff < -epsilon)
                     {
                         change = true;
                         seq.Reverse(i + 1, j - i);
