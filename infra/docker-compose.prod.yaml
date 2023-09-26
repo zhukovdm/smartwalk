@@ -22,15 +22,15 @@ services:
       context: ./
       dockerfile: Dockerfile.routing
     container_name: smartwalk-routing
-    ports:
-      - '5000:5000'
+#   ports:
+#     - '5000:5000'
     volumes:
       - ../data/assets/routing:/data
     networks:
       - routing-net
     entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${REGION_FILE}.osrm
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
+      test: curl --head --silent --fail 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
       interval: 15s
       timeout: 15s
       retries: 10
@@ -42,13 +42,13 @@ services:
     environment:
       - SMARTWALK_MONGO_CONN_STR=mongodb://smartwalk-database:27017
       - SMARTWALK_OSRM_BASE_URL=http://smartwalk-routing:5000
-    ports:
-      - '5017:80'
+#   ports:
+#     - '5017:80'
     volumes:
       - ./backend/keys/:/root/.aspnet/DataProtection-Keys/
     networks:
       - database-net
-      - frontend-net
+      - proxy-net
       - routing-net
     depends_on:
       database:
@@ -56,32 +56,32 @@ services:
       routing:
         condition: service_healthy
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider 'http://localhost:80/healthcheck' || exit 1
+      test: curl --head --silent --fail 'http://localhost:80/healthcheck' || exit 1
       interval: 15s
       timeout: 15s
       retries: 10
       start_period: 2m
-  frontend:
-    image: smartwalk/frontend:v1.0.0
+  proxy:
+    image: smartwalk/proxy:v1.0.0
     build:
       context: ../app/frontend/
       args:
         - REACT_APP_SMARTWALK_API_ORIGIN=http://localhost:3000
-    container_name: smartwalk-frontend
+    container_name: smartwalk-proxy
     ports:
       - '3000:80'
     networks:
-      - frontend-net
+      - proxy-net
     depends_on:
       backend:
         condition: service_healthy
     healthcheck:
-      test: curl --fail http://localhost:80/ || exit 1
+      test: curl --head --silent --fail http://localhost:80/ || exit 1
       interval: 15s
       timeout: 15s
       retries: 10
       start_period: 3m
 networks:
   database-net:
-  frontend-net:
+  proxy-net:
   routing-net:
