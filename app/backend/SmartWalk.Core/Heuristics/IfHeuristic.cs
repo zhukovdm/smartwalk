@@ -66,6 +66,8 @@ internal static class IfCandidateSelector
     private static double NextDistance(
         IReadOnlyList<SolverPlace> seq, IDistanceMatrix distMatrix, SolverPlace place, double currDist, int seqIdx)
     {
+        // remove one edge, and add two other edges
+
         return currDist
             - distMatrix.GetDistance(seq[seqIdx - 1].idx, seq[seqIdx].idx)
             + distMatrix.GetDistance(seq[seqIdx - 1].idx, place.idx)
@@ -75,13 +77,15 @@ internal static class IfCandidateSelector
     public static (SolverPlace, double, int) SelectBest(
         IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix, double currDist)
     {
+        // WLOG, `currDist` can be 0.0. We use it to simplify the caller's body.
+
         (SolverPlace best, double lastDist, int seqIdx) = GetDefaults();
 
         foreach (var place in cat)
         {
             // insertion shall not affect the source
 
-            for (int i = 1 /* source */; i < seq.Count; ++i)
+            for (int i = 1 /* source is skipped */; i < seq.Count; ++i)
             {
                 /**
                  * Category cannot use any further indices for insertion,
@@ -95,16 +99,19 @@ internal static class IfCandidateSelector
 
                 /**
                  * Place in the sequence shall come before the considered
-                 * one. Already found best placement is no longer relevant.
+                 * one. Already found best placement is no longer relevant,
+                 * and position `i` is not considered.
                  */
 
                 if (precMatrix.IsBefore(seq[i].cat, place.cat))
                 {
                     (best, lastDist, seqIdx) = GetDefaults();
-                    continue;
+                    continue; // !
                 }
 
                 var candDist = NextDistance(seq, distMatrix, place, currDist, i);
+
+                // update state if a better candidate is found
 
                 if (candDist < lastDist)
                 {
