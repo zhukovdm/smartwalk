@@ -14,7 +14,7 @@ public static class SearchService
 {
     #region Direcs
 
-    public static Task<List<ShortestPath>> GetDirecs(IRoutingEngine routingEngine, List<WgsPoint> waypoints)
+    public static Task<List<ShortestPath>> GetDirecs(IRoutingEngine routingEngine, IReadOnlyList<WgsPoint> waypoints)
     {
         return routingEngine.GetShortestPaths(waypoints);
     }
@@ -24,7 +24,7 @@ public static class SearchService
     #region Places
 
     public static async Task<List<Place>> GetPlaces(
-        IEntityIndex entityIndex, WgsPoint center, double radius, List<Category> categories)
+        IEntityIndex entityIndex, WgsPoint center, double radius, IReadOnlyList<Category> categories)
     {
         return await entityIndex.GetAround(center, radius, categories);
     }

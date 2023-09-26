@@ -49,7 +49,7 @@ internal sealed class MongoEntityIndex : IEntityIndex
         return places;
     }
 
-    private async Task<List<Place>> FetchCategories(Filter baseFilter, List<Category> categories)
+    private async Task<List<Place>> FetchCategories(Filter baseFilter, IReadOnlyList<Category> categories)
     {
         var result = new List<Place>();
 
@@ -61,7 +61,7 @@ internal sealed class MongoEntityIndex : IEntityIndex
         return result.WithMergedCategories();
     }
 
-    public Task<List<Place>> GetAround(WgsPoint center, double radius, List<Category> categories)
+    public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
     {
         // $nearSphere returns objects sorted by distance from the center!
 
@@ -74,7 +74,7 @@ internal sealed class MongoEntityIndex : IEntityIndex
             : FetchPlaces(sf & Builders<ExtendedPlace>.Filter.Empty, null);
     }
 
-    public Task<List<Place>> GetWithin(List<WgsPoint> polygon, List<Category> categories)
+    public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
     {
         // $geoWithin does not sort objects.
 

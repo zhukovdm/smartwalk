@@ -49,7 +49,7 @@ internal static class ShortestPathFetcher
     /// <param name="addr">Base URL of the service</param>
     /// <param name="waypoints">List of WGS 84 points</param>
     /// <returns>Non-null list of shortest paths.</returns>
-    public static async Task<List<ShortestPath>> Fetch(string addr, List<WgsPoint> waypoints)
+    public static async Task<List<ShortestPath>> Fetch(string addr, IReadOnlyList<WgsPoint> waypoints)
     {
         var res = await QueryExecutor.Execute(QueryConstructor.Route(addr, waypoints));
         if (res is null) { return new(); }

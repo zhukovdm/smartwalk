@@ -28,7 +28,7 @@ internal static class DistanceMatrixFetcher
     /// <param name="addr">base URL of the service</param>
     /// <param name="waypoints">list of WGS84 points</param>
     /// <returns>distance matrix in meters</returns>
-    public static async Task<IDistanceMatrix> Fetch(string addr, List<WgsPoint> waypoints)
+    public static async Task<IDistanceMatrix> Fetch(string addr, IReadOnlyList<WgsPoint> waypoints)
     {
         var res = await QueryExecutor.Execute(QueryConstructor.Table(addr, waypoints));
         if (res is null) { return null; }
