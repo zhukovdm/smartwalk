@@ -15,24 +15,10 @@ public class IfCategoryFormerTests
 {
     private static readonly int N = 7;
 
-    private List<SolverPlace> GetPlaces()
-    {
-        var places = new List<SolverPlace>();
-
-        for (int idx = 0; idx < N; ++idx)
-        {
-            for (int cat = 0; cat < N - idx; ++cat)
-            {
-                places.Add(new(idx, cat));
-            }
-        }
-        return places;
-    }
-
     [TestMethod]
     public void ShouldSeparatePlacesByCategory()
     {
-        var cats = IfCategoryFormer.Form(GetPlaces(), 0, N - 1);
+        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N), 0, N - 1);
 
         foreach (var cat in cats)
         {
@@ -48,7 +34,7 @@ public class IfCategoryFormerTests
     [TestMethod]
     public void ShouldRemoveSourceAndTargetCategories()
     {
-        var cats = IfCategoryFormer.Form(GetPlaces(), 1, N - 2);
+        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N), 1, N - 2);
 
         Assert.AreEqual(cats.Count, 5);
 
@@ -62,7 +48,7 @@ public class IfCategoryFormerTests
     [TestMethod]
     public void ShouldPrioritizeCategoriesWithLessItems()
     {
-        var cats = IfCategoryFormer.Form(GetPlaces(), 0, N - 1);
+        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N), 0, N - 1);
 
         for (int i = 0; i < N - 3; ++i)
         {
@@ -76,22 +62,6 @@ public class IfCategoryFormerTests
 [TestClass]
 public class IfCandidateSelectorTests
 {
-    private static List<List<double>> GetUnitDistanceMatrix(int order)
-    {
-        var result = new List<List<double>>();
-
-        for (int row = 0; row < order; ++row)
-        {
-            result.Add(new());
-
-            for (int col = 0; col < order; ++col)
-            {
-                result[row].Add(row == col ? 0 : 1);
-            }
-        }
-        return result;
-    }
-
     [TestMethod]
     public void ShouldSelectIndexAfterAllBefore()
     {
@@ -112,7 +82,7 @@ public class IfCandidateSelectorTests
             new(2, 2)
         };
 
-        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(7));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(7));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -150,7 +120,7 @@ public class IfCandidateSelectorTests
             new(0, 0)
         };
 
-        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(5));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(5));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -186,7 +156,7 @@ public class IfCandidateSelectorTests
             new(1, 1)
         };
 
-        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(5));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(5));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -223,7 +193,7 @@ public class IfCandidateSelectorTests
             new(2, 1),
         };
 
-        var matrix = GetUnitDistanceMatrix(6);
+        var matrix = TestPrimitives.GetUnitDistanceMatrix(6);
         matrix[2][3] = 0.9;
 
         var distMatrix = new ListDistanceMatrix(matrix);
@@ -248,80 +218,6 @@ public class IfCandidateSelectorTests
 [TestClass]
 public class IfHeuristicTests
 {
-    private static List<List<double>> GetUnitDistanceMatrix(int order)
-    {
-        var result = new List<List<double>>();
-
-        for (int row = 0; row < order; ++row)
-        {
-            result.Add(new());
-
-            for (int col = 0; col < order; ++col)
-            {
-                result[row].Add(row == col ? 0 : 1);
-            }
-        }
-        return result;
-    }
-
-    private static IDistanceMatrix GetDistanceMatrix(int order)
-    {
-        var N = order + 2;
-        var rand = new Random();
-
-        var matrix = Enumerable.Range(0, N).Select((_) => Enumerable.Repeat(0.0, N).ToList()).ToList();
-
-        for (int row = 0; row < N; ++row)
-        {
-            for (int col = 0; col < N; ++col)
-            {
-                if (row != col)
-                {
-                    matrix[row][col] = rand.NextDouble();
-                }
-            }
-        }
-        return new ListDistanceMatrix(matrix);
-    }
-
-    private static IPrecedenceMatrix GetPrecedenceMatrix(int order)
-    {
-        var N = order + 2;
-        var rand = new Random();
-
-        var topo = Enumerable.Range(0, N).ToList().DurstenfeldShuffle();
-        var matrix = Enumerable.Range(0, N).Select((_) => Enumerable.Repeat(false, N).ToList()).ToList();
-
-        for (int row = 0; row < order - 1; ++row)
-        {
-            for (int col = 0; col < order; ++col)
-            {
-                if (rand.NextDouble() < 0.5)
-                {
-                    matrix[row][col] = true;
-                }
-            }
-        }
-
-        // st-edges
-
-        for (int row = 0; row < N - 1; ++row)
-        {
-            matrix[row][N - 1] = true;
-        }
-
-        for (int col = 0; col < N; ++col)
-        {
-            var row = N - 2;
-
-            if (row != col)
-            {
-                matrix[row][col] = true;
-            }
-        }
-        return new ListPrecedenceMatrix(TransitiveClosure.Closure(matrix), true);
-    }
-
     [TestMethod]
     public void ShouldAdviceTotallyOrderedSequence()
     {
@@ -337,7 +233,7 @@ public class IfHeuristicTests
             new(4, 4),
             new(3, 3),
         };
-        var distMatrix = new ListDistanceMatrix(GetUnitDistanceMatrix(7));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(7));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -367,17 +263,17 @@ public class IfHeuristicTests
     [TestMethod]
     public void ShouldAdviceValidSequenceForRandomGraph()
     {
-        var N = 10;
+        var N = 100;
 
         var places = Enumerable
             .Range(0, N).ToList()
             .DurstenfeldShuffle()
             .Select((idx, cat) => new SolverPlace(idx, cat)).ToList();
 
-        var distMatrix = GetDistanceMatrix(N);
-        var precMatrix = GetPrecedenceMatrix(N);
+        var distMatrix = TestPrimitives.GetRandomDistanceMatrix(N);
+        var precMatrix = TestPrimitives.GetRandomPrecedenceMatrix(N);
 
-        var result = IfHeuristic.Advise(new(10, 10), new(11, 11), places, distMatrix, precMatrix);
+        var result = IfHeuristic.Advise(new(N, N), new(N + 1, N + 1), places, distMatrix, precMatrix);
 
         for (int row = 0; row < result.Count - 1; ++row)
         {
