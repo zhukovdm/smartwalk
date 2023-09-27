@@ -77,7 +77,8 @@ internal static class IfCandidateSelector
     public static (SolverPlace, double, int) SelectBest(
         IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix, double currDist)
     {
-        // WLOG, `currDist` can be 0.0. We use it to simplify the caller's body.
+        /* WLOG, `currDist` can be 0.0. We return new distance to simplify the
+         * caller's body. */
 
         (SolverPlace best, double lastDist, int seqIdx) = GetDefaults();
 
@@ -89,7 +90,7 @@ internal static class IfCandidateSelector
             {
                 /**
                  * Category cannot use any further indices for insertion,
-                 * because it shall precede the category on position (i - 1).
+                 * because it shall precede the category on position i-1.
                  */
 
                 if (precMatrix.IsBefore(place.cat, seq[i - 1].cat))
@@ -115,9 +116,9 @@ internal static class IfCandidateSelector
 
                 if (candDist < lastDist)
                 {
-                    seqIdx = i;
                     best = place;
                     lastDist = candDist;
+                    seqIdx = i;
                 }
             }
         }

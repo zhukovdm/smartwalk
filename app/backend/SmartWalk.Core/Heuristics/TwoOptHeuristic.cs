@@ -17,6 +17,14 @@ internal static class TwoOptHeuristic
     /// <summary>
     /// Used as a refinement step for routes without precedence constraints.
     /// The first and last items in the sequence are never swapped.
+    /// 
+    /// The main idea is to find an improvement and reverse the segment between
+    /// i and j+1, that is [i+1, _, ..., _, j]. Unfortunately, the standard array
+    /// reverse is based on the segment length, and not indices.
+    /// 
+    /// <code>
+    /// ... _ i i+1 _ _ _ _ _ j j+1 _ ...
+    /// </code>
     /// </summary>
     public static List<SolverPlace> Refine(List<SolverPlace> seq, IDistanceMatrix matrix)
     {
@@ -38,7 +46,7 @@ internal static class TwoOptHeuristic
                     if (diff < -epsilon)
                     {
                         change = true;
-                        seq.Reverse(i + 1, j - i);
+                        seq.Reverse(i + 1, j - i); // !
                     }
                 }
             }
