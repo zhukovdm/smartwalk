@@ -77,14 +77,14 @@ internal static class OgCategoryFormer
     }
 }
 
-internal static class OgCandidateFinder
+internal static class OgCandidateSelector
 {
     /// <summary>
     /// Given feasible categories, find the best place from some category that
     /// optimize the distance of the place from the last inserted place and
     /// straight line between the source and target.
     /// </summary>
-    public static SolverPlace FindBest(
+    public static SolverPlace SelectBest(
         List<SolverPlace> seq, IEnumerable<OgCategory> cats, IDistanceMatrix distMatrix)
     {
         SolverPlace best = null;
@@ -131,7 +131,7 @@ internal static class OgHeuristic
         while (cats.Count > 0)
         {
             var freeCats = cats.Select(kv => kv.Value).Where((cat, _) => cat.pred == 0);
-            var best = OgCandidateFinder.FindBest(seq, freeCats, distMatrix);
+            var best = OgCandidateSelector.SelectBest(seq, freeCats, distMatrix);
 
             if (best is null) { break; }
 
