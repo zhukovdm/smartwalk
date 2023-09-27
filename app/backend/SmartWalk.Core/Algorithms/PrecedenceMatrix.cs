@@ -6,7 +6,7 @@ using SmartWalk.Model.Interfaces;
 public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
 {
     private static List<List<bool>> GetEmpty(int order)
-        => Enumerable.Range(0, order).Select(_ => Enumerable.Repeat(false, order).ToList()).ToList();
+        => Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
 
     public static List<List<bool>> GetLists(IEnumerable<PrecedenceEdge> precedence, int order)
     {

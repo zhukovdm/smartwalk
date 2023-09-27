@@ -8,11 +8,6 @@ namespace SmartWalk.Core.Heuristics;
 internal sealed class OgCategory
 {
     /// <summary>
-    /// Category identifier.
-    /// </summary>
-    public int cid { get; init; }
-
-    /// <summary>
     /// Number of predecessors.
     /// </summary>
     public int pred { get; set; } = 0;
@@ -41,7 +36,7 @@ internal static class OgCategoryFormer
 
         var ensureCat = (SortedDictionary<int, OgCategory> dict, int cat) =>
         {
-            if (!dict.ContainsKey(cat)) { dict.Add(cat, new() { cid = cat }); }
+            if (!dict.ContainsKey(cat)) { dict.Add(cat, new()); }
         };
 
         // group places by category
@@ -57,7 +52,7 @@ internal static class OgCategoryFormer
         result.Remove(sourceCat);
         result.Remove(targetCat);
 
-        // add edges between categories (terminal edges are skipped!)
+        // add arrows between categories (terminal edges are skipped!)
 
         for (int fr = 0; fr < precMatrix.CsCount; ++fr)
         {
@@ -72,7 +67,6 @@ internal static class OgCategoryFormer
                 }
             }
         }
-
         return result;
     }
 }
@@ -106,7 +100,6 @@ internal static class OgCandidateSelector
                 }
             }
         }
-
         return best;
     }
 }
@@ -138,7 +131,6 @@ internal static class OgHeuristic
             seq.Insert(seq.Count - 1, best);
             RemoveCategory(cats, best.cat);
         }
-
         return seq;
     }
 }
