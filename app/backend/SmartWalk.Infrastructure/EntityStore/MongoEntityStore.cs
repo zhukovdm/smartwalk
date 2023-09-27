@@ -5,7 +5,7 @@ using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Infrastructure.EntityStore;
 
-internal sealed class MongoEntityStore : IEntityStore
+public sealed class MongoEntityStore : IEntityStore
 {
     private readonly IMongoCollection<ExtendedPlace> _collection;
 
@@ -21,6 +21,9 @@ internal sealed class MongoEntityStore : IEntityStore
             .FirstOrDefaultAsync();
     }
 
-    public static IEntityStore GetInstance(IMongoCollection<ExtendedPlace> collection)
-        => new MongoEntityStore(collection);
+    public static IEntityStore GetInstance()
+    {
+        var coll = MongoCollectionFactory.GetPlaceCollection();
+        return new MongoEntityStore(coll);
+    }
 }

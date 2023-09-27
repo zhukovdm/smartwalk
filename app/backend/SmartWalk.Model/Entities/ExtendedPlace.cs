@@ -85,6 +85,9 @@ public sealed class PlaceAttributes
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string description { get; init; }
 
+    /// <summary>
+    /// Url of an image.
+    /// </summary>
     /// <example>http://www.image.com/1.png</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
     public string image { get; init; }

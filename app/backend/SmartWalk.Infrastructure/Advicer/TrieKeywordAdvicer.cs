@@ -9,20 +9,23 @@ namespace SmartWalk.Infrastructure.Advicer;
 
 using Trie = PruningRadixTrie.PruningRadixTrie;
 
-internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
+/// <summary>
+/// In-memory collection for finding top-k keywords with the highest score.
+/// </summary>
+internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
 {
     private readonly Trie _trie = new();
-    private readonly Dictionary<string, KeywordsAdviceItem> _items = new();
+    private readonly Dictionary<string, KeywordAdviceItem> _items = new();
 
-    private TrieKeywordsAdvicer() { }
+    private TrieKeywordAdvicer() { }
 
-    private void Add(string term, KeywordsAdviceItem attributeList, long freq)
+    private void Add(string term, KeywordAdviceItem attributeList, long freq)
     {
         _items[term] = attributeList;
         _trie.AddTerm(term, freq);
     }
 
-    public Task<List<KeywordsAdviceItem>> GetTopK(string prefix, int count)
+    public Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count)
     {
         var result = _trie
             .GetTopkTermsForPrefix(prefix, count, out _)
@@ -33,14 +36,14 @@ internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
     }
 
     [BsonIgnoreExtraElements]
-    internal class Item : KeywordsAdviceItem
+    internal class Item : KeywordAdviceItem
     {
         public int count { get; init; }
     }
 
-    internal static IKeywordsAdvicer GetInstance(IEnumerable<Item> items)
+    internal static IKeywordAdvicer GetInstance(IEnumerable<Item> items)
     {
-        var advicer = new TrieKeywordsAdvicer();
+        var advicer = new TrieKeywordAdvicer();
 
         foreach (var item in items)
         {
@@ -51,7 +54,7 @@ internal sealed class TrieKeywordsAdvicer : IKeywordsAdvicer
                     keyword = item.keyword,
                     attributeList = item.attributeList,
                     numericBounds = item.numericBounds,
-                    collectBounds = item.collectBounds
+                    collectBounds = item.collectBounds,
                 },
                 item.count
             );
