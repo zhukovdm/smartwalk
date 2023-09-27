@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SmartWalk.Domain.Entities;
+namespace SmartWalk.Model.Entities;
 
 [BsonIgnoreExtraElements]
 public sealed class PlaceAddress

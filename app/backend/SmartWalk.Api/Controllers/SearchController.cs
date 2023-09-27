@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 using NJsonSchema;
 using SmartWalk.Api.Contexts;
 using SmartWalk.Core.Algorithms;
-using SmartWalk.Domain.Entities;
+using SmartWalk.Model.Entities;
 using SmartWalk.Service;
 
 namespace SmartWalk.Api.Controllers;

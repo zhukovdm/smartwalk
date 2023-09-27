@@ -1,7 +1,7 @@
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 
 WORKDIR /opt/build/
-COPY ./SmartWalk.Domain/*.csproj ./SmartWalk.Domain/
+COPY ./SmartWalk.Model/*.csproj ./SmartWalk.Model/
 COPY ./WolfGarbe.PruningRadixTrie/PruningRadixTrie/*.csproj ./WolfGarbe.PruningRadixTrie/PruningRadixTrie/
 COPY ./SmartWalk.Core/*.csproj ./SmartWalk.Core/
 COPY ./SmartWalk.Infrastructure/*.csproj ./SmartWalk.Infrastructure/
@@ -12,7 +12,7 @@ WORKDIR /opt/build/SmartWalk.Api/
 RUN dotnet restore --use-current-runtime
 
 WORKDIR /opt/build/
-COPY ./SmartWalk.Domain/. ./SmartWalk.Domain/
+COPY ./SmartWalk.Model/. ./SmartWalk.Model/
 COPY ./WolfGarbe.PruningRadixTrie/PruningRadixTrie/. ./WolfGarbe.PruningRadixTrie/PruningRadixTrie/
 COPY ./SmartWalk.Core/. ./SmartWalk.Core/
 COPY ./SmartWalk.Infrastructure/. ./SmartWalk.Infrastructure/

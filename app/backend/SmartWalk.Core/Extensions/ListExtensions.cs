@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using SmartWalk.Domain.Entities;
+using SmartWalk.Model.Entities;
 
-namespace SmartWalk.Domain.Extensions;
+namespace SmartWalk.Core.Extensions;
 
 public static class ListExtensions
 {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SmartWalk.Domain.Entities;
+namespace SmartWalk.Model.Entities;
 
 public sealed class PrecedenceEdge
 {

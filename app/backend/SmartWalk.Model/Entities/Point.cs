@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace SmartWalk.Domain.Entities;
+namespace SmartWalk.Model.Entities;
 
 /// <summary>
 /// Representation of a point on an ellipsoidal body.

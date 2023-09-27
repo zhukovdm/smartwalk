@@ -1,7 +1,7 @@
 using System;
 using MongoDB.Driver;
-using SmartWalk.Domain.Entities;
 using SmartWalk.Infrastructure.Advicer;
+using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Infrastructure;
 

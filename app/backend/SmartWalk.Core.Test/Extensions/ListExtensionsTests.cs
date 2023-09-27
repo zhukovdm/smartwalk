@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SmartWalk.Domain.Entities;
-using SmartWalk.Domain.Extensions;
+using SmartWalk.Core.Extensions;
+using SmartWalk.Model.Entities;
 
-namespace SmartWalk.Domain.Test;
+namespace SmartWalk.Core.Test;
 
 [TestClass]
 public class ListExtensionsTests

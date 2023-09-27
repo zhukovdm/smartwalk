@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SmartWalk.Domain.Entities;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.Geometries.Utilities;
 using NetTopologySuite.Utilities;
+using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Core.Algorithms;
 

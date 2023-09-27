@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using SmartWalk.Api.Contexts;
-using SmartWalk.Domain.Entities;
+using SmartWalk.Model.Entities;
 using SmartWalk.Service;
 
 namespace SmartWalk.Api.Controllers;
