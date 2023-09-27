@@ -1,9 +1,12 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Algorithms;
+using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Heuristics;
 using SmartWalk.Model.Entities;
+using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Core.Test;
 
@@ -261,6 +264,64 @@ public class IfHeuristicTests
         return result;
     }
 
+    private static IDistanceMatrix GetDistanceMatrix(int order)
+    {
+        var N = order + 2;
+        var rand = new Random();
+
+        var matrix = Enumerable.Range(0, N).Select((_) => Enumerable.Repeat(0.0, N).ToList()).ToList();
+
+        for (int row = 0; row < N; ++row)
+        {
+            for (int col = 0; col < N; ++col)
+            {
+                if (row != col)
+                {
+                    matrix[row][col] = rand.NextDouble();
+                }
+            }
+        }
+        return new ListDistanceMatrix(matrix);
+    }
+
+    private static IPrecedenceMatrix GetPrecedenceMatrix(int order)
+    {
+        var N = order + 2;
+        var rand = new Random();
+
+        var topo = Enumerable.Range(0, N).ToList().DurstenfeldShuffle();
+        var matrix = Enumerable.Range(0, N).Select((_) => Enumerable.Repeat(false, N).ToList()).ToList();
+
+        for (int row = 0; row < order - 1; ++row)
+        {
+            for (int col = 0; col < order; ++col)
+            {
+                if (rand.NextDouble() < 0.5)
+                {
+                    matrix[row][col] = true;
+                }
+            }
+        }
+
+        // st-edges
+
+        for (int row = 0; row < N - 1; ++row)
+        {
+            matrix[row][N - 1] = true;
+        }
+
+        for (int col = 0; col < N; ++col)
+        {
+            var row = N - 2;
+
+            if (row != col)
+            {
+                matrix[row][col] = true;
+            }
+        }
+        return new ListPrecedenceMatrix(TransitiveClosure.Closure(matrix), true);
+    }
+
     [TestMethod]
     public void ShouldAdviceTotallyOrderedSequence()
     {
@@ -300,6 +361,33 @@ public class IfHeuristicTests
         for (int i = 0; i < ans.Count; ++i)
         {
             Assert.AreEqual(ans[i], seq[i].idx);
+        }
+    }
+
+    [TestMethod]
+    public void ShouldAdviceValidSequenceForRandomGraph()
+    {
+        var N = 10;
+
+        var places = Enumerable
+            .Range(0, N).ToList()
+            .DurstenfeldShuffle()
+            .Select((idx, cat) => new SolverPlace(idx, cat)).ToList();
+
+        var distMatrix = GetDistanceMatrix(N);
+        var precMatrix = GetPrecedenceMatrix(N);
+
+        var result = IfHeuristic.Advise(new(10, 10), new(11, 11), places, distMatrix, precMatrix);
+
+        for (int row = 0; row < result.Count - 1; ++row)
+        {
+            for (int col = row + 1; col < result.Count; ++col)
+            {
+                var fr = result[row].cat;
+                var to = result[col].cat;
+
+                Assert.IsFalse(precMatrix.IsBefore(to, fr));
+            }
         }
     }
 }
