@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using SmartWalk.Domain.Entities;
+using SmartWalk.Model.Entities;
 
-namespace SmartWalk.Domain.Interfaces;
+namespace SmartWalk.Model.Interfaces;
 
 public interface IKeywordsAdvicer
 {

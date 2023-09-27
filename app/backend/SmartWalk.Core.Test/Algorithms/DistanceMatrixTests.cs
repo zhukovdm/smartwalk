@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Algorithms;
-using SmartWalk.Domain.Entities;
+using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Core.Test;
 

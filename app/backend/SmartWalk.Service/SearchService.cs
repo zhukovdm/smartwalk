@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartWalk.Core.Algorithms;
+using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Solvers;
-using SmartWalk.Domain.Entities;
-using SmartWalk.Domain.Extensions;
-using SmartWalk.Domain.Interfaces;
+using SmartWalk.Model.Entities;
+using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Service;
 

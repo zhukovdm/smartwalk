@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartWalk.Domain\SmartWalk.Domain.csproj" />
+    <ProjectReference Include="..\SmartWalk.Model\SmartWalk.Model.csproj" />
   </ItemGroup>
 
   <ItemGroup>

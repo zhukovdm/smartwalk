@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 
 using CollectBound = System.Collections.Generic.List<string>;
 
-namespace SmartWalk.Domain.Entities;
+namespace SmartWalk.Model.Entities;
 
 public sealed class NumericBound
 {

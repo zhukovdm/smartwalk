@@ -3,7 +3,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using GeoJSON.Text.Geometry;
-using SmartWalk.Domain.Entities;
+using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 

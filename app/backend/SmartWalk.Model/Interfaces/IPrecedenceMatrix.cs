@@ -1,4 +1,4 @@
-namespace SmartWalk.Domain.Interfaces;
+namespace SmartWalk.Model.Interfaces;
 
 public interface IPrecedenceMatrix
 {
