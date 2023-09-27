@@ -42,11 +42,11 @@ public sealed class AdviceController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<KeywordsAdviceItem>>> AdviseKeywords([FromQuery] KeywordsRequest request)
+    public async Task<ActionResult<List<KeywordAdviceItem>>> AdviseKeywords([FromQuery] KeywordsRequest request)
     {
         try {
             return await AdviceService.GetKeywords(
-                _context.KeywordsAdvicer, request.prefix, request.count.Value);
+                _context.KeywordAdvicer, request.prefix, request.count.Value);
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
     }

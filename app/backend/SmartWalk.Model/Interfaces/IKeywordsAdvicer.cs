@@ -4,7 +4,7 @@ using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Model.Interfaces;
 
-public interface IKeywordsAdvicer
+public interface IKeywordAdvicer
 {
-    Task<List<KeywordsAdviceItem>> GetTopK(string prefix, int count);
+    Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count);
 }

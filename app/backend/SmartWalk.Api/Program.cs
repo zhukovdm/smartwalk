@@ -24,7 +24,7 @@ public class Program
 
         builder.Services.AddCors(cors => cors.AddPolicy(_policy, builder =>
         {
-            builder.WithOrigins("*").AllowAnyMethod().AllowAnyHeader();
+            builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
         }));
 
         builder.Services.AddAuthentication(CertificateAuthenticationDefaults.AuthenticationScheme).AddCertificate();
@@ -46,29 +46,20 @@ public class Program
                 .ForEach(f => g.IncludeXmlComments(f));
         });
 
-        builder.Services.AddSingleton<IAdviceContext, AdviceContext>((_) =>
+        builder.Services.AddSingleton<IAdviceContext>(new AdviceContext()
         {
-            return new()
-            {
-                KeywordsAdvicer = AdvicerFactory.GetKeywordsAdvicer()
-            };
+            KeywordAdvicer = MongoKeywordAdvicer.GetInstance()
         });
 
-        builder.Services.AddSingleton<IEntityContext, EntityContext>((_) =>
+        builder.Services.AddSingleton<IEntityContext>(new EntityContext()
         {
-            return new()
-            {
-                Store = EntityStoreFactory.GetInstance()
-            };
+            EntityStore = MongoEntityStore.GetInstance()
         });
 
-        builder.Services.AddSingleton<ISearchContext, SearchContext>((_) =>
+        builder.Services.AddSingleton<ISearchContext>(new SearchContext()
         {
-            return new()
-            {
-                EntityIndex = EntityIndexFactory.GetInstance(),
-                RoutingEngine = RoutingEngineFactory.GetInstance()
-            };
+            EntityIndex = MongoEntityIndex.GetInstance(),
+            RoutingEngine = OsrmRoutingEngine.GetInstance()
         });
 
         var wapp = builder.Build();

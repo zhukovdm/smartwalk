@@ -4,10 +4,10 @@ namespace SmartWalk.Api.Contexts;
 
 public interface IEntityContext
 {
-    IEntityStore Store { get; init; }
+    IEntityStore EntityStore { get; init; }
 }
 
 public sealed class EntityContext : IEntityContext
 {
-    public IEntityStore Store { get; init; }
+    public IEntityStore EntityStore { get; init; }
 }

@@ -1,9 +1,0 @@
-using SmartWalk.Model.Interfaces;
-
-namespace SmartWalk.Infrastructure.EntityStore;
-
-public static class EntityStoreFactory
-{
-    public static IEntityStore GetInstance()
-        => MongoEntityStore.GetInstance(MongoCollectionFactory.GetPlaceCollection());
-}

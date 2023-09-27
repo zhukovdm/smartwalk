@@ -58,7 +58,7 @@ public class CollectBounds
     public CollectBound rental { get; init; }
 }
 
-public class KeywordsAdviceItem
+public class KeywordAdviceItem
 {
     /// <example>museum</example>
     [Required]

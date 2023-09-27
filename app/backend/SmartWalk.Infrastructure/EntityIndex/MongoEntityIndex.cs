@@ -14,7 +14,7 @@ namespace SmartWalk.Infrastructure.EntityIndex;
 
 using Filter = FilterDefinition<ExtendedPlace>;
 
-internal sealed class MongoEntityIndex : IEntityIndex
+public sealed class MongoEntityIndex : IEntityIndex
 {
     private readonly IMongoCollection<ExtendedPlace> _collection;
 
@@ -85,6 +85,9 @@ internal sealed class MongoEntityIndex : IEntityIndex
         return FetchCategories(wf, categories);
     }
 
-    public static IEntityIndex GetInstance(IMongoCollection<ExtendedPlace> collection)
-        => new MongoEntityIndex(collection);
+    public static IEntityIndex GetInstance()
+    {
+        var coll = MongoCollectionFactory.GetPlaceCollection();
+        return new MongoEntityIndex(coll);
+    }
 }

@@ -51,7 +51,7 @@ public sealed class EntityController : ControllerBase
 
         try
         {
-            var place = await PlacesService.GetPlace(_context.Store, smartId);
+            var place = await PlacesService.GetPlace(_context.EntityStore, smartId);
             return (place is not null) ? place : NotFound();
         }
         catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }

@@ -5,7 +5,7 @@ using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Infrastructure;
 
-using Item = TrieKeywordsAdvicer.Item;
+using Item = TrieKeywordAdvicer.Item;
 
 internal static class MongoCollectionFactory
 {
