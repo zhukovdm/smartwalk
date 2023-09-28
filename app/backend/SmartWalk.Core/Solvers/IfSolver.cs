@@ -7,10 +7,10 @@ namespace SmartWalk.Core.Solvers;
 
 internal sealed class IfSolver : HeuristicSolverBase, ISolver
 {
-    internal static IPrecedenceMatrix GetPrecedenceMatrix(IReadOnlyList<PrecedenceEdge> precedence, int catsCount, bool hasArrows)
+    internal static IPrecedenceMatrix GetPrecedenceMatrix(IEnumerable<PrecedenceEdge> edges, int catsCount, bool hasArrows)
     {
         var closure = TransitiveClosure
-            .Closure(ListPrecedenceMatrix.GetLists(precedence, catsCount));
+            .Closure(ListPrecedenceMatrix.GetLists(edges, catsCount));
 
         return new ListPrecedenceMatrix(closure, hasArrows);
     }

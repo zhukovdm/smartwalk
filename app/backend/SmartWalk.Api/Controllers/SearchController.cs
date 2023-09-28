@@ -22,45 +22,11 @@ using Direc = ShortestPath;
 [Route("api/search")]
 public sealed class SearchController : ControllerBase
 {
-    private static ValidationProblemDetails GetValidationProblemDetails(string detail)
+    internal static bool ValidateQuery<T>(string query, JsonSchema schema, out List<string> errors)
     {
-        return new(new Dictionary<string, string[]>
-        {
-            { "query", new string[] { detail } }
-        });
-    }
-
-    private static bool VerifyDistance(WgsPoint source, WgsPoint target, double maxDistance)
-        => Spherical.HaversineDistance(source, target) <= maxDistance && maxDistance <= 30_000;
-
-    /// <summary>
-    /// Check if edges define directed acyclic loop-free graph, repeated edges
-    /// are tolerable.
-    /// </summary>
-    private static bool VerifyPrecedence(IReadOnlyList<WebPrecedenceEdge> edges, int order)
-    {
-        var g = new CycleDetector(order);
-
-        foreach (var e in edges)
-        {
-            var fr = e.fr.Value;
-            var to = e.to.Value;
-
-            if (fr == to || fr >= order || to >= order) { return false; }
-
-            g.AddEdge(fr, to);
-        }
-
-        return g.Cycle() is null;
-    }
-
-    internal static T DeserializeQuery<T>(string query, JsonSchema schema)
-    {
-        var errors = schema.Validate(query);
-
-        return (errors.Count == 0)
-            ? JsonSerializer.Deserialize<T>(query)
-            : throw new Exception(string.Join(", ", errors.Select((e) => e.Path + ' ' + e.Kind)));
+        errors = schema.Validate(query)
+            .Select((e) => $"{e.Path}/{e.Property} {e.Kind}, line {e.LineNumber}, position {e.LinePosition}.").ToList();
+        return errors.Count == 0;
     }
 
     /// <summary>
@@ -128,24 +94,31 @@ public sealed class SearchController : ControllerBase
     [Route("direcs", Name = "SearchDirecs")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] DirecsRequest request)
     {
-        DirecsQuery dq = null;
-
-        try
+        if (!ValidateQuery<DirecsQuery>(request.query, _direcsSchema, out var queryErrors))
         {
-            dq = DeserializeQuery<DirecsQuery>(request.query, _direcsSchema);
+            foreach (var error in queryErrors)
+            {
+                ModelState.AddModelError("query", error);
+            }
+            return ValidationProblem();
         }
-        catch (Exception ex) { return BadRequest(GetValidationProblemDetails(ex.Message)); }
+
+        var dq = JsonSerializer.Deserialize<DirecsQuery>(request.query);
 
         try
         {
             return await SearchService.GetDirecs(
                 _context.RoutingEngine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
         }
-        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
     #endregion
@@ -187,34 +160,90 @@ public sealed class SearchController : ControllerBase
     [Route("places", Name = "SearchPlaces")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] PlacesRequest request)
     {
-        PlacesQuery pq = null;
-
-        try
+        if (!ValidateQuery<PlacesQuery>(request.query, _placesSchema, out var queryErrors))
         {
-            pq = DeserializeQuery<PlacesQuery>(request.query, _placesSchema);
+            foreach (var error in queryErrors)
+            {
+                ModelState.AddModelError("query", error);
+            }
+            return ValidationProblem();
         }
-        catch (Exception ex) { return BadRequest(GetValidationProblemDetails(ex.Message)); }
+
+        var pq = JsonSerializer.Deserialize<PlacesQuery>(request.query);
 
         try
         {
             return await SearchService.GetPlaces(
                 _context.EntityIndex, pq.center.AsWgs(), pq.radius.Value, pq.categories);
         }
-        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
     #endregion
 
     #region SearchRoutes
 
+    /// <summary>
+    /// Check if edges define directed acyclic loop-free graph, repeated edges
+    /// are tolerable.
+    /// </summary>
+    private static bool ValidateArrows(IReadOnlyList<WebPrecedenceEdge> arrows, int order, out string error)
+    {
+        error = null;
+        var detector = new CycleDetector(order);
+
+        foreach (var e in arrows)
+        {
+            var fr = e.fr.Value;
+            var to = e.to.Value;
+
+            if (fr >= order || to >= order)
+            {
+                error = $"Arrow {fr} → {to} contains an out-of-bound terminal point.";
+                return false;
+            }
+
+            if (fr == to)
+            {
+                error = $"Arrow {fr} → {to} is a loop.";
+                return false;
+            }
+            detector.AddEdge(fr, to);
+        }
+
+        var cycle = detector.Cycle();
+
+        if (cycle is not null)
+        {
+            error = $"Cycle {string.Join(" → ", cycle)} detected.";
+            return false;
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <param name="maxDistance"></param>
+    /// <returns></returns>
+    private static bool ValidateRouteMaxDistance(WgsPoint source, WgsPoint target, double maxDistance)
+    => Spherical.HaversineDistance(source, target) <= maxDistance && maxDistance <= 30_000;
+
+
     public sealed class RoutesRequest
     {
         /// <example>
-        /// {"source":{"lon":14.4035264,"lat":50.0884344},"target":{"lon":14.4039444,"lat":50.0894092},"distance":3000,"categories":[{"keyword":"castle","filters":{}},{"keyword":"restaurant","filters":{}},{"keyword":"tourism","filters":{}}],"precedence":[{"fr":0,"to":2}]}
+        /// {"source":{"lon":14.4035264,"lat":50.0884344},"target":{"lon":14.4039444,"lat":50.0894092},"distance":3000,"categories":[{"keyword":"castle","filters":{}},{"keyword":"restaurant","filters":{}},{"keyword":"tourism","filters":{}}],"arrows":[{"fr":0,"to":2}]}
         /// </example>
         [Required]
         [MinLength(1)]
@@ -241,10 +270,10 @@ public sealed class SearchController : ControllerBase
         public List<Category> categories { get; init; }
 
         /// <summary>
-        /// Edges of a category precedence graph.
+        /// User-defined ordering on categories.
         /// </summary>
         [Required]
-        public List<WebPrecedenceEdge> precedence { get; init; }
+        public List<WebPrecedenceEdge> arrows { get; init; }
     }
 
     private static readonly JsonSchema _routesSchema = JsonSchema.FromType<RoutesQuery>();
@@ -253,41 +282,51 @@ public sealed class SearchController : ControllerBase
     [Route("routes", Name = "SearchRoutes")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] RoutesRequest request)
     {
-        RoutesQuery rq = null;
-
-        WgsPoint s = null;
-        WgsPoint t = null;
-
-        try
+        if (!ValidateQuery<RoutesQuery>(request.query, _routesSchema, out var queryErrors))
         {
-            rq = DeserializeQuery<RoutesQuery>(request.query, _routesSchema);
-
-            if (!VerifyPrecedence(rq.precedence, rq.categories.Count)) {
-                throw new Exception("Malformed precedence graph.");
+            foreach (var error in queryErrors)
+            {
+                ModelState.AddModelError("query", error);
             }
-
-            s = rq.source.AsWgs();
-            t = rq.target.AsWgs();
-
-            if (!VerifyDistance(s, t, rq.maxDistance.Value)) {
-                throw new Exception("Malformed point-distance configuration.");
-            }
+            return ValidationProblem();
         }
-        catch (Exception ex) { return BadRequest(GetValidationProblemDetails(ex.Message)); }
 
-        var precedence = rq.precedence
+        var q = JsonSerializer.Deserialize<RoutesQuery>(request.query);
+
+        if (!ValidateArrows(q.arrows, q.categories.Count, out var arrowError))
+        {
+            ModelState.AddModelError("query", arrowError);
+            return ValidationProblem();
+        }
+
+        WgsPoint s = q.source.AsWgs();
+        WgsPoint t = q.target.AsWgs();
+
+        double maxDistance = q.maxDistance.Value;
+
+        if (!ValidateRouteMaxDistance(s, t, maxDistance))
+        {
+            ModelState.AddModelError("query", "Starting point and destination are too far from each other.");
+            return ValidationProblem();
+        }
+
+        var arrows = q.arrows
             .Select(p => new PrecedenceEdge(p.fr.Value, p.to.Value)).ToList();
 
         try
         {
             return await SearchService.GetRoutes(
-                _context.EntityIndex, _context.RoutingEngine, s, t, rq.maxDistance.Value, rq.categories, precedence);
+                _context.EntityIndex, _context.RoutingEngine, s, t, maxDistance, q.categories, arrows);
         }
-        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
 
     #endregion

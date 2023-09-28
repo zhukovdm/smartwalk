@@ -24,6 +24,8 @@ public sealed class AdviceController : ControllerBase
         _context = context; _logger = logger;
     }
 
+    # region Keywords
+
     public sealed class KeywordsRequest
     {
         /// <example>m</example>
@@ -44,10 +46,17 @@ public sealed class AdviceController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<KeywordAdviceItem>>> AdviseKeywords([FromQuery] KeywordsRequest request)
     {
-        try {
+        try
+        {
             return await AdviceService.GetKeywords(
                 _context.KeywordAdvicer, request.prefix, request.count.Value);
         }
-        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
+
+    # endregion
 }

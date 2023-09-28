@@ -24,10 +24,10 @@ public static class SolverFactory
     /// different from the source and target.
     /// </param>
     public static IPrecedenceMatrix GetPrecedenceMatrix(
-        IEnumerable<PrecedenceEdge> precedence, int catsCount, bool hasArrows)
+        IEnumerable<PrecedenceEdge> edges, int catsCount, bool hasArrows)
     {
-        // return IfSolver.GetPrecedenceMatrix(precedence, catsCount, hasArrows);
-        return OgSolver.GetPrecedenceMatrix(precedence, catsCount, hasArrows);
+        // return IfSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
+        return OgSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
     }
     public static ISolver GetSolver()
     {
