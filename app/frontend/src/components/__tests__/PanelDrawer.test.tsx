@@ -894,7 +894,7 @@ describe("<PanelDrawer />", () => {
             { ...getKeywordAdviceItem(), keyword: "castle", filters: {} },
             { ...getKeywordAdviceItem(), keyword: "museum", filters: {} }
           ],
-          precedence: []
+          arrows: []
         };
 
         jest.spyOn(smartwalkApi, "fetchSearchRoutes").mockResolvedValueOnce(Array(3).fill(undefined).map(() => (getRoute())));
@@ -944,7 +944,7 @@ describe("<PanelDrawer />", () => {
               filters: {}
             }
           ],
-          precedence: []
+          arrows: []
         };
 
         const alertSpy = jest.spyOn(window, "alert");

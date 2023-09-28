@@ -24,9 +24,9 @@ import {
   useAppSelector
 } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
+import ArrowViewDialog from "../_shared/ArrowViewDialog";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
-import PrecedenceViewDialog from "../_shared/PrecedenceViewDialog";
 import RouteContentList from "../_shared/RouteContentList";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
 import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
@@ -63,7 +63,7 @@ export default function ResultRoutesContent(): JSX.Element {
     places: routePlaces,
     maxDistance,
     categories,
-    precedence,
+    arrows,
     waypoints: routeWaypoints
   } = route;
 
@@ -119,10 +119,10 @@ export default function ResultRoutesContent(): JSX.Element {
             dispatch(toggleResultRoutesFilter(index));
           }}
         />
-        <PrecedenceViewDialog
+        <ArrowViewDialog
           show={showP}
           categories={categories}
-          precedence={precedence}
+          arrows={arrows}
           onHide={() => { setShowP(false); }}
         />
         </Stack>

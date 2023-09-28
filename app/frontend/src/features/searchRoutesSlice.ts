@@ -7,13 +7,13 @@ export type SearchRoutesState = {
   target?: UiPlace;
   maxDistance: number;
   categories: KeywordCategory[];
-  precedence: PrecedenceEdge[];
+  arrows: PrecedenceEdge[];
 };
 
 export const initialSearchRoutesState = (): SearchRoutesState => ({
   maxDistance: 5.0,
   categories: [],
-  precedence: []
+  arrows: []
 });
 
 export const searchRoutesSlice = createSlice({
@@ -36,17 +36,17 @@ export const searchRoutesSlice = createSlice({
     deleteSearchRoutesCategory: (state, action: PayloadAction<number>) => {
       const i = action.payload;
       state.categories = deleteItemImmutable(state.categories, i);
-      state.precedence = [];
+      state.arrows = [];
     },
     updateSearchRoutesCategory: (state, action: PayloadAction<{ category: KeywordCategory; i: number; }>) => {
       const { category, i } = action.payload;
       state.categories = updateItemImmutable(state.categories, category, i);
     },
-    appendSearchRoutesPrecEdge: (state, action: PayloadAction<PrecedenceEdge>) => {
-      state.precedence.push(action.payload);
+    appendSearchRoutesArrow: (state, action: PayloadAction<PrecedenceEdge>) => {
+      state.arrows.push(action.payload);
     },
-    deleteSearchRoutesPrecEdge: (state, action: PayloadAction<number>) => {
-      state.precedence = deleteItemImmutable(state.precedence, action.payload);
+    deleteSearchRoutesArrow: (state, action: PayloadAction<number>) => {
+      state.arrows = deleteItemImmutable(state.arrows, action.payload);
     }
   }
 });
@@ -59,8 +59,8 @@ export const {
   appendSearchRoutesCategory,
   deleteSearchRoutesCategory,
   updateSearchRoutesCategory,
-  appendSearchRoutesPrecEdge,
-  deleteSearchRoutesPrecEdge
+  appendSearchRoutesArrow,
+  deleteSearchRoutesArrow
 } = searchRoutesSlice.actions;
 
 export default searchRoutesSlice.reducer;

@@ -1,14 +1,12 @@
 import { render as rtlRender } from "@testing-library/react";
 import { Network } from "vis-network";
-import PrecedenceDrawing, {
-  type PrecedenceDrawingProps
-} from "../PrecedenceDrawing";
+import ArrowDrawing, { type ArrowDrawingProps } from "../ArrowDrawing";
 
 jest.mock("vis-network", () => ({
   Network: jest.fn().mockImplementation(() => { })
 }));
 
-const getDefault = (): PrecedenceDrawingProps => ({
+const getProps = (): ArrowDrawingProps => ({
   categories: [
     {
       keyword: "castle",
@@ -23,27 +21,18 @@ const getDefault = (): PrecedenceDrawingProps => ({
       filters: {}
     }
   ],
-  precedence: [
-    {
-      fr: 0,
-      to: 1
-    },
-    {
-      fr: 1,
-      to: 2
-    }
+  arrows: [
+    { fr: 0, to: 1 },
+    { fr: 1, to: 2 }
   ],
-  edge: {
-    fr: 2,
-    to: 0
-  }
+  arrow: { fr: 2, to: 0 }
 });
 
-function render(props = getDefault()) {
-  return rtlRender(<PrecedenceDrawing {...props} />);
+function render(props = getProps()) {
+  return rtlRender(<ArrowDrawing {...props} />);
 }
 
-describe("<PrecedenceDrawing />", () => {
+describe("<ArrowDrawing />", () => {
 
   test("render", () => {
     const { container } = render();

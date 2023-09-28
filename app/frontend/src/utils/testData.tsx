@@ -181,7 +181,7 @@ export const getRoute = (): UiRoute => ({
     { keyword: "market", filters: {} },
     { keyword: "cinema", filters: {} }
   ],
-  precedence: [
+  arrows: [
     { fr: 0, to: 3 },
     { fr: 1, to: 3 },
     { fr: 2, to: 3 },

@@ -3,24 +3,23 @@ import Paper from "@mui/material/Paper";
 import { Edge, Network, Node, Options } from "vis-network";
 import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
 
-export type PrecedenceDrawingProps = {
+export type ArrowDrawingProps = {
 
   /** Configured categories */
   categories: PlaceCategory[];
 
-  /** Confirmed edges */
-  precedence: PrecedenceEdge[];
+  /** Confirmed arrows */
+  arrows: PrecedenceEdge[];
 
-  /** New `red` edge */
-  edge?: PrecedenceEdge;
+  /** New `red` arrow */
+  arrow?: PrecedenceEdge;
 };
 
 /**
- * Drawing of a category precedence graph. Vertices are cats, and edges are
- * arrows.
+ * Drawing of a category precedence graph. Vertices are cats, and edges are arrows.
  */
-export default function PrecedenceDrawing(
-  { categories, precedence, edge }: PrecedenceDrawingProps): JSX.Element {
+export default function ArrowDrawing(
+  { categories, arrows, arrow }: ArrowDrawingProps): JSX.Element {
 
   const visRef = useRef<HTMLInputElement>(null);
 
@@ -37,13 +36,13 @@ export default function PrecedenceDrawing(
       }
     ));
 
-    const edges: Edge[] = precedence.map(({ fr, to }) => ({
+    const edges: Edge[] = arrows.map(({ fr, to }) => ({
       from: fr, to: to, color: { color: "black" }
     }));
 
-    if (edge) {
+    if (arrow) {
       edges.push({
-        from: edge.fr, to: edge.to, color: { color: "red" }
+        from: arrow.fr, to: arrow.to, color: { color: "red" }
       });
     }
 
@@ -68,7 +67,7 @@ export default function PrecedenceDrawing(
     };
 
     (!!visRef?.current) && new Network(visRef.current, { nodes, edges }, options);
-  }, [visRef, categories, precedence, edge]);
+  }, [visRef, categories, arrows, arrow]);
 
   return (
     <Paper

@@ -18,10 +18,10 @@ import type {
   PrecedenceEdge
 } from "../../domain/types";
 import CycleDetector from "../../utils/cycleDetector";
-import PrecedenceList from "../_shared/PrecedenceList";
-import PrecedenceDrawing from "../_shared/PrecedenceDrawing";
+import ArrowList from "../_shared/ArrowList";
+import ArrowDrawing from "../_shared/ArrowDrawing";
 
-type PrecedenceSelectorProps = {
+type ArrowSelectorProps = {
 
   /** Configured categories */
   categories: PlaceCategory[];
@@ -36,8 +36,8 @@ type PrecedenceSelectorProps = {
 /**
  * Category selector defining one side (cat from, or cat to) of a new arrow.
  */
-function PrecedenceSelector(
-  { categories, onSelect, "aria-label": ariaLabel }: PrecedenceSelectorProps): JSX.Element {
+function ArrowSelector(
+  { categories, onSelect, "aria-label": ariaLabel }: ArrowSelectorProps): JSX.Element {
 
   const [value, setValue] = useState("");
 
@@ -67,65 +67,65 @@ function PrecedenceSelector(
   )
 }
 
-export type PrecedenceBoxProps = {
+export type ArrowBoxProps = {
 
   /** Configured categories */
   categories: PlaceCategory[];
 
-  /** Confirmed edges */
-  precedence: PrecedenceEdge[];
+  /** Confirmed arrows */
+  arrows: PrecedenceEdge[];
 
-  /** Callback deleting an edge */
-  deleteEdge: (i: number) => void;
+  /** Callback deleting an arrow */
+  deleteArrow: (i: number) => void;
 
-  /** Callback appending an edge */
-  appendEdge: (e: PrecedenceEdge) => void;
+  /** Callback appending an arrow */
+  appendArrow: (e: PrecedenceEdge) => void;
 };
 
 /**
  * Dialog for adding category arrows.
  */
-export default function PrecedenceBox(
-  { categories, precedence, deleteEdge, appendEdge }: PrecedenceBoxProps): JSX.Element {
+export default function ArrowBox(
+  { categories, arrows, deleteArrow, appendArrow }: ArrowBoxProps): JSX.Element {
 
   const fullScreen = useMediaQuery(useTheme().breakpoints.down("sm"));
 
   const [showDialog, setShowDialog] = useState(false);
-  const [edgeFr, setEdgeFr] = useState<number | undefined>(undefined);
-  const [edgeTo, setEdgeTo] = useState<number | undefined>(undefined);
-  const [edge, setEdge] = useState<PrecedenceEdge | undefined>(undefined);
+  const [catFr, setCatFr] = useState<number | undefined>(undefined);
+  const [catTo, setCatTo] = useState<number | undefined>(undefined);
+  const [arrow, setArrow] = useState<PrecedenceEdge | undefined>(undefined);
 
   useEffect(() => {
-    setEdge((edgeFr !== undefined && edgeTo !== undefined)
-      ? { fr: edgeFr, to: edgeTo }
+    setArrow((catFr !== undefined && catTo !== undefined)
+      ? { fr: catFr, to: catTo }
       : undefined);
-  }, [edgeFr, edgeTo]);
+  }, [catFr, catTo]);
 
   const discardAction = () => {
-    setEdgeFr(undefined);
-    setEdgeTo(undefined);
+    setCatFr(undefined);
+    setCatTo(undefined);
     setShowDialog(false);
   };
 
   const confirmAction = () => {
 
-    if (!edge) { return; }
+    if (!arrow) { return; }
 
-    const repeated = precedence.some((e) => (e.fr === edge.fr && e.to === edge.to));
+    const repeated = arrows.some((e) => (e.fr === arrow.fr && e.to === arrow.to));
 
     if (repeated) {
-      alert(`Repeated arrow ${edge.fr + 1} → ${edge.to + 1} detected, try another one.`);
+      alert(`Repeated arrow ${arrow.fr + 1} → ${arrow.to + 1} detected, try another one.`);
       return;
     }
 
-    const cycle = new CycleDetector(categories.length, [...precedence, edge]).cycle();
+    const cycle = new CycleDetector(categories.length, [...arrows, arrow]).cycle();
 
     if (cycle !== undefined) {
       alert(`Cycle ${cycle.map((v) => v + 1).join(" → ")} detected, try another arrow.`);
       return;
     }
 
-    appendEdge(edge);
+    appendArrow(arrow);
     discardAction();
   };
 
@@ -135,9 +135,9 @@ export default function PrecedenceBox(
         role={"none"}
         variant={"outlined"}
       >
-        <PrecedenceList
-          precedence={precedence}
-          onDelete={deleteEdge}
+        <ArrowList
+          arrows={arrows}
+          onDelete={deleteArrow}
         />
         <Button
           size={"large"}
@@ -156,10 +156,10 @@ export default function PrecedenceBox(
           sx={{ display: "flex", justifyContent: "center" }}
         >
           <Stack mt={0.5} gap={2} maxWidth={"360px"}>
-            <PrecedenceDrawing
-              edge={edge}
+            <ArrowDrawing
+              arrow={arrow}
               categories={categories}
-              precedence={precedence}
+              arrows={arrows}
             />
             <Stack
               alignItems={"center"}
@@ -167,16 +167,16 @@ export default function PrecedenceBox(
               gap={2}
               justifyContent={"space-between"}
             >
-              <PrecedenceSelector
+              <ArrowSelector
                 aria-label={"this category"}
                 categories={categories}
-                onSelect={(i: number) => { setEdgeFr(i); }}
+                onSelect={(i: number) => { setCatFr(i); }}
               />
               <EastIcon titleAccess={"before"} />
-              <PrecedenceSelector
+              <ArrowSelector
                 aria-label={"that category"}
                 categories={categories}
-                onSelect={(i: number) => { setEdgeTo(i); }}
+                onSelect={(i: number) => { setCatTo(i); }}
               />
             </Stack>
             <Stack gap={1}>
@@ -195,7 +195,9 @@ export default function PrecedenceBox(
             </Stack>
           </Stack>
         </DialogContent>
-        <DialogActions sx={{ display: "flex", justifyContent: "space-between" }}>
+        <DialogActions
+          sx={{ display: "flex", justifyContent: "space-between" }}
+        >
           <Button
             color={"error"}
             onClick={discardAction}
@@ -203,7 +205,7 @@ export default function PrecedenceBox(
             <span>Discard</span>
           </Button>
           <Button
-            disabled={edge === undefined}
+            disabled={arrow === undefined}
             onClick={confirmAction}
           >
             <span>Confirm</span>

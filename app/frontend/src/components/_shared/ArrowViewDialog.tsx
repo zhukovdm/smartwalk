@@ -11,10 +11,10 @@ import {
   PlaceCategory,
   PrecedenceEdge
 } from "../../domain/types";
-import PrecedenceList from "./PrecedenceList";
-import PrecedenceDrawing from "./PrecedenceDrawing";
+import ArrowList from "./ArrowList";
+import ArrowDrawing from "./ArrowDrawing";
 
-export type PrecedenceViewDialogProps = {
+export type ArrowViewDialogProps = {
 
   /** Show dialog */
   show: boolean;
@@ -23,18 +23,18 @@ export type PrecedenceViewDialogProps = {
   categories: PlaceCategory[];
 
   /** User-defined arrows */
-  precedence: PrecedenceEdge[];
+  arrows: PrecedenceEdge[];
 
   /** Callback hiding dialog */
   onHide: () => void;
 };
 
 /**
- * Read-only view of precedence configuration with drawing and the list
+ * Read-only view of the arrow configuration with drawing and the list
  * of arrows.
  */
-export default function PrecedenceViewDialog(
-  { show, categories, precedence, onHide }: PrecedenceViewDialogProps): JSX.Element {
+export default function ArrowViewDialog(
+  { show, categories, arrows, onHide }: ArrowViewDialogProps): JSX.Element {
 
   const fullScreen = useMediaQuery(useTheme().breakpoints.down("sm"));
 
@@ -63,17 +63,17 @@ export default function PrecedenceViewDialog(
       </DialogTitle>
       <DialogContent>
         <Stack mt={0.5} gap={2} maxWidth={"360px"}>
-          {precedence.length > 0 &&
+          {arrows.length > 0 &&
             <Paper
               role={"none"}
               variant={"outlined"}
             >
-              <PrecedenceList precedence={precedence} />
+              <ArrowList arrows={arrows} />
             </Paper>
           }
-          <PrecedenceDrawing
+          <ArrowDrawing
             categories={categories}
-            precedence={precedence}
+            arrows={arrows}
           />
         </Stack>
       </DialogContent>

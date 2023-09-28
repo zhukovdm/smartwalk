@@ -28,7 +28,7 @@ export default class CycleDetector {
   private readonly vs: Vertex[];
   private readonly es: Set<number>[];
 
-  constructor(order: number, precedence: PrecedenceEdge[]) {
+  constructor(order: number, arrows: PrecedenceEdge[]) {
     this.vs = CycleDetector
       .getArrayBase(order)
       .map(() => CycleDetector.getCycleDetectorV());
@@ -36,7 +36,7 @@ export default class CycleDetector {
     this.es = CycleDetector
       .getArrayBase(order).map(() => new Set<number>());
 
-    precedence.forEach(({ fr, to }) => this.es[fr].add(to));
+    arrows.forEach(({ fr, to }) => this.es[fr].add(to));
   }
 
   private cycleImpl(u: number): boolean {

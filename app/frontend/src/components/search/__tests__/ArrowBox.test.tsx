@@ -1,30 +1,30 @@
 import {
   render as rtlRender
 } from "@testing-library/react";
-import PrecedenceBox, { type PrecedenceBoxProps } from "../PrecedenceBox";
+import ArrowBox, { type ArrowBoxProps } from "../ArrowBox";
 
 global.alert = jest.fn();
 
 jest.mock("vis-network");
 
-const getProps = (): PrecedenceBoxProps => ({
+const getProps = (): ArrowBoxProps => ({
   categories: [
     { keyword: "a", filters: {} },
     { keyword: "b", filters: {} },
     { keyword: "c", filters: {} },
   ],
-  precedence: [
+  arrows: [
     { fr: 0, to: 1 }
   ],
-  deleteEdge: jest.fn(),
-  appendEdge: jest.fn()
+  deleteArrow: jest.fn(),
+  appendArrow: jest.fn()
 });
 
 function render(props = getProps()) {
-  return rtlRender(<PrecedenceBox {...props} />);
+  return rtlRender(<ArrowBox {...props} />);
 }
 
-describe("<PrecedenceBox />", () => {
+describe("<ArrowBox />", () => {
 
   test("render", () => {
     expect(render().container).toBeTruthy();

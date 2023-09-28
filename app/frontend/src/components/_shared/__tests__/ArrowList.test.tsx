@@ -1,20 +1,18 @@
 import { render as rtlRender } from "@testing-library/react";
-import PrecedenceList, {
-  type PrecedenceListProps
-} from "../PrecedenceList";
+import ArrowList, { type ArrowListProps } from "../ArrowList";
 
-const getProps = (): PrecedenceListProps => ({
-  precedence: [
+const getProps = (): ArrowListProps => ({
+  arrows: [
     { fr: 0, to: 1 },
     { fr: 1, to: 2 }
   ]
 });
 
 function render(props = getProps()) {
-  return rtlRender(<PrecedenceList {...props} />);
+  return rtlRender(<ArrowList {...props} />);
 }
 
-describe("<PrecedenceList />", () => {
+describe("<ArrowList />", () => {
 
   test("render", () => {
     const { container } = render();

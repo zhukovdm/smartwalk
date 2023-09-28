@@ -12,9 +12,9 @@ import {
 } from "../features/resultRoutesSlice";
 import {
   appendSearchRoutesCategory,
-  appendSearchRoutesPrecEdge,
+  appendSearchRoutesArrow,
   deleteSearchRoutesCategory,
-  deleteSearchRoutesPrecEdge,
+  deleteSearchRoutesArrow,
   resetSearchRoutes,
   setSearchRoutesMaxDistance,
   updateSearchRoutesCategory,
@@ -31,11 +31,11 @@ import {
 import { useSearchRoutesMap } from "../features/searchHooks";
 import LogoCloseBar from "./_shared/LogoCloseBar";
 import PanelSelector from "./_shared/PanelSelector";
+import ArrowBox from "./search/ArrowBox";
 import BottomButtons from "./search/BottomButtons";
 import CategoryBox from "./search/CategoryBox";
 import DistanceSlider from "./search/DistanceSlider";
 import KilometersLink from "./search/KilometersLink";
-import PrecedenceBox from "./search/PrecedenceBox";
 import SourceTargetBox from "./search/SourceTargetBox";
 
 /**
@@ -51,7 +51,7 @@ export default function SearchRoutesPanel(): JSX.Element {
     target: storedTarget,
     maxDistance,
     categories,
-    precedence
+    arrows
   } = useAppSelector((state) => state.searchRoutes);
 
   const storedPlaces = useStoredPlaces();
@@ -70,7 +70,7 @@ export default function SearchRoutesPanel(): JSX.Element {
         target: target!,
         maxDistance: maxDistance,
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters })),
-        precedence: precedence
+        arrows
       });
       dispatch(resetResultRoutes());
       dispatch(setResultRoutes(routes));
@@ -123,11 +123,11 @@ export default function SearchRoutesPanel(): JSX.Element {
         <Typography>
           Categories could appear on a route in <strong>any</strong> order. Add arrows to impose a specific arrangement.
         </Typography>
-        <PrecedenceBox
+        <ArrowBox
           categories={categories}
-          precedence={precedence}
-          deleteEdge={(i: number) => { dispatch(deleteSearchRoutesPrecEdge(i)); }}
-          appendEdge={(e: PrecedenceEdge) => { dispatch(appendSearchRoutesPrecEdge(e)); }}
+          arrows={arrows}
+          deleteArrow={(i: number) => { dispatch(deleteSearchRoutesArrow(i)); }}
+          appendArrow={(e: PrecedenceEdge) => { dispatch(appendSearchRoutesArrow(e)); }}
         />
         <BottomButtons
           disabled={!source || !target || !(categories.length > 0)}

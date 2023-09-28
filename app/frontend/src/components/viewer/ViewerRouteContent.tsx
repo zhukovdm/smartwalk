@@ -5,9 +5,9 @@ import type { StoredRoute } from "../../domain/types";
 import { toggleViewerRouteFilter } from "../../features/viewerSlice";
 import { useAppDispatch, useAppSelector } from "../../features/storeHooks";
 import { useResultRoute } from "../../features/resultHooks";
+import ArrowViewDialog from "../_shared/ArrowViewDialog";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
-import PrecedenceViewDialog from "../_shared/PrecedenceViewDialog";
 import RouteContentList from "../_shared/RouteContentList";
 import TraversableHeader from "../_shared/TraversableHeader";
 
@@ -29,10 +29,10 @@ export default function ViewerRouteContent(
   } = useAppSelector((state) => state.viewer);
 
   const {
-    categories,
-    precedence,
     name,
-    path
+    path,
+    categories,
+    arrows
   } = route;
 
   const {
@@ -45,14 +45,14 @@ export default function ViewerRouteContent(
   // eslint-disable-next-line
   useEffect(() => { map?.flyTo(source); }, []);
 
-  const [showPrecedence, setShowPrecedence] = useState(false);
+  const [showArrows, setShowArrows] = useState(false);
 
   return (
     <Stack gap={2.5}>
       <TraversableHeader name={name} />
       <Stack gap={1}>
         <Typography>
-          This route is <strong>{parseFloat(path.distance.toFixed(2))}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowPrecedence(true); }} />):
+          This route is <strong>{parseFloat(path.distance.toFixed(2))}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowArrows(true); }} />):
         </Typography>
         <CategoryFilterList
           categories={categories}
@@ -62,11 +62,11 @@ export default function ViewerRouteContent(
             dispatch(toggleViewerRouteFilter(index));
           }}
         />
-        <PrecedenceViewDialog
-          show={showPrecedence}
+        <ArrowViewDialog
+          show={showArrows}
           categories={categories}
-          precedence={precedence}
-          onHide={() => { setShowPrecedence(false); }}
+          arrows={arrows}
+          onHide={() => { setShowArrows(false); }}
         />
       </Stack>
       <RouteContentList

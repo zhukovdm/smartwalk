@@ -11,11 +11,11 @@ import {
   renderWithProviders
 } from "../../../utils/testUtils";
 import InmemStorage from "../../../utils/inmemStorage";
+import { LeafletMap } from "../../../utils/leaflet";
 import { context } from "../../../features/context";
 import { initialResultRoutesState } from "../../../features/resultRoutesSlice";
 import { initialFavoritesState } from "../../../features/favoritesSlice";
 import ResultRoutesContent from "../ResultRoutesContent";
-import { LeafletMap } from "../../../utils/leaflet";
 
 jest.mock("vis-network", () => ({
   Network: jest.fn().mockImplementation()
@@ -64,7 +64,7 @@ describe("<ResultRoutesContent />", () => {
                 categories: [
                   { keyword: "castle", filters: {} },
                 ],
-                precedence: [],
+                arrows: [],
                 places: [
                   {
                     ...getPlace(),
