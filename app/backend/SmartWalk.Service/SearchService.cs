@@ -51,7 +51,7 @@ public static class SearchService
 
     public async static Task<List<Route>> GetRoutes(
         IEntityIndex entityIndex, IRoutingEngine routingEngine, WgsPoint source, WgsPoint target,
-        double maxDistance, List<Category> categories, List<PrecedenceEdge> precedence)
+        double maxDistance, List<Category> categories, List<PrecedenceEdge> arrows)
     {
         var result = new List<Route>();
 
@@ -81,7 +81,7 @@ public static class SearchService
                        select new PrecedenceEdge(fr, targetCat);
 
         var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(precedence.Concat(sourceEs).Concat(targetEs), totalCats, precedence.Count > 0);
+            .GetPrecedenceMatrix(arrows.Concat(sourceEs).Concat(targetEs), totalCats, arrows.Count > 0);
 
         var distMatrix = new HaversineDistanceMatrix(places);
 

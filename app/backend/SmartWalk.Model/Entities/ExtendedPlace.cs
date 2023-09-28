@@ -176,23 +176,23 @@ public sealed class PlaceAttributes
 
     /// <example>["men", "women", "children"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> clothes { get; init; }
+    public List<string> clothes { get; init; }
 
     /// <example>["czech", "oriental"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> cuisine { get; init; }
+    public List<string> cuisine { get; init; }
 
     /// <example>["catholic", "protestant"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> denomination { get; init; }
+    public List<string> denomination { get; init; }
 
     /// <example>["amex", "cash", "mastercard"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> payment { get; init; }
+    public List<string> payment { get; init; }
 
     /// <example>["bike", "car", "equipment"]</example>
     [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-    public SortedSet<string> rental { get; init; }
+    public List<string> rental { get; init; }
 }
 
 [BsonIgnoreExtraElements]

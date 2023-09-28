@@ -49,6 +49,9 @@ public sealed class CycleDetector
         _Es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
     }
 
+    /// <summary>
+    /// Add directed edge (fr -> to), repeated edges are allowed.
+    /// </summary>
     public CycleDetector AddEdge(int fr, int to) { _ = _Es[fr].Add(to); return this; }
 
     /// <summary>

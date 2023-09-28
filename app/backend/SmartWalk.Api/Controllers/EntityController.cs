@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -19,12 +18,14 @@ public sealed class EntityController : ControllerBase
     private readonly IEntityContext _context;
     private readonly ILogger<EntityController> _logger;
 
-    private static bool VerifySmartId(string smartId) => ObjectId.TryParse(smartId, out _);
-
     public EntityController(IEntityContext context, ILogger<EntityController> logger)
     {
         _context = context; _logger = logger;
     }
+
+    # region Places
+
+    private static bool ValidateSmartId(string smartId) => ObjectId.TryParse(smartId, out _);
 
     /// <summary></summary>
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
@@ -36,17 +37,15 @@ public sealed class EntityController : ControllerBase
     [Route("places/{smartId}", Name = "GetPlace")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(ValidationProblemDetails), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
-        if (!VerifySmartId(smartId))
+        if (!ValidateSmartId(smartId))
         {
-            return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
-            {
-                { "smartId", new string[] { "Malformed identifier." } }
-            }));
+            ModelState.AddModelError("smartId", "Malformed identifier.");
+            return ValidationProblem();
         }
 
         try
@@ -54,6 +53,12 @@ public sealed class EntityController : ControllerBase
             var place = await PlacesService.GetPlace(_context.EntityStore, smartId);
             return (place is not null) ? place : NotFound();
         }
-        catch (Exception ex) { _logger.LogError(ex.Message); return StatusCode(500); }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex.Message);
+            return StatusCode(StatusCodes.Status500InternalServerError);
+        }
     }
+
+    # endregion
 }

@@ -8,11 +8,11 @@ public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
     private static List<List<bool>> GetEmpty(int order)
         => Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
 
-    public static List<List<bool>> GetLists(IEnumerable<PrecedenceEdge> precedence, int order)
+    public static List<List<bool>> GetLists(IEnumerable<PrecedenceEdge> edges, int order)
     {
         var matrix = GetEmpty(order);
 
-        foreach (var edge in precedence)
+        foreach (var edge in edges)
         {
             matrix[edge.fr][edge.to] = true;
         }
