@@ -299,9 +299,6 @@ describe("<SearchPlacesPanel />", () => {
           keyword,
           filters: {}
         })),
-        precedence: [
-          { fr: 0, to: 1 }
-        ],
         radius: 5.0,
       }
     })

@@ -454,9 +454,9 @@ describe("<SearchRoutesPanel />", () => {
     });
   });
 
-  describe("precedence", () => {
+  describe("arrows", () => {
 
-    const getPreloadedState = (precedence: PrecedenceEdge[]) => ({
+    const getPreloadedState = (arrows: PrecedenceEdge[]) => ({
       searchRoutes: {
         ...initialSearchRoutesState(),
         categories: ["bridge", "castle", "museum", "statue"].map((keyword) => ({
@@ -464,7 +464,7 @@ describe("<SearchRoutesPanel />", () => {
           keyword,
           filters: {}
         })),
-        precedence
+        arrows
       }
     });
 
@@ -602,7 +602,7 @@ describe("<SearchRoutesPanel />", () => {
           keyword,
           filters: {}
         })),
-        precedence: [
+        arrows: [
           { fr: 0, to: 1 }
         ],
         maxDistance: 3.1,

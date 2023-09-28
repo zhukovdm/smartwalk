@@ -3,22 +3,20 @@ import {
   render as rtlRender
 } from "@testing-library/react";
 import { Network } from "vis-network";
-import PrecedenceViewDialog, {
-  type PrecedenceViewDialogProps
-} from "../PrecedenceViewDialog";
+import ArrowViewDialog, { type ArrowViewDialogProps } from "../ArrowViewDialog";
 
 jest.mock("vis-network", () => ({
   Network: jest.fn().mockImplementation(() => { })
 }));
 
-const getProps = (): PrecedenceViewDialogProps => ({
+const getProps = (): ArrowViewDialogProps => ({
   show: true,
   categories: [
     { keyword: "castle", filters: {} },
     { keyword: "museum", filters: {} },
     { keyword: "statue", filters: {} }
   ],
-  precedence: [
+  arrows: [
     { fr: 0, to: 1 },
     { fr: 1, to: 2 }
   ],
@@ -26,10 +24,10 @@ const getProps = (): PrecedenceViewDialogProps => ({
 });
 
 function render(props = getProps()) {
-  return rtlRender(<PrecedenceViewDialog {...props} />);
+  return rtlRender(<ArrowViewDialog {...props} />);
 }
 
-describe("<PrecedenceViewDialog />", () => {
+describe("<ArrowViewDialog />", () => {
 
   test("render", () => {
     const { container } = render();
@@ -40,12 +38,12 @@ describe("<PrecedenceViewDialog />", () => {
     const { container } = render({
       ...getProps(),
       categories: [],
-      precedence: []
+      arrows: []
     });
     expect(container).toBeTruthy();
   })
 
-  describe("precedence list", () => {
+  describe("arrow list", () => {
 
     test("rendered", () => {
       const { getAllByRole } = render();
@@ -55,7 +53,7 @@ describe("<PrecedenceViewDialog />", () => {
     test("not rendered if array is empty", () => {
       const { queryAllByRole } = render({
         ...getProps(),
-        precedence: []
+        arrows: []
       });
       expect(queryAllByRole("list").length).toEqual(0);
     });

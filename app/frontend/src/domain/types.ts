@@ -519,7 +519,7 @@ export type RoutesRequest = {
   categories: PlaceCategory[];
 
   /** Poset on categories. */
-  precedence: PrecedenceEdge[];
+  arrows: PrecedenceEdge[];
 };
 
 type RouteAttributes = RoutesRequest & {

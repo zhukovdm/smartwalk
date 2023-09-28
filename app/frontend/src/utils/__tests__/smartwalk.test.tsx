@@ -166,7 +166,7 @@ describe("smartwalk", () => {
         keyword,
         filters: {}
       })),
-      precedence: []
+      arrows: []
     });
 
     it("should get a value object", async () => {

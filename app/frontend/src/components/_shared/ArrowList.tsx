@@ -3,17 +3,16 @@ import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
 import { PrecedenceEdge } from "../../domain/types";
 
-export type PrecedenceListProps = {
+export type ArrowListProps = {
 
   /** Confirmed arrows */
-  precedence: PrecedenceEdge[];
+  arrows: PrecedenceEdge[];
 
   /** Callback deleting an arrow */
   onDelete?: (index: number) => void;
 };
 
-export default function PrecedenceList(
-  { precedence, onDelete }: PrecedenceListProps): JSX.Element {
+export default function ArrowList({ arrows, onDelete }: ArrowListProps): JSX.Element {
 
   return (
     <Stack
@@ -22,7 +21,7 @@ export default function PrecedenceList(
       direction={"row"}
       flexWrap={"wrap"}
     >
-      {precedence.map((edge, i) => (
+      {arrows.map((edge, i) => (
         <Box
           key={i}
           role={"listitem"}
