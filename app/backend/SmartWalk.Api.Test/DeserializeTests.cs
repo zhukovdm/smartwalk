@@ -1,160 +1,141 @@
-using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NJsonSchema;
 using SmartWalk.Api.Controllers;
+using SmartWalk.Model.Entities;
 using static SmartWalk.Api.Controllers.SearchController;
 
 namespace SmartWalk.Api.Tests;
 
 /// <summary>
-/// All queries are eventually JSON objects. NJsonSchema internally uses
-/// primitive from json.net library. The behavior of it is sometimes unexpected,
-/// corner cases are tested by the class below. Tests are applicable for all
-/// user-defined classes.
+/// All queries are ultimately JSON objects. NJsonSchema internally uses
+/// primitives from the `json.net` library. The behavior of it is sometimes
+/// unexpected, and corner cases are tested by the class below. Even though
+/// schema validates against the `DirecsQuery` type, these tests are applicable
+/// to all user-defined classes.
 /// </summary>
 [TestClass]
 public class QueryDeserializeTests
 {
-    private static readonly JsonSchema _s = JsonSchema.FromType<DirecsQuery>();
+    private static readonly JsonSchema _schema = JsonSchema.FromType<DirecsQuery>();
 
     [TestMethod]
-    [ExpectedException(typeof(Newtonsoft.Json.JsonReaderException))]
     public void EmptyQuery()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("", _s); // invalid Json!
+        var query = "";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Newtonsoft.Json.JsonReaderException))]
     public void QueryAsInvalidJsonString()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("{1}", _s);
+        var query = "{1}";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void QueryAsEmptyObject()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("{}", _s);
+        var query = "{}";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void QueryAsEmptyArray()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("[]", _s);
+        var query = "[]";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void QueryAsEmptyString()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("\"\"", _s);
+        var query = "\"\"";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void QueryAsZeroString()
+    public void QueryAsNumber()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("0", _s);
+        var query = "0";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void QueryAsNumberString()
+    public void QueryAsBoolean()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("1", _s);
+        var query = "false";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void QueryAsTrueString()
+    public void QueryAsNull()
     {
-        SearchController.DeserializeQuery<DirecsQuery>("true", _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void QueryAsFalseString()
-    {
-        SearchController.DeserializeQuery<DirecsQuery>("false", _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void QueryAsNullString()
-    {
-        SearchController.DeserializeQuery<DirecsQuery>("null", _s);
+        var query = "null";
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 }
 
 [TestClass]
 public class WebPointDeserializeTests
 {
-    private static readonly JsonSchema _s = JsonSchema.FromType<WebPoint>();
+    private static readonly JsonSchema _schema = JsonSchema.FromType<WebPoint>();
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingLon()
     {
-        var q = @"{
+        var query = @"{
             ""lat"": 0.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void BelowLowerBoundLon()
     {
-        var q = @"{
+        var query = @"{
             ""lon"": -181.0,
             ""lat"": 0.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void AboveUpperBoundLon()
     {
         var q = @"{
             ""lon"": 181.0,
             ""lat"": 0.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingLat()
     {
-        var q = @"{
+        var query = @"{
             ""lon"": 0.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void BelowLowerBoundLat()
     {
         var q = @"{
             ""lon"": 0.0,
             ""lat"": -86.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void AboveUpperBoundLat()
     {
         var q = @"{
             ""lon"": 0.0,
             ""lat"": 86.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
     }
 
     [TestMethod]
@@ -164,84 +145,154 @@ public class WebPointDeserializeTests
             ""lon"": 0.0,
             ""lat"": 0.0
         }";
-        SearchController.DeserializeQuery<WebPoint>(q, _s);
+        Assert.IsTrue(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
     }
 }
 
 [TestClass]
 public class WebPrecedenceEdgeDeserializeTests
 {
-    private static readonly JsonSchema _s = JsonSchema.FromType<WebPrecedenceEdge>();
+    private static readonly JsonSchema _schema = JsonSchema.FromType<WebPrecedenceEdge>();
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingFr()
     {
-        var q = @"{
+        var query = @"{
             ""to"": 0
         }";
-        SearchController.DeserializeQuery<WebPrecedenceEdge>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void BelowLowerBoundFr()
     {
-        var q = @"{
+        var query = @"{
             ""fr"": -1,
             ""to"": 0
         }";
-        SearchController.DeserializeQuery<WebPrecedenceEdge>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingTo()
     {
-        var q = @"{
+        var query = @"{
             ""fr"": 0
         }";
-        SearchController.DeserializeQuery<WebPrecedenceEdge>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void BelowLowerBoundTo()
     {
-        var q = @"{
+        var query = @"{
             ""fr"": 0,
             ""to"": -1
         }";
-        SearchController.DeserializeQuery<WebPrecedenceEdge>(q, _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void ExtraProperty()
-    {
-        var q = @"{
-            ""fr"": 0,
-            ""to"": 0,
-            ""ex"": 0
-        }";
-        SearchController.DeserializeQuery<WebPrecedenceEdge>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var q = @"{
+        var query = @"{
             ""fr"": 0,
             ""to"": 0
         }";
-        SearchController.DeserializeQuery<WebPrecedenceEdge>(q, _s);
+        Assert.IsTrue(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
+    }
+}
+
+[TestClass]
+public class AttributeFilterNumericDeserializeTests
+{
+    private static readonly JsonSchema _schema = JsonSchema.FromType<AttributeFilterNumeric>();
+
+    [TestMethod]
+    public void MissingMin()
+    {
+        var query = @"{
+            ""max"": 0.0
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterNumeric>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MissingMax()
+    {
+        var query = @"{
+            ""min"": 0.0
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterNumeric>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void WellFormed()
+    {
+        var query = @"{
+            ""min"": 0.0
+            ""max"": 0.0
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterNumeric>(query, _schema, out var _));
+    }
+}
+
+[TestClass]
+public class AttributeFilterCollectDeserializeTests
+{
+    private static readonly JsonSchema _schema = JsonSchema.FromType<AttributeFilterCollect>();
+
+    [TestMethod]
+    public void MissingInc()
+    {
+        var query = @"{
+            ""exc"": [""e""]
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterCollect>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MissingExc()
+    {
+        var query = @"{
+            ""inc"": [""i""]
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterCollect>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void WellFormed()
+    {
+        var query = @"{
+            ""inc"": [""i""],
+            ""exc"": [""e""]
+        }";
+        Assert.IsTrue(SearchController.ValidateQuery<AttributeFilterCollect>(query, _schema, out var _));
     }
 }
 
 [TestClass]
 public class CategoryDeserializeTests
 {
-    
+    private static readonly JsonSchema _schema = JsonSchema.FromType<Category>();
+
+    [TestMethod]
+    public void MissingKeyword()
+    {
+        var query = @"{
+            ""filters"": {}
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<Category>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MissingFilters()
+    {
+        var query = @"{
+            ""keyword"": ""abc""
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<Category>(query, _schema, out var _));
+    }
 }
 
 [TestClass]
@@ -250,15 +301,6 @@ public class DirecsQueryDeserializeTests
     private static readonly JsonSchema _s = JsonSchema.FromType<DirecsQuery>();
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void MissingWaypoints()
-    {
-        var q = @"{}";
-        SearchController.DeserializeQuery<DirecsQuery>(q, _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void TooSmallNumberOfWaypoints()
     {
         var q = @"
@@ -267,22 +309,7 @@ public class DirecsQueryDeserializeTests
                 { ""lon"": 0.0, ""lat"": 0.0 }
             ]
         }";
-        SearchController.DeserializeQuery<DirecsQuery>(q, _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void ExtraProperty()
-    {
-        var q = @"
-        {
-            ""waypoints"":[
-                { ""lon"": 0.0, ""lat"": 0.0 },
-                { ""lon"": 1.0, ""lat"": 1.0 }
-            ],
-            ""ex"": 0
-        }";
-        SearchController.DeserializeQuery<DirecsQuery>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(q, _s, out var _));
     }
 
     [TestMethod]
@@ -295,151 +322,269 @@ public class DirecsQueryDeserializeTests
                 { ""lon"": 1.0, ""lat"": 1.0 }
             ]
         }";
-        SearchController.DeserializeQuery<DirecsQuery>(q, _s);
+        Assert.IsTrue(SearchController.ValidateQuery<DirecsQuery>(q, _s, out var _));
     }
 }
 
 [TestClass]
 public class PlacesQueryDeserializeTests
 {
-    private static readonly JsonSchema _s = JsonSchema.FromType<PlacesQuery>();
+    private static readonly JsonSchema _schema = JsonSchema.FromType<PlacesQuery>();
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingCenter()
     {
-        var q = @"
-        {
+        var query = @"{
             ""radius"": 0,
-            ""categories"": [],
-            ""offset"": 0,
-            ""bucket"": 0
+            ""categories"": []
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingRadius()
     {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""categories"": [],
-            ""offset"": 0,
-            ""bucket"": 0
+        var query = @"{
+            ""center"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""categories"": []
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void RadiusBelowLowerBound()
     {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": -1,
-            ""categories"": [],
-            ""offset"": 0,
-            ""bucket"": 0
+        var query = @"{
+            ""center"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""radius"": -1.0,
+            ""categories"": []
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void RadiusAboveUpperBound()
     {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": 12001,
-            ""categories"": [],
-            ""offset"": 0,
-            ""bucket"": 0
+        var query = @"{
+            ""center"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""radius"": 15001.0,
+            ""categories"": []
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
     public void MissingCategories()
     {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": 0,
-            ""offset"": 0,
-            ""bucket"": 0
+        var query = @"{
+            ""center"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""radius"": 0
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void MissingOffset()
+    public void WellFormedWithEmptyCategories()
     {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": 0,
-            ""categories"": [],
-            ""bucket"": 0
+        var query = @"{
+            ""center"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""radius"": 3000,
+            ""categories"": []
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsTrue(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void OffsetBelowLowerBound()
+    public void WellFormedWithNonEmptyCategories()
     {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": 0,
-            ""categories"": [],
-            ""offset"": -1,
-            ""bucket"": 0
+        var query = @"{
+            ""center"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""radius"": 3000,
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ]
         }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void MissingBucket()
-    {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": 0,
-            ""categories"": [],
-            ""offset"": 0
-        }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(Exception))]
-    public void BucketBelowLowerBound()
-    {
-        var q = @"
-        {
-            ""center"": { ""lon"": 0.0, ""lat"": 0.0 },
-            ""radius"": 0,
-            ""categories"": [],
-            ""offset"": 0,
-            ""bucket"": -1
-        }";
-        SearchController.DeserializeQuery<PlacesQuery>(q, _s);
+        Assert.IsTrue(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 }
 
 [TestClass]
 public class RoutesQueryDeserializeTests
 {
+    private static readonly JsonSchema _schema = JsonSchema.FromType<RoutesQuery>();
+
     [TestMethod]
-    public void Test()
+    public void MissingSource()
     {
+        var query = @"{
+            ""target"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""maxDistance"": 5.0,
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ],
+            ""arrows"": []
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MissingTarget()
+    {
+        var query = @"{
+            ""source"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""maxDistance"": 5.0,
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ],
+            ""arrows"": []
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MissingMaxDistance()
+    {
+        var query = @"{
+            ""source"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""target"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ],
+            ""arrows"": []
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MaxDistanceBelowLowerBound()
+    {
+        var query = @"{
+            ""source"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""target"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""maxDistance"": -1.0
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ],
+            ""arrows"": []
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void MaxDistanceAboveUpperBound()
+    {
+        var query = @"{
+            ""source"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""target"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""maxDistance"": 30001.0,
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ],
+            ""arrows"": []
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void EmptyCategories()
+    {
+        var query = @"{
+            ""source"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""target"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""maxDistance"": 5000.0,
+            ""categories"": [],
+            ""arrows"": []
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+    }
+
+    [TestMethod]
+    public void WellFormed()
+    {
+        var query = @"{
+            ""source"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""target"": {
+                ""lon"": 0.0,
+                ""lat"": 0.0
+            },
+            ""maxDistance"": 5.0,
+            ""categories"": [
+                {
+                    ""keyword"": ""museum"",
+                    ""filters"": {}
+                }
+            ],
+            ""arrows"": []
+        }";
+        Assert.IsTrue(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
     }
 }
