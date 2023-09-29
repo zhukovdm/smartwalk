@@ -24,8 +24,13 @@ public sealed class SearchController : ControllerBase
 {
     internal static bool ValidateQuery<T>(string query, JsonSchema schema, out List<string> errors)
     {
-        errors = schema.Validate(query)
-            .Select((e) => $"{e.Path}/{e.Property} {e.Kind}, line {e.LineNumber}, position {e.LinePosition}.").ToList();
+        try
+        {
+            errors = schema.Validate(query)
+                .Select((e) => $"{e.Kind} at {e.Path}, line {e.LineNumber}, position {e.LinePosition}.").ToList();
+        }
+        catch (Exception) { errors = new() { "Invalid JSON string." }; }
+
         return errors.Count == 0;
     }
 
