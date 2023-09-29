@@ -39,7 +39,7 @@ internal class Program
 
         try
         {
-            var locator = await LocatorFactory
+            var locator = await OverpassLocatorFactory
                 .GetInstance(log, opt.Bbox.ToList(), opt.Rows, opt.Cols);
 
             var source = SourceFactory

@@ -13,7 +13,7 @@ services:
       - ../data/assets/routing:/data
     entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${REGION_FILE}.osrm
     healthcheck:
-      test: wget --no-verbose --tries=1 --spider 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
+      test: curl --head --silent --fail 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
       interval: 15s
       timeout: 15s
       retries: 10
