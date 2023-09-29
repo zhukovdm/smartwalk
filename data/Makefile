@@ -4,10 +4,40 @@
 
 REGION_FILE=czech-republic-latest
 
+# Prague
+
 REGION_W=14.18
 REGION_N=50.20
 REGION_E=14.80
 REGION_S=49.90
+
+# Brno
+
+# REGION_W=16.52
+# REGION_N=49.27
+# REGION_E=16.72
+# REGION_S=49.12
+
+# Ostrava
+
+# REGION_W=18.14
+# REGION_N=49.88
+# REGION_E=18.36
+# REGION_S=49.75
+
+# Plzen
+
+# REGION_W=13.29
+# REGION_N=49.79
+# REGION_E=13.44
+# REGION_S=49.69
+
+# Liberec
+
+# REGION_W=14.99
+# REGION_N=50.81
+# REGION_E=15.11
+# REGION_S=50.68
 
 ################################################################################
 
@@ -21,9 +51,6 @@ R_CMD=docker run --rm -t -v $(A_DIR)/routing:/data osrm/osrm-backend:v5.24.0
 
 # entity store
 M_URL=mongodb://localhost:27017
-
-# entity index
-I_URL=http://localhost:9200
 
 ################################################################################
 
