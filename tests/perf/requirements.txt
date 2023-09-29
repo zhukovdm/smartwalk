@@ -1,0 +1,3 @@
+matplotlib
+pymongo
+requests
