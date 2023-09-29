@@ -8,11 +8,11 @@ using Newtonsoft.Json;
 using SmartWalk.Core.Algorithms;
 using SmartWalk.Model.Entities;
 
-namespace SmartWalk.Experiment.Core;
+namespace SmartWalk.Experiment;
 
-static class CoreExperiments
+internal class Program
 {
-    internal static void BoundingEllipse()
+    static void Main(string[] args)
     {
         var f1 = new WgsPoint(14.4035264, 50.0884344);
         var f2 = new WgsPoint(14.4073961, 50.0909408);
@@ -46,6 +46,6 @@ static class CoreExperiments
             GeoJsonSerializer.Create().Serialize(jsonWriter, c);
         }
 //      Console.WriteLine(writer);
-        File.WriteAllText("./results/core/bounding-ellipse.json", writer.ToString());
+        File.WriteAllText("./result.json", writer.ToString());
     }
 }
