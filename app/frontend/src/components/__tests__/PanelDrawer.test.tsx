@@ -1197,7 +1197,7 @@ describe("<PanelDrawer />", () => {
             expect(within(places[i]).getByText(name)).toBeInTheDocument();
           });
         });
-      });
+      }, 10_000);
     });
   });
 

@@ -4,8 +4,8 @@ services:
   database:
     image: mongo:4.4.23
     container_name: smartwalk-database
-    ports:
-      - '27017:27017'
+#   ports:
+#     - '27017:27017'
     volumes:
       - ../data/assets/database:/data/db
     networks:

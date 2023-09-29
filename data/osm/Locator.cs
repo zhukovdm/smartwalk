@@ -208,9 +208,3 @@ SELECT ?oid ?loc WHERE {{
         return new(logger, Extract(logger, await Fetch(logger, bbox)));
     }
 }
-
-internal static class LocatorFactory
-{
-    public static Task<Locator> GetInstance(ILogger logger, List<string> bbox, int rows, int cols)
-        => OverpassLocatorFactory.GetInstance(logger, bbox, rows, cols);
-}
