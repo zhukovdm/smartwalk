@@ -1,5 +1,7 @@
-from typing import List, Tuple
+from typing import Any, List, Tuple
+import numpy as np
 import pymongo
+from scipy import stats
 
 class Store:
 
@@ -26,10 +28,15 @@ class Store:
         (w, n, e, s) = bbox
         return list(self.__placeColl.find({ "location": { "$within": { "$box": [[w, s], [e, n]] } } }, { "_id": 0, "location": 1 }))
 
-    def get_keywords(self) -> (List[str], List[int]):
+    def get_keywords(self) -> (List[str], Any):
         objects = list(self.__keywdColl.find())
 
         keywords = list(map(lambda object: object["keyword"], objects))
         counts = list(map(lambda object: object["count"], objects))
 
-        return (keywords, counts)
+        total = sum(counts)
+        pmf = list(map(lambda count: count / total, counts))
+
+        rv = stats.rv_discrete(values=(np.arange(len(counts)), pmf))
+
+        return (keywords, rv)
