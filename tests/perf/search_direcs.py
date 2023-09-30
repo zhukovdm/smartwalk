@@ -62,7 +62,7 @@ def draw() -> None:
 
     fig.tight_layout()
 
-    plt.savefig(f"./search-direcs.pdf", format="pdf")
+    plt.savefig(f"./perf-search-direcs.pdf", format="pdf")
 
 def main() -> None:
     measure()

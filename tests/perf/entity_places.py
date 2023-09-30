@@ -42,7 +42,7 @@ def draw() -> None:
     ax.tick_params(bottom=False)
 
     fig.tight_layout()
-    plt.savefig(f"./entity-places.pdf", format="pdf")
+    plt.savefig(f"./perf-entity-places.pdf", format="pdf")
 
 def main() -> None:
     measure()

@@ -53,7 +53,7 @@ def draw() -> None:
     ax.set_ylabel("Response time, ms")
 
     fig.tight_layout()
-    plt.savefig(f"./advice-keywords.pdf", format="pdf")
+    plt.savefig(f"./perf-advice-keywords.pdf", format="pdf")
 
 def main() -> None:
     measure()
