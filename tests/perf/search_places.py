@@ -1,8 +1,8 @@
-from typing import Any
 from datetime import datetime
 import matplotlib.pyplot as plt
 import random
 
+from lib.drawing import enrich_subplot
 from lib.store import Store
 from lib.smartwalk import baseUrl, make_request, serialize_request, \
     time_to_milliseconds
@@ -18,9 +18,8 @@ def get_url(request: dict) -> str:
 def make_trial(request: dict) -> float:
     start_time = datetime.now()
     _ = make_request(get_url(request))
-    stop_time = datetime.now()
 
-    return time_to_milliseconds(stop_time - start_time)
+    return time_to_milliseconds(datetime.now() - start_time)
 
 def measure() -> None:
     global category_counts, measurements
@@ -45,18 +44,9 @@ def measure() -> None:
                     }
                     measurements[c][r].append(make_trial(request))
 
-def enrich_subplot(subplot: Any) -> None:
-    subplot.set_xticklabels(radii)
-    _, top = subplot.get_ylim()
-
-    if (top > 300):
-        subplot.axhline(300, linewidth=1.0, linestyle="dotted", color="black")
-
-    if (top > 1_000):
-        subplot.axhline(1_000, linewidth=1.0, linestyle="dotted", color="red")
 
 def draw() -> None:
-    global category_counts, measurements
+    global category_counts, radii, measurements
 
     fig, axs = plt.subplots(2, 2, figsize=(10, 5))
 
@@ -64,7 +54,7 @@ def draw() -> None:
 
     ax = axs[0, 0]
     ax.boxplot(measurements[0])
-    enrich_subplot(ax)
+    enrich_subplot(ax, radii)
     ax.set_title("1 category")
     ax.set_ylabel("Response time, ms")
 
@@ -73,7 +63,7 @@ def draw() -> None:
     ax = axs[0, 1]
 
     ax.boxplot(measurements[1])
-    enrich_subplot(ax)
+    enrich_subplot(ax, radii)
     ax.set_title("2 categories")
 
     #
@@ -81,7 +71,7 @@ def draw() -> None:
     ax = axs[1, 0]
 
     ax.boxplot(measurements[2])
-    enrich_subplot(ax)
+    enrich_subplot(ax, radii)
     ax.set_title("3 categories")
     ax.set_xlabel("Radius, km")
     ax.set_ylabel("Response time, ms")
@@ -91,12 +81,12 @@ def draw() -> None:
     ax = axs[1, 1]
 
     ax.boxplot(measurements[3])
-    enrich_subplot(ax)
+    enrich_subplot(ax, radii)
     ax.set_title("∞ categories")
     ax.set_xlabel("Radius, km")
 
     fig.tight_layout()
-    plt.savefig(f"./search-places.pdf", format="pdf")
+    plt.savefig(f"./perf-search-places.pdf", format="pdf")
 
 def main():
     measure()
