@@ -26,5 +26,10 @@ class Store:
         (w, n, e, s) = bbox
         return list(self.__placeColl.find({ "location": { "$within": { "$box": [[w, s], [e, n]] } } }, { "_id": 0, "location": 1 }))
 
-    # def get_keywords(self) -> List[dict]:
-    #     return list(self.__keywdColl.find())
+    def get_keywords(self) -> (List[str], List[int]):
+        objects = list(self.__keywdColl.find())
+
+        keywords = list(map(lambda object: object["keyword"], objects))
+        counts = list(map(lambda object: object["count"], objects))
+
+        return (keywords, counts)
