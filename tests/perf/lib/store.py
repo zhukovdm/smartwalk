@@ -19,15 +19,12 @@ class Store:
         if self.__client is not None:
             self.__client.close()
 
-    def get_place_count(self) -> int:
-        return self.__placeColl.count_documents({})
+    def get_place_identifiers(self) -> List[str]:
+        return list(map(lambda obj: str(obj["_id"]), self.__placeColl.find({}, { "_id": 1 })))
 
-    def get_place_on_offset(self, offset: int):
-        return list(self.__placeColl.find({}).skip(offset).limit(1))[0]
-
-    def get_places_within(self, bbox: Tuple[float, float, float, float]) -> List[dict]:
+    def get_locations_within(self, bbox: Tuple[float, float, float, float]) -> List[dict]:
         (w, n, e, s) = bbox
         return list(self.__placeColl.find({ "location": { "$within": { "$box": [[w, s], [e, n]] } } }, { "_id": 0, "location": 1 }))
 
-    def get_keywords(self) -> List[dict]:
-        return list(self.__keywdColl.find())
+    # def get_keywords(self) -> List[dict]:
+    #     return list(self.__keywdColl.find())
