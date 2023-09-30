@@ -4,7 +4,7 @@ import random
 import requests
 
 from lib.store import Store
-from lib.smartwalk import baseUrl, bboxes, headers, \
+from lib.smartwalk import baseUrl, bboxes, make_request, \
     serialize_request, time_to_milliseconds
 
 count = [0, 1, 3, 5]
@@ -15,9 +15,7 @@ def get_url(request: dict) -> str:
 
 def make_trial(request: dict) -> (float, float):
     start_time = datetime.now()
-
-    response = requests.get(get_url(request), headers=headers)
-
+    response = make_request(get_url(request))
     stop_time = datetime.now()
 
     distance = response.json()[0]["distance"]

@@ -1,11 +1,15 @@
 from datetime import timedelta
 import json
+import requests
 from urllib.parse import quote
 
 baseUrl = "http://localhost:5017/api"
 headers = {
     "Accept": "application/json; charset=utf-8"
 }
+
+def make_request(url: str):
+    return requests.get(url, headers=headers)
 
 def time_to_milliseconds(time_dif: timedelta) -> float:
     return time_dif.total_seconds() * 1000.0
