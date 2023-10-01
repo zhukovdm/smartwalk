@@ -7,10 +7,11 @@ import {
 } from "mongodb";
 
 const DATABASE_NAME = "smartwalk";
+
 const PLACE_COLLECTION = "place";
 const KEYWORD_COLLECTION = "keyword";
 
-class ModelIterator implements AsyncIterator<any> {
+class StoreIterator implements AsyncIterator<any> {
 
   private readonly cursor: FindCursor<WithId<any>>;
 
@@ -29,7 +30,7 @@ class ModelIterator implements AsyncIterator<any> {
   }
 }
 
-export class PlaceModel implements AsyncIterable<any> {
+export class PlaceStore implements AsyncIterable<any> {
 
   private readonly client: MongoClient;
   private readonly placeColl: Collection;
@@ -40,13 +41,13 @@ export class PlaceModel implements AsyncIterable<any> {
   }
 
   [Symbol.asyncIterator](): AsyncIterator<any> {
-    return new ModelIterator(this.placeColl.find());
+    return new StoreIterator(this.placeColl.find());
   }
 
   async dispose() { this.client.close(); }
 }
 
-export class KeywordModel implements AsyncIterable<any> {
+export class KeywordStore implements AsyncIterable<any> {
 
   private readonly client: MongoClient;
   private readonly keywordColl: Collection;
@@ -57,7 +58,7 @@ export class KeywordModel implements AsyncIterable<any> {
   }
 
   [Symbol.asyncIterator](): AsyncIterator<any> {
-    return new ModelIterator(this.keywordColl.find());
+    return new StoreIterator(this.keywordColl.find());
   }
 
   async dispose() { this.client.close(); }
