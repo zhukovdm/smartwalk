@@ -36,7 +36,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/KeywordsAdviceItem'
+                  $ref: '#/components/schemas/KeywordAdviceItem'
         '500':
           description: Server Error
   '/api/entity/places/{smartId}':
@@ -163,19 +163,9 @@ paths:
           description: Server Error
 components:
   schemas:
-    Bounds:
+    CollectBounds:
       type: object
       properties:
-        capacity:
-          $ref: '#/components/schemas/NumericBound'
-        elevation:
-          $ref: '#/components/schemas/NumericBound'
-        minimumAge:
-          $ref: '#/components/schemas/NumericBound'
-        rating:
-          $ref: '#/components/schemas/NumericBound'
-        year:
-          $ref: '#/components/schemas/NumericBound'
         clothes:
           type: array
           items:
@@ -214,8 +204,10 @@ components:
       additionalProperties: false
     ExtendedPlace:
       required:
+        - attributes
         - categories
         - keywords
+        - linked
         - location
         - name
         - smartId
@@ -236,7 +228,9 @@ components:
           items:
             type: string
           example:
-            - keyword
+            - a
+            - b
+            - c
         categories:
           uniqueItems: true
           type: array
@@ -246,16 +240,18 @@ components:
           example:
             - 0
             - 1
+            - 2
         linked:
           $ref: '#/components/schemas/PlaceLinked'
         attributes:
           $ref: '#/components/schemas/PlaceAttributes'
       additionalProperties: false
-    KeywordsAdviceItem:
+    KeywordAdviceItem:
       required:
         - attributeList
-        - bounds
+        - collectBounds
         - keyword
+        - numericBounds
       type: object
       properties:
         keyword:
@@ -268,8 +264,10 @@ components:
           example:
             - name
             - openingHours
-        bounds:
-          $ref: '#/components/schemas/Bounds'
+        numericBounds:
+          $ref: '#/components/schemas/NumericBounds'
+        collectBounds:
+          $ref: '#/components/schemas/CollectBounds'
       additionalProperties: false
     NumericBound:
       required:
@@ -283,6 +281,20 @@ components:
         max:
           type: number
           format: double
+      additionalProperties: false
+    NumericBounds:
+      type: object
+      properties:
+        capacity:
+          $ref: '#/components/schemas/NumericBound'
+        elevation:
+          $ref: '#/components/schemas/NumericBound'
+        minimumAge:
+          $ref: '#/components/schemas/NumericBound'
+        rating:
+          $ref: '#/components/schemas/NumericBound'
+        year:
+          $ref: '#/components/schemas/NumericBound'
       additionalProperties: false
     Place:
       required:
@@ -308,7 +320,9 @@ components:
           items:
             type: string
           example:
-            - keyword
+            - a
+            - b
+            - c
         categories:
           uniqueItems: true
           type: array
@@ -318,6 +332,7 @@ components:
           example:
             - 0
             - 1
+            - 2
       additionalProperties: false
     PlaceAddress:
       type: object
@@ -329,20 +344,23 @@ components:
         settlement:
           type: string
           nullable: true
+          example: Prague
         district:
           type: string
           nullable: true
+          example: Prague 1
         place:
           type: string
           nullable: true
+          example: Malostranske namesti
         house:
           type: string
           nullable: true
-          example: '1'
+          example: '2'
         postalCode:
           type: string
           nullable: true
-          example: 100 00
+          example: 118 00
       additionalProperties: false
     PlaceAttributes:
       type: object
@@ -367,11 +385,12 @@ components:
         description:
           type: string
           nullable: true
-          example: Detailed object description
+          example: Detailed object description...
         image:
           type: string
+          description: Url of an image.
           nullable: true
-          example: http://www.image.com/1
+          example: http://www.image.com/1.png
         website:
           type: string
           nullable: true
@@ -393,11 +412,17 @@ components:
           items:
             type: string
           nullable: true
+          example:
+            - 100 CZK on weekdays
+            - 200 CZK on weekends
         openingHours:
           type: array
           items:
             type: string
           nullable: true
+          example:
+            - Mo-Fr 09:00-18:00
+            - Sa-Su 08:00-12:00
         fee:
           type: boolean
           nullable: true
@@ -460,45 +485,48 @@ components:
           nullable: true
           example: 2023
         clothes:
-          uniqueItems: true
           type: array
           items:
             type: string
           nullable: true
           example:
             - men
+            - women
+            - children
         cuisine:
-          uniqueItems: true
           type: array
           items:
             type: string
           nullable: true
           example:
             - czech
+            - oriental
         denomination:
-          uniqueItems: true
           type: array
           items:
             type: string
           nullable: true
           example:
             - catholic
+            - protestant
         payment:
-          uniqueItems: true
           type: array
           items:
             type: string
           nullable: true
           example:
+            - amex
             - cash
+            - mastercard
         rental:
-          uniqueItems: true
           type: array
           items:
             type: string
           nullable: true
           example:
             - bike
+            - car
+            - equipment
       additionalProperties: false
     PlaceLinked:
       type: object
@@ -534,24 +562,31 @@ components:
         facebook:
           type: string
           nullable: true
+          example: https://www.facebook.com/facebookId
         instagram:
           type: string
           nullable: true
+          example: https://www.instagram.com/instagramId/
         linkedin:
           type: string
           nullable: true
+          example: https://www.linkedin.com/in/linkedinId/
         pinterest:
           type: string
           nullable: true
+          example: https://www.pinterest.com/pinterestId/
         telegram:
           type: string
           nullable: true
+          example: https://t.me/telegramId
         twitter:
           type: string
           nullable: true
+          example: https://twitter.com/twitterId
         youtube:
           type: string
           nullable: true
+          example: https://www.youtube.com/channel/youtubeId
       additionalProperties: false
     ProblemDetails:
       type: object
@@ -643,10 +678,12 @@ components:
           minimum: -180
           type: number
           format: double
+          example: 0
         lat:
           maximum: 85.06
           minimum: -85.06
           type: number
           format: double
+          example: 0
       additionalProperties: false
       description: Representation of a point on an ellipsoidal body.
