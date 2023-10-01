@@ -122,7 +122,7 @@ public class OgHeuristicTests
             new(4, 4),
             new(3, 3),
         };
-        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(7));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GenerateUnitDistanceMatrix(7));
 
         var precMatrix = new ListPrecedenceMatrix(new()
         {
@@ -148,19 +148,44 @@ public class OgHeuristicTests
     }
 
     [TestMethod]
-    public void ShouldAdviceValidSequenceForRandomGraph()
+    [DataRow(0.0)]
+    [DataRow(0.2)]
+    [DataRow(0.4)]
+    [DataRow(0.6)]
+    [DataRow(0.8)]
+    [DataRow(1.0)]
+    public void ShouldAdviceValidSequenceForRandomGraph(double probability)
     {
         var N = 100;
 
+        var source = new SolverPlace(N, N);
+        var target = new SolverPlace(N + 1, N + 1);
+
+        var order = N + 2;
+
         var places = Enumerable
-            .Range(0, N).ToList()
+            .Range(0, N)
+            .ToList()
             .DurstenfeldShuffle()
-            .Select((idx, cat) => new SolverPlace(idx, cat)).ToList();
+            .Select((idx) => new SolverPlace(idx, idx))
+            .Concat(new[] { source, target })
+            .ToList();
 
-        var distMatrix = TestPrimitives.GetRandomDistanceMatrix(N);
-        var precMatrix = TestPrimitives.GetRandomPrecedenceMatrix(N);
+        var distMatrix = TestPrimitives.GenerateRandomDistanceMatrix(order);
+        var precMatrix = TestPrimitives.GenerateRandomPrecedenceMatrix(order, probability);
 
-        var result = OgHeuristic.Advise(new(N, N), new(N + 1, N + 1), places, distMatrix, precMatrix);
+        var result = OgHeuristic.Advise(source, target, places, distMatrix, precMatrix);
+
+        // length
+
+        Assert.AreEqual(order, result.Count);
+
+        // terminals
+
+        Assert.AreEqual(result[ 0].cat, N);
+        Assert.AreEqual(result[^1].cat, N + 1);
+
+        // arrows
 
         for (int row = 0; row < result.Count - 1; ++row)
         {

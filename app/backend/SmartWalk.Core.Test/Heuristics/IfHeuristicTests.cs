@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -6,7 +5,6 @@ using SmartWalk.Core.Algorithms;
 using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Heuristics;
 using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Core.Test;
 
@@ -82,7 +80,7 @@ public class IfCandidateSelectorTests
             new(2, 2)
         };
 
-        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(7));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GenerateUnitDistanceMatrix(7));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -120,7 +118,7 @@ public class IfCandidateSelectorTests
             new(0, 0)
         };
 
-        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(5));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GenerateUnitDistanceMatrix(5));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -156,7 +154,7 @@ public class IfCandidateSelectorTests
             new(1, 1)
         };
 
-        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(5));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GenerateUnitDistanceMatrix(5));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -193,7 +191,7 @@ public class IfCandidateSelectorTests
             new(2, 1),
         };
 
-        var matrix = TestPrimitives.GetUnitDistanceMatrix(6);
+        var matrix = TestPrimitives.GenerateUnitDistanceMatrix(6);
         matrix[2][3] = 0.9;
 
         var distMatrix = new ListDistanceMatrix(matrix);
@@ -233,7 +231,7 @@ public class IfHeuristicTests
             new(4, 4),
             new(3, 3),
         };
-        var distMatrix = new ListDistanceMatrix(TestPrimitives.GetUnitDistanceMatrix(7));
+        var distMatrix = new ListDistanceMatrix(TestPrimitives.GenerateUnitDistanceMatrix(7));
 
         var closure = TransitiveClosure.Closure(new()
         {
@@ -261,19 +259,44 @@ public class IfHeuristicTests
     }
 
     [TestMethod]
-    public void ShouldAdviceValidSequenceForRandomGraph()
+    [DataRow(0.0)]
+    [DataRow(0.2)]
+    [DataRow(0.4)]
+    [DataRow(0.6)]
+    [DataRow(0.8)]
+    [DataRow(1.0)]
+    public void ShouldAdviceValidSequenceForRandomGraph(double probability)
     {
         var N = 100;
 
+        var source = new SolverPlace(N, N);
+        var target = new SolverPlace(N + 1, N + 1);
+
+        var order = N + 2;
+
         var places = Enumerable
-            .Range(0, N).ToList()
+            .Range(0, N)
+            .ToList()
             .DurstenfeldShuffle()
-            .Select((idx, cat) => new SolverPlace(idx, cat)).ToList();
+            .Select((idx) => new SolverPlace(idx, idx))
+            .Concat(new[] { source, target })
+            .ToList();
 
-        var distMatrix = TestPrimitives.GetRandomDistanceMatrix(N);
-        var precMatrix = TestPrimitives.GetRandomPrecedenceMatrix(N);
+        var distMatrix = TestPrimitives.GenerateRandomDistanceMatrix(order);
+        var precMatrix = TestPrimitives.GenerateRandomPrecedenceMatrix(order, probability);
 
-        var result = IfHeuristic.Advise(new(N, N), new(N + 1, N + 1), places, distMatrix, precMatrix);
+        var result = IfHeuristic.Advise(source, target, places, distMatrix, precMatrix);
+
+        // length
+
+        Assert.AreEqual(order, result.Count);
+
+        // terminals
+
+        Assert.AreEqual(result[ 0].cat, N);
+        Assert.AreEqual(result[^1].cat, N + 1);
+
+        // arrows
 
         for (int row = 0; row < result.Count - 1; ++row)
         {

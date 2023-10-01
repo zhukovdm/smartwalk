@@ -2,15 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartWalk.Core.Algorithms;
-using SmartWalk.Core.Extensions;
 using SmartWalk.Model.Entities;
 using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Core.Test;
 
-static class TestPrimitives
+public static class TestPrimitives
 {
-    public static List<List<double>> GetUnitDistanceMatrix(int order)
+    public static List<List<double>> GenerateUnitDistanceMatrix(int order)
     {
         var result = new List<List<double>>();
 
@@ -26,16 +25,15 @@ static class TestPrimitives
         return result;
     }
 
-    public static IDistanceMatrix GetRandomDistanceMatrix(int order)
+    public static IDistanceMatrix GenerateRandomDistanceMatrix(int order)
     {
-        var N = order + 2;
         var rand = new Random();
 
-        var matrix = Enumerable.Range(0, N).Select((_) => Enumerable.Repeat(0.0, N).ToList()).ToList();
+        var matrix = Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(0.0, order).ToList()).ToList();
 
-        for (int row = 0; row < N; ++row)
+        for (int row = 0; row < order; ++row)
         {
-            for (int col = 0; col < N; ++col)
+            for (int col = 0; col < order; ++col)
             {
                 if (row != col)
                 {
@@ -46,40 +44,44 @@ static class TestPrimitives
         return new ListDistanceMatrix(matrix);
     }
 
-    public static IPrecedenceMatrix GetRandomPrecedenceMatrix(int order)
+    public static IPrecedenceMatrix GenerateRandomPrecedenceMatrix(int order, double probability)
     {
-        var N = order + 2;
         var rand = new Random();
 
-        var topo = Enumerable.Range(0, N).ToList().DurstenfeldShuffle();
-        var matrix = Enumerable.Range(0, N).Select((_) => Enumerable.Repeat(false, N).ToList()).ToList();
+        var matrix = Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
 
-        for (int row = 0; row < order - 1; ++row)
+        // the last two items are always st!
+
+        for (int row = 0; row < order - 3; ++row)
         {
-            for (int col = 0; col < order; ++col)
+            for (int col = row + 1; col < order - 2; ++col)
             {
-                if (rand.NextDouble() < 0.5)
+                if (rand.NextDouble() < probability)
                 {
                     matrix[row][col] = true;
                 }
             }
         }
 
-        // st-edges
+        // (s -> ?) edges
 
-        for (int row = 0; row < N - 1; ++row)
+        var sourceRow = order - 2;
+
+        for (int col = 0; col < order; ++col)
         {
-            matrix[row][N - 1] = true;
+            if (sourceRow != col)
+            {
+                matrix[sourceRow][col] = true;
+            }
         }
 
-        for (int col = 0; col < N; ++col)
-        {
-            var row = N - 2;
+        // (? -> t) edges
 
-            if (row != col)
-            {
-                matrix[row][col] = true;
-            }
+        var targetCol = order - 1;
+
+        for (int row = 0; row < order - 1; ++row)
+        {
+            matrix[row][targetCol] = true;
         }
         return new ListPrecedenceMatrix(TransitiveClosure.Closure(matrix), true);
     }

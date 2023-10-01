@@ -60,7 +60,7 @@ public static class SearchService
         var sourceCat = categories.Count + 0;
         var targetCat = categories.Count + 1;
 
-        var totalCats = categories.Count + 2;
+        var catsCount = categories.Count + 2;
 
         var places = new List<Place>()
             .Concat(await entityIndex.GetWithin(ellipse, categories))
@@ -70,18 +70,18 @@ public static class SearchService
 
         // source before all (no loops!)
 
-        var sourceEs = from to in Enumerable.Range(0, totalCats)
+        var sourceEs = from to in Enumerable.Range(0, catsCount)
                        where to != sourceCat
                        select new PrecedenceEdge(sourceCat, to);
 
         // all before target (no loops!)
 
-        var targetEs = from fr in Enumerable.Range(0, totalCats)
+        var targetEs = from fr in Enumerable.Range(0, catsCount)
                        where fr != targetCat
                        select new PrecedenceEdge(fr, targetCat);
 
         var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(arrows.Concat(sourceEs).Concat(targetEs), totalCats, arrows.Count > 0);
+            .GetPrecedenceMatrix(arrows.Concat(sourceEs).Concat(targetEs), catsCount, arrows.Count > 0);
 
         var distMatrix = new HaversineDistanceMatrix(places);
 
