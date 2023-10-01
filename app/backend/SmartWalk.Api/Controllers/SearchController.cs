@@ -244,7 +244,6 @@ public sealed class SearchController : ControllerBase
     private static bool ValidateRouteMaxDistance(WgsPoint source, WgsPoint target, double maxDistance)
     => Spherical.HaversineDistance(source, target) <= maxDistance && maxDistance <= 30_000;
 
-
     public sealed class RoutesRequest
     {
         /// <example>

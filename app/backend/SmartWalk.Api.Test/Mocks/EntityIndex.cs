@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using SmartWalk.Model.Entities;
@@ -9,49 +10,50 @@ namespace SmartWalk.Api.Test.Mocks;
 
 internal sealed class FakeWorkingEntityIndex : IEntityIndex
 {
-    private static readonly Dictionary<string, Place> _places = new();
+    private static readonly List<Place> _places;
 
     private static double GenerateRandomInInterval(double min, double max)
-    {
-        return new Random().NextDouble() * (max - min) + min;
-    }
+        => new Random().NextDouble() * (max - min) + min;
 
     static FakeWorkingEntityIndex()
     {
-        var rnd = new Random();
+        var buffer = new Dictionary<string, Place>();
 
         for (int i = 0; i < 100; ++i)
         {
             var lon = GenerateRandomInInterval(-180.0, +180.0);
             var lat = GenerateRandomInInterval(-85.06, +85.06);
+            var smartId = ObjectId.GenerateNewId().ToString();
 
-            _places.Add(ObjectId.GenerateNewId().ToString(), new()
+            buffer.Add(smartId, new()
             {
-                location = new(lon, lat)
+                smartId = smartId,
+                name = $"Place {i}",
+                location = new(lon, lat),
+                keywords = new()
+                {
+                    "a",
+                    "b",
+                    "c"
+                },
+                categories = new() { 0, 1, 2 }
             });
         }
+        _places = buffer.Values.ToList();
     }
 
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
-    {
-        throw new System.NotImplementedException();
-    }
+        => Task.FromResult(_places);
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
-    {
-        throw new System.NotImplementedException();
-    }
+        => Task.FromResult(_places);
 }
 
 internal sealed class FakeFailingEntityIndex : IEntityIndex
 {
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
-    {
-        throw new System.NotImplementedException();
-    }
+        => throw new Exception($"{this.GetType()}: GetAround");
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
-    {
-        throw new System.NotImplementedException();
-    }
+        => throw new Exception($"{this.GetType()}: GetWithin");
 }

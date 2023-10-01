@@ -22,9 +22,9 @@ public class AdviceControllerAdviseKeywordsTests
     {
         var context = new AdviceContext()
         {
-            KeywordAdvicer = new FailingKeywordAdvicerMock()
+            KeywordAdvicer = new FakeFailingKeywordAdvicer()
         };
-        var controller = new AdviceController(context, new LoggerMock<AdviceController>());
+        var controller = new AdviceController(context, new FakeLogger<AdviceController>());
 
         var response = (await controller.AdviseKeywords(GetValidKeywordsRequest())).Result as StatusCodeResult;
 
@@ -38,7 +38,7 @@ public class AdviceControllerAdviseKeywordsTests
         {
             KeywordAdvicer = new WorkingKeywordAdvicerMock()
         };
-        var controller = new AdviceController(context, new LoggerMock<AdviceController>());
+        var controller = new AdviceController(context, new FakeLogger<AdviceController>());
 
         var items = (await controller.AdviseKeywords(GetValidKeywordsRequest())).Value;
 

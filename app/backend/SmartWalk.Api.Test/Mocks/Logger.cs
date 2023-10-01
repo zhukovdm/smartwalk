@@ -3,7 +3,7 @@ using Microsoft.Extensions.Logging;
 
 namespace SmartWalk.Api.Test.Mocks;
 
-internal class LoggerMock<T> : ILogger<T>
+internal class FakeLogger<T> : ILogger<T>
 {
     private class Scope : IDisposable
     {

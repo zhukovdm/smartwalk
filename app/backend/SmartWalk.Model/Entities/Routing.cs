@@ -25,5 +25,5 @@ public sealed class ShortestPath
     /// Ordered sequence of points representing connected linestring.
     /// </summary>
     [Required]
-    public List<WgsPoint> polyline { get; init; }
+    public IReadOnlyList<WgsPoint> polyline { get; init; }
 }

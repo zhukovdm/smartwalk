@@ -18,7 +18,7 @@ public class EntityControllerGetPlaceTests
         {
             EntityStore = new FakeWorkingEntityStore()
         };
-        var controller = new EntityController(context, new LoggerMock<EntityController>());
+        var controller = new EntityController(context, new FakeLogger<EntityController>());
 
         var value = ((await controller.GetPlace("a0")).Result as ObjectResult).Value;
         var hasError = (value as ValidationProblemDetails).Errors.ContainsKey("smartId");
@@ -33,7 +33,7 @@ public class EntityControllerGetPlaceTests
         {
             EntityStore = new FakeWorkingEntityStore()
         };
-        var controller = new EntityController(context, new LoggerMock<EntityController>());
+        var controller = new EntityController(context, new FakeLogger<EntityController>());
 
         var result = (await controller.GetPlace("707f1f77bcf86cd799439011")).Result as StatusCodeResult;
 
@@ -47,7 +47,7 @@ public class EntityControllerGetPlaceTests
         {
             EntityStore = new FakeFailingEntityStore()
         };
-        var controller = new EntityController(context, new LoggerMock<EntityController>());
+        var controller = new EntityController(context, new FakeLogger<EntityController>());
 
         var result = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Result as StatusCodeResult;
 
@@ -61,7 +61,7 @@ public class EntityControllerGetPlaceTests
         {
             EntityStore = new FakeWorkingEntityStore()
         };
-        var controller = new EntityController(context, new LoggerMock<EntityController>());
+        var controller = new EntityController(context, new FakeLogger<EntityController>());
 
         var responseValue = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Value;
 
