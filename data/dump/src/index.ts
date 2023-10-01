@@ -1,6 +1,6 @@
 import Logger from "./logger";
 import { parseArgs } from "./parse";
-import { KeywordModel, PlaceModel } from "./model";
+import { KeywordStore, PlaceStore } from "./store";
 import Writer from "./writer";
 
 async function dump() {
@@ -10,20 +10,20 @@ async function dump() {
   const logger = new Logger();
   const writer = new Writer(logger);
 
-  const placeModel = new PlaceModel(conn);
-  const keywordModel = new KeywordModel(conn);
+  const placeStore = new PlaceStore(conn);
+  const keywordStore = new KeywordStore(conn);
 
   try {
     logger.logStarted();
 
     logger.logPlaces();
-    for await (const place of placeModel) {
+    for await (const place of placeStore) {
       writer.writePlace(place);
     }
     writer.reportPlacesProcessed();
 
     logger.logKeywords();
-    for await (const keyword of keywordModel) {
+    for await (const keyword of keywordStore) {
       writer.writeKeyword(keyword);
     }
     writer.reportKeywordsProcessed();
@@ -32,8 +32,8 @@ async function dump() {
   }
   catch (ex) { logger.logError(ex); }
   finally {
-    placeModel.dispose();
-    keywordModel.dispose();
+    placeStore.dispose();
+    keywordStore.dispose();
   }
 }
 
