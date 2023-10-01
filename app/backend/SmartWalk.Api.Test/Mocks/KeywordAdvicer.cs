@@ -9,24 +9,11 @@ namespace SmartWalk.Api.Test.Mocks;
 internal class WorkingKeywordAdvicerMock : IKeywordAdvicer
 {
     public Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count)
-    {
-        return Task.FromResult(new List<KeywordAdviceItem>()
-        {
-            new()
-            {
-                keyword = "museum",
-                attributeList = new() { "image" },
-                numericBounds = new(),
-                collectBounds = new()
-            }
-        });
-    }
+        => Task.FromResult(new List<KeywordAdviceItem>() { new() });
 }
 
-internal class FailingKeywordAdvicerMock : IKeywordAdvicer
+internal class FakeFailingKeywordAdvicer : IKeywordAdvicer
 {
     public Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count)
-    {
-        throw new NotImplementedException();
-    }
+        => throw new Exception($"{this.GetType()}: GetTopK");
 }
