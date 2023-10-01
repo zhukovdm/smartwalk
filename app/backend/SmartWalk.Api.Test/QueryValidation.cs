@@ -4,7 +4,7 @@ using SmartWalk.Api.Controllers;
 using SmartWalk.Model.Entities;
 using static SmartWalk.Api.Controllers.SearchController;
 
-namespace SmartWalk.Api.Tests;
+namespace SmartWalk.Api.Test;
 
 /// <summary>
 /// All queries are ultimately JSON objects. NJsonSchema internally uses
@@ -14,7 +14,7 @@ namespace SmartWalk.Api.Tests;
 /// to all user-defined classes.
 /// </summary>
 [TestClass]
-public class QueryDeserializeTests
+public class GeneralValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<DirecsQuery>();
 
@@ -76,7 +76,7 @@ public class QueryDeserializeTests
 }
 
 [TestClass]
-public class WebPointDeserializeTests
+public class WebPointValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<WebPoint>();
 
@@ -150,7 +150,7 @@ public class WebPointDeserializeTests
 }
 
 [TestClass]
-public class WebPrecedenceEdgeDeserializeTests
+public class WebPrecedenceEdgeValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<WebPrecedenceEdge>();
 
@@ -204,7 +204,7 @@ public class WebPrecedenceEdgeDeserializeTests
 }
 
 [TestClass]
-public class AttributeFilterNumericDeserializeTests
+public class AttributeFilterNumericValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<AttributeFilterNumeric>();
 
@@ -238,7 +238,7 @@ public class AttributeFilterNumericDeserializeTests
 }
 
 [TestClass]
-public class AttributeFilterCollectDeserializeTests
+public class AttributeFilterCollectValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<AttributeFilterCollect>();
 
@@ -272,7 +272,7 @@ public class AttributeFilterCollectDeserializeTests
 }
 
 [TestClass]
-public class CategoryDeserializeTests
+public class CategoryValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<Category>();
 
@@ -296,7 +296,7 @@ public class CategoryDeserializeTests
 }
 
 [TestClass]
-public class DirecsQueryDeserializeTests
+public class DirecsQueryValidationTests
 {
     private static readonly JsonSchema _s = JsonSchema.FromType<DirecsQuery>();
 
@@ -327,7 +327,7 @@ public class DirecsQueryDeserializeTests
 }
 
 [TestClass]
-public class PlacesQueryDeserializeTests
+public class PlacesQueryValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<PlacesQuery>();
 
@@ -430,7 +430,7 @@ public class PlacesQueryDeserializeTests
 }
 
 [TestClass]
-public class RoutesQueryDeserializeTests
+public class RoutesQueryValidationTests
 {
     private static readonly JsonSchema _schema = JsonSchema.FromType<RoutesQuery>();
 
