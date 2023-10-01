@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -5,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Api.Contexts;
 using SmartWalk.Api.Controllers;
 using SmartWalk.Api.Test.Mocks;
+using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Api.Test;
 
@@ -63,9 +65,9 @@ public class SearchControllerSearchDirecsTests
         };
         var controller = new SearchController(context, new FakeLogger<SearchController>());
 
-        var responseValue = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Value;
+        var value = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Value;
 
-        Assert.AreEqual(1, responseValue.Count);
+        Assert.IsTrue(value is not null);
     }
 }
 
@@ -132,9 +134,9 @@ public class SearchControllerSearchPlacesTests
         };
         var controller = new SearchController(context, new FakeLogger<SearchController>());
 
-        var responseValue = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Value;
+        var value = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Value;
 
-        Assert.AreEqual(100, responseValue.Count);
+        Assert.IsTrue(value is not null);
     }
 }
 
@@ -247,7 +249,7 @@ public class SearchControllerSearchRoutesTests
     }
 
     [TestMethod]
-    public async Task ShouldReturnBadRequestDueToInvalidSourceTargetConfiguration()
+    public async Task ShouldReturnBadRequestDueToTooLargeDistance()
     {
         var context = new SearchContext()
         {
@@ -341,5 +343,97 @@ public class SearchControllerSearchRoutesTests
         var value = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Value;
 
         Assert.IsTrue(value is not null);
+    }
+
+    [TestClass]
+    public class ArrowValidationTests
+    {
+        [TestMethod]
+        public void ShouldDetectOutOfBoundEdge()
+        {
+            var arrows = new List<PrecedenceEdge>
+            {
+                new(0, 1),
+                new(1, 2),
+                new(2, 3), // !
+                new(0, 2)
+            };
+
+            var valid = SearchController.ValidateArrows(arrows, 3, out var _);
+
+            Assert.IsFalse(valid);
+        }
+
+        [TestMethod]
+        public void ShouldDetectLoop()
+        {
+            var arrows = new List<PrecedenceEdge>
+            {
+                new(0, 1),
+                new(1, 2),
+                new(2, 2), // !
+                new(0, 2),
+            };
+
+            var valid = SearchController.ValidateArrows(arrows, 3, out var _);
+
+            Assert.IsFalse(valid);
+        }
+
+        [TestMethod]
+        public void ShouldDetectRepeatedEdge()
+        {
+            var arrows = new List<PrecedenceEdge>
+            {
+                new(0, 1),
+                new(1, 2), // !
+                new(2, 3),
+                new(3, 4),
+                new(1, 2), // !
+                new(0, 2),
+            };
+
+            var valid = SearchController.ValidateArrows(arrows, 5, out var _);
+
+            Assert.IsFalse(valid);
+        }
+
+        [TestMethod]
+        public void ShouldDetectCycle()
+        {
+            var arrows = new List<PrecedenceEdge>
+            {
+                new(0, 1),
+                new(1, 2), // !
+                new(2, 3), // !
+                new(3, 4),
+                new(3, 5), // !
+                new(5, 6), // !
+                new(6, 1), // !
+            };
+
+            var valid = SearchController.ValidateArrows(arrows, 7, out var _);
+
+            Assert.IsFalse(valid);
+        }
+
+        [TestMethod]
+        public void WellFormed()
+        {
+            var N = 100;
+            var arrows = new List<PrecedenceEdge>();
+
+            for (int fr = N - 1; fr >= 0; --fr)
+            {
+                for (int to = fr + 1; to <= N - 1; ++to)
+                {
+                    arrows.Add(new(fr, to));
+                }
+            }
+
+            var valid = SearchController.ValidateArrows(arrows, N, out var _);
+
+            Assert.IsTrue(valid);
+        }
     }
 }

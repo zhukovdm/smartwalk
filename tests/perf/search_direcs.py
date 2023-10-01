@@ -61,7 +61,6 @@ def draw() -> None:
             ax.set_ylabel("Response time, ms")
 
     fig.tight_layout()
-
     plt.savefig(f"./perf-search-direcs.pdf", format="pdf")
 
 def main() -> None:

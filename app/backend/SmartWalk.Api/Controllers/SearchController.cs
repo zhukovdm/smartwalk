@@ -196,35 +196,46 @@ public sealed class SearchController : ControllerBase
 
     #region SearchRoutes
 
+    private class ArrowComparer : IComparer<PrecedenceEdge>
+    {
+        public int Compare(PrecedenceEdge l, PrecedenceEdge r)
+            => l.fr != r.fr ? l.fr.CompareTo(r.fr) : l.to.CompareTo(r.to);
+    }
+
     /// <summary>
     /// Check if edges define directed acyclic loop-free graph, repeated edges
     /// are tolerable.
     /// </summary>
-    private static bool ValidateArrows(IReadOnlyList<WebPrecedenceEdge> arrows, int order, out string error)
+    internal static bool ValidateArrows(IEnumerable<PrecedenceEdge> arrows, int order, out string error)
     {
         error = null;
-        var detector = new CycleDetector(order);
 
-        foreach (var e in arrows)
+        var cycleDetector = new CycleDetector(order);
+        var uniqueArrows = new SortedSet<PrecedenceEdge>(new ArrowComparer());
+
+        foreach (var arrow in arrows)
         {
-            var fr = e.fr.Value;
-            var to = e.to.Value;
-
-            if (fr >= order || to >= order)
+            if (arrow.fr >= order || arrow.to >= order)
             {
-                error = $"Arrow {fr} → {to} contains an out-of-bound terminal point.";
+                error = $"Arrow {arrow.fr} → {arrow.to} contains an out-of-bound terminal point.";
                 return false;
             }
 
-            if (fr == to)
+            if (arrow.fr == arrow.to)
             {
-                error = $"Arrow {fr} → {to} is a loop.";
+                error = $"Arrow {arrow.fr} → {arrow.to} is a loop.";
                 return false;
             }
-            detector.AddEdge(fr, to);
+
+            if (!uniqueArrows.Add(arrow))
+            {
+                error = $"Repeated arrow {arrow.fr} → {arrow.to} detected.";
+                return false;
+            }
+            cycleDetector.AddEdge(arrow.fr, arrow.to);
         }
 
-        var cycle = detector.Cycle();
+        var cycle = cycleDetector.Cycle();
 
         if (cycle is not null)
         {
@@ -235,14 +246,15 @@ public sealed class SearchController : ControllerBase
     }
 
     /// <summary>
-    /// 
+    /// False if the crow-fly distance between a source and target exceeds
+    /// maximum allowed distance (network distance >= crow-fly distance).
     /// </summary>
     /// <param name="source"></param>
     /// <param name="target"></param>
     /// <param name="maxDistance"></param>
     /// <returns></returns>
     private static bool ValidateRouteMaxDistance(WgsPoint source, WgsPoint target, double maxDistance)
-    => Spherical.HaversineDistance(source, target) <= maxDistance && maxDistance <= 30_000;
+        => Spherical.HaversineDistance(source, target) <= maxDistance;
 
     public sealed class RoutesRequest
     {
@@ -301,7 +313,10 @@ public sealed class SearchController : ControllerBase
 
         var q = JsonSerializer.Deserialize<RoutesQuery>(request.query);
 
-        if (!ValidateArrows(q.arrows, q.categories.Count, out var arrowError))
+        var arrows = q.arrows
+            .Select(p => new PrecedenceEdge(p.fr.Value, p.to.Value)).ToList();
+
+        if (!ValidateArrows(arrows, q.categories.Count, out var arrowError))
         {
             ModelState.AddModelError("query", arrowError);
             return ValidationProblem();
@@ -317,9 +332,6 @@ public sealed class SearchController : ControllerBase
             ModelState.AddModelError("query", "Starting point and destination are too far from each other.");
             return ValidationProblem();
         }
-
-        var arrows = q.arrows
-            .Select(p => new PrecedenceEdge(p.fr.Value, p.to.Value)).ToList();
 
         try
         {

@@ -102,11 +102,11 @@ public class WebPointValidationTests
     [TestMethod]
     public void AboveUpperBoundLon()
     {
-        var q = @"{
+        var query = @"{
             ""lon"": 181.0,
             ""lat"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 
     [TestMethod]
@@ -121,31 +121,31 @@ public class WebPointValidationTests
     [TestMethod]
     public void BelowLowerBoundLat()
     {
-        var q = @"{
+        var query = @"{
             ""lon"": 0.0,
             ""lat"": -86.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 
     [TestMethod]
     public void AboveUpperBoundLat()
     {
-        var q = @"{
+        var query = @"{
             ""lon"": 0.0,
             ""lat"": 86.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
+        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var q = @"{
+        var query = @"{
             ""lon"": 0.0,
             ""lat"": 0.0
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<WebPoint>(q, _schema, out var _));
+        Assert.IsTrue(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
     }
 }
 
@@ -286,6 +286,16 @@ public class CategoryValidationTests
     }
 
     [TestMethod]
+    public void EmptyKeyword()
+    {
+        var query = @"{
+            ""keyword"": """",
+            ""filters"": {}
+        }";
+        Assert.IsFalse(SearchController.ValidateQuery<Category>(query, _schema, out var _));
+    }
+
+    [TestMethod]
     public void MissingFilters()
     {
         var query = @"{
@@ -298,31 +308,29 @@ public class CategoryValidationTests
 [TestClass]
 public class DirecsQueryValidationTests
 {
-    private static readonly JsonSchema _s = JsonSchema.FromType<DirecsQuery>();
+    private static readonly JsonSchema _schema = JsonSchema.FromType<DirecsQuery>();
 
     [TestMethod]
-    public void TooSmallNumberOfWaypoints()
+    public void TooShortWaypointSequence()
     {
-        var q = @"
-        {
+        var query = @"{
             ""waypoints"":[
                 { ""lon"": 0.0, ""lat"": 0.0 }
             ]
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(q, _s, out var _));
+        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var q = @"
-        {
+        var query = @"{
             ""waypoints"":[
                 { ""lon"": 0.0, ""lat"": 0.0 },
                 { ""lon"": 1.0, ""lat"": 1.0 }
             ]
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<DirecsQuery>(q, _s, out var _));
+        Assert.IsTrue(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
     }
 }
 
