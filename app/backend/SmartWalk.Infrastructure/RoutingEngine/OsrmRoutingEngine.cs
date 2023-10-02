@@ -13,11 +13,11 @@ public sealed class OsrmRoutingEngine : IRoutingEngine
 
     private OsrmRoutingEngine(string baseUrl) { _baseUrl = baseUrl; }
 
-    public async Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints)
-        => await ShortestPathFetcher.Fetch(_baseUrl, waypoints);
+    public Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints)
+        => OsrmShortestPathQueryExecutor.Execute(new OsrmRouteFetcher(_baseUrl), waypoints);
 
     public async Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
-        => await DistanceMatrixFetcher.Fetch(_baseUrl, waypoints);
+        => await OsrmDistanceMatrixQueryExecutor.Execute(new OsrmTableFetcher(_baseUrl), waypoints);
 
     public static IRoutingEngine GetInstance()
     {
