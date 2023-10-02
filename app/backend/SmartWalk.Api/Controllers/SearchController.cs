@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NJsonSchema;
 using SmartWalk.Api.Contexts;
 using SmartWalk.Core.Algorithms;
 using SmartWalk.Model.Entities;
@@ -22,18 +21,6 @@ using Direc = ShortestPath;
 [Route("api/search")]
 public sealed class SearchController : ControllerBase
 {
-    internal static bool ValidateQuery<T>(string query, JsonSchema schema, out List<string> errors)
-    {
-        try
-        {
-            errors = schema.Validate(query)
-                .Select((e) => $"{e.Kind} at {e.Path}, line {e.LineNumber}, position {e.LinePosition}.").ToList();
-        }
-        catch (Exception) { errors = new() { "Invalid JSON string." }; }
-
-        return errors.Count == 0;
-    }
-
     /// <summary>
     /// Representation of a point in EPSG:4326 restricted to the range of EPSG:3857.
     /// See https://epsg.io/4326 and https://epsg.io/3857 for details.
@@ -85,8 +72,6 @@ public sealed class SearchController : ControllerBase
         public List<WebPoint> waypoints { get; init; }
     }
 
-    private static readonly JsonSchema _direcsSchema = JsonSchema.FromType<DirecsQuery>();
-
     private readonly ISearchContext _context;
     private readonly ILogger<SearchController> _logger;
 
@@ -103,7 +88,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] DirecsRequest request)
     {
-        if (!ValidateQuery<DirecsQuery>(request.query, _direcsSchema, out var queryErrors))
+        if (!SerializationValidator<DirecsQuery>.Validate(request.query, out var queryErrors))
         {
             foreach (var error in queryErrors)
             {
@@ -159,8 +144,6 @@ public sealed class SearchController : ControllerBase
         public List<Category> categories { get; init; }
     }
 
-    private static readonly JsonSchema _placesSchema = JsonSchema.FromType<PlacesQuery>();
-
     [HttpGet]
     [Route("places", Name = "SearchPlaces")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -169,7 +152,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] PlacesRequest request)
     {
-        if (!ValidateQuery<PlacesQuery>(request.query, _placesSchema, out var queryErrors))
+        if (!SerializationValidator<PlacesQuery>.Validate(request.query, out var queryErrors))
         {
             foreach (var error in queryErrors)
             {
@@ -292,8 +275,6 @@ public sealed class SearchController : ControllerBase
         public List<WebPrecedenceEdge> arrows { get; init; }
     }
 
-    private static readonly JsonSchema _routesSchema = JsonSchema.FromType<RoutesQuery>();
-
     [HttpGet]
     [Route("routes", Name = "SearchRoutes")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -302,7 +283,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] RoutesRequest request)
     {
-        if (!ValidateQuery<RoutesQuery>(request.query, _routesSchema, out var queryErrors))
+        if (!SerializationValidator<RoutesQuery>.Validate(request.query, out var queryErrors))
         {
             foreach (var error in queryErrors)
             {

@@ -1,371 +1,303 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using NJsonSchema;
-using SmartWalk.Api.Controllers;
 using SmartWalk.Model.Entities;
 using static SmartWalk.Api.Controllers.SearchController;
 
 namespace SmartWalk.Api.Test;
 
-/// <summary>
-/// All queries are ultimately JSON objects. NJsonSchema internally uses
-/// primitives from the `json.net` library. The behavior of it is sometimes
-/// unexpected, and corner cases are tested by the class below. Even though
-/// schema validates against the `DirecsQuery` type, these tests are applicable
-/// to all user-defined classes.
-/// </summary>
-[TestClass]
-public class GeneralValidationTests
-{
-    private static readonly JsonSchema _schema = JsonSchema.FromType<DirecsQuery>();
-
-    [TestMethod]
-    public void EmptyQuery()
-    {
-        var query = "";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsInvalidJsonString()
-    {
-        var query = "{1}";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsEmptyObject()
-    {
-        var query = "{}";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsEmptyArray()
-    {
-        var query = "[]";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsEmptyString()
-    {
-        var query = "\"\"";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsNumber()
-    {
-        var query = "0";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsBoolean()
-    {
-        var query = "false";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-
-    [TestMethod]
-    public void QueryAsNull()
-    {
-        var query = "null";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
-    }
-}
-
 [TestClass]
 public class WebPointValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<WebPoint>();
-
     [TestMethod]
     public void MissingLon()
     {
-        var query = @"{
+        var serialization = @"{
             ""lat"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void BelowLowerBoundLon()
     {
-        var query = @"{
+        var serialization = @"{
             ""lon"": -181.0,
             ""lat"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void AboveUpperBoundLon()
     {
-        var query = @"{
+        var serialization = @"{
             ""lon"": 181.0,
             ""lat"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingLat()
     {
-        var query = @"{
+        var serialization = @"{
             ""lon"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void BelowLowerBoundLat()
     {
-        var query = @"{
+        var serialization = @"{
             ""lon"": 0.0,
             ""lat"": -86.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void AboveUpperBoundLat()
     {
-        var query = @"{
+        var serialization = @"{
             ""lon"": 0.0,
             ""lat"": 86.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var query = @"{
+        var serialization = @"{
             ""lon"": 0.0,
             ""lat"": 0.0
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<WebPoint>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<WebPoint>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class WebPrecedenceEdgeValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<WebPrecedenceEdge>();
-
     [TestMethod]
     public void MissingFr()
     {
-        var query = @"{
+        var serialization = @"{
             ""to"": 0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void BelowLowerBoundFr()
     {
-        var query = @"{
+        var serialization = @"{
             ""fr"": -1,
             ""to"": 0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingTo()
     {
-        var query = @"{
+        var serialization = @"{
             ""fr"": 0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void BelowLowerBoundTo()
     {
-        var query = @"{
+        var serialization = @"{
             ""fr"": 0,
             ""to"": -1
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var query = @"{
+        var serialization = @"{
             ""fr"": 0,
             ""to"": 0
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<WebPrecedenceEdge>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class AttributeFilterNumericValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<AttributeFilterNumeric>();
-
     [TestMethod]
     public void MissingMin()
     {
-        var query = @"{
+        var serialization = @"{
             ""max"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterNumeric>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<AttributeFilterNumeric>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingMax()
     {
-        var query = @"{
+        var serialization = @"{
             ""min"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterNumeric>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<AttributeFilterNumeric>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var query = @"{
-            ""min"": 0.0
+        var serialization = @"{
+            ""min"": 0.0,
             ""max"": 0.0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterNumeric>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<AttributeFilterNumeric>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class AttributeFilterCollectValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<AttributeFilterCollect>();
-
     [TestMethod]
     public void MissingInc()
     {
-        var query = @"{
+        var serialization = @"{
             ""exc"": [""e""]
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterCollect>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<AttributeFilterCollect>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingExc()
     {
-        var query = @"{
+        var serialization = @"{
             ""inc"": [""i""]
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<AttributeFilterCollect>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<AttributeFilterCollect>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var query = @"{
+        var serialization = @"{
             ""inc"": [""i""],
             ""exc"": [""e""]
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<AttributeFilterCollect>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<AttributeFilterCollect>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class CategoryValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<Category>();
-
     [TestMethod]
     public void MissingKeyword()
     {
-        var query = @"{
+        var serialization = @"{
             ""filters"": {}
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<Category>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<Category>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void EmptyKeyword()
     {
-        var query = @"{
+        var serialization = @"{
             ""keyword"": """",
             ""filters"": {}
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<Category>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<Category>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingFilters()
     {
-        var query = @"{
+        var serialization = @"{
             ""keyword"": ""abc""
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<Category>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<Category>.Validate(serialization, out var _));
+    }
+
+    [TestMethod]
+    public void WellFormed()
+    {
+        var serialization = @"{
+            ""keyword"": ""museum"",
+            ""filters"": {}
+        }";
+        Assert.IsTrue(SerializationValidator<Category>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class DirecsQueryValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<DirecsQuery>();
+    [TestMethod]
+    public void MissingWaypoints()
+    {
+        var serialization = @"{}";
+        Assert.IsFalse(SerializationValidator<DirecsQuery>.Validate(serialization, out var _));
+    }
 
     [TestMethod]
     public void TooShortWaypointSequence()
     {
-        var query = @"{
+        var serialization = @"{
             ""waypoints"":[
                 { ""lon"": 0.0, ""lat"": 0.0 }
             ]
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<DirecsQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var query = @"{
+        var serialization = @"{
             ""waypoints"":[
                 { ""lon"": 0.0, ""lat"": 0.0 },
                 { ""lon"": 1.0, ""lat"": 1.0 }
             ]
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<DirecsQuery>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<DirecsQuery>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class PlacesQueryValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<PlacesQuery>();
-
     [TestMethod]
     public void MissingCenter()
     {
-        var query = @"{
+        var serialization = @"{
             ""radius"": 0,
             ""categories"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingRadius()
     {
-        var query = @"{
+        var serialization = @"{
             ""center"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
             },
             ""categories"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void RadiusBelowLowerBound()
     {
-        var query = @"{
+        var serialization = @"{
             ""center"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -373,13 +305,13 @@ public class PlacesQueryValidationTests
             ""radius"": -1.0,
             ""categories"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void RadiusAboveUpperBound()
     {
-        var query = @"{
+        var serialization = @"{
             ""center"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -387,26 +319,26 @@ public class PlacesQueryValidationTests
             ""radius"": 15001.0,
             ""categories"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingCategories()
     {
-        var query = @"{
+        var serialization = @"{
             ""center"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
             },
             ""radius"": 0
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormedWithEmptyCategories()
     {
-        var query = @"{
+        var serialization = @"{
             ""center"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -414,13 +346,13 @@ public class PlacesQueryValidationTests
             ""radius"": 3000,
             ""categories"": []
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormedWithNonEmptyCategories()
     {
-        var query = @"{
+        var serialization = @"{
             ""center"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -433,19 +365,17 @@ public class PlacesQueryValidationTests
                 }
             ]
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<PlacesQuery>.Validate(serialization, out var _));
     }
 }
 
 [TestClass]
 public class RoutesQueryValidationTests
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<RoutesQuery>();
-
     [TestMethod]
     public void MissingSource()
     {
-        var query = @"{
+        var serialization = @"{
             ""target"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -459,13 +389,13 @@ public class RoutesQueryValidationTests
             ],
             ""arrows"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingTarget()
     {
-        var query = @"{
+        var serialization = @"{
             ""source"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -479,13 +409,13 @@ public class RoutesQueryValidationTests
             ],
             ""arrows"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MissingMaxDistance()
     {
-        var query = @"{
+        var serialization = @"{
             ""source"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -502,13 +432,13 @@ public class RoutesQueryValidationTests
             ],
             ""arrows"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MaxDistanceBelowLowerBound()
     {
-        var query = @"{
+        var serialization = @"{
             ""source"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -526,13 +456,13 @@ public class RoutesQueryValidationTests
             ],
             ""arrows"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void MaxDistanceAboveUpperBound()
     {
-        var query = @"{
+        var serialization = @"{
             ""source"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -550,13 +480,13 @@ public class RoutesQueryValidationTests
             ],
             ""arrows"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void EmptyCategories()
     {
-        var query = @"{
+        var serialization = @"{
             ""source"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -569,13 +499,13 @@ public class RoutesQueryValidationTests
             ""categories"": [],
             ""arrows"": []
         }";
-        Assert.IsFalse(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsFalse(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
     public void WellFormed()
     {
-        var query = @"{
+        var serialization = @"{
             ""source"": {
                 ""lon"": 0.0,
                 ""lat"": 0.0
@@ -593,6 +523,6 @@ public class RoutesQueryValidationTests
             ],
             ""arrows"": []
         }";
-        Assert.IsTrue(SearchController.ValidateQuery<PlacesQuery>(query, _schema, out var _));
+        Assert.IsTrue(SerializationValidator<RoutesQuery>.Validate(serialization, out var _));
     }
 }
