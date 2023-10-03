@@ -97,12 +97,12 @@ public sealed class SearchController : ControllerBase
             return ValidationProblem();
         }
 
-        var dq = JsonSerializer.Deserialize<DirecsQuery>(request.query);
+        var direcsQuery = JsonSerializer.Deserialize<DirecsQuery>(request.query);
 
         try
         {
             return await SearchService.GetDirecs(
-                _context.RoutingEngine, dq.waypoints.Select((p) => p.AsWgs()).ToList());
+                _context.RoutingEngine, direcsQuery.waypoints.Select((p) => p.AsWgs()).ToList());
         }
         catch (Exception ex)
         {
@@ -161,12 +161,12 @@ public sealed class SearchController : ControllerBase
             return ValidationProblem();
         }
 
-        var pq = JsonSerializer.Deserialize<PlacesQuery>(request.query);
+        var placesQuery = JsonSerializer.Deserialize<PlacesQuery>(request.query);
 
         try
         {
             return await SearchService.GetPlaces(
-                _context.EntityIndex, pq.center.AsWgs(), pq.radius.Value, pq.categories);
+                _context.EntityIndex, placesQuery.center.AsWgs(), placesQuery.radius.Value, placesQuery.categories);
         }
         catch (Exception ex)
         {
@@ -292,21 +292,21 @@ public sealed class SearchController : ControllerBase
             return ValidationProblem();
         }
 
-        var q = JsonSerializer.Deserialize<RoutesQuery>(request.query);
+        var routesQuery = JsonSerializer.Deserialize<RoutesQuery>(request.query);
 
-        var arrows = q.arrows
+        var arrows = routesQuery.arrows
             .Select(p => new PrecedenceEdge(p.fr.Value, p.to.Value)).ToList();
 
-        if (!ValidateArrows(arrows, q.categories.Count, out var arrowError))
+        if (!ValidateArrows(arrows, routesQuery.categories.Count, out var arrowError))
         {
             ModelState.AddModelError("query", arrowError);
             return ValidationProblem();
         }
 
-        WgsPoint s = q.source.AsWgs();
-        WgsPoint t = q.target.AsWgs();
+        WgsPoint s = routesQuery.source.AsWgs();
+        WgsPoint t = routesQuery.target.AsWgs();
 
-        double maxDistance = q.maxDistance.Value;
+        double maxDistance = routesQuery.maxDistance.Value;
 
         if (!ValidateRouteMaxDistance(s, t, maxDistance))
         {
@@ -317,7 +317,7 @@ public sealed class SearchController : ControllerBase
         try
         {
             return await SearchService.GetRoutes(
-                _context.EntityIndex, _context.RoutingEngine, s, t, maxDistance, q.categories, arrows);
+                _context.EntityIndex, _context.RoutingEngine, s, t, maxDistance, routesQuery.categories, arrows);
         }
         catch (Exception ex)
         {

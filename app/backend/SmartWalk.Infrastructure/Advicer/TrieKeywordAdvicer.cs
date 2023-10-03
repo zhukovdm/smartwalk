@@ -19,9 +19,9 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
 
     private TrieKeywordAdvicer() { }
 
-    private void Add(string term, KeywordAdviceItem attributeList, long freq)
+    private void Add(string term, KeywordAdviceItem item, long freq)
     {
-        _items[term] = attributeList;
+        _items[term] = item;
         _trie.AddTerm(term, freq);
     }
 
@@ -29,7 +29,7 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
     {
         var result = _trie
             .GetTopkTermsForPrefix(prefix, count, out _)
-            .Select((pair) => _items[pair.term])
+            .Select((triePair) => _items[triePair.term])
             .ToList();
 
         return Task.FromResult(result);
