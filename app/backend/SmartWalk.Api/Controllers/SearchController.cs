@@ -179,8 +179,14 @@ public sealed class SearchController : ControllerBase
 
     #region SearchRoutes
 
-    private class ArrowComparer : IComparer<PrecedenceEdge>
+    private sealed class ArrowComparer : IComparer<PrecedenceEdge>
     {
+        private ArrowComparer() { }
+
+        private static readonly Lazy<ArrowComparer> _instance = new(() => new());
+
+        public static ArrowComparer Instance { get { return _instance.Value; } }
+
         public int Compare(PrecedenceEdge l, PrecedenceEdge r)
             => l.fr != r.fr ? l.fr.CompareTo(r.fr) : l.to.CompareTo(r.to);
     }
@@ -194,7 +200,7 @@ public sealed class SearchController : ControllerBase
         error = null;
 
         var cycleDetector = new CycleDetector(order);
-        var uniqueArrows = new SortedSet<PrecedenceEdge>(new ArrowComparer());
+        var uniqueArrows = new SortedSet<PrecedenceEdge>(ArrowComparer.Instance);
 
         foreach (var arrow in arrows)
         {

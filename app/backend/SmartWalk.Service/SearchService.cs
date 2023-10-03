@@ -40,12 +40,24 @@ public static class SearchService
 
     private sealed class SolverPlaceComparer : IComparer<SolverPlace>
     {
+        private SolverPlaceComparer() { }
+
+        private static readonly Lazy<SolverPlaceComparer> _instance = new(() => new());
+
+        public static SolverPlaceComparer Instance { get { return _instance.Value; } }
+
         public int Compare(SolverPlace l, SolverPlace r)
             => (l.idx != r.idx) ? l.idx.CompareTo(r.idx) : l.cat.CompareTo(r.cat);
     }
 
     private sealed class RouteComparer : IComparer<Route>
     {
+        private RouteComparer() { }
+
+        private static readonly Lazy<RouteComparer> _instance = new(() => new());
+
+        public static RouteComparer Instance { get { return _instance.Value; } }
+
         public int Compare(Route l, Route r) => l.path.distance.CompareTo(r.path.distance);
     }
 
@@ -90,7 +102,7 @@ public static class SearchService
 
         var solverPlaces = places
             .Select((p, i) => (p, i))
-            .Aggregate(new SortedSet<SolverPlace>(new SolverPlaceComparer()), (acc, itm) =>
+            .Aggregate(new SortedSet<SolverPlace>(SolverPlaceComparer.Instance), (acc, itm) =>
             {
                 foreach (var cat in itm.p.categories)
                 {
@@ -148,7 +160,7 @@ public static class SearchService
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
         } while ((DateTime.Now - startedAt).TotalMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
 
-        result.Sort(new RouteComparer());
+        result.Sort(RouteComparer.Instance);
         return result;
     }
 

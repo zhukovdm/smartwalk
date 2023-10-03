@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,6 +10,12 @@ internal static class OsrmShortestPathQueryExecutor
 {
     private sealed class PathComparer : IComparer<ShortestPath>
     {
+        private PathComparer() { }
+
+        private static readonly Lazy<PathComparer> _instance = new(() => new());
+
+        public static PathComparer Instance { get { return _instance.Value; } }
+
         public int Compare(ShortestPath l, ShortestPath r)
             => l.distance.CompareTo(r.distance);
     }
@@ -30,7 +37,7 @@ internal static class OsrmShortestPathQueryExecutor
                 .ToList()
         }).ToList();
 
-        paths.Sort(new PathComparer());
+        paths.Sort(PathComparer.Instance);
         return paths;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using SmartWalk.Model.Entities;
@@ -7,11 +8,17 @@ namespace SmartWalk.Core.Heuristics;
 
 internal static class IfCategoryFormer
 {
+    /// <summary>
+    /// Categories with less items are more relevant.
+    /// </summary>
     internal sealed class CategoryComparer : IComparer<List<SolverPlace>>
     {
-        /// <summary>
-        /// Categories with less items are more relevant.
-        /// </summary>
+        private CategoryComparer() { }
+
+        private static readonly Lazy<CategoryComparer> _instance = new(() => new());
+
+        public static CategoryComparer Instance { get { return _instance.Value; } }
+
         public int Compare(List<SolverPlace> l, List<SolverPlace> r) => l.Count.CompareTo(r.Count);
     }
 
@@ -45,7 +52,7 @@ internal static class IfCategoryFormer
     /// </summary>
     private static List<List<SolverPlace>> Sort(List<List<SolverPlace>> categories)
     {
-        categories.Sort(new CategoryComparer());
+        categories.Sort(CategoryComparer.Instance);
         return categories;
     }
 
