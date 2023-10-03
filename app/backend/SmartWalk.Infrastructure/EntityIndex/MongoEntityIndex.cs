@@ -71,7 +71,7 @@ public sealed class MongoEntityIndex : IEntityIndex
 
         return categories.Count != 0
             ? FetchCategories(sf, categories)
-            : FetchPlaces(sf & Builders<ExtendedPlace>.Filter.Empty, null);
+            : FetchPlaces(sf & Builders<ExtendedPlace>.Filter.Empty, null); // special case!
     }
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)

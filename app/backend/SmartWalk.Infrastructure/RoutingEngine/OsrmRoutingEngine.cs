@@ -16,8 +16,8 @@ public sealed class OsrmRoutingEngine : IRoutingEngine
     public Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints)
         => OsrmShortestPathQueryExecutor.Execute(new OsrmRouteFetcher(_baseUrl), waypoints);
 
-    public async Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
-        => await OsrmDistanceMatrixQueryExecutor.Execute(new OsrmTableFetcher(_baseUrl), waypoints);
+    public Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
+        => OsrmDistanceMatrixQueryExecutor.Execute(new OsrmTableFetcher(_baseUrl), waypoints);
 
     public static IRoutingEngine GetInstance()
     {

@@ -27,11 +27,7 @@ internal sealed class OsrmRouteFetcher : OsrmFetcherBase, IOsrmRouteFetcher
     public async Task<List<OsrmRoute>> Fetch(IEnumerable<WgsPoint> waypoints)
     {
         var content = await MakeHttpRequest(GetUrl(waypoints));
-
-        if (!SerializationValidator<OsrmRouteResponse>.Validate(content ?? "{}", out var _))
-        {
-            return new();
-        }
+        if (content is null) { return new(); }
 
         var response = JsonSerializer.Deserialize<OsrmRouteResponse>(content);
 

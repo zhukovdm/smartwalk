@@ -29,11 +29,7 @@ internal sealed class OsrmTableFetcher : OsrmFetcherBase, IOsrmTableFetcher
     public async Task<Table> Fetch(IEnumerable<WgsPoint> waypoints)
     {
         var content = await MakeHttpRequest(GetUrl(waypoints));
-
-        if (!SerializationValidator<OsrmTableResponse>.Validate(content ?? "{}", out var _))
-        {
-            return null;
-        }
+        if (content is null) { return null; }
 
         var response = JsonSerializer.Deserialize<OsrmTableResponse>(content);
 
