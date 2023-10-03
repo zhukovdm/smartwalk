@@ -10,7 +10,7 @@ public sealed class ShortestPath
     /// </summary>
     /// <example>1234.56</example>
     [Required]
-    [Range(0, double.MaxValue)]
+    [Range(0.0, double.MaxValue)]
     public double distance { get; init; }
 
     /// <summary>
@@ -18,7 +18,7 @@ public sealed class ShortestPath
     /// </summary>
     /// <example>300.00</example>
     [Required]
-    [Range(0, double.MaxValue)]
+    [Range(0.0, double.MaxValue)]
     public double duration { get; init; }
 
     /// <summary>

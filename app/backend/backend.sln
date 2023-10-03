@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Infrastructure.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Service", "SmartWalk.Service\SmartWalk.Service.csproj", "{95A89A8A-E918-4F2B-808E-DD79830C0268}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Service.Test", "SmartWalk.Service.Test\SmartWalk.Service.Test.csproj", "{D6AA4A1A-208C-4358-9D12-273379C4E06D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api", "SmartWalk.Api\SmartWalk.Api.csproj", "{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api.Test", "SmartWalk.Api.Test\SmartWalk.Api.Test.csproj", "{1742B954-6523-40EA-B212-6FFDC72BC1D4}"
@@ -55,6 +57,10 @@ Global
 		{95A89A8A-E918-4F2B-808E-DD79830C0268}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95A89A8A-E918-4F2B-808E-DD79830C0268}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95A89A8A-E918-4F2B-808E-DD79830C0268}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D6AA4A1A-208C-4358-9D12-273379C4E06D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D6AA4A1A-208C-4358-9D12-273379C4E06D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D6AA4A1A-208C-4358-9D12-273379C4E06D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D6AA4A1A-208C-4358-9D12-273379C4E06D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}.Release|Any CPU.ActiveCfg = Release|Any CPU
