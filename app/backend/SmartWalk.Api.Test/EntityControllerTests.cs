@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Api.Contexts;
 using SmartWalk.Api.Controllers;
-using SmartWalk.Api.Test.Mocks;
+using SmartWalk.Api.Test.Fakes;
 
 namespace SmartWalk.Api.Test;
 

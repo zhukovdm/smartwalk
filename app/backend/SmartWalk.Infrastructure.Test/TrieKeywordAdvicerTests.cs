@@ -11,7 +11,7 @@ using Item = TrieKeywordAdvicer.Item;
 [TestClass]
 public class TrieKeywordAdvicerTests
 {
-    private static List<Item> _items = new()
+    private static readonly List<Item> _items = new()
     {
         new() { keyword = "abc", count = 1 },
         new() { keyword = "abd", count = 2 },

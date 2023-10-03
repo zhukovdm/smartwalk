@@ -4,9 +4,9 @@ using System.Threading.Tasks;
 using SmartWalk.Model.Entities;
 using SmartWalk.Model.Interfaces;
 
-namespace SmartWalk.Api.Test.Mocks;
+namespace SmartWalk.Api.Test.Fakes;
 
-internal class WorkingKeywordAdvicerMock : IKeywordAdvicer
+internal class FakeWorkingKeywordAdvicer : IKeywordAdvicer
 {
     public Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count)
         => Task.FromResult(new List<KeywordAdviceItem>() { new() });

@@ -133,15 +133,16 @@ public static class SearchService
             {
                 var routePlaces = trimmedSeq.Aggregate(new List<Place>(), (acc, sp) =>
                 {
-                    var p = places[sp.idx];
+                    var place = places[sp.idx];
 
-                    // ensure only satisfied categories!
+                    // ensure categories!
+
                     acc.Add(new()
                     {
-                        smartId = p.smartId,
-                        name = p.name,
-                        location = p.location,
-                        keywords = p.keywords,
+                        smartId = place.smartId,
+                        name = place.name,
+                        location = place.location,
+                        keywords = place.keywords,
                         categories = new() { sp.cat }
                     });
                     return acc;

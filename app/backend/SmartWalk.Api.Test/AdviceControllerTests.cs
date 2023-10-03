@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Api.Contexts;
 using SmartWalk.Api.Controllers;
-using SmartWalk.Api.Test.Mocks;
+using SmartWalk.Api.Test.Fakes;
 using static SmartWalk.Api.Controllers.AdviceController;
 
 namespace SmartWalk.Api.Test;
@@ -36,7 +36,7 @@ public class AdviceControllerAdviseKeywordsTests
     {
         var context = new AdviceContext()
         {
-            KeywordAdvicer = new WorkingKeywordAdvicerMock()
+            KeywordAdvicer = new FakeWorkingKeywordAdvicer()
         };
         var controller = new AdviceController(context, new FakeLogger<AdviceController>());
 

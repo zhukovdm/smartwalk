@@ -48,12 +48,12 @@ public class IfCategoryFormerTests
     {
         var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N), 0, N - 1);
 
-        for (int i = 0; i < N - 3; ++i)
+        foreach (var (l, r) in cats.Zip(cats.Skip(1)))
         {
-            Assert.IsTrue(cats[i].Count < cats[i + 1].Count);
+            Assert.IsTrue(l.Count < r.Count);
         }
         Assert.AreEqual(cats[0][0].cat, N - 2);
-        Assert.AreEqual(cats[N - 3][0].cat, 1);
+        Assert.AreEqual(cats[N - 3][0].cat, 1); // st are removed!
     }
 }
 
