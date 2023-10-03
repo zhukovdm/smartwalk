@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using SmartWalk.Core.Algorithms;
@@ -115,7 +116,7 @@ public static class SearchService
                 return acc;
             });
 
-        var startedAt = DateTime.Now;
+        var watch = Stopwatch.StartNew();
         do
         {
             var seq = SolverFactory.GetSolver()
@@ -159,7 +160,7 @@ public static class SearchService
             }
 
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
-        } while ((DateTime.Now - startedAt).TotalMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
+        } while (watch.ElapsedMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
 
         result.Sort(RouteComparer.Instance);
         return result;

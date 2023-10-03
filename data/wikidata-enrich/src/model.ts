@@ -64,7 +64,7 @@ export default class Model {
             "linked.mapycz": obj.mapycz,
             "linked.geonames": obj.geonames
           },
-          $addToSet: {
+          $addToSet: { /* eliminate repeated keywords */
             "keywords": {
               $each: obj.keywords
             }
