@@ -9,7 +9,7 @@ services:
     volumes:
       - ../data/assets/database:/data/db
     healthcheck:
-      test: mongo --eval 'db.runCommand({ping:1}).ok' localhost:27017/smartwalk --quiet
+      test: mongo --eval 'db.runCommand({ping:1}).ok' mongodb://localhost:27017/smartwalk --quiet
       interval: 15s
       timeout: 15s
       retries: 10

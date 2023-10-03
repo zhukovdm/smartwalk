@@ -11,7 +11,7 @@ services:
       - 5000:5000
     volumes:
       - ../data/assets/routing:/data
-    entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${REGION_FILE}.osrm
+    entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${OSRM_REGION_FILE}.osrm
     healthcheck:
       test: curl --head --silent --fail 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
       interval: 15s

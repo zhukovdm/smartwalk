@@ -11,7 +11,7 @@ services:
     networks:
       - database-net
     healthcheck:
-      test: mongo --eval 'db.runCommand({ping:1}).ok' localhost:27017/smartwalk --quiet
+      test: mongo --eval 'db.runCommand({ping:1}).ok' mongodb://localhost:27017/smartwalk --quiet
       interval: 15s
       timeout: 15s
       retries: 10
@@ -28,7 +28,7 @@ services:
       - ../data/assets/routing:/data
     networks:
       - routing-net
-    entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${REGION_FILE}.osrm
+    entrypoint: osrm-routed --max-viaroute-size 1000 --algorithm mld /data/${OSRM_REGION_FILE}.osrm
     healthcheck:
       test: curl --head --silent --fail 'http://localhost:5000/route/v1/foot/0,0;0,0' || exit 1
       interval: 15s
@@ -40,8 +40,8 @@ services:
     build: ../app/backend/
     container_name: smartwalk-backend
     environment:
-      - SMARTWALK_MONGO_CONN_STR=mongodb://smartwalk-database:27017
-      - SMARTWALK_OSRM_BASE_URL=http://smartwalk-routing:5000
+      - SMARTWALK_MONGO_CONN_STR=${SMARTWALK_MONGO_CONN_STR}
+      - SMARTWALK_OSRM_BASE_URL=${SMARTWALK_OSRM_BASE_URL}
 #   ports:
 #     - '5017:80'
     volumes:
@@ -66,7 +66,7 @@ services:
     build:
       context: ../app/frontend/
       args:
-        - REACT_APP_SMARTWALK_API_ORIGIN=http://localhost:3000
+        - REACT_APP_SMARTWALK_API_ORIGIN=${REACT_APP_SMARTWALK_API_ORIGIN}
     container_name: smartwalk-proxy
     ports:
       - '3000:80'

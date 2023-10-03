@@ -9,6 +9,8 @@
   <ItemGroup>
     <PackageReference Include="NetTopologySuite" Version="2.5.0" />
     <PackageReference Include="NJsonSchema" Version="10.9.0" />
+    <PackageReference Include="System.IO.FileSystem.Primitives" Version="4.3.0" />
+    <PackageReference Include="System.Text.Encoding.Extensions" Version="4.3.0" />
   </ItemGroup>
 
   <ItemGroup>
