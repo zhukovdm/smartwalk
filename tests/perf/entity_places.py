@@ -1,10 +1,10 @@
-from datetime import datetime
 import matplotlib.pyplot as plt
 import random
 import requests
+import time
 
 from lib.store import Store
-from lib.smartwalk import baseUrl, headers, time_to_milliseconds
+from lib.smartwalk import baseUrl, headers
 
 measurements = []
 
@@ -12,13 +12,14 @@ def get_url(smartId: str) -> str:
     return f"{baseUrl}/entity/places/{smartId}"
 
 def make_trial(smartId: str) -> float:
-    start_time = datetime.now()
+    t0 = time.perf_counter_ns()
+    res = requests.get(get_url(smartId), headers=headers)
+    t1 = time.perf_counter_ns()
 
-    _ = requests.get(get_url(smartId), headers=headers)
+    if (res.status_code != 200):
+        raise Exception
 
-    stop_time = datetime.now()
-
-    return time_to_milliseconds(stop_time - start_time)
+    return (t1 - t0) / 1_000_000
 
 def measure() -> None:
     global measurements
@@ -27,7 +28,7 @@ def measure() -> None:
         places = store.get_place_identifiers()
         length = len(places)
 
-        for _ in range(50):
+        for _ in range(100):
             measurements.append(make_trial(places[random.randint(0, length - 1)]))
 
 def draw() -> None:

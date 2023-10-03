@@ -19,7 +19,7 @@ frontend-dev:
 	@cd ./app/frontend/ && npm start
 
 prod:
-	@cd ./infra && docker compose --env-file ./.env.production -f docker-compose.production.yaml up
+	@cd ./infra && docker compose --env-file ./.env.production -f docker-compose.production.yaml up -d
 
 prod-stop:
 	@cd ./infra && docker compose --env-file ./.env.production -f docker-compose.production.yaml down
