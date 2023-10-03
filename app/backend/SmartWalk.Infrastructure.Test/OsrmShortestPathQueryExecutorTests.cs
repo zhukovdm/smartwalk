@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Infrastructure.RoutingEngine.Osrm;
-using SmartWalk.Infrastructure.Test.Mocks;
+using SmartWalk.Infrastructure.Test.Fakes;
 using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Infrastructure.Test;

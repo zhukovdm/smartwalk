@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using SmartWalk.Infrastructure.RoutingEngine.Osrm;
 using SmartWalk.Model.Entities;
 
-namespace SmartWalk.Infrastructure.Test.Mocks;
+namespace SmartWalk.Infrastructure.Test.Fakes;
 
 internal sealed class FakeOsrmRouteFetcher : IOsrmRouteFetcher
 {

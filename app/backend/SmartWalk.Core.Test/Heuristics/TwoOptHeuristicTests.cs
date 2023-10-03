@@ -99,9 +99,9 @@ public class TwoOptHeuristicTests
         {
             var result = 0.0;
 
-            for (int i = 0; i < sequence.Count - 1; ++i)
+            foreach (var (l, r) in sequence.Zip(sequence.Skip(1)))
             {
-                result += distMatrix.GetDistance(sequence[i].idx, sequence[i + 1].idx);
+                result += distMatrix.GetDistance(l.idx, r.idx);
             }
             return result;
         };
