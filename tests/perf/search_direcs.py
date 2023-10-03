@@ -1,10 +1,9 @@
-from datetime import datetime
 import matplotlib.pyplot as plt
 import random
+import time
 
 from lib.store import Store
-from lib.smartwalk import baseUrl, bboxes, make_request, \
-    serialize_request, time_to_milliseconds
+from lib.smartwalk import baseUrl, bboxes, make_request, serialize_request
 
 point_count = [0, 1, 3, 5]
 measurements = [([], []) for _ in range(len(point_count))]
@@ -13,12 +12,15 @@ def get_url(request: dict) -> str:
     return f"{baseUrl}/search/direcs?query={serialize_request(request)}"
 
 def make_trial(request: dict) -> (float, float):
-    start_time = datetime.now()
-    response = make_request(get_url(request))
-    stop_time = datetime.now()
+    t0 = time.perf_counter_ns()
+    res = make_request(get_url(request))
+    t1 = time.perf_counter_ns()
 
-    distance = response.json()[0]["distance"]
-    time_dif = time_to_milliseconds(stop_time - start_time)
+    if (res.status_code != 200):
+        raise Exception
+
+    distance = res.json()[0]["distance"]
+    time_dif = (t1 - t0) / 1_000_000
 
     return (distance / 1000.0, time_dif)
 
@@ -51,7 +53,7 @@ def draw() -> None:
         ax = axs[row, col]
         (xpoints, ypoints) = measurements[i]
 
-        ax.set_title(f"{point_count[i] + 2} points")
+        ax.set_title(f"{point_count[i] + 2} points", fontsize=10)
         ax.scatter(xpoints, ypoints, facecolors="none", edgecolors="#0380fc", linewidth=0.55)
 
         if (row == 1):

@@ -1,10 +1,10 @@
-from datetime import datetime
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
+import time
 
 from lib.store import Store
-from lib.smartwalk import baseUrl, make_request, time_to_milliseconds
+from lib.smartwalk import baseUrl, make_request
 
 advice_item_counts = [1, 3, 5, 7]
 measurements = [[] for _ in range(len(advice_item_counts))]
@@ -13,11 +13,14 @@ def get_url(prefix: str, count: int) -> str:
     return f"{baseUrl}/advice/keywords?prefix={prefix.replace(' ', '+')}&count={count}"
 
 def make_trial(prefix: str, count: int) -> float:
-    start_time = datetime.now()
-    _ = make_request(get_url(prefix, count))
-    stop_time = datetime.now()
+    t0 = time.perf_counter_ns()
+    res = make_request(get_url(prefix, count))
+    t1 = time.perf_counter_ns()
 
-    return time_to_milliseconds(stop_time - start_time)
+    if (res.status_code != 200):
+        raise Exception
+
+    return (t1 - t0) / 1_000_000
 
 def measure() -> None:
     global advice_item_counts, measurements
@@ -26,14 +29,13 @@ def measure() -> None:
         (keywords, keywordRv) = store.get_keywords()
 
         for i in range(len(advice_item_counts)):
-            for _ in range(50):
-
+            for _ in range(100):
                 keyword = keywords[keywordRv.rvs()]
                 prefix_max_len = min(len(keyword), 5)
 
-                # decreasing 1/2, 1/4, ..., 1/(2^i), 1/(2^i).
+                # decreasing 1/2, 1/4, ..., 1/(2^p), 1/(2^p).
 
-                seq = list(map(lambda number: 1/(2**(number + 1)), np.arange(prefix_max_len)))
+                seq = list(map(lambda p: 1/(2**(p + 1)), np.arange(prefix_max_len)))
                 seq[-1] *= 2
 
                 prefixRv = stats.rv_discrete(values=(np.arange(prefix_max_len), seq))

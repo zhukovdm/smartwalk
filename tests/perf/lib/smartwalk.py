@@ -1,18 +1,16 @@
-from datetime import timedelta
 import json
 import requests
 from urllib.parse import quote
 
-baseUrl = "http://localhost:5017/api"
+from lib.settings import SMARTWALK_API_ORIGIN
+
+baseUrl = f"{SMARTWALK_API_ORIGIN}/api"
 headers = {
     "Accept": "application/json; charset=utf-8"
 }
 
 def make_request(url: str):
     return requests.get(url, headers=headers)
-
-def time_to_milliseconds(time_dif: timedelta) -> float:
-    return time_dif.total_seconds() * 1000.0
 
 def serialize_request(request: dict):
     return quote(json.dumps(request, separators=(',', ':')))
