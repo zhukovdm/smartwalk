@@ -8,6 +8,9 @@ using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Core.Algorithms;
 
+/// <summary>
+/// Geometry primitives for calculations on a sphere.
+/// </summary>
 public static class Spherical
 {
     private static readonly double _deg2rad = Math.PI / 180.0;
