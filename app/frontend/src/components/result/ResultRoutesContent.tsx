@@ -7,7 +7,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import type { UiPlace } from "../../domain/types";
-import { SEARCH_DIRECS_ADDR } from "../../domain/routing";
+import { SEARCH_DIRECS_ADDR } from "../../utils/routing";
 import IdGenerator from "../../utils/idGenerator";
 import {
   toggleResultRoutesFilter,
@@ -29,9 +29,9 @@ import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
 import RouteContentList from "../_shared/RouteContentList";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
-import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
-import TraversableDistance from "../_shared/TraversableDistance";
-import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
+import TraversalDistance from "../_shared/TraversalDistance";
+import TraversalModifyDialog from "../_shared/TraversalModifyDialog";
+import TraversalSaveDialog from "../_shared/TraversalSaveDialog";
 
 /**
  * Component presenting the content of a route search result.
@@ -158,21 +158,19 @@ export default function ResultRoutesContent(): JSX.Element {
             This route is not in your Favorites yet.
           </Alert>
       }
-      <SomethingSaveDialog
-        key={name}
-        name={name}
+      <TraversalSaveDialog
         show={showS}
         what={"route"}
         onHide={() => { setShowS(false); }}
         onSave={onSave}
       />
-      <TraversableModifyDialog
+      <TraversalModifyDialog
         show={showM}
         what={"route"}
         onHide={() => { setShowM(false); }}
         onModify={onModify}
       />
-      <TraversableDistance distance={path.distance} />
+      <TraversalDistance distance={path.distance} />
       <RouteContentList
         map={map}
         source={source}

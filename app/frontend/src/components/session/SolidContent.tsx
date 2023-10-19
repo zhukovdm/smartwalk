@@ -10,7 +10,7 @@ import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { AppContext } from "../../App";
-import { FAVORITES_ADDR } from "../../domain/routing";
+import { FAVORITES_ADDR } from "../../utils/routing";
 import { resetFavorites } from "../../features/favoritesSlice";
 import { setBlock, setDialogBlock } from "../../features/panelSlice";
 import {
@@ -145,19 +145,16 @@ export default function SolidContent(): JSX.Element {
         />
       </Stack>
       <Stack gap={1}>
-        <Typography>
-          Activate selection and redirect to Favorites.
-        </Typography>
         <Stack direction={"row"} justifyContent={"center"}>
           <Button
             disabled={block || dialogBlock || !!selectedPod || !pod || activated}
             onClick={activateAction}
           >
-            <span>Activate</span>
+            <span>Activate Pod</span>
           </Button>
         </Stack>
         <Typography fontSize={"small"}>
-          After activating, only data from your Solid Pod will appear in Favorites. Local storage will be available immediately upon logout. Storages are not synced.
+          After activation, you will be redirected to Favorites. Only data from your Solid Pod will appear there. Device storage will be available immediately upon logout. Storages are not synced.
         </Typography>
       </Stack>
       <Stack direction={"row"} justifyContent={"center"}>

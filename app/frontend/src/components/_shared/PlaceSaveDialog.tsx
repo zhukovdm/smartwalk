@@ -5,7 +5,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import { SomethingKind } from "../../domain/types";
 import {
   useAppDispatch,
   useAppSelector
@@ -13,16 +12,13 @@ import {
 import { setDialogBlock } from "../../features/panelSlice";
 import SomethingSaveDialogActions from "./SomethingSaveDialogActions";
 
-export type SomethingSaveDialogProps = {
+export type PlaceSaveDialogProps = {
 
   /** An initial name of `something`. */
   name: string;
 
   /** Opens dialog window. */
   show: boolean;
-
-  /** A kind of `something`. */
-  what: SomethingKind;
 
   /** Action hiding the dialog. */
   onHide: () => void;
@@ -32,10 +28,10 @@ export type SomethingSaveDialogProps = {
 };
 
 /**
- * Dialog for saving `something`.
+ * Dialog for saving a place.
  */
-export default function SomethingSaveDialog(
-  { name: oldName, show, what, onHide, onSave }: SomethingSaveDialogProps): JSX.Element {
+export default function PlaceSaveDialog(
+  { name: oldName, show, onHide, onSave }: PlaceSaveDialogProps): JSX.Element {
 
   const dispatch = useAppDispatch();
   const { dialogBlock } = useAppSelector((state) => state.panel);
@@ -61,14 +57,14 @@ export default function SomethingSaveDialog(
 
   return (
     <Dialog open={show}>
-      <DialogTitle>Save {what}</DialogTitle>
+      <DialogTitle>Save place</DialogTitle>
       <DialogContent>
         <Stack
           direction={"column"}
           gap={2}
-          sx={{ width: "320px", maxWidth: "100%" }}
+          sx={{ width: "350px", maxWidth: "100%" }}
         >
-          <Typography>Fill in / modify data items, and press Save.</Typography>
+          <Typography>Set data items as required, and then click Save.</Typography>
           <TextField
             required
             label={"Name"}
@@ -78,7 +74,7 @@ export default function SomethingSaveDialog(
             onChange={(e) => { setName(e.target.value); }}
           />
           <Typography fontSize={"small"}>
-            The save operation creates a <strong>local copy</strong> of the object, which is no longer synchronized with the server.
+            The save operation creates a <strong>partial copy</strong> with a link to the original entity.
           </Typography>
         </Stack>
       </DialogContent>

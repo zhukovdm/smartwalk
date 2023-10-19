@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { RESULT_PLACES_ADDR } from "../domain/routing";
+import { RESULT_PLACES_ADDR } from "../utils/routing";
 import { fetchSearchPlaces } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {

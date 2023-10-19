@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import InformPlaceListItem from "./InformPlaceListItem";
-import TraversableWaypointList from "./TraversableWaypointList";
+import TraversalWaypointList from "./TraversalWaypointList";
 
 export type RouteContentListProps = {
 
@@ -43,7 +43,7 @@ export default function RouteContentList(
         />
       </Box>
       {filterList.some((f) => f) && (
-        <TraversableWaypointList
+        <TraversalWaypointList
           map={map}
           waypoints={waypoints}
         />

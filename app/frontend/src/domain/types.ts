@@ -1,7 +1,12 @@
 /**
- * Recognized entities.
+ * Recognized kinds of traversal.
  */
-export type SomethingKind = "direction" | "place" | "route";
+export type TraversalKind = "direction" | "route";
+
+/**
+ * Recognized kinds of entities.
+ */
+export type SomethingKind = TraversalKind | "place";
 
 /**
  * Recognized kinds of places (color schemata).

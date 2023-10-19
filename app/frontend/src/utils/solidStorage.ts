@@ -66,15 +66,15 @@ export default class SolidStorage implements IStorage {
     this.storageUrl = storageUrl;
   }
 
-  public mem(): boolean {
+  public inmemory(): boolean {
     return false;
   }
 
-  public loc(): boolean {
+  public device(): boolean {
     return false;
   }
 
-  public rem(): boolean {
+  public decentralized(): boolean {
     return true;
   }
 

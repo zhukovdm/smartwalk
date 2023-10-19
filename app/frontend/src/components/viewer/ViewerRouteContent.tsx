@@ -9,7 +9,7 @@ import ArrowViewDialog from "../_shared/ArrowViewDialog";
 import ArrowsLinkButton from "../_shared/ArrowsLinkButton";
 import CategoryFilterList from "../_shared/CategoryFilterList";
 import RouteContentList from "../_shared/RouteContentList";
-import TraversableHeader from "../_shared/TraversableHeader";
+import TraversalHeader from "../_shared/TraversalHeader";
 
 export type ViewerRouteContentProps = {
 
@@ -49,7 +49,7 @@ export default function ViewerRouteContent(
 
   return (
     <Stack gap={2.5}>
-      <TraversableHeader name={name} />
+      <TraversalHeader name={name} />
       <Stack gap={1}>
         <Typography>
           This route is <strong>{parseFloat(path.distance.toFixed(2))}</strong>&nbsp;km long and visits at least one place from each of the <strong>{categories.length}</strong> categor{categories.length > 1 ? "ies" : "y"} (arranged by the set of <ArrowsLinkButton onClick={() => { setShowArrows(true); }} />):

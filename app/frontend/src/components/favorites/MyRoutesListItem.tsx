@@ -5,7 +5,7 @@ import { AppContext } from "../../App";
 import {
   SEARCH_DIRECS_ADDR,
   VIEWER_ROUTE_ADDR
-} from "../../domain/routing";
+} from "../../utils/routing";
 import {
   StoredPlace,
   StoredRoute,
@@ -26,7 +26,7 @@ import {
 } from "../../features/sharedHooks";
 import { useAppDispatch } from "../../features/storeHooks";
 import StandardListItem from "../_shared/StandardListItem";
-import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
+import TraversalModifyDialog from "../_shared/TraversalModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import SomethingEditDialog from "./SomethingEditDialog";
 import SomethingDeleteDialog from "./SomethingDeleteDialog";
@@ -152,7 +152,7 @@ export default function MyRoutesListItem(
         onHide={() => { setShowE(false); }}
         onSave={onEdit}
       />
-      <TraversableModifyDialog
+      <TraversalModifyDialog
         show={showM}
         what={"route"}
         onHide={() => { setShowM(false); }}

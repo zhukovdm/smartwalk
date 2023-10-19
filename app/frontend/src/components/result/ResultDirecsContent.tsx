@@ -22,9 +22,9 @@ import {
 } from "../../features/storeHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
-import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
-import TraversableDistance from "../_shared/TraversableDistance";
-import TraversableWaypointList from "../_shared/TraversableWaypointList";
+import TraversalDistance from "../_shared/TraversalDistance";
+import TraversalSaveDialog from "../_shared/TraversalSaveDialog";
+import TraversalWaypointList from "../_shared/TraversalWaypointList";
 
 /**
  * Component presenting the content of a direction search result.
@@ -98,16 +98,14 @@ export default function ResultDirecsContent(): JSX.Element {
             This direction is not in your Favorites yet.
           </Alert>
       }
-      <SomethingSaveDialog
-        key={name}
-        name={name}
+      <TraversalSaveDialog
         show={showS}
         what={"direction"}
         onHide={() => { setShowS(false); }}
         onSave={onSave}
       />
-      <TraversableDistance distance={path.distance} />
-      <TraversableWaypointList
+      <TraversalDistance distance={path.distance} />
+      <TraversalWaypointList
         map={map}
         waypoints={waypoints}
       />

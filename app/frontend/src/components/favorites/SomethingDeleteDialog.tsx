@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { SomethingKind } from "../../domain/types";
+import { escapeHtml } from "../../utils/functions";
 import { setDialogBlock } from "../../features/panelSlice";
 import {
   useAppDispatch,
@@ -59,7 +60,7 @@ export default function SomethingDeleteDialog(
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            You are about to delete <strong>{name}</strong>. Please confirm the action.
+            You are about to delete <strong>{escapeHtml(name)}</strong>. Please confirm the action.
           </Typography>
         </Stack>
       </DialogContent>

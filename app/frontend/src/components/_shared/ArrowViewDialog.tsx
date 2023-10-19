@@ -62,7 +62,7 @@ export default function ArrowViewDialog(
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Stack mt={0.5} gap={2} maxWidth={"360px"}>
+        <Stack mt={0.5} gap={2} maxWidth={"340px"}>
           {arrows.length > 0 &&
             <Paper
               role={"none"}

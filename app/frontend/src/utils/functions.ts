@@ -1,4 +1,4 @@
-import { ENTITY_PLACES_ADDR } from '../domain/routing';
+import { ENTITY_PLACES_ADDR } from './routing';
 import { UiPlace, WgsPoint } from '../domain/types';
 
 const LOCATION_PRECISION = 7;
@@ -26,6 +26,17 @@ export function fromToItemImmutable<T>(arr: T[], fr: number, to: number): T[] {
   res.splice(to, 0, e);
 
   return res;
+}
+
+/**
+ * Present the content safely.
+ * - https://stackoverflow.com/a/4835406
+ */
+export function escapeHtml(text: string): string {
+  const map = new Map<string, string>([
+    ["&", "&amp;"], ["<", "&lt;"], [">", "&gt;"], ["\"", "&quot;"], ["'", "&#039;"]
+  ]);
+  return text.replace(/[&<>"']/g, (m) => { return map.get(m)!; });
 }
 
 /**

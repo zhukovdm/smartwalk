@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import { escapeHtml } from "../../utils/functions";
 
 export type StandardListItemProps = {
 
@@ -24,7 +25,9 @@ export type StandardListItemProps = {
  * List item with left and right icons, and a label in-between.
  */
 export default function StandardListItem(
-  { l, r, label, link }: StandardListItemProps): JSX.Element {
+  { l, r, label: unsafeLabel, link }: StandardListItemProps): JSX.Element {
+
+  const label = escapeHtml(unsafeLabel);
 
   return (
     <Stack

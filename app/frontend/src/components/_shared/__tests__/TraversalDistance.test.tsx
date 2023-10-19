@@ -1,17 +1,19 @@
-import { render as rtlRender } from "@testing-library/react";
-import TraversableDistance, {
-  type TraversableDistanceProps
-} from "../TraversableDistance";
+import {
+  render as rtlRender
+} from "@testing-library/react";
+import TraversalDistance, {
+  type TraversalDistanceProps
+} from "../TraversalDistance";
 
-const getDefault = (): TraversableDistanceProps => ({
+const getDefault = (): TraversalDistanceProps => ({
   distance: 1.234
 });
 
 function render(props = getDefault()) {
-  return rtlRender(<TraversableDistance {...props} />);
+  return rtlRender(<TraversalDistance {...props} />);
 }
 
-describe("<TraversableDistance />", () => {
+describe("<TraversalDistance />", () => {
 
   test("render", () => {
     const { container } = render();

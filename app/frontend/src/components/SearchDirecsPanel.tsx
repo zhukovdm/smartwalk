@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import {
   RESULT_DIRECS_ADDR
-} from "../domain/routing";
+} from "../utils/routing";
 import { fetchSearchDirecs } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {

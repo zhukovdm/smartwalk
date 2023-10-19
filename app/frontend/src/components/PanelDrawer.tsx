@@ -19,7 +19,7 @@ import {
   VIEWER_DIREC_ADDR,
   VIEWER_PLACE_ADDR,
   VIEWER_ROUTE_ADDR
-} from "../domain/routing";
+} from "../utils/routing";
 import { useAppSelector } from "../features/storeHooks";
 import EntityPlacePanel from "./EntityPlacePanel";
 import NotFoundPanel from "./NotFoundPanel";

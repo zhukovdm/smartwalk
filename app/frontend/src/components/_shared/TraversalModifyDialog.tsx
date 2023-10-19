@@ -8,14 +8,15 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import DirectionsIcon from "@mui/icons-material/Directions";
+import type { TraversalKind } from "../../domain/types";
 
-export type TraversableModifyDialogProps = {
+export type TraversalModifyDialogProps = {
 
   /** Show dialog */
   show: boolean;
 
   /** Kind of a `traversable` */
-  what: "route" | "direction";
+  what: TraversalKind;
 
   /** Callback hiding dialog */
   onHide: () => void;
@@ -28,8 +29,8 @@ export type TraversableModifyDialogProps = {
  * Dialog that replaces direction sequence by points of a route, or direction
  * from a result or stored one.
  */
-export default function TraversableModifyDialog(
-  { show, what, onHide, onModify }: TraversableModifyDialogProps): JSX.Element {
+export default function TraversalModifyDialog(
+  { show, what, onHide, onModify }: TraversalModifyDialogProps): JSX.Element {
 
   const confirmAction = async () => {
     onModify();
