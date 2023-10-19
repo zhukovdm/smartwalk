@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
-using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
+using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Api.Test.Fakes;
+namespace SmartWalk.Api.Test;
 
 internal sealed class FakeWorkingEntityIndex : IEntityIndex
 {

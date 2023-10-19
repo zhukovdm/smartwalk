@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33424.131
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartWalk.Model", "SmartWalk.Model\SmartWalk.Model.csproj", "{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PruningRadixTrie", "WolfGarbe.PruningRadixTrie\PruningRadixTrie\PruningRadixTrie.csproj", "{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Core", "SmartWalk.Core\SmartWalk.Core.csproj", "{CCD99FB7-C14F-4BCA-9466-EDD308A3EE15}"
@@ -15,9 +13,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Infrastructure", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Infrastructure.Test", "SmartWalk.Infrastructure.Test\SmartWalk.Infrastructure.Test.csproj", "{93705C26-7FEB-4FCA-99F9-7CFE428B026A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Service", "SmartWalk.Service\SmartWalk.Service.csproj", "{95A89A8A-E918-4F2B-808E-DD79830C0268}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Application", "SmartWalk.Application\SmartWalk.Application.csproj", "{95A89A8A-E918-4F2B-808E-DD79830C0268}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Service.Test", "SmartWalk.Service.Test\SmartWalk.Service.Test.csproj", "{D6AA4A1A-208C-4358-9D12-273379C4E06D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Application.Test", "SmartWalk.Application.Test\SmartWalk.Application.Test.csproj", "{D6AA4A1A-208C-4358-9D12-273379C4E06D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartWalk.Api", "SmartWalk.Api\SmartWalk.Api.csproj", "{AF8F749A-24AA-4EA1-899C-2C40FEA8537C}"
 EndProject
@@ -29,10 +27,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2A9EF9C8-A9C1-40F8-B9FA-E01466837B75}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F4CC5C2C-E63D-4254-8CB2-C85600D9C33B}.Release|Any CPU.ActiveCfg = Release|Any CPU

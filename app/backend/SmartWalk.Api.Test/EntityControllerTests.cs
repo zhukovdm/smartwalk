@@ -2,9 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SmartWalk.Api.Contexts;
 using SmartWalk.Api.Controllers;
-using SmartWalk.Api.Test.Fakes;
+using SmartWalk.Application.Entities;
 
 namespace SmartWalk.Api.Test;
 

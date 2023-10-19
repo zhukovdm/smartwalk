@@ -1,7 +1,7 @@
 using System;
 using Microsoft.Extensions.Logging;
 
-namespace SmartWalk.Api.Test.Fakes;
+namespace SmartWalk.Api.Test;
 
 internal class FakeLogger<T> : ILogger<T>
 {
