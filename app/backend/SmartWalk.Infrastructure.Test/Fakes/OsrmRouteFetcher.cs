@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SmartWalk.Core.Entities;
 using SmartWalk.Infrastructure.RoutingEngine.Osrm;
-using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Infrastructure.Test.Fakes;
 

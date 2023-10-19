@@ -5,10 +5,10 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Driver;
 using MongoDB.Driver.GeoJsonObjectModel;
+using SmartWalk.Core.Entities;
 using SmartWalk.Core.Extensions;
+using SmartWalk.Core.Interfaces;
 using SmartWalk.Infrastructure.EntityIndex.Mongo;
-using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Infrastructure.EntityIndex;
 
