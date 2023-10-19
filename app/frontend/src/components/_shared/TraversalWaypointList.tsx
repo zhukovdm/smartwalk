@@ -4,7 +4,7 @@ import { IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import InformPlaceListItem from "./InformPlaceListItem";
 
-export type TraversableWaypointListProps = {
+export type TraversalWaypointListProps = {
 
   /** Current map */
   map?: IMap;
@@ -17,8 +17,8 @@ export type TraversableWaypointListProps = {
  * List of waypoints shown in the Result or Viewer panel for
  * both `routes` and `directions`.
  */
-export default function TraversableWaypointList(
-  { map, waypoints }: TraversableWaypointListProps): JSX.Element {
+export default function TraversalWaypointList(
+  { map, waypoints }: TraversalWaypointListProps): JSX.Element {
 
   return (
     <Stack

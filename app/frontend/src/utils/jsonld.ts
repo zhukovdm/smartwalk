@@ -42,9 +42,9 @@ function extractLinked(linked: PlaceLinked): string[] {
 /**
  * @param url Resource location
  * @param place Place that defines json-ld object
- * @returns Semantically sound json-ld object.
+ * @returns Semantically sound json-ld object
  */
-export const getJsonLdPlace = (url: string, place: ExtendedPlace): any => {
+export const getPlaceJsonLd = (url: string, place: ExtendedPlace): any => {
 
   const {
     name,

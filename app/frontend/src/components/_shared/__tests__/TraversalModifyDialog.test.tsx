@@ -2,11 +2,11 @@ import {
   fireEvent,
   render as rtlRender
 } from "@testing-library/react";
-import TraversableModifyDialog, {
-  type TraversableModifyDialogProps
-} from "../TraversableModifyDialog";
+import TraversalModifyDialog, {
+  type TraversalModifyDialogProps
+} from "../TraversalModifyDialog";
 
-const getDefault = (): TraversableModifyDialogProps => ({
+const getDefault = (): TraversalModifyDialogProps => ({
   show: true,
   what: "route",
   onHide: jest.fn(),
@@ -14,10 +14,10 @@ const getDefault = (): TraversableModifyDialogProps => ({
 });
 
 function render(props = getDefault()) {
-  return rtlRender(<TraversableModifyDialog {...props} />);
+  return rtlRender(<TraversalModifyDialog {...props} />);
 }
 
-describe("<TraversableModifyDialog />", () => {
+describe("<TraversalModifyDialog />", () => {
 
   test("render", () => {
     const { container } = render();

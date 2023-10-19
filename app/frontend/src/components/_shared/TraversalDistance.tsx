@@ -1,6 +1,6 @@
 import Typography from "@mui/material/Typography";
 
-export type TraversableDistanceProps = {
+export type TraversalDistanceProps = {
 
   /** Walking distance of a `traversable` */
   distance: number;
@@ -9,8 +9,7 @@ export type TraversableDistanceProps = {
 /**
  * Distance of a route or direction shown in the Result or Viewer panel.
  */
-export default function TraversableDistance(
-  { distance }: TraversableDistanceProps): JSX.Element {
+export default function TraversalDistance({ distance }: TraversalDistanceProps): JSX.Element {
 
   return (
     <Typography>

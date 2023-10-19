@@ -4,11 +4,11 @@ import {
 } from "@testing-library/react";
 import { getPlace } from "../../../utils/testData";
 import { LeafletMap } from "../../../utils/leaflet";
-import TraversableWaypointList, {
-  type TraversableWaypointListProps
-} from "../TraversableWaypointList";
+import TraversalWaypointList, {
+  type TraversalWaypointListProps
+} from "../TraversalWaypointList";
 
-const getDefault = (): TraversableWaypointListProps => ({
+const getDefault = (): TraversalWaypointListProps => ({
   map: new LeafletMap(),
   waypoints: [
     [
@@ -23,10 +23,10 @@ const getDefault = (): TraversableWaypointListProps => ({
 });
 
 function render(props = getDefault()) {
-  return rtlRender(<TraversableWaypointList {...props} />);
+  return rtlRender(<TraversalWaypointList {...props} />);
 }
 
-describe("<TraversableWaypointList />", () => {
+describe("<TraversalWaypointList />", () => {
 
   test("render", () => {
     const { container } = render();

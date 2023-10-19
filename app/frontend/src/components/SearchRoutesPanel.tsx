@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { PrecedenceEdge } from "../domain/types";
-import { RESULT_ROUTES_ADDR } from "../domain/routing";
+import { RESULT_ROUTES_ADDR } from "../utils/routing";
 import { fetchSearchRoutes } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
 import {

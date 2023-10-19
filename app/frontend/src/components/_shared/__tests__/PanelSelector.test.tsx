@@ -7,7 +7,7 @@ import {
   SEARCH_DIRECS_ADDR,
   SEARCH_PLACES_ADDR,
   SEARCH_ROUTES_ADDR
-} from "../../../domain/routing";
+} from "../../../utils/routing";
 import { renderWithProviders } from "../../../utils/testUtils";
 import PanelSelector from "../PanelSelector";
 

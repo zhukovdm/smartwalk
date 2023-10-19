@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import {
   SEARCH_DIRECS_ADDR,
   VIEWER_DIREC_ADDR
-} from "../../domain/routing";
+} from "../../utils/routing";
 import {
   StoredDirec,
   StoredPlace
@@ -22,7 +22,7 @@ import { setViewerDirec } from "../../features/viewerSlice";
 import { usePlaces } from "../../features/sharedHooks";
 import { useAppDispatch } from "../../features/storeHooks";
 import StandardListItem from "../_shared/StandardListItem";
-import TraversableModifyDialog from "../_shared/TraversableModifyDialog";
+import TraversalModifyDialog from "../_shared/TraversalModifyDialog";
 import ListItemMenu from "./ListItemMenu";
 import SomethingEditDialog from "./SomethingEditDialog";
 import SomethingDeleteDialog from "./SomethingDeleteDialog";
@@ -130,7 +130,7 @@ export default function MyDirecsListItem(
         onHide={() => { setShowE(false); }}
         onSave={onEdit}
       />
-      <TraversableModifyDialog
+      <TraversalModifyDialog
         show={showM}
         what={"direction"}
         onHide={() => { setShowM(false); }}

@@ -12,7 +12,7 @@ import { AppContext } from "../App";
 import {
   FAVORITES_ADDR,
   SESSION_SOLID_ADDR
-} from "../domain/routing";
+} from "../utils/routing";
 import { resetFavorites } from "../features/favoritesSlice";
 import { showPanel } from "../features/panelSlice";
 import {

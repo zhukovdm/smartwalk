@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import PlaceIcon from "@mui/icons-material/Place";
-import { SEARCH_PLACES_ADDR } from "../../domain/routing";
+import { SEARCH_PLACES_ADDR } from "../../utils/routing";
 import { useAppSelector } from "../../features/storeHooks";
 import FavoriteStub from "./FavoriteStub";
 import MyPlacesListItem from "./MyPlacesListItem";

@@ -7,9 +7,9 @@ import {
   useStoredSmarts
 } from "../../features/sharedHooks";
 import { useResultDirecsMap } from "../../features/resultHooks";
-import TraversableDistance from "../_shared/TraversableDistance";
-import TraversableHeader from "../_shared/TraversableHeader";
-import TraversableWaypointList from "../_shared/TraversableWaypointList";
+import TraversalDistance from "../_shared/TraversalDistance";
+import TraversalHeader from "../_shared/TraversalHeader";
+import TraversalWaypointList from "../_shared/TraversalWaypointList";
 
 export type ViewerDirecContentProps = {
 
@@ -38,11 +38,11 @@ export default function ViewerDirecContent(
 
   return (
     <Stack gap={2.5}>
-      <TraversableHeader name={name} />
-      <TraversableDistance
+      <TraversalHeader name={name} />
+      <TraversalDistance
         distance={path.distance}
       />
-      <TraversableWaypointList
+      <TraversalWaypointList
         map={map}
         waypoints={waypoints}
       />

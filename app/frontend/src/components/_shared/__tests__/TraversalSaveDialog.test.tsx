@@ -5,23 +5,22 @@ import {
   waitFor
 } from "@testing-library/react";
 import { withState } from "../../../utils/testUtils";
-import SomethingSaveDialog, {
-  type SomethingSaveDialogProps
-} from "../SomethingSaveDialog";
+import TraversalSaveDialog, {
+  type TraversalSaveDialogProps
+} from "../TraversalSaveDialog";
 
-const getDefault = (): SomethingSaveDialogProps => ({
-  name: "",
+const getDefault = (): TraversalSaveDialogProps => ({
   show: true,
-  what: "place",
+  what: "route",
   onHide: jest.fn(),
   onSave: jest.fn()
 });
 
 function render(props = getDefault()) {
-  return rtlRender(withState(<SomethingSaveDialog {...props} />));
+  return rtlRender(withState(<TraversalSaveDialog {...props} />));
 }
 
-describe("<SomethingSaveDialog />", () => {
+describe("<TraversalSaveDialog />", () => {
 
   test("render", () => {
     const { container } = render();
@@ -29,7 +28,7 @@ describe("<SomethingSaveDialog />", () => {
   });
 
   test("input changes", () => {
-    const v = "Medieval Museum";
+    const v = "Nice Route";
     const { getByRole } = render();
     fireEvent.change(getByRole("textbox"), { target: { value: v } });
     expect(getByRole("textbox", { name: "Name" })).toHaveValue(v);
@@ -60,10 +59,10 @@ describe("<SomethingSaveDialog />", () => {
     const s = jest.fn();
     const { getByRole } = render({
       ...getDefault(),
-      name: "A",
       onHide: h,
       onSave: s
     });
+    fireEvent.change(getByRole("textbox"), { target: { value: "Route" } });
     act(() => {
       fireEvent.click(getByRole("button", { name: "Save" }));
     });

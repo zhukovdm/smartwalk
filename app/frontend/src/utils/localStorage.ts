@@ -24,15 +24,15 @@ export default class LocalStorage implements IStorage {
 
   private fallback?: IStorage = new InmemStorage();
 
-  public mem(): boolean {
+  public inmemory(): boolean {
     return !!this.fallback;
   }
 
-  public loc(): boolean {
+  public device(): boolean {
     return !this.fallback;
   }
 
-  public rem(): boolean {
+  public decentralized(): boolean {
     return false;
   }
 

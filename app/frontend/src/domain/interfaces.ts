@@ -94,13 +94,13 @@ export interface IMap {
 export interface IStorage {
 
   /** In-memory storage. */
-  mem(): boolean;
+  inmemory(): boolean;
 
-  /** Data are persisted locally. */
-  loc(): boolean;
+  /** Data are persisted locally on the device. */
+  device(): boolean;
 
-  /** Remote storage, such as Solid. */
-  rem(): boolean;
+  /** Decentralized storage, such as Solid. */
+  decentralized(): boolean;
 
   /** Initialization procedure. */
   init(): Promise<void>;

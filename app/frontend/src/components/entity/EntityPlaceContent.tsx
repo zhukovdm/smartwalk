@@ -23,6 +23,7 @@ import {
   type ExtendedPlace,
   type PlaceAddress
 } from "../../domain/types";
+import { escapeHtml } from "../../utils/functions";
 import IdGenerator from "../../utils/idGenerator";
 import { createFavoritePlace } from "../../features/favoritesSlice";
 import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
@@ -32,7 +33,7 @@ import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import PlaceLocation from "../_shared/PlaceLocation";
 import PlaceKeywords from "../_shared/PlaceKeywords";
 import SomethingActionMenu from "../_shared/SomethingActionMenu";
-import SomethingSaveDialog from "../_shared/SomethingSaveDialog";
+import PlaceSaveDialog from "../_shared/PlaceSaveDialog";
 import ExtraChip from "./ExtraChip";
 import ExtraArray from "./ExtraArray";
 import EntityPlaceHelmet from "./EntityPlaceHelmet";
@@ -174,7 +175,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
           fontSize={"1.25rem"}
           fontWeight={"medium"}
         >
-          {name}
+          {escapeHtml(name)}
         </Typography>
         <Divider sx={{ background: "lightgrey" }} />
         <PlaceLocation
@@ -197,7 +198,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               />
             }
           >
-            Saved as <strong>{storedPlace.name}</strong>.
+            Saved as <strong>{escapeHtml(storedPlace.name)}</strong>.
           </Alert>
         : <Alert
             icon={false}
@@ -212,11 +213,10 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
             This place is not in your Favorites yet.
           </Alert>
       }
-      <SomethingSaveDialog
+      <PlaceSaveDialog
         key={name}
         name={name}
         show={showS}
-        what={"place"}
         onHide={() => { setShowS(false); }}
         onSave={onSave}
       />
@@ -242,7 +242,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 className={"entity-place"}
                 titleAccess={"Address"}
               />
-              <Typography>{composeAddress(address)}</Typography>
+              <Typography>{escapeHtml(composeAddress(address))}</Typography>
             </Stack>
           }
           {website &&
@@ -439,7 +439,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 titleAccess={"Opening hours"}
               />
               <Stack direction={"column"} rowGap={1}>
-                {openingHours.map((o, i) => (<Typography key={i}>{o}</Typography>))}
+                {openingHours.map((o, i) => (<Typography key={i}>{escapeHtml(o)}</Typography>))}
               </Stack>
             </Stack>
           }
@@ -456,7 +456,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 titleAccess={"Charge"}
               />
               <Stack direction="column" rowGap={1}>
-                {charge.map((o, i) => (<Typography key={i}>{o}</Typography>))}
+                {charge.map((o, i) => (<Typography key={i}>{escapeHtml(o)}</Typography>))}
               </Stack>
             </Stack>
           }
@@ -480,7 +480,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
       }
       {(description) &&
         <Typography aria-label={"Description"}>
-          {description}
+          {escapeHtml(description)}
         </Typography>
       }
       {(sectionWithAdditionalInformation) &&

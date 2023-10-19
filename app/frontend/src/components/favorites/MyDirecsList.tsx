@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import DirectionsIcon from "@mui/icons-material/Directions";
-import { SEARCH_DIRECS_ADDR } from "../../domain/routing";
+import { SEARCH_DIRECS_ADDR } from "../../utils/routing";
 import {
   useStoredPlaces,
   useStoredSmarts

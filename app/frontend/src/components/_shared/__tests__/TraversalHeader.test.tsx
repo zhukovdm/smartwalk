@@ -1,17 +1,17 @@
 import { render as rtlRender } from "@testing-library/react";
-import TraversableHeader, {
-  type TraversableHeaderProps
-} from "../TraversableHeader";
+import TraversalHeader, {
+  type TraversalHeaderProps
+} from "../TraversalHeader";
 
-const getDefault = (): TraversableHeaderProps => ({
+const getDefault = (): TraversalHeaderProps => ({
   name: "Place A"
 });
 
 function render(props = getDefault()) {
-  return rtlRender(<TraversableHeader {...props} />);
+  return rtlRender(<TraversalHeader {...props} />);
 }
 
-describe("<TraversableHeader />", () => {
+describe("<TraversalHeader />", () => {
 
   test("render", () => {
     const { container } = render();

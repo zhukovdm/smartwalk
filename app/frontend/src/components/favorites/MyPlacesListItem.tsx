@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import { AppContext } from "../../App";
-import { VIEWER_PLACE_ADDR } from "../../domain/routing";
+import { VIEWER_PLACE_ADDR } from "../../utils/routing";
 import { StoredPlace } from "../../domain/types";
 import { getSmartPlaceLink } from "../../utils/functions";
 import {

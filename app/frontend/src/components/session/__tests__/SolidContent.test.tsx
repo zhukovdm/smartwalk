@@ -57,16 +57,16 @@ describe("<SolidContent />", () => {
 
     const { getByRole, getByLabelText } = renderOption!;
 
-    expect(getByRole("button", { name: "Activate" })).toBeDisabled();
+    expect(getByRole("button", { name: "Activate Pod" })).toBeDisabled();
 
     fireEvent.click(getByRole("button", { name: "Open" }));
     fireEvent.click(getByRole("option", { name: "https://www.storage.com/2" }));
 
-    expect(getByRole("button", { name: "Activate" })).toBeEnabled();
+    expect(getByRole("button", { name: "Activate Pod" })).toBeEnabled();
 
     fireEvent.click(getByLabelText("Clear"));
 
-    expect(getByRole("button", { name: "Activate" })).toBeDisabled();
+    expect(getByRole("button", { name: "Activate Pod" })).toBeDisabled();
   });
 
   it("should allow the user to activate selected pod", async () => {
@@ -90,10 +90,10 @@ describe("<SolidContent />", () => {
     fireEvent.click(getByRole("button", { name: "Open" }));
     fireEvent.click(getByRole("option", { name: "https://www.storage.com/2" }));
 
-    expect(getByRole("button", { name: "Activate" })).toBeEnabled();
+    expect(getByRole("button", { name: "Activate Pod" })).toBeEnabled();
 
     act(() => {
-      fireEvent.click(getByRole("button", { name: "Activate" }));
+      fireEvent.click(getByRole("button", { name: "Activate Pod" }));
     });
 
     await waitFor(() => {
