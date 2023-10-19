@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartWalk.Core.Entities;
 using SmartWalk.Core.Extensions;
-using SmartWalk.Model.Entities;
 
 namespace SmartWalk.Core.Test;
 

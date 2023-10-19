@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
-namespace SmartWalk.Model.Entities;
+namespace SmartWalk.Core.Entities;
 
 public sealed class ShortestPath
 {

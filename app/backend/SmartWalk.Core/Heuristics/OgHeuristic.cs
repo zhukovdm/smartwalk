@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
+using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Core.Heuristics;
 

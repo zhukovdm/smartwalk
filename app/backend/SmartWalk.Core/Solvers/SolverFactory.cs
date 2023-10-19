@@ -1,12 +1,12 @@
 using System.Collections.Generic;
-using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
+using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Core.Solvers;
 
 public static class SolverFactory
 {
-    /**
+    /*
      ***************************************************************************
      *
      *                  NOTE THAT THE PROCEDURE FOR FINDING
@@ -14,11 +14,13 @@ public static class SolverFactory
      *
      ***************************************************************************
      */
-     //
+    //
 
     /// <summary>
     /// <b>Solver-specific</b> precedence matrix.
     /// </summary>
+    /// <param name="edges"></param>
+    /// <param name="catsCount"></param>
     /// <param name="hasArrows">
     /// Set <c>true</c> if the matrix has at least one edge with both vertices
     /// different from the source and target.

@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 
+namespace SmartWalk.Core.Algorithms;
+
 public static class TransitiveClosure
 {
     public static List<List<bool>> Closure(List<List<bool>> precMatrix)
