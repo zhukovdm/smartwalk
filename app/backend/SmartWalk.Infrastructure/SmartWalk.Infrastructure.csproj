@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj" />
-    <ProjectReference Include="..\SmartWalk.Model\SmartWalk.Model.csproj" />
     <ProjectReference Include="..\WolfGarbe.PruningRadixTrie\PruningRadixTrie\PruningRadixTrie.csproj" />
   </ItemGroup>
 

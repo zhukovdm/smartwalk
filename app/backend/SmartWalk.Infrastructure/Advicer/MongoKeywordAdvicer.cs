@@ -1,5 +1,5 @@
 using MongoDB.Driver;
-using SmartWalk.Model.Interfaces;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Infrastructure.Advicer;
 

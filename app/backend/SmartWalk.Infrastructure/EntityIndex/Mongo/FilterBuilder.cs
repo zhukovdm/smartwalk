@@ -4,7 +4,7 @@ using System.Linq.Expressions;
 using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using SmartWalk.Model.Entities;
+using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Infrastructure.EntityIndex.Mongo;
 

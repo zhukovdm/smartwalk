@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SmartWalk.Model.Entities;
+using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 

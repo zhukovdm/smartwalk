@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 using SmartWalk.Infrastructure.RoutingEngine.Osrm;
-using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
 
 namespace SmartWalk.Infrastructure.RoutingEngine;
 
