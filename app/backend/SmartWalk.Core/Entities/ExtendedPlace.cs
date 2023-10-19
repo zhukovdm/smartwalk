@@ -5,6 +5,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SmartWalk.Core.Entities;
 
+/// <summary>
+/// Object describing address as known in the real world.
+/// </summary>
 [BsonIgnoreExtraElements]
 public sealed class PlaceAddress
 {
@@ -33,6 +36,9 @@ public sealed class PlaceAddress
     public string postalCode { get; init; }
 }
 
+/// <summary>
+/// Object describing possible social networks that an entity might use.
+/// </summary>
 [BsonIgnoreExtraElements]
 public sealed class PlaceSocialNetworks
 {
@@ -65,6 +71,9 @@ public sealed class PlaceSocialNetworks
     public string youtube { get; init; }
 }
 
+/// <summary>
+/// Attributes defining an extended place. All of them are optional.
+/// </summary>
 [BsonIgnoreExtraElements]
 public sealed class PlaceAttributes
 {
@@ -195,6 +204,9 @@ public sealed class PlaceAttributes
     public List<string> rental { get; init; }
 }
 
+/// <summary>
+/// Optional items with `sameAs` semantics.
+/// </summary>
 [BsonIgnoreExtraElements]
 public sealed class PlaceLinked
 {
@@ -223,6 +235,9 @@ public sealed class PlaceLinked
     public string yago { get; init; }
 }
 
+/// <summary>
+/// Full representation of a place used for rendering in detailed views.
+/// </summary>
 [BsonIgnoreExtraElements]
 public sealed class ExtendedPlace : Place
 {

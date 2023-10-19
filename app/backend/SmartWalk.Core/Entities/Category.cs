@@ -3,8 +3,15 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Core.Entities;
 
+/// <summary>
+/// Filter if set means that the item should exist on the object and does
+/// not specify the type.
+/// </summary>
 public sealed class AttributeFilterExisten { }
 
+/// <summary>
+/// All items with `existing` semantics.
+/// </summary>
 public sealed class AttributeFilterExistens
 {
     public AttributeFilterExisten description { get; init; }
@@ -26,6 +33,9 @@ public sealed class AttributeFilterExistens
     public AttributeFilterExisten openingHours { get; init; }
 }
 
+/// <summary>
+/// All items with `existing boolean` semantics.
+/// </summary>
 public sealed class AttributeFilterBooleans
 {
     public bool? fee { get; init; }
@@ -47,6 +57,9 @@ public sealed class AttributeFilterBooleans
     public bool? wheelchair { get; init; }
 }
 
+/// <summary>
+/// Bounds for numeric attributes.
+/// </summary>
 public sealed class AttributeFilterNumeric
 {
     [Required]
@@ -56,6 +69,9 @@ public sealed class AttributeFilterNumeric
     public double? max { get; init; }
 }
 
+/// <summary>
+/// All items with `existing numeric` semantics.
+/// </summary>
 public sealed class AttributeFilterNumerics
 {
     public AttributeFilterNumeric capacity { get; init; }
@@ -69,11 +85,17 @@ public sealed class AttributeFilterNumerics
     public AttributeFilterNumeric year { get; init; }
 }
 
+/// <summary>
+/// All items with `existing textual` semantics.
+/// </summary>
 public sealed class AttributeFilterTextuals
 {
     public string name { get; init; }
 }
 
+/// <summary>
+/// Bounds for collection-like attributes.
+/// </summary>
 public sealed class AttributeFilterCollect
 {
     /// <summary>
@@ -89,6 +111,9 @@ public sealed class AttributeFilterCollect
     public SortedSet<string> exc { get; init; }
 }
 
+/// <summary>
+/// All items with `existing collection` semantics.
+/// </summary>
 public sealed class AttributeFilterCollects
 {
     public AttributeFilterCollect clothes { get; init; }
@@ -102,6 +127,9 @@ public sealed class AttributeFilterCollects
     public AttributeFilterCollect rental { get; init; }
 }
 
+/// <summary>
+/// All possible attribute filters.
+/// </summary>
 public sealed class AttributeFilters
 {
     public AttributeFilterExistens es { get; init; }
@@ -115,6 +143,9 @@ public sealed class AttributeFilters
     public AttributeFilterCollects cs { get; init; }
 }
 
+/// <summary>
+/// User-defined category.
+/// </summary>
 public sealed class Category
 {
     /// <summary>

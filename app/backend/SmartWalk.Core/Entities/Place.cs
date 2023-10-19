@@ -5,6 +5,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace SmartWalk.Core.Entities;
 
+/// <summary>
+/// Minimal representation of a place used in results and private storages.
+/// </summary>
 [BsonIgnoreExtraElements]
 public class Place
 {
