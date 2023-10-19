@@ -1,4 +1,4 @@
-namespace SmartWalk.Model.Entities;
+namespace SmartWalk.Core.Entities;
 
 public sealed class SolverPlace
 {

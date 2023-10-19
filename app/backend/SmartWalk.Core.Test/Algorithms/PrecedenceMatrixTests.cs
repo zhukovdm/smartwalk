@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartWalk.Core.Algorithms;
 
 namespace SmartWalk.Core.Test;
 

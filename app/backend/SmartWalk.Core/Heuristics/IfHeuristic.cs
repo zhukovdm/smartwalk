@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using SmartWalk.Model.Entities;
-using SmartWalk.Model.Interfaces;
+using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Core.Heuristics;
 
@@ -95,7 +95,7 @@ internal static class IfCandidateSelector
 
             for (int i = 1 /* source is skipped */; i < seq.Count; ++i)
             {
-                /**
+                /* 
                  * Category cannot use any further indices for insertion,
                  * because it shall precede the category on position i-1.
                  */
@@ -105,7 +105,7 @@ internal static class IfCandidateSelector
                     break;
                 }
 
-                /**
+                /* 
                  * Place in the sequence shall come before the considered
                  * one. Already found best placement is no longer relevant,
                  * and position `i` is not considered.
@@ -140,7 +140,13 @@ internal static class IfCandidateSelector
 /// </summary>
 internal sealed class IfHeuristic
 {
+    /// <summary></summary>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <param name="places"></param>
+    /// <param name="distMatrix"></param>
     /// <param name="precMatrix">Transitive closure of a category graph.</param>
+    /// <returns></returns>
     public static List<SolverPlace> Advise(
         SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
     {

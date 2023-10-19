@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using SmartWalk.Model.Entities;
+using SmartWalk.Core.Entities;
 
-namespace SmartWalk.Model.Interfaces;
+namespace SmartWalk.Core.Interfaces;
 
 public interface IEntityStore
 {

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace SmartWalk.Model.Entities;
+namespace SmartWalk.Core.Entities;
 
 [BsonIgnoreExtraElements]
 public class Place
