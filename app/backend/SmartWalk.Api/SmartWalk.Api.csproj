@@ -14,9 +14,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartWalk.Model\SmartWalk.Model.csproj" />
+    <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj" />
     <ProjectReference Include="..\SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj" />
-    <ProjectReference Include="..\SmartWalk.Service\SmartWalk.Service.csproj" />
+    <ProjectReference Include="..\SmartWalk.Application\SmartWalk.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>

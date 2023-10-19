@@ -2,17 +2,15 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SmartWalk.Api.Contexts;
 using SmartWalk.Api.Controllers;
-using SmartWalk.Api.Test.Fakes;
-using static SmartWalk.Api.Controllers.AdviceController;
+using SmartWalk.Application.Entities;
 
 namespace SmartWalk.Api.Test;
 
 [TestClass]
 public class AdviceControllerAdviseKeywordsTests
 {
-    private KeywordsRequest GetValidKeywordsRequest()
+    private AdviseKeywordsRequest GetValidAdviseKeywordsRequest()
     {
         return new() { prefix = "m", count = 5 };
     }
@@ -26,7 +24,7 @@ public class AdviceControllerAdviseKeywordsTests
         };
         var controller = new AdviceController(context, new FakeLogger<AdviceController>());
 
-        var response = (await controller.AdviseKeywords(GetValidKeywordsRequest())).Result as StatusCodeResult;
+        var response = (await controller.AdviseKeywords(GetValidAdviseKeywordsRequest())).Result as StatusCodeResult;
 
         Assert.AreEqual(StatusCodes.Status500InternalServerError, response.StatusCode);
     }
@@ -40,7 +38,7 @@ public class AdviceControllerAdviseKeywordsTests
         };
         var controller = new AdviceController(context, new FakeLogger<AdviceController>());
 
-        var items = (await controller.AdviseKeywords(GetValidKeywordsRequest())).Value;
+        var items = (await controller.AdviseKeywords(GetValidAdviseKeywordsRequest())).Value;
 
         Assert.AreEqual(1, items.Count);
     }

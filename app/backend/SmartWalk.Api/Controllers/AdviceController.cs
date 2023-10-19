@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SmartWalk.Api.Contexts;
-using SmartWalk.Model.Entities;
-using SmartWalk.Service;
+using SmartWalk.Application.Entities;
+using SmartWalk.Application.Handlers;
+using SmartWalk.Application.Interfaces;
+using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Api.Controllers;
 
@@ -16,27 +16,12 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/advice")]
 public sealed class AdviceController : ControllerBase
 {
-    private readonly IAdviceContext _context;
+    private readonly IAdviceContext _ctx;
     private readonly ILogger<AdviceController> _logger;
 
-    public AdviceController(IAdviceContext context, ILogger<AdviceController> logger)
+    public AdviceController(IAdviceContext ctx, ILogger<AdviceController> logger)
     {
-        _context = context; _logger = logger;
-    }
-
-    # region Keywords
-
-    public sealed class KeywordsRequest
-    {
-        /// <example>m</example>
-        [Required]
-        [MinLength(1)]
-        public string prefix { get; init; }
-
-        /// <example>5</example>
-        [Required]
-        [Range(1, int.MaxValue)]
-        public int? count { get; init; }
+        _ctx = ctx; _logger = logger;
     }
 
     [HttpGet]
@@ -44,12 +29,12 @@ public sealed class AdviceController : ControllerBase
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<KeywordAdviceItem>>> AdviseKeywords([FromQuery] KeywordsRequest request)
+    public async Task<ActionResult<List<KeywordAdviceItem>>> AdviseKeywords([FromQuery] AdviseKeywordsRequest request)
     {
         try
         {
-            return await AdviceService.GetKeywords(
-                _context.KeywordAdvicer, request.prefix, request.count.Value);
+            return await new AdviseKeywordsHandler(_ctx.KeywordAdvicer)
+                .Handle(new() { prefix = request.prefix, count = request.count.Value });
         }
         catch (Exception ex)
         {
@@ -57,6 +42,4 @@ public sealed class AdviceController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
-
-    # endregion
 }

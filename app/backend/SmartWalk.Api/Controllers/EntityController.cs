@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
-using SmartWalk.Api.Contexts;
-using SmartWalk.Model.Entities;
-using SmartWalk.Service;
+using SmartWalk.Application.Handlers;
+using SmartWalk.Application.Interfaces;
+using SmartWalk.Application.Validators;
+using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Api.Controllers;
 
@@ -15,17 +15,13 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/entity")]
 public sealed class EntityController : ControllerBase
 {
-    private readonly IEntityContext _context;
+    private readonly IEntityContext _ctx;
     private readonly ILogger<EntityController> _logger;
 
-    public EntityController(IEntityContext context, ILogger<EntityController> logger)
+    public EntityController(IEntityContext ctx, ILogger<EntityController> logger)
     {
-        _context = context; _logger = logger;
+        _ctx = ctx; _logger = logger;
     }
-
-    # region Places
-
-    private static bool ValidateSmartId(string smartId) => ObjectId.TryParse(smartId, out _);
 
     /// <summary></summary>
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
@@ -42,15 +38,14 @@ public sealed class EntityController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
-        if (!ValidateSmartId(smartId))
+        if (!new GetPlaceValidator(new ModelStateWrapper(ModelState)).Validate(smartId))
         {
-            ModelState.AddModelError("smartId", "Malformed identifier.");
             return ValidationProblem();
         }
 
         try
         {
-            var place = await PlacesService.GetPlace(_context.EntityStore, smartId);
+            var place = await new GetPlaceHandler(_ctx.EntityStore).Handle(new() { smartId = smartId });
             return (place is not null) ? place : NotFound();
         }
         catch (Exception ex)
@@ -59,6 +54,4 @@ public sealed class EntityController : ControllerBase
             return StatusCode(StatusCodes.Status500InternalServerError);
         }
     }
-
-    # endregion
 }
