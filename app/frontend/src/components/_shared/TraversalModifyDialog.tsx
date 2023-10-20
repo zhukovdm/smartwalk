@@ -59,7 +59,7 @@ export default function TraversalModifyDialog(
       <DialogContent>
         <Stack direction={"column"} gap={2} maxWidth={"300px"}>
           <Typography>
-            This action will <strong>replace</strong> points in the {<DirectionsIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} />} search panel and <strong>navigate</strong> you there.
+            This action will <em>replace</em> points in the {<DirectionsIcon fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} />} search panel and <em>navigate</em> you there.
           </Typography>
         </Stack>
       </DialogContent>

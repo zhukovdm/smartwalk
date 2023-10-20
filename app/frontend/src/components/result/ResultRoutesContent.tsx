@@ -7,8 +7,9 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import type { UiPlace } from "../../domain/types";
-import { SEARCH_DIRECS_ADDR } from "../../utils/routing";
+import { escapeHtml } from "../../utils/functions";
 import IdGenerator from "../../utils/idGenerator";
+import { SEARCH_DIRECS_ADDR } from "../../utils/routing";
 import {
   toggleResultRoutesFilter,
   setResultRoutesIndex,
@@ -143,7 +144,7 @@ export default function ResultRoutesContent(): JSX.Element {
               />
             }
           >
-            Saved as <strong>{name}</strong>.
+            Saved as <strong>{escapeHtml(name)}</strong>.
           </Alert>
         : <Alert
             icon={false}

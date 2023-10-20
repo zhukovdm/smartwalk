@@ -20,6 +20,9 @@ export type CategoryFilterListProps = {
   onToggle: (index: number) => void;
 };
 
+/**
+ * List of categories presented to the user.
+ */
 export default function CategoryFilterList(
   { categories, filterList, found, onToggle }: CategoryFilterListProps): JSX.Element {
 

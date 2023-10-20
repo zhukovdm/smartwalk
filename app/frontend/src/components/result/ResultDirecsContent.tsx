@@ -4,8 +4,9 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { AppContext } from "../../App";
+import { escapeHtml } from "../../utils/functions";
 import IdGenerator from "../../utils/idGenerator";
+import { AppContext } from "../../App";
 import {
   setResultDirecsIndex,
   updateResultDirec
@@ -84,7 +85,7 @@ export default function ResultDirecsContent(): JSX.Element {
             severity={"success"}
             action={<SomethingActionMenu />}
           >
-            Saved as <strong>{name}</strong>.
+            Saved as <strong>{escapeHtml(name)}</strong>.
           </Alert>
         : <Alert
             icon={false}
