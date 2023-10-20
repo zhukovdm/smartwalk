@@ -23,7 +23,6 @@ public sealed class EntityController : ControllerBase
         _ctx = ctx; _logger = logger;
     }
 
-    /// <summary></summary>
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
     /// <returns>Unique place that has the same identifier.</returns>
     /// <response code="200">Valid place object.</response>
