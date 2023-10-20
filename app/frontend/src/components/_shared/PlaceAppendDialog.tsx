@@ -62,7 +62,7 @@ export default function PlaceAppendDialog(
           maxWidth={"300px"}
         >
           <Typography>
-            This action will <strong>append</strong> the point to the current <DirectionsIcon titleAccess={"direction"} fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} /> sequence.
+            This action will <em>append</em> the point to the current <DirectionsIcon titleAccess={"direction"} fontSize={"small"} className={"action-place"} sx={{ verticalAlign: "middle" }} /> sequence.
           </Typography>
         </Stack>
       </DialogContent>

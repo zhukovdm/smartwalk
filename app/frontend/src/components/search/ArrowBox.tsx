@@ -181,7 +181,7 @@ export default function ArrowBox(
             </Stack>
             <Stack gap={1}>
               <Typography fontSize={"small"}>
-                Symbol &rarr; has the same meaning as the word <strong>&quot;before&quot;</strong>. Given categories &#123;1,&nbsp;2,&nbsp;3&#125; and the only arrow (1&nbsp;&rarr;&nbsp;2), the following orders are valid:
+                Symbol &rarr; has the same meaning as the word <em>&quot;before&quot;</em>. Given categories &#123;1,&nbsp;2,&nbsp;3&#125; and the only arrow (1&nbsp;&rarr;&nbsp;2), the following orders are valid:
               </Typography>
               <Stack
                 direction={"row"}

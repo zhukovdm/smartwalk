@@ -12,6 +12,9 @@ export type ArrowListProps = {
   onDelete?: (index: number) => void;
 };
 
+/**
+ * List of arrows presented to the user.
+ */
 export default function ArrowList({ arrows, onDelete }: ArrowListProps): JSX.Element {
 
   return (

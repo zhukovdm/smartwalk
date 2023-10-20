@@ -121,7 +121,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           onUpdate={(category, i) => dispatch(updateSearchRoutesCategory({ category, i }))}
         />
         <Typography>
-          Categories could appear on a route in <strong>any</strong> order. Add arrows to impose a specific arrangement.
+          Categories could appear on a route in <em>any</em> order. Add arrows to impose a specific arrangement.
         </Typography>
         <ArrowBox
           categories={categories}

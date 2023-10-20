@@ -11,7 +11,7 @@ import "leaflet.markercluster";
 import * as ReactDOMServer from "react-dom/server";
 import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { IMap, IPin } from "../domain/interfaces";
-import { point2place } from "./functions";
+import { escapeHtml, point2place } from "./functions";
 
 const dir = process.env.PUBLIC_URL + "/assets/markers";
 
@@ -78,7 +78,7 @@ function PlacePopup({ place, categories }: PlacePopupProps): JSX.Element {
 
   return (
     <div>
-      <strong>{place.name}</strong>
+      <strong>{escapeHtml(place.name)}</strong>
       <div>
         <hr style={{opacity: 0.7, margin: "0.25rem 0"}} />
         <div style={{
