@@ -16,6 +16,9 @@ using EC = Expression<Func<ExtendedPlace, IEnumerable<string>>>;
 using ET = Expression<Func<ExtendedPlace, string>>;
 using EN = Expression<Func<ExtendedPlace, double?>>;
 
+/// <summary>
+/// Mongo-specific filter definition.
+/// </summary>
 internal static class FilterDefinitionExtensions
 {
     public static F existen(this F filter, B builder, object x, EE expr)

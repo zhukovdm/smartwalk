@@ -5,12 +5,12 @@ using NJsonSchema;
 namespace SmartWalk.Application.Validators;
 
 /// <summary>
-/// Schema-based attribute validator.
+/// Schema-based validator (defined by type attributes).
 /// </summary>
-/// <typeparam name="T"></typeparam>
-public static class SerializationValidator<T>
+/// <typeparam name="V">Validated against.</typeparam>
+public static class SerializationValidator<V>
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<T>();
+    private static readonly JsonSchema _schema = JsonSchema.FromType<V>();
 
     public static bool Validate(string serialization, out string[] errors)
     {

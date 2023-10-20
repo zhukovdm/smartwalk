@@ -1,15 +1,11 @@
 namespace SmartWalk.Application.Interfaces;
 
-/// <summary>
-/// Interface for interactions between ModelState of a controller
-/// and the corresponding request handler.
-/// </summary>
 public interface IValidationResult
 {
     /// <summary>
-    /// Eventually reports validation errors to the user.
+    /// Report validation errors to the user.
     /// </summary>
-    /// <param name="item"></param>
-    /// <param name="errorMessage"></param>
+    /// <param name="item">Name of the invalid item.</param>
+    /// <param name="errorMessage">Error message.</param>
     void AddError(string item, string errorMessage);
 }

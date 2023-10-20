@@ -27,6 +27,10 @@ public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQu
     /// Check if edges define directed acyclic loop-free graph, repeated edges
     /// are tolerable.
     /// </summary>
+    /// <param name="arrows">User-defined ordering on categories.</param>
+    /// <param name="order">Number of categories.</param>
+    /// <param name="error">Possible error.</param>
+    /// <returns></returns>
     internal static bool ValidateArrows(IEnumerable<PrecedenceEdge> arrows, int order, out string error)
     {
         error = null;
@@ -70,9 +74,9 @@ public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQu
     /// False if the crow-fly distance between a source and target exceeds
     /// maximum allowed distance (network distance >= crow-fly distance).
     /// </summary>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    /// <param name="maxDistance"></param>
+    /// <param name="source">Starting point.</param>
+    /// <param name="target">Destination.</param>
+    /// <param name="maxDistance">Maximum allowed distance.</param>
     /// <returns></returns>
     private static bool ValidateRouteMaxDistance(WgsPoint source, WgsPoint target, double maxDistance)
     {

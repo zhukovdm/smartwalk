@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 namespace SmartWalk.Application.Entities;
 
 /// <summary>
-/// Type used for model (V)alidation and handling.
+/// Type used for model (V)alidation.
 /// </summary>
 public sealed class AdviseKeywordsRequest
 {

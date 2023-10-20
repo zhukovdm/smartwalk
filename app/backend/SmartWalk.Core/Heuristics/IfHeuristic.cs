@@ -81,6 +81,9 @@ internal static class IfCandidateSelector
             + distMatrix.GetDistance(place.idx,           seq[seqIdx].idx);
     }
 
+    /// <summary>
+    /// Select the best candidate out of all available places.
+    /// </summary>
     public static (SolverPlace, double, int) SelectBest(
         IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix, double currDist)
     {
@@ -141,10 +144,10 @@ internal static class IfCandidateSelector
 internal sealed class IfHeuristic
 {
     /// <summary></summary>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
-    /// <param name="places"></param>
-    /// <param name="distMatrix"></param>
+    /// <param name="source">Starting place.</param>
+    /// <param name="target">Destination.</param>
+    /// <param name="places">All places.</param>
+    /// <param name="distMatrix">Distance matrix.</param>
     /// <param name="precMatrix">Transitive closure of a category graph.</param>
     /// <returns></returns>
     public static List<SolverPlace> Advise(

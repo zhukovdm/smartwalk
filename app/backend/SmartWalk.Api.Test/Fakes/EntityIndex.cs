@@ -13,7 +13,9 @@ internal sealed class FakeWorkingEntityIndex : IEntityIndex
     private static readonly List<Place> _places;
 
     private static double GenerateRandomInInterval(double min, double max)
-        => new Random().NextDouble() * (max - min) + min;
+    {
+        return new Random().NextDouble() * (max - min) + min;
+    }
 
     static FakeWorkingEntityIndex()
     {
@@ -43,17 +45,25 @@ internal sealed class FakeWorkingEntityIndex : IEntityIndex
     }
 
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
-        => Task.FromResult(_places);
+    {
+        return Task.FromResult(_places);
+    }
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
-        => Task.FromResult(_places);
+    {
+        return Task.FromResult(_places);
+    }
 }
 
 internal sealed class FakeFailingEntityIndex : IEntityIndex
 {
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
-        => throw new Exception($"{this.GetType()}: GetAround");
+    {
+        throw new Exception($"{this.GetType()}: GetAround");
+    }
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
-        => throw new Exception($"{this.GetType()}: GetWithin");
+    {
+        throw new Exception($"{this.GetType()}: GetWithin");
+    }
 }

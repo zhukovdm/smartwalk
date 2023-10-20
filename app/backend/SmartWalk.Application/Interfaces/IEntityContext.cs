@@ -7,5 +7,8 @@ namespace SmartWalk.Application.Interfaces;
 /// </summary>
 public interface IEntityContext
 {
+    /// <summary>
+    /// Abstraction for storing data objects in their original form.
+    /// </summary>
     IEntityStore EntityStore { get; init; }
 }

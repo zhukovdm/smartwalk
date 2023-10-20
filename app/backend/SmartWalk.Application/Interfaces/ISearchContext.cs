@@ -7,7 +7,13 @@ namespace SmartWalk.Application.Interfaces;
 /// </summary>
 public interface ISearchContext
 {
+    /// <summary>
+    /// Abstraction for searching data objects.
+    /// </summary>
     IEntityIndex EntityIndex { get; init; }
 
+    /// <summary>
+    /// Abstraction for finding network traversals and distance matrices.
+    /// </summary>
     IRoutingEngine RoutingEngine { get; init; }
 }

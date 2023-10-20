@@ -24,10 +24,10 @@ public sealed class SearchController : ControllerBase
     /// <typeparam name="V">Validate against.</typeparam>
     /// <typeparam name="D">Deserialize as and handle.</typeparam>
     /// <typeparam name="T">Response of a handler.</typeparam>
-    /// <param name="query"></param>
-    /// <param name="parser"></param>
-    /// <param name="handler"></param>
-    /// <returns></returns>
+    /// <param name="query">Received query string.</param>
+    /// <param name="parser">Constructor of a parser with validation capabilities.</param>
+    /// <param name="handler">Request handler.</param>
+    /// <returns>Response object.</returns>
     private async Task<ActionResult<T>> SearchT<V, D, T>(
         string query, Func<Model, IQueryParser<V, D>> parser, IQueryHandler<D, T> handler)
     {
@@ -55,6 +55,12 @@ public sealed class SearchController : ControllerBase
         _ctx = ctx; _logger = logger;
     }
 
+    /// <summary></summary>
+    /// <param name="request">Request object with embedded query.</param>
+    /// <returns>Response object.</returns>
+    /// <response code="200">Valid list of directions.</response>
+    /// <response code="400">Invalid query structure.</response>
+    /// <response code="500">Some of the backend services malfunction.</response>
     [HttpGet]
     [Route("direcs", Name = "SearchDirecs")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -66,6 +72,12 @@ public sealed class SearchController : ControllerBase
         return SearchT(request.query, (Model model) => new SearchDirecsQueryParser(model), new SearchDirecsHandler(_ctx.RoutingEngine));
     }
 
+    /// <summary></summary>
+    /// <param name="request">Request object with embedded query.</param>
+    /// <returns>Response object.</returns>
+    /// <response code="200">Valid list of places.</response>
+    /// <response code="400">Invalid query structure.</response>
+    /// <response code="500">Some of the backend services malfunction.</response>
     [HttpGet]
     [Route("places", Name = "SearchPlaces")]
     [Produces(MediaTypeNames.Application.Json)]
@@ -77,6 +89,12 @@ public sealed class SearchController : ControllerBase
         return SearchT(request.query, (Model model) => new SearchPlacesQueryParser(model), new SearchPlacesHandler(_ctx.EntityIndex));
     }
 
+    /// <summary></summary>
+    /// <param name="request">Request object with embedded query.</param>
+    /// <returns>Response object.</returns>
+    /// <response code="200">Valid list of routes.</response>
+    /// <response code="400">Invalid query structure.</response>
+    /// <response code="500">Some of the backend services malfunction.</response>
     [HttpGet]
     [Route("routes", Name = "SearchRoutes")]
     [Produces(MediaTypeNames.Application.Json)]

@@ -24,6 +24,11 @@ public sealed class AdviceController : ControllerBase
         _ctx = ctx; _logger = logger;
     }
 
+    /// <summary></summary>
+    /// <param name="request">Valid request object.</param>
+    /// <returns>List of autocomplete items.</returns>
+    /// <response code="200">Valid response with autocomplete items.</response>
+    /// <response code="500">Some of the backend services malfunction.</response>
     [HttpGet]
     [Route("keywords", Name = "AdviseKeywords")]
     [Produces(MediaTypeNames.Application.Json)]

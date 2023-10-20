@@ -51,8 +51,8 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     /// <summary>
     /// Source before all (&amp; no loops!)
     /// </summary>
-    /// <param name="sourceCat"></param>
-    /// <param name="catsCount"></param>
+    /// <param name="sourceCat">CategoryId of the source point.</param>
+    /// <param name="catsCount">Number of categories.</param>
     /// <returns></returns>
     private static IEnumerable<PrecedenceEdge> GetSourceEs(int sourceCat, int catsCount)
     {
@@ -62,8 +62,8 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     /// <summary>
     /// All before target (&amp; no loops!)
     /// </summary>
-    /// <param name="targetCat"></param>
-    /// <param name="catsCount"></param>
+    /// <param name="targetCat">CategoryId of the target point.</param>
+    /// <param name="catsCount">Number of categories.</param>
     /// <returns></returns>
     private static IEnumerable<PrecedenceEdge> GetTargetEs(int targetCat, int catsCount)
     {
@@ -73,10 +73,10 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     /// <summary>
     /// Expand places to disjunct solver places.
     /// </summary>
-    /// <param name="sourceCat"></param>
-    /// <param name="targetCat"></param>
-    /// <param name="places"></param>
-    /// <returns>(source, target, allPlaces)</returns>
+    /// <param name="sourceCat">CategoryId of the source point.</param>
+    /// <param name="targetCat">CategoryId of the target point.</param>
+    /// <param name="places">All places.</param>
+    /// <returns>Places prepared for a particular solver.</returns>
     private static (SolverPlace, SolverPlace, SortedSet<SolverPlace>) GetSolverPlaces(int sourceCat, int targetCat, IEnumerable<Place> places)
     {
         var solverSource = default(SolverPlace);
@@ -104,8 +104,8 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     /// Plan simple path through a given sequence.
     /// </summary>
     /// <param name="fullSeq">Sequence of places with terminal points.</param>
-    /// <param name="places"></param>
-    /// <param name="maxDistance"></param>
+    /// <param name="places">All places.</param>
+    /// <param name="maxDistance">Maximum allowed distance of a route.</param>
     /// <returns>A path or nothing.</returns>
     private async Task<ShortestPath> GetPath(IEnumerable<SolverPlace> fullSeq, List<Place> places, double maxDistance)
     {
@@ -117,9 +117,9 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     /// <summary>
     /// Construct a route out of a path and a sequence of places excluding source and target.
     /// </summary>
-    /// <param name="trimmedSeq"></param>
-    /// <param name="places"></param>
-    /// <param name="path"></param>
+    /// <param name="trimmedSeq">Route sequence excluding source and target locations.</param>
+    /// <param name="places">All places.</param>
+    /// <param name="path">Exact route traversal.</param>
     /// <returns></returns>
     private static Route GetRoute(List<SolverPlace> trimmedSeq, List<Place> places, ShortestPath path)
     {

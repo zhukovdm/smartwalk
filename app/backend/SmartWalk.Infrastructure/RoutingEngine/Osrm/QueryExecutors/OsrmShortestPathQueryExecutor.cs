@@ -23,7 +23,7 @@ internal static class OsrmShortestPathQueryExecutor
     /// <summary>
     /// Request the shortest paths from an OSRM instance.
     /// </summary>
-    /// <param name="addr">Base URL of the service</param>
+    /// <param name="fetcher">Primitive that makes HTTP request.</param>
     /// <param name="waypoints">List of WGS 84 points</param>
     /// <returns>Non-null list of shortest paths ordered by distance.</returns>
     public static async Task<List<ShortestPath>> Execute(IOsrmRouteFetcher fetcher, IEnumerable<WgsPoint> waypoints)

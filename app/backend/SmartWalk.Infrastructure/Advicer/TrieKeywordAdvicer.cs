@@ -19,6 +19,9 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
 
     private TrieKeywordAdvicer() { }
 
+    /// <summary>
+    /// Insert term into the collection.
+    /// </summary>
     private void Add(string term, KeywordAdviceItem item, long freq)
     {
         _items[term] = item;

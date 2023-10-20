@@ -34,5 +34,7 @@ public sealed class HaversineDistanceMatrix : IDistanceMatrix
     public int Count => _places.Count;
 
     public double GetDistance(int fr, int to)
-        => Spherical.HaversineDistance(_places[fr].location, _places[to].location) * _scaleFactor;
+    {
+        return Spherical.HaversineDistance(_places[fr].location, _places[to].location) * _scaleFactor;
+    }
 }

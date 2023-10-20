@@ -7,6 +7,9 @@ namespace SmartWalk.Core.Extensions;
 
 public static class ListExtensions
 {
+    /// <summary>
+    /// Swap elements of the list on `left` and `right` positions.
+    /// </summary>
     public static void Swap<T>(this List<T> list, int l, int r)
     {
         (list[r], list[l]) = (list[l], list[r]);
@@ -26,6 +29,11 @@ public static class ListExtensions
         return list;
     }
 
+    /// <summary>
+    /// Group places by identifiers and merge their category sets.
+    /// </summary>
+    /// <param name="places">List of places.</param>
+    /// <returns>List of places with merged category sets.</returns>
     public static List<Place> WithMergedCategories(this List<Place> places)
     {
         var result = new Dictionary<string, Place>();

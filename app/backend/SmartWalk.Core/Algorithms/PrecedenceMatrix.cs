@@ -17,10 +17,10 @@ public sealed class ListPrecedenceMatrix : IPrecedenceMatrix
         => Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
 
     /// <summary>
-    /// Create a table based on edge configuration (edges might be user-defined arrows and st-arrows).
+    /// Create a table based on edge configuration.
     /// </summary>
-    /// <param name="edges"></param>
-    /// <param name="order"></param>
+    /// <param name="edges">All edges (user-defined arrows and st-edges).</param>
+    /// <param name="order">Number of categories.</param>
     /// <returns></returns>
     public static List<List<bool>> GetLists(IEnumerable<PrecedenceEdge> edges, int order)
     {

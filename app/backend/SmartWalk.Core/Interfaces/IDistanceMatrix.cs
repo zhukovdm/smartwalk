@@ -1,5 +1,8 @@
 namespace SmartWalk.Core.Interfaces;
 
+/// <summary>
+/// Distance matrix abstraction.
+/// </summary>
 public interface IDistanceMatrix
 {
     /// <summary>

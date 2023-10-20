@@ -7,5 +7,8 @@ namespace SmartWalk.Application.Interfaces;
 /// </summary>
 public interface IAdviceContext
 {
+    /// <summary>
+    /// Abstraction for facilitating autocomplete functionality.
+    /// </summary>
     IKeywordAdvicer KeywordAdvicer { get; init; }
 }

@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using SmartWalk.Application.Interfaces;
 
 /// <summary>
-/// Abstraction over controller model state.
+/// Abstraction over controller Model State and the corresponding request handler.
 /// </summary>
 internal sealed class ModelStateWrapper : IValidationResult
 {

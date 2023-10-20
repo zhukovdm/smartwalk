@@ -241,9 +241,15 @@ public sealed class PlaceLinked
 [BsonIgnoreExtraElements]
 public sealed class ExtendedPlace : Place
 {
+    /// <summary>
+    /// Linked data item.
+    /// </summary>
     [Required]
     public PlaceLinked linked { get; init; }
 
+    /// <summary>
+    /// Place attributes.
+    /// </summary>
     [Required]
     public PlaceAttributes attributes { get; init; }
 }

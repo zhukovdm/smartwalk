@@ -30,8 +30,12 @@ internal class FakeEntityIndex : IEntityIndex
     }
 
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
-        => throw new NotImplementedException();
+    {
+        throw new NotImplementedException();
+    }
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
-        => Task.FromResult(_places);
+    {
+        return Task.FromResult(_places);
+    }
 }
