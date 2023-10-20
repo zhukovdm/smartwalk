@@ -61,7 +61,7 @@ describe("<PanelEnsemble />", () => {
     });
   });
 
-  it("should render solid session on the panel if the session state is set", async () => {
+  it("should render Solid session on the panel if the session state is set", async () => {
 
     jest.spyOn(solidFuncs, "solidRedirect").mockResolvedValueOnce(undefined);
     jest.spyOn(solidFuncs, "getAvailableSolidPods").mockResolvedValueOnce([]);
