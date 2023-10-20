@@ -13,16 +13,16 @@ public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
     /// <summary>
     /// Additional domain-specific validation (e.g. arrow configuration).
     /// </summary>
-    /// <param name="queryObject"></param>
+    /// <param name="queryObject">Query object.</param>
     /// <returns></returns>
     protected abstract bool PostValidate(D queryObject);
 
     /// <summary>
     /// Parse procedure with domain-specific logic.
     /// </summary>
-    /// <param name="query"></param>
-    /// <param name="queryObject"></param>
-    /// <returns></returns>
+    /// <param name="query">Query string.</param>
+    /// <param name="queryObject">Query object.</param>
+    /// <returns>True if parsed and passed by a domain-specific validator.</returns>
     public bool TryParse(string query, out D queryObject)
     {
         queryObject = default(D);

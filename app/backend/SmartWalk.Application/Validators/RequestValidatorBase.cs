@@ -12,5 +12,10 @@ public abstract class RequestValidatorBase<T>
 
     public RequestValidatorBase(IValidationResult result) { _result = result; }
 
+    /// <summary>
+    /// Domain-specific validation procedure.
+    /// </summary>
+    /// <param name="input">Object to be validated.</param>
+    /// <returns>True if valid.</returns>
     public abstract bool Validate(T input);
 }

@@ -17,6 +17,9 @@ internal sealed class OsrmRouteFetcher : OsrmFetcherBase, IOsrmRouteFetcher
         public List<OsrmRoute> routes { get; init; }
     }
 
+    /// <summary>
+    /// Construct URL for a path fetch.
+    /// </summary>
     private string GetUrl(IEnumerable<WgsPoint> waypoints)
     {
         return _baseUrl + "/route/v1/foot/" + Chain(waypoints) + "?alternatives=true&geometries=geojson&skip_waypoints=true";

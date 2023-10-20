@@ -13,7 +13,9 @@ internal abstract class FakeRoutingEngine : IRoutingEngine
     protected abstract int Delay { get; }
 
     public Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
-        => throw new NotImplementedException();
+    {
+        throw new NotImplementedException();
+    }
 
     public Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints)
     {

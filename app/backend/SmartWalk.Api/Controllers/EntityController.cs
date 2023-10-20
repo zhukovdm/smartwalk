@@ -25,7 +25,8 @@ public sealed class EntityController : ControllerBase
 
     /// <summary></summary>
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
-    /// <response code="200">Returns object with an entity item.</response>
+    /// <returns>Unique place that has the same identifier.</returns>
+    /// <response code="200">Valid place object.</response>
     /// <response code="400">Invalid identifier detected.</response>
     /// <response code="404">An entity with identifier does not exist.</response>
     /// <response code="500">Some of the backend services malfunction.</response>

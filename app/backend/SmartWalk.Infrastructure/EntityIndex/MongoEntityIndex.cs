@@ -29,8 +29,8 @@ public sealed class MongoEntityIndex : IEntityIndex
     /// <summary>
     /// General-purpose fetch.
     /// </summary>
-    /// <param name="filter"></param>
-    /// <param name="categoryId"></param>
+    /// <param name="filter">Filter.</param>
+    /// <param name="categoryId">Possibly null categoryId (support for unbounded queries).</param>
     /// <returns>List of places that satisfy at least one category filter.</returns>
     private async Task<List<Place>> FetchPlaces(Filter filter, int? categoryId)
     {

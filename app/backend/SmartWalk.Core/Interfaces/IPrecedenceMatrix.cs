@@ -1,5 +1,8 @@
 namespace SmartWalk.Core.Interfaces;
 
+/// <summary>
+/// Precedence matrix abstraction with "before" semantics.
+/// </summary>
 public interface IPrecedenceMatrix
 {
     /// <summary>

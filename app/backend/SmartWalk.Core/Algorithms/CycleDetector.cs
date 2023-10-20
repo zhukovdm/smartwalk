@@ -3,9 +3,6 @@ using System.Linq;
 
 namespace SmartWalk.Core.Algorithms;
 
-/// <summary>
-/// Detect a cycle in a directed graph using standard 3-color recursive procedure.
-/// </summary>
 public sealed class CycleDetector
 {
     private enum Color { A, B, C }
@@ -55,7 +52,8 @@ public sealed class CycleDetector
     public CycleDetector AddEdge(int fr, int to) { _ = _Es[fr].Add(to); return this; }
 
     /// <summary>
-    /// Cycle-detection procedure. Note that loops are recognized as cycles.
+    /// Detect a cycle in a directed graph using standard 3-color recursive
+    /// procedure. Note that loops are recognized as cycles.
     /// </summary>
     public List<int> Cycle()
     {

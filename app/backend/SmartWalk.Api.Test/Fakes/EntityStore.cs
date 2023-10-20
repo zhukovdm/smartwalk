@@ -25,5 +25,7 @@ internal sealed class FakeWorkingEntityStore : IEntityStore
 internal sealed class FakeFailingEntityStore : IEntityStore
 {
     public Task<ExtendedPlace> GetPlace(string smartId)
-        => throw new Exception($"{this.GetType()}: GetPlace");
+    {
+        throw new Exception($"{this.GetType()}: GetPlace");
+    }
 }
