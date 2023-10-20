@@ -24,7 +24,6 @@ public sealed class AdviceController : ControllerBase
         _ctx = ctx; _logger = logger;
     }
 
-    /// <summary></summary>
     /// <param name="request">Valid request object.</param>
     /// <returns>List of autocomplete items.</returns>
     /// <response code="200">Valid response with autocomplete items.</response>

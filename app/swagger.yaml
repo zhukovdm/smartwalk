@@ -30,7 +30,7 @@ paths:
           example: 5
       responses:
         '200':
-          description: Success
+          description: Valid response with autocomplete items.
           content:
             application/json:
               schema:
@@ -38,12 +38,11 @@ paths:
                 items:
                   $ref: '#/components/schemas/KeywordAdviceItem'
         '500':
-          description: Server Error
+          description: Some of the backend services malfunction.
   '/api/entity/places/{smartId}':
     get:
       tags:
         - Entity
-      summary: ''
       operationId: GetPlace
       parameters:
         - name: smartId
@@ -55,7 +54,7 @@ paths:
           example: 64c91f8359914b93b23b01d9
       responses:
         '200':
-          description: Returns object with an entity item.
+          description: Valid place object.
           content:
             application/json:
               schema:
@@ -88,7 +87,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Success
+          description: Valid list of directions.
           content:
             application/json:
               schema:
@@ -96,13 +95,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/ShortestPath'
         '400':
-          description: Bad Request
+          description: Invalid query structure.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
-          description: Server Error
+          description: Some of the backend services malfunction.
   /api/search/places:
     get:
       tags:
@@ -117,7 +116,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Success
+          description: Valid list of places.
           content:
             application/json:
               schema:
@@ -125,13 +124,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Place'
         '400':
-          description: Bad Request
+          description: Invalid query structure.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
-          description: Server Error
+          description: Some of the backend services malfunction.
   /api/search/routes:
     get:
       tags:
@@ -146,7 +145,7 @@ paths:
             type: string
       responses:
         '200':
-          description: Success
+          description: Valid list of routes.
           content:
             application/json:
               schema:
@@ -154,13 +153,13 @@ paths:
                 items:
                   $ref: '#/components/schemas/Route'
         '400':
-          description: Bad Request
+          description: Invalid query structure.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ProblemDetails'
         '500':
-          description: Server Error
+          description: Some of the backend services malfunction.
 components:
   schemas:
     CollectBounds:
@@ -246,6 +245,7 @@ components:
         attributes:
           $ref: '#/components/schemas/PlaceAttributes'
       additionalProperties: false
+      description: Full representation of a place used for rendering in detailed views.
     KeywordAdviceItem:
       required:
         - attributeList
@@ -334,6 +334,7 @@ components:
             - 1
             - 2
       additionalProperties: false
+      description: Minimal representation of a place used in results and private storages.
     PlaceAddress:
       type: object
       properties:
@@ -362,6 +363,7 @@ components:
           nullable: true
           example: 118 00
       additionalProperties: false
+      description: Object describing address as known in the real world.
     PlaceAttributes:
       type: object
       properties:
@@ -528,6 +530,7 @@ components:
             - car
             - equipment
       additionalProperties: false
+      description: Attributes defining an extended place. All of them are optional.
     PlaceLinked:
       type: object
       properties:
@@ -556,6 +559,7 @@ components:
           nullable: true
           example: Example
       additionalProperties: false
+      description: Optional items with `sameAs` semantics.
     PlaceSocialNetworks:
       type: object
       properties:
@@ -588,6 +592,7 @@ components:
           nullable: true
           example: https://www.youtube.com/channel/youtubeId
       additionalProperties: false
+      description: Object describing possible social networks that an entity might use.
     ProblemDetails:
       type: object
       properties:

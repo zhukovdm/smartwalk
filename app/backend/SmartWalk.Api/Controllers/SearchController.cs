@@ -20,7 +20,7 @@ using Model = ModelStateWrapper;
 [Route("api/search")]
 public sealed class SearchController : ControllerBase
 {
-    /// <summary></summary>
+    /// <summary>Concrete handling.</summary>
     /// <typeparam name="V">Validate against.</typeparam>
     /// <typeparam name="D">Deserialize as and handle.</typeparam>
     /// <typeparam name="T">Response of a handler.</typeparam>
@@ -55,7 +55,6 @@ public sealed class SearchController : ControllerBase
         _ctx = ctx; _logger = logger;
     }
 
-    /// <summary></summary>
     /// <param name="request">Request object with embedded query.</param>
     /// <returns>Response object.</returns>
     /// <response code="200">Valid list of directions.</response>
@@ -72,7 +71,6 @@ public sealed class SearchController : ControllerBase
         return SearchT(request.query, (Model model) => new SearchDirecsQueryParser(model), new SearchDirecsHandler(_ctx.RoutingEngine));
     }
 
-    /// <summary></summary>
     /// <param name="request">Request object with embedded query.</param>
     /// <returns>Response object.</returns>
     /// <response code="200">Valid list of places.</response>
@@ -89,7 +87,6 @@ public sealed class SearchController : ControllerBase
         return SearchT(request.query, (Model model) => new SearchPlacesQueryParser(model), new SearchPlacesHandler(_ctx.EntityIndex));
     }
 
-    /// <summary></summary>
     /// <param name="request">Request object with embedded query.</param>
     /// <returns>Response object.</returns>
     /// <response code="200">Valid list of routes.</response>
