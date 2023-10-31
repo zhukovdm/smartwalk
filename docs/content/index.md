@@ -1,9 +1,9 @@
 # Welcome to SmartWalk Docs
 
-This repository contains the documentation for the SmartWalk project.
+This page is the documentation of the [SmartWalk](https://www.github.com/zhukovdm/smartwalk) project.
 
-[**\[User documentation\]**](./usr.md) covers use cases that most users of the system would get in touch with.
+[**\[User documentation\]**](./usr.md) describes how to accomplish basic task within the system, including entity search and management.
 
-[**\[Developer manual\]**](./dev.md) brings clarity into application architecture and code structure.
+[**\[Developer manual\]**](./dev.md) brings clarity into architecture and code organization.
 
-[**\[Administrator guide\]**](./adm.md) explains how to set up an instance of the system on your personal computer, including data ingestion, deployment, and troubleshooting.
+[**\[Administrator guide\]**](./adm.md) explains how to set up an instance of the application on your personal computer, including data ingestion, deployment, and troubleshooting.
