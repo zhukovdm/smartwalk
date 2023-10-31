@@ -20,7 +20,7 @@ export default class Logger {
   }
 
   reportFinished() {
-    this.logger.info("Finished setting up database.");
+    this.logger.info("Finished setting up the database.");
   }
 
   reportError(err: unknown) { this.logger.error(err); }

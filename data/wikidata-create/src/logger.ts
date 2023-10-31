@@ -27,14 +27,10 @@ export default class Logger {
   }
 
   logStarted() {
-    this.logger.info("Started processing categories...");
+    this.logger.info("Started processing bounding box...");
   }
 
-  logCategory(cat: string) {
-    this.logger.info(`> Processing category ${cat}...`);
-  }
-
-  logCategoryBbox({ w, n, e, s }: Bbox) {
+  logSquare({ w, n, e, s }: Bbox) {
     this.logger.info(`>  [${getTimestamp()}] Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s}...`);
   }
 
@@ -43,25 +39,25 @@ export default class Logger {
     this.logger.info(err);
   }
 
-  logFetchedEntities(cat: string, count: number) {
-    this.logger.info(`>  Fetched ${count} entities for ${cat} category.`);
+  logFetchedEntities(count: number) {
+    this.logger.info(`>  Fetched ${count} entities.`);
   }
 
-  logCreatingObjects() {
-    this.logger.info(">  Creating objects for fetched batch...");
+  logWritingObjects() {
+    this.logger.info(">  Writing objects for fetched batch...");
   }
 
-  logFailedCreate(wikidataId: string, err: unknown) {
-    this.logger.warn(`>  Failed to create an item with ${wikidataId} identifier.`);
+  logFailedWrite(wikidataId: string, err: unknown) {
+    this.logger.warn(`>  Failed to write an item with ${wikidataId} identifier.`);
     this.logger.info(err);
   }
 
-  logItemsCreated(batchCreated: number, totalCreated: number) {
-    this.logger.info(`>  Created ${batchCreated} from this batch, created total ${totalCreated} entities.`)
+  logItemsWritten(batchWritten: number, totalWritten: number) {
+    this.logger.info(`>  Wrote ${batchWritten} from this batch, written total ${totalWritten} entities.`);
   }
 
   logFinished() {
-    this.logger.info(`Finished processing categories.`);
+    this.logger.info(`Finished processing objects.`);
   }
 
   logError(err: unknown) { this.logger.error(err); }
