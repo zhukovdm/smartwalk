@@ -9,8 +9,12 @@ internal static class MongoBuilder
     private static readonly string _collectionName = "place";
 
     internal static IMongoDatabase GetDatabase(string conn)
-        => new MongoClient(new MongoUrl(conn)).GetDatabase(_databaseName);
+    {
+        return new MongoClient(new MongoUrl(conn)).GetDatabase(_databaseName);
+    }
 
     internal static IMongoCollection<Place> GetCollection(IMongoDatabase database)
-        => database.GetCollection<Place>(_collectionName);
+    {
+        return database.GetCollection<Place>(_collectionName);
+    }
 }

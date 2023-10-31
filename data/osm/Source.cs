@@ -14,9 +14,9 @@ internal class Source : IEnumerable<Place>
     private readonly double _w, _n, _e, _s;
     private readonly ILogger _logger;
     private readonly OsmStreamSource _stream;
-    private readonly Locator _locator;
+    private readonly ElementLocator _locator;
 
-    public Source(ILogger logger, OsmStreamSource stream, (double, double, double, double) bbox, Locator locator)
+    public Source(ILogger logger, OsmStreamSource stream, (double, double, double, double) bbox, ElementLocator locator)
     {
         _logger = logger; _stream = stream; (_w, _n, _e, _s) = bbox; _locator = locator;
     }
@@ -82,7 +82,7 @@ internal static class SourceFactory
         catch (Exception) { throw new Exception($"Cannot create OSM stream from ${fStream}."); }
     }
 
-    public static Source GetInstance(ILogger logger, string file, List<string> bbox, Locator locator)
+    public static Source GetInstance(ILogger logger, string file, List<string> bbox, ElementLocator locator)
     {
         return new(logger, ToStream(file), Converter.ToBbox(bbox), locator);
     }
