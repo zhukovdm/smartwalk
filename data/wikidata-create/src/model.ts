@@ -17,38 +17,54 @@ export default class Model {
     this.collection = this.client.db(DATABASE_NAME).collection(COLLECTION_NAME);
   }
 
-  async create(items: Item[]): Promise<void> {
-    let batchCreated = 0;
-    this.logger.logCreatingObjects();
+  async write(items: Item[]): Promise<void> {
+    let batchWritten = 0;
+    this.logger.logWritingObjects();
 
-    for (const { location, wikidata } of items) {
+    const options = { ignoreUndefined: true };
+
+    for (const { location, wikidata, osm } of items) {
       try {
-        if (!(await this.collection.findOne({ "linked.wikidata": wikidata }))) {
-          const obj = {
+        // update existing
+
+        if (!!osm && !!(await this.collection.findOne({ "linked.osm": osm }))) {
+          const filter = {
+            "linked.osm": { $eq: osm }
+          };
+          const update: Record<string, any> = {
+            $set: {
+              "linked.wikidata": wikidata
+            }
+          };
+          await this.collection.updateMany(filter, update, options);
+          ++batchWritten;
+        }
+
+        // or insert non-existent!
+
+        else if (!(await this.collection.findOne({ "linked.wikidata": wikidata }))) {
+          const create = {
             name: "Noname",
             keywords: [],
             location: location,
             attributes: {},
             linked: {
+              osm: osm,
               wikidata: wikidata
             }
           };
 
-          const options = {
-            ignoreUndefined: true
-          };
-
-          await this.collection.insertOne(obj, options);
-          ++batchCreated;
+          await this.collection.insertOne(create, options);
+          ++batchWritten;
         }
       }
       catch (ex) {
-        this.logger.logFailedCreate(wikidata, ex);
+        this.logger.logFailedWrite(wikidata, ex);
       }
     }
 
-    this.totalCreated += batchCreated;
-    this.logger.logItemsCreated(batchCreated, this.totalCreated);
+    this.totalCreated += batchWritten;
+    this.logger.logItemsWritten(batchWritten, this.totalCreated);
   }
 
   async dispose(): Promise<void> { this.client.close(); }

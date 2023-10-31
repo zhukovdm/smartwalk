@@ -11,7 +11,6 @@ export function parseArgs(): {
   rows: number;
   cols: number;
   conn: string;
-  cats: string[];
 } {
   const args = new Command()
     .option("--w <number>", "West coordinate", parseFloat)
@@ -19,8 +18,7 @@ export function parseArgs(): {
     .option("--e <number>", "East coordinate", parseFloat)
     .option("--s <number>", "South coordinate", parseFloat)
     .option("--rows <number>", "Rows in a grid", parseInt)
-    .option("--cols <number>", "Columns in a grid", parseInt)
-    .option("--conn <string>", "Database connection string")
-    .option("--cats <string...>", "Categories to consider");
+    .option("--cols <number>", "Cols in a grid", parseInt)
+    .option("--conn <string>", "Database connection string");
   return args.parse().opts();
 }

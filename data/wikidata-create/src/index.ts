@@ -1,4 +1,4 @@
-import { fetchCat } from "./fetch";
+import { fetchBbox } from "./fetch";
 import Logger from "./logger";
 import Model from "./model";
 import { parseArgs } from "./parse";
@@ -8,7 +8,7 @@ import { parseArgs } from "./parse";
  */
 async function wikidataCreate() {
 
-  const { w, n, e, s, rows, cols, conn, cats } = parseArgs();
+  const { w, n, e, s, rows, cols, conn } = parseArgs();
 
   const logger = new Logger();
   const model = new Model(logger, conn);
@@ -16,11 +16,8 @@ async function wikidataCreate() {
   try {
     logger.logStarted();
 
-    for (const cat of cats) {
-      logger.logCategory(cat);
-      const items = await fetchCat(logger, cat, { w: w, n: n, e: e, s: s }, rows, cols);
-      await model.create(items);
-    }
+    const items = await fetchBbox(logger, { w: w, n: n, e: e, s: s }, rows, cols);
+    await model.write(items);
 
     logger.logFinished();
   }

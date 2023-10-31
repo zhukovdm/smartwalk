@@ -19,29 +19,54 @@ const WIKIDATA_JSONLD_CONTEXT = {
     "@id": "my:location",
     "@type": "geo:wktLiteral"
   },
+  "osmN": {
+    "@id": "my:osmN",
+  },
+  "osmW": {
+    "@id": "my:osmW",
+  },
+  "osmR": {
+    "@id": "my:osmR",
+  },
   "wikidata": "@id"
 };
 
 /**
- * @param cat Wikidata identifier defining category of objects
+ * - 
+ * - https://www.wikidata.org/wiki/Property:P11693
+ * - https://www.wikidata.org/wiki/Property:P10689
+ * - https://www.wikidata.org/wiki/Property:P402
+ * 
  * @param bbox Bounding box
  * @returns query as a string
  */
-const wikidataQuery = (cat: string, { w, n, e, s }: Bbox) => (`PREFIX bd: <http://www.bigdata.com/rdf#>
+const wikidataQuery = ({ w, n, e, s }: Bbox) => (`PREFIX bd: <http://www.bigdata.com/rdf#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX my: <http://example.com/>
 PREFIX wd: <http://www.wikidata.org/entity/>
 PREFIX wdt: <http://www.wikidata.org/prop/direct/>
 PREFIX wikibase: <http://wikiba.se/ontology#>
 CONSTRUCT {
-  ?wikidataId my:location ?location.
+  ?wikidataId
+    my:location ?location;
+    my:osmN ?osmN;
+    my:osmW ?osmW;
+    my:osmR ?osmR.
 }
 WHERE {
-  ?wikidataId wdt:P31/wdt:P279* wd:${cat}.
   SERVICE wikibase:box {
     ?wikidataId wdt:P625 ?location.
     bd:serviceParam wikibase:cornerSouthWest "Point(${w} ${s})"^^geo:wktLiteral.
     bd:serviceParam wikibase:cornerNorthEast "Point(${e} ${n})"^^geo:wktLiteral.
+  }
+  OPTIONAL {
+    ?wikidataId wdt:P11693 ?osmN.
+  }
+  OPTIONAL {
+    ?wikidataId wdt:P10689 ?osmW.
+  }
+  OPTIONAL {
+    ?wikidataId wdt:P402 ?osmR.
   }
 }`);
 
@@ -77,20 +102,27 @@ function extractLocation(location: string): WgsPoint {
   };
 }
 
+function extractOsmId(n?: string, w?: string, r?: string): string | undefined {
+  const f = (prefix: string, id?: string) => (!!id) ? `${prefix}/${id}` : undefined;
+  return f("node", n) ?? f("way", w) ?? f("relation", r);
+}
+
 const constructFromEntity = (entity: any): Item => ({
   location: extractLocation(getFirst(entity.location)),
-  wikidata: entity.wikidata.substring(3) as string // cut `wd:`
+  osm: extractOsmId(getFirst(entity.osmN), getFirst(entity.osmW), getFirst(entity.osmR)),
+  wikidata: entity.wikidata.substring(3) as string // cut off `wd:`
 });
 
-const wait = (seconds: number): Promise<void> => (
-  new Promise((resolve) => setTimeout(resolve, seconds * 1000.0)));
+function wait(seconds: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, seconds * 1000.0))
+}
 
-async function fetchSquare(logger: Logger, cat: string, bbox: Bbox): Promise<Item[]> {
+async function fetchSquare(logger: Logger, bbox: Bbox): Promise<Item[]> {
   let result: Item[] | undefined = undefined;
-  logger.logCategoryBbox(bbox);
+  logger.logSquare(bbox);
 
   let attempt = 0;
-  const query = wikidataQuery(cat, bbox);
+  const query = wikidataQuery(bbox);
   await wait(3);
 
   do {
@@ -108,7 +140,7 @@ async function fetchSquare(logger: Logger, cat: string, bbox: Bbox): Promise<Ite
   return result ?? [];
 }
 
-export async function fetchCat(logger: Logger, cat: string, bbox: Bbox, rows: number, cols: number): Promise<Item[]> {
+export async function fetchBbox(logger: Logger, bbox: Bbox, rows: number, cols: number): Promise<Item[]> {
 
   const result = new Map<string, Item>();
   const {
@@ -129,12 +161,12 @@ export async function fetchCat(logger: Logger, cat: string, bbox: Bbox, rows: nu
       const w = roundCoordinate(xW + colStep * col);
       const e = roundCoordinate(w + colStep);
 
-      (await fetchSquare(logger, cat, { w: w, n: n, e: e, s: s })).forEach((item) => {
+      (await fetchSquare(logger, { w: w, n: n, e: e, s: s })).forEach((item) => {
         result.set(item.wikidata, item);
       });
     }
   }
 
-  logger.logFetchedEntities(cat, result.size);
+  logger.logFetchedEntities(result.size);
   return Array.from(result.values());
 }

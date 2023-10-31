@@ -12,5 +12,6 @@ type WgsPoint = {
 
 type Item = {
   wikidata: string;
+  osm?: string;
   location: WgsPoint;
 };
