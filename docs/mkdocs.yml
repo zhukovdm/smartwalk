@@ -1,0 +1,17 @@
+site_name: SmartWalk Docs
+repo_url: https://github.com/zhukovdm/smartwalk-docs
+
+docs_dir: content
+theme: readthedocs
+
+markdown_extensions:
+  - admonition
+
+extra_javascript:
+  - js/extra.js
+
+nav:
+  - Home: index.md
+  - User documentation: usr.md
+  - Developer manual: dev.md
+  - Administrator guide: adm.md
