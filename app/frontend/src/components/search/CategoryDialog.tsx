@@ -8,9 +8,11 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
+import HelpOutline from "@mui/icons-material/HelpOutline";
 import type {
   AttributeFilterBoolean,
   AttributeFilterBooleanLabel,
@@ -99,7 +101,7 @@ export default function CategoryDialog(
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
         <DialogContentText>
-          Enter a keyword that places should associate with:
+          Enter a keyword<sup><Link rel={"noopener noreferrer"} target={"_blank"} href={"https://raw.githubusercontent.com/zhukovdm/smartwalk/main/data/assets/advice/keywords.txt"} fontSize={"small"}><HelpOutline fontSize={"small"} titleAccess={"examples of keywords"} /></Link></sup> that places should associate with:
         </DialogContentText>
         <Autocomplete
           value={value}
