@@ -10,20 +10,20 @@ using Microsoft.Extensions.Logging;
 
 namespace osm;
 
-internal class Locator
+internal class ElementLocator
 {
     private readonly Dictionary<long, Point> _locs;
 
-    public Locator(ILogger logger, Dictionary<long, Point> locs)
+    public ElementLocator(ILogger logger, Dictionary<long, Point> locs)
     {
         _locs = locs;
-        logger.LogInformation("Created locator with {0} OSM relations.", locs.Count);
+        logger.LogInformation("Created element locator with {0} OSM elements.", locs.Count);
     }
 
     public bool TryGetLocation(long id, out Point location) => _locs.TryGetValue(id, out location);
 }
 
-internal static class OverpassLocatorFactory
+internal static class OverpassElementLocatorFactory
 {
     private class Item
     {
@@ -106,7 +106,7 @@ internal static class OverpassLocatorFactory
         });
     }
 
-    public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox, int rows, int cols)
+    public static async Task<ElementLocator> GetInstance(ILogger logger, List<string> bbox, int rows, int cols)
     {
         return new(logger, Reduce(logger, await Fetch(logger, bbox, rows, cols)));
     }
@@ -115,7 +115,7 @@ internal static class OverpassLocatorFactory
 /// <summary>
 /// Currently NOT USED in favor of more stable Overpass API.
 /// </summary>
-internal static class SophoxLocatorFactory
+internal static class SophoxElementLocatorFactory
 {
     private class Value
     {
@@ -203,7 +203,7 @@ SELECT ?oid ?loc WHERE {{
         return dic;
     }
 
-    public static async Task<Locator> GetInstance(ILogger logger, List<string> bbox)
+    public static async Task<ElementLocator> GetInstance(ILogger logger, List<string> bbox)
     {
         return new(logger, Extract(logger, await Fetch(logger, bbox)));
     }

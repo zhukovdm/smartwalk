@@ -114,7 +114,7 @@ internal static class Inspector
         return null;
     }
 
-    public static Place Inspect(Relation relation, Locator locator)
+    public static Place Inspect(Relation relation, ElementLocator locator)
     {
         if (relation is not null)
         {
