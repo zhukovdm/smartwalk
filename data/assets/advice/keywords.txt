@@ -1,3 +1,6 @@
+abandoned hamlet
+abandoned project
+abandoned railway
 abandoned village
 abbey
 abbey church
@@ -9,9 +12,12 @@ academic publisher
 academy of commerce
 academy of sciences
 access point
+accident
 accountant
 adit
 administrative building
+administrative district of prague
+administrative office of the czech republic
 adventure park
 advertising agency
 aerial lift
@@ -19,6 +25,7 @@ aerial tramway
 aerialway
 aerodrome
 aeroway
+age
 agrarian
 agricultural building
 agricultural museum
@@ -26,7 +33,9 @@ aikido
 air base
 air pollution
 aircraft
+aircraft crash
 airport
+airport building
 airsoft
 alcohol
 alley
@@ -51,6 +60,7 @@ apartment
 apartment building
 apartment hotel
 apartments
+apostolic exarchate
 apostolic nunciature
 appliance
 aquarium
@@ -84,10 +94,16 @@ art nouveau architecture
 art of painting
 art of sculpture
 art school
+artificial cave
+artificial hill
 artificial pond
+artificial waterfall
 artificial whitewater
 arts centre
 artwork
+assassination
+assay office
+assembly hall
 association
 association football club
 association football pitch
@@ -116,6 +132,7 @@ bandstand
 bank
 bank building
 bar
+barefoot path
 barn
 baroque
 baroque architecture
@@ -123,10 +140,13 @@ baroque art
 baroque revival
 barracks
 baseball
+basement
+basic unit of settlement in the czech republic
 basilica
 basket maker
 basketball
 bastion
+bathing site
 bathroom
 bathroom furnishing
 battle
@@ -140,6 +160,7 @@ beauty
 bed
 bed and breakfast
 bedrock
+beer
 beer museum
 bell
 bell tower
@@ -201,6 +222,7 @@ bridge
 bridge group
 bridge over railway line
 bronze sculpture
+brook
 brothel
 brussels style
 brutalism
@@ -221,7 +243,9 @@ business school
 bust
 butcher
 cabin
+cadastral area in the czech republic
 cafe
+calendar
 calvary
 camera
 camp site
@@ -263,8 +287,10 @@ cathedral
 catholic cathedral
 catholic cemetery
 catholic library
+catholic parish
 catholic seminary
 catholic theological faculty
+cave
 cave entrance
 cement plant
 cemetery
@@ -272,6 +298,7 @@ cemetery chapel
 cemetery cross
 cenotaph
 central bank
+central office for jewish emigration
 central station
 centre
 chalet
@@ -281,17 +308,20 @@ chancery
 chapel
 chapel of loreto
 chaplain houses
+chapter
 charging station
 charitable organization
 charity
 check in
 cheese
 chemist
+cherry tree
 chess
 childcare
 chimney
 chimney sweeper
 chocolate
+choir
 church
 church bell
 church building
@@ -302,11 +332,16 @@ church tower
 churchyard wall
 cinema
 cinematheque
+city
+city center
 city gate
+city or town
 city walls
 citywalls
 civic
+civil rights movement
 classical architecture
+classical music
 classicism
 cleaning
 clergy house
@@ -321,6 +356,7 @@ club
 codex
 coffee
 coffeehouse
+cohesion region
 collection of images on a page
 college
 collegiate church
@@ -344,10 +380,17 @@ computer
 concert hall
 conciliation cross
 concrete plant
+condominium
 confectionary
 confectionery
 conference centre
+conflagration
+conflict
+confluence
 conservatory
+consortium
+constituent republic within czechoslovakia
+constituent state
 construction
 constructivism
 constructivist architecture
@@ -357,13 +400,15 @@ container
 contemporary
 contextual architecture
 control room
+conurbation
 convenience
 convent
+convention
 convention center
 convitto
 cooling tower
 cooperative
-copy
+copper engraving technique
 copyshop
 cornerstone
 corporate headquarters
@@ -371,6 +416,8 @@ corporation
 cosmetics
 counselling
 counterintelligence
+country baroque architecture
+country in czechoslovakia
 country store
 courthouse
 courtyard
@@ -379,6 +426,7 @@ covered passageway
 coworking
 coworking space
 craft
+crag and tail
 creative residency
 crematorium
 cricket
@@ -399,6 +447,7 @@ cybernetics
 cycling
 czech baroque architecture
 czech gothic architecture
+czech hiking markers system
 czech literature
 czech municipality with expanded powers
 czech public research institution
@@ -429,12 +478,17 @@ design modernism
 designated
 destroyed artwork
 destroyed building or structure
+detention basin
+developer conference
 dining room
 diplomatic
 diplomatic mission
 disc golf
 disc golf course
+dispatch
+display window
 distillery
+distributary
 distribution substation
 district court in the czech republic
 district of the czech republic
@@ -499,6 +553,7 @@ erotic
 escape game
 estate agent
 etching technique
+european mixed curling championship
 european union space programme
 event venue
 events venue
@@ -513,10 +568,12 @@ fabric
 facility
 factory
 faculty
+faculty of humanities
 faculty of law
 faculty of science
 faculty of social sciences
 fallout shelter
+family
 farm
 farm auxiliary
 fashion accessories
@@ -524,12 +581,16 @@ fast food
 feeding place
 fell
 ferris wheel
+ferry route
+ferry ship
 ferry terminal
+festival
 festival grounds
 field hockey
 filling station
 film
 film archive
+film festival
 film museum
 film school
 finance ministry
@@ -550,12 +611,15 @@ fitness centre
 fitness station
 flagpole
 flash fiction
+floating restaurant
 floodgate
 floorball
 floorer
 flooring
 florist
 flowerpot
+fluvial lake
+flyer
 fodder rack
 food
 food court
@@ -564,20 +628,28 @@ footbridge
 ford
 foreshore bridge
 forest
+formation
 former bridge
 former church
 former educational institution
 former entity
+former municipality
+former protected area
 former railway station
 former railway stop
+former settlement
+former thoroughfare
+former village
 fortification
 fortified house
 fortified tower
 fortress
+foundation stone
 foundry
 fountain
 frame
 frauenstift
+free area
 free flying
 french formal garden
 fresco
@@ -594,6 +666,7 @@ futsal
 gallery
 gambling
 game feeding
+game reserve
 games
 gap site
 garage
@@ -601,7 +674,9 @@ garages
 garden
 garden centre
 garden house
+garden machinery
 gardener
+garrison churche
 gas
 gas holder
 gasworks
@@ -612,7 +687,10 @@ gazebo
 geodesist
 geographic location
 geographical feature
+geomorphological district
+geopark
 ger
+ghost town
 gift
 girder bridge
 give box
@@ -622,17 +700,17 @@ gloriette
 golf
 golf club
 golf course
+goods
 goods station
-gord
 gorge
 gothic
 gothic architecture
 gothic art
 gothic revival
+governing body
 government
 government agency
 government building
-government organization
 graffiti
 granary
 grandstand
@@ -642,21 +720,26 @@ grave field
 grave yard
 greengrocer
 greenhouse
+grid control centre
 grinding mill
 grit bin
 grocery
+grocery store
 grotto
 group
 group of artificial physical objects
 group of sculptures
+grove
 guardhouse
 guest house
 guide
 guide book
+gully
 gym
 gymnasium
 gymnastics
 haberdashery
+hackathon
 hackerspace
 hair salon
 haircutting establishment
@@ -688,7 +771,10 @@ hill
 hillfort
 historic
 historic site
+historical country
+historical district in the czech republic
 historical event
+historical period
 historicism
 historicist architecture
 hoard
@@ -717,6 +803,7 @@ house sign
 houseboat
 household linen
 houseware
+housing development
 housing estate
 human
 human settlement
@@ -732,10 +819,14 @@ hydrometeorology
 ice cream
 ice hockey
 ice hockey arena
+ice hockey team
 ice house
 ice rink
 ice skating
+image
 imax theatre
+important tree
+incineration
 incinerator
 inclined elevator
 inclined tower
@@ -760,11 +851,14 @@ insurance
 intelligence agency
 interchange
 interior decoration
+intermodal goods center
 international airport
+international organization
 international school
 international style
 internet access
 investment firm
+island
 japanese garden
 jazz
 jazz club
@@ -777,6 +871,7 @@ jewelry
 jewish cemetery
 jewish town hall
 joiner
+judicial district of austria
 jumping
 jumping platform
 junction
@@ -787,32 +882,44 @@ kamienica
 karate
 karting
 kayak
+kerbtal
 key cutter
 kickboxing
 kindergarten
 kinetic art
-kinetic object
+kinetic sculpture
 kingdom hall
 kiosk
+kirch
 kitchen
 klubovna
+kraj
 laboratory
+labyrinth
+lake
+lake island
 landfill
 landing site
 language school
 laser
 last address plaque
 late baroque
+latticework
 laundry
+laundry room
 law enforcement agency in the czech republic
 lawyer
 learned society
 leather
 ledger stone
+legislative house
+legislature
 letter box
 levee
+level crossing
 lgbt
 lgbt archive
+lgbt film festival
 lgbt history
 library
 library branch
@@ -828,6 +935,7 @@ literature
 livestock housing
 living street
 loading dock
+locality
 location of burial
 lock
 locker
@@ -852,14 +960,17 @@ manufactory
 manufacture
 maria column
 marina
+marked hiking route
 market hall
 marketplace
 martial arts
 mass media
+massacre
 massage
 maternity hospital
 mausoleum
 maze
+mechanical fan
 medical equipment
 medical facility
 medical organization
@@ -872,6 +983,7 @@ memorial stone
 memorial tree
 menhir
 meridian
+mesoregion
 metal construction
 meteorological column
 metro depot
@@ -882,14 +994,14 @@ military academy
 military affairs
 military archive
 military cemetery
-military church
 military operation
 military service
 military surplus
 mill building
 mill race
+millstone
+mine
 miniature golf
-minigolf
 minimalism in architecture
 ministry of culture
 ministry of industry
@@ -900,6 +1012,7 @@ ministry of trade
 minor basilica
 mission cross
 mist maker
+mixed forest
 moat
 mobile phone
 model
@@ -910,6 +1023,7 @@ modernism
 modernist literature
 monastery
 monastery building
+monastery church
 monastic garden
 monastic library
 money lender
@@ -933,7 +1047,11 @@ multi
 multifamily residential
 multistorey car park
 municipal archive
+municipal district of prague
+municipal office
 municipal office building
+municipal part in czechia
+municipal part of prague
 municipality of the czech republic
 municipality with authorized municipal office
 mural
@@ -944,6 +1062,7 @@ museum storage
 music
 music club
 music education
+music festival
 music museum
 music school
 music venue
@@ -951,11 +1070,15 @@ musical
 musical instrument
 national library
 national museum
+national natural monument
+national nature reserve
 national police
 natural monument in the czech republic
+nature park in the czech republic
 nature reserve
 nature reserve in the czech republic
 navigationaid
+neighborhood
 neoclassical architecture
 neoclassicism
 netball
@@ -968,12 +1091,12 @@ nonprofit organization
 notary
 notch
 novel
-nuclear power plant
 numismatics
 nursery
 nursing home
 nutrition supplements
 nuts
+oak
 obelisk
 observation deck
 observation tower
@@ -985,22 +1108,28 @@ official residence
 online database
 opera house
 oppidum
+optical telescope
 optician
 optometrist
 oral history
+oration
 orchard
+orchestra
 organisational unit of the state
 organization
 organizational unit
 oriental studies
 orphanage
+ortsteil
 ossuary
 other
 outdoor
 outdoor playset
 outdoor seating
 outpost
+oxbow lake
 paddling pool
+padel
 paint
 paintball
 painter
@@ -1010,11 +1139,12 @@ palace hotel
 palace theatre
 paleontological site
 panoramic painting
-paper mill
+paper factory
 parallel marker
 parcel locker
 parish
 park
+park and ride car park
 parking lot
 parkour
 parliament
@@ -1030,6 +1160,7 @@ payment centre
 payment terminal
 peak
 pedestrian tunnel
+peninsula
 pension
 performing arts
 performing arts center
@@ -1045,7 +1176,6 @@ photo booth
 photograph
 photographer
 photographic laboratory
-physical sign
 physician
 physiotherapist
 piano
@@ -1056,15 +1186,19 @@ picture gallery
 pier
 pilates
 pillory
+pipe organ
 pipeline bridge
 pitch
+pizzeria
 plague column
+plain
 planet trail
 planetarium
 plant
 plastic artwork
 playground
 plumber
+pneumatic tube
 podiatrist
 poetry
 poetry jukebox
@@ -1072,8 +1206,12 @@ pole vault
 police
 police museum
 policlinic
+political district
 political party
+pond system
 port
+portable engine
+portal
 portrait at bust length
 post box
 post office
@@ -1083,6 +1221,7 @@ postal museum
 postal station
 pottery
 power station
+practical joke
 practice pitch
 pragensia
 prague german literature
@@ -1103,7 +1242,11 @@ property management
 proposal
 proposed building or structure
 proposed tunnel
+prosecutors office
 protected area
+protected building
+protected landscape area
+protectorate
 protestant faculty of theology
 provost
 provost church
@@ -1127,15 +1270,19 @@ pylon
 quarry
 quarter
 queer
+quercus robur fastigiata
 race track
 racetrack
 radio station
+radio telescope
 radiotechnics
+rail trail
 rail transport
 rail transport electrical substation
 railway bridge
 railway building
 railway line
+railway network
 railway roundhouse
 railway station
 railway stop
@@ -1144,13 +1291,24 @@ railway tunnel
 ramp
 rapid transit
 rathaus
+ravine
 rc car
 realism
+realm
+rebellion
 recreation
+recreation area
 recreation ground
+recurrent event edition
+recurring event
+recurring sporting event
+recurring tournament
 refinery
+region of czechoslovakia
 region of the czech republic
 regional court in the czech republic
+regulatory agency
+regulatory college
 rehabilitation
 relief
 relief sculpture
@@ -1161,6 +1319,7 @@ religious building
 religious community
 religious school
 remarkable tree
+remarkable trees
 renaissance
 renaissance architecture
 renaissance revival architecture
@@ -1188,8 +1347,12 @@ revenue house
 revenue service
 riding hall
 riding school
+ring road
 river
+river island
+river mouth
 river source
+riverfront
 road
 road bridge
 road tunnel
@@ -1199,6 +1362,7 @@ rococo
 rococo revival
 rococo revival architecture
 roller skating
+roman catholic metropolitan archdiocese
 romanesque
 romanesque architecture
 romanesque art
@@ -1206,6 +1370,7 @@ romanesque revival architecture
 romantic architecture
 rondocubism
 roof
+room
 rose garden
 rotunda
 roundabout
@@ -1215,17 +1380,21 @@ rugby
 rugby league
 rugby union
 ruins
+rundling
 running
 russian revival architecture
 sala terrena
 sample collection
 sanatorium
+sand mine
+satellite state
 sauna
 sawmill
 scattering meadow
 scenic viewpoint
 school
 school building
+school of international relations
 scientific library
 scout
 scuba diving
@@ -1238,8 +1407,10 @@ secondary education
 secondary school
 security
 seminary
+senate
 sepulchral chapel
 service center
+settlement site
 sewing
 sex museum
 sgraffito
@@ -1258,9 +1429,13 @@ shopping
 shopping center
 short story
 shower
+showroom
 shrine
 shrubbery
+sidewalk
+siege
 signage system
+signalling control
 silo
 simultaneum
 siren
@@ -1287,18 +1462,20 @@ social
 social centre
 social facility
 socialist realism
+society
 softball
 sokol house
 solitary
 spa
 spa building
-spa town
 space agency
+special area of conservation
 special library
 specialized archives
 speedway
 spices
 spillway
+spoil tip
 sport
 sports
 sports award
@@ -1308,6 +1485,8 @@ sports discipline
 sports field
 sports hall
 sports school
+sports season
+sports team
 sports venue
 spring
 spring box
@@ -1323,11 +1502,12 @@ stage
 stained glass
 stairs
 stalinist architecture
+standards organization
 state media
+state organization
 static caravan
 station
 station building
-station in a landfield
 station located on surface
 station located underground
 stationery
@@ -1345,6 +1525,7 @@ storage rental
 storage tank
 stream
 stream gauge
+stream pool
 street
 street art
 street clock
@@ -1360,6 +1541,7 @@ studio
 stumbling stone
 sty
 subway
+subway line branch
 sugar refinery
 sundial
 supermarket
@@ -1395,10 +1577,14 @@ temporal entity
 temporary bridge
 tenement
 tennis
+tennis club
+tennis tournament
 tent
 terminal
 terrace
 terrace house
+territory
+terrorist attack
 theatre
 theatre company
 theatre festival
@@ -1410,6 +1596,7 @@ through station
 ticket
 ticket validator
 tiles
+tilia of liberty
 tinsmith
 tobacco
 toilets
@@ -1424,21 +1611,28 @@ tourist attraction
 tourist destination
 tower
 tower house
+town
 townhall
 toy museum
 toys
 track
 trade
+trademark
 traffic park
+trail
 train station
+train wreck
 training
 training facility
 tram
+tram accident
 tram bridge
 tram depot
+tram line
 tram stop
 trampoline
 trampoline park
+tramway track
 tramway tunnel
 transformer tower
 transmitter station
@@ -1463,6 +1657,7 @@ university hospital
 university institute
 university library
 upholsterer
+urban area
 urban forest
 urban monument zone
 urban park
@@ -1471,6 +1666,7 @@ vaccination centre
 vacuum cleaner
 valley
 variety store
+vehicle depot
 vehicle inspection
 velodrome
 vending machine
@@ -1481,13 +1677,19 @@ viaduct
 victims of communism memorial
 video
 video games
+vietnamese restaurant
 viewpoint
 villa
+village
 village green
+vineyard
 vineyard house
+vineyard track
 visual arts
 vocational school
 volleyball
+voluntary association
+wagonway
 waldorf education
 walkway
 wall
@@ -1507,6 +1709,8 @@ water supply
 water tank
 water tower
 water well
+watercourse
+waterfall
 watering place
 watermill
 waterworks
@@ -1515,22 +1719,24 @@ wayside cross
 wayside shrine
 weapons
 weather station
-website
 weighbridge
 weighing scale
 weir
 well
 well house
+wetland
 wharf
 whipping post
 wholesale
+wikimedia category
 wikimedia chapter
 wikimedia disambiguation page
 wikimedia duplicated page
 wikimedia list article
 wikinews article
 wilderness hut
-wildlife overpass
+wildlife crossing
+willow
 windmill
 window
 window blind
@@ -1541,11 +1747,13 @@ wine cellar
 wine column
 wine room
 winery
+wing
 wooden bridge
 wooden sculpture
 work
 work of art
 workout
+workplace
 workshop
 world war i and ii memorial
 wrestling
