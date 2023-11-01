@@ -1,0 +1,474 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SearchPlacesQuery",
+  "type": "object",
+  "description": "Type used for (D)eserialization and handling.",
+  "additionalProperties": false,
+  "properties": {
+    "center": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/definitions/WgsPoint"
+        }
+      ]
+    },
+    "radius": {
+      "type": "number",
+      "format": "double"
+    },
+    "categories": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/Category"
+      }
+    }
+  },
+  "definitions": {
+    "WgsPoint": {
+      "type": "object",
+      "description": "Representation of a point on an ellipsoidal body.",
+      "additionalProperties": false,
+      "required": [
+        "lon",
+        "lat"
+      ],
+      "properties": {
+        "lon": {
+          "type": "number",
+          "format": "double",
+          "maximum": 180.0,
+          "minimum": -180.0,
+          "x-example": 0.0
+        },
+        "lat": {
+          "type": "number",
+          "format": "double",
+          "maximum": 85.06,
+          "minimum": -85.06,
+          "x-example": 0.0
+        }
+      }
+    },
+    "Category": {
+      "type": "object",
+      "description": "User-defined category.",
+      "additionalProperties": false,
+      "required": [
+        "keyword",
+        "filters"
+      ],
+      "properties": {
+        "keyword": {
+          "type": "string",
+          "description": "Consider places identified as keyword.",
+          "minLength": 1
+        },
+        "filters": {
+          "description": "Additional attribute filters introduced by the user.",
+          "oneOf": [
+            {
+              "$ref": "#/definitions/AttributeFilters"
+            }
+          ]
+        }
+      }
+    },
+    "AttributeFilters": {
+      "type": "object",
+      "description": "All possible attribute filters.",
+      "additionalProperties": false,
+      "properties": {
+        "es": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExistens"
+            }
+          ]
+        },
+        "bs": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterBooleans"
+            }
+          ]
+        },
+        "ns": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterNumerics"
+            }
+          ]
+        },
+        "ts": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterTextuals"
+            }
+          ]
+        },
+        "cs": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterCollects"
+            }
+          ]
+        }
+      }
+    },
+    "AttributeFilterExistens": {
+      "type": "object",
+      "description": "All items with `existing` semantics.",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "image": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "website": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "address": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "email": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "phone": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "socialNetworks": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "charge": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        },
+        "openingHours": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterExisten"
+            }
+          ]
+        }
+      }
+    },
+    "AttributeFilterExisten": {
+      "type": "object",
+      "description": "Filter if set means that the item should exist on the object and does\nnot specify the type.",
+      "additionalProperties": false
+    },
+    "AttributeFilterBooleans": {
+      "type": "object",
+      "description": "All items with `existing boolean` semantics.",
+      "additionalProperties": false,
+      "properties": {
+        "fee": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "delivery": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "drinkingWater": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "internetAccess": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "shower": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "smoking": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "takeaway": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "toilets": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "wheelchair": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        }
+      }
+    },
+    "AttributeFilterNumerics": {
+      "type": "object",
+      "description": "All items with `existing numeric` semantics.",
+      "additionalProperties": false,
+      "properties": {
+        "capacity": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterNumeric"
+            }
+          ]
+        },
+        "elevation": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterNumeric"
+            }
+          ]
+        },
+        "minimumAge": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterNumeric"
+            }
+          ]
+        },
+        "rating": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterNumeric"
+            }
+          ]
+        },
+        "year": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterNumeric"
+            }
+          ]
+        }
+      }
+    },
+    "AttributeFilterNumeric": {
+      "type": "object",
+      "description": "Bounds for numeric attributes.",
+      "additionalProperties": false,
+      "required": [
+        "min",
+        "max"
+      ],
+      "properties": {
+        "min": {
+          "type": "number",
+          "format": "double"
+        },
+        "max": {
+          "type": "number",
+          "format": "double"
+        }
+      }
+    },
+    "AttributeFilterTextuals": {
+      "type": "object",
+      "description": "All items with `existing textual` semantics.",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": [
+            "null",
+            "string"
+          ]
+        }
+      }
+    },
+    "AttributeFilterCollects": {
+      "type": "object",
+      "description": "All items with `existing collection` semantics.",
+      "additionalProperties": false,
+      "properties": {
+        "clothes": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterCollect"
+            }
+          ]
+        },
+        "cuisine": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterCollect"
+            }
+          ]
+        },
+        "denomination": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterCollect"
+            }
+          ]
+        },
+        "payment": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterCollect"
+            }
+          ]
+        },
+        "rental": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/definitions/AttributeFilterCollect"
+            }
+          ]
+        }
+      }
+    },
+    "AttributeFilterCollect": {
+      "type": "object",
+      "description": "Bounds for collection-like attributes.",
+      "additionalProperties": false,
+      "required": [
+        "inc",
+        "exc"
+      ],
+      "properties": {
+        "inc": {
+          "type": "array",
+          "description": "Collection shall include any of these items.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "exc": {
+          "type": "array",
+          "description": "Collection shall exclude all of these items.",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
