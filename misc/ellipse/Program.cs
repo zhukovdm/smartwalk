@@ -6,7 +6,7 @@ using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using Newtonsoft.Json;
 using SmartWalk.Core.Algorithms;
-using SmartWalk.Model.Entities;
+using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Experiment;
 
