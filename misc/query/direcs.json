@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "SearchDirecsQuery",
+  "type": "object",
+  "description": "Type used for (D)eserialization and handling.",
+  "additionalProperties": false,
+  "properties": {
+    "waypoints": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/definitions/WgsPoint"
+      }
+    }
+  },
+  "definitions": {
+    "WgsPoint": {
+      "type": "object",
+      "description": "Representation of a point on an ellipsoidal body.",
+      "additionalProperties": false,
+      "required": [
+        "lon",
+        "lat"
+      ],
+      "properties": {
+        "lon": {
+          "type": "number",
+          "format": "double",
+          "maximum": 180.0,
+          "minimum": -180.0,
+          "x-example": 0.0
+        },
+        "lat": {
+          "type": "number",
+          "format": "double",
+          "maximum": 85.06,
+          "minimum": -85.06,
+          "x-example": 0.0
+        }
+      }
+    }
+  }
+}
