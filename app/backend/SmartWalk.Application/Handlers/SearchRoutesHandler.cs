@@ -169,9 +169,6 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
         var sourceEs = GetSourceEs(sourceCat, catsCount);
         var targetEs = GetTargetEs(targetCat, catsCount);
 
-        var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(arrows.Concat(sourceEs).Concat(targetEs), catsCount, arrows.Count > 0);
-
         var ellipse = Spherical.BoundingEllipse(source, target, query.maxDistance);
 
         var places = new List<Place>()
@@ -181,6 +178,9 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
             .ToList();
 
         var distMatrix = new HaversineDistanceMatrix(places);
+
+        var precMatrix = SolverFactory
+            .GetPrecedenceMatrix(arrows.Concat(sourceEs).Concat(targetEs), catsCount, arrows.Count > 0);
 
         var (solverSource, solverTarget, solverPlaces) = GetSolverPlaces(sourceCat, targetCat, places);
 

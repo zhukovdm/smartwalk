@@ -28,12 +28,12 @@ public static class SolverFactory
     public static IPrecedenceMatrix GetPrecedenceMatrix(
         IEnumerable<PrecedenceEdge> edges, int catsCount, bool hasArrows)
     {
-        // return IfSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
+    //  return IfSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
         return OgSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
     }
     public static ISolver GetSolver()
     {
-        // return new IfSolver();
+    //  return new IfSolver();
         return new OgSolver();
     }
 }
