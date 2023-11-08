@@ -98,13 +98,13 @@ export default function SolidContent(): JSX.Element {
   return (
     <Stack direction={"column"} gap={2}>
       <Stack direction={"column"} gap={1}>
-        <Typography>You are logged in with WebId:</Typography>
+        <Typography>You are logged in with WebID:</Typography>
         <Typography align={"center"}>
           <Link
             href={webId}
             rel={"noopener noreferrer"}
             target={"_blank"}
-            title={"Web Identity"}
+            title={"Web Identity and Discovery"}
             underline={"hover"}
             noWrap={true}
           >

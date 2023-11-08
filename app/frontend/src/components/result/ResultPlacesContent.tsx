@@ -136,7 +136,7 @@ export default function ResultPlacesContent(
         gap={2}
         justifyContent={"right"}
       >
-        <Typography>Rows per page:</Typography>
+        <Typography>Places per page:</Typography>
         <Select
           role={"navigation"}
           aria-label={"rows per page"}

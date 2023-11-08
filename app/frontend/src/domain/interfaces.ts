@@ -89,18 +89,21 @@ export interface IMap {
 }
 
 /**
+ * Supported kinds of decentralized storage.
+ */
+export enum StorageKind {
+  Device,
+  InMem,
+  Solid,
+};
+
+/**
  * Standard operations over an arbitrary object storage.
  */
 export interface IStorage {
 
-  /** In-memory storage. */
-  inmemory(): boolean;
-
-  /** Data are persisted locally on the device. */
-  device(): boolean;
-
-  /** Decentralized storage, such as Solid. */
-  decentralized(): boolean;
+  /** Storage kind. */
+  kind(): StorageKind;
 
   /** Initialization procedure. */
   init(): Promise<void>;

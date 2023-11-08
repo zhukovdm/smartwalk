@@ -10,11 +10,14 @@ import {
 import { fetch } from "@inrupt/solid-client-authn-browser";
 import namespace from "@rdfjs/namespace";
 import {
+  IStorage,
+  StorageKind
+} from "../domain/interfaces";
+import type {
   StoredDirec,
   StoredPlace,
   StoredRoute
 } from "../domain/types";
-import { IStorage } from "../domain/interfaces";
 import StorageErrorGenerator from "./storageErrorGenerator";
 
 const ns = {
@@ -66,16 +69,8 @@ export default class SolidStorage implements IStorage {
     this.storageUrl = storageUrl;
   }
 
-  public inmemory(): boolean {
-    return false;
-  }
-
-  public device(): boolean {
-    return false;
-  }
-
-  public decentralized(): boolean {
-    return true;
+  public kind(): StorageKind {
+    return StorageKind.Solid;
   }
 
   public async init(): Promise<void> {

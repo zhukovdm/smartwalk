@@ -114,12 +114,12 @@ export default function AttributeFiltersList(props: AttributeFiltersListProps): 
           onChange={(_, v) => { setEsExpanded(v); }}
         >
           <AccordionSummary
-            aria-label={"Has"}
+            aria-label={"Have"}
             id={esHeadId}
             aria-controls={esContId}
             expandIcon={<ExpandSectionIcon expanded={esExpanded} />}
           >
-            <Typography>Has</Typography>
+            <Typography>Have</Typography>
           </AccordionSummary>
           <AccordionDetails>
             <Stack

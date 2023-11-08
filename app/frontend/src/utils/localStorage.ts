@@ -1,5 +1,8 @@
-import { IStorage } from "../domain/interfaces";
 import {
+  IStorage,
+  StorageKind
+} from "../domain/interfaces";
+import type {
   StoredDirec,
   StoredPlace,
   StoredRoute
@@ -24,16 +27,8 @@ export default class LocalStorage implements IStorage {
 
   private fallback?: IStorage = new InmemStorage();
 
-  public inmemory(): boolean {
-    return !!this.fallback;
-  }
-
-  public device(): boolean {
-    return !this.fallback;
-  }
-
-  public decentralized(): boolean {
-    return false;
+  public kind(): StorageKind {
+    return (!!this.fallback) ? StorageKind.InMem : StorageKind.Device;
   }
 
   public init(): Promise<void> {

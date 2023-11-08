@@ -96,7 +96,7 @@ export default function CategoryDialog(
       open
       fullScreen={fullScreen}
     >
-      <DialogTitle>Add category</DialogTitle>
+      <DialogTitle>{!!category ? "Modify" : "Add"} category</DialogTitle>
       <DialogContent
         sx={{ display: "flex", flexDirection: "column", gap: 2 }}
       >
