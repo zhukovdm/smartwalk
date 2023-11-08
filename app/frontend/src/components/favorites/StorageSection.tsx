@@ -2,6 +2,7 @@ import { useContext } from "react";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import { AppContext } from "../../App";
+import { StorageKind } from "../../domain/interfaces";
 
 /**
  * Alert saying what kind of storage (in-mem, local, or remote) is currently in use.
@@ -12,19 +13,19 @@ export default function StorageSection(): JSX.Element {
 
   return (
     <Box>
-      {storage.inmemory() &&
+      {storage.kind() === StorageKind.InMem &&
         <Alert severity={"error"}>
           You use an <strong>in-memory</strong> storage. This might occur due to various reasons (old browser, private mode, etc.). Any data will be lost upon refreshing the page.
         </Alert>
       }
-      {storage.device() &&
+      {storage.kind() === StorageKind.Device &&
         <Alert severity={"info"}>
-          Data are stored locally on your device.
+          Data is stored locally on your device.
         </Alert>
       }
-      {storage.decentralized() &&
+      {storage.kind() === StorageKind.Solid &&
         <Alert severity={"success"}>
-          You use a decentralized storage.
+          Data is stored in your Solid Pod.
         </Alert>
       }
     </Box>

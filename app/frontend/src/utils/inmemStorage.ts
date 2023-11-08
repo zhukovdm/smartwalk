@@ -1,5 +1,12 @@
-import { IStorage } from "../domain/interfaces";
-import type { StoredDirec, StoredPlace, StoredRoute } from "../domain/types";
+import {
+  IStorage,
+  StorageKind
+} from "../domain/interfaces";
+import type {
+  StoredDirec,
+  StoredPlace,
+  StoredRoute
+} from "../domain/types";
 
 /**
  * Storage wrapper over standard kv-collection.
@@ -10,16 +17,8 @@ export default class InmemStorage implements IStorage {
   private readonly placeStore = new Map<string, StoredPlace>();
   private readonly routeStore = new Map<string, StoredRoute>();
 
-  public inmemory(): boolean {
-    return true;
-  }
-
-  public device(): boolean {
-    return false;
-  }
-
-  public decentralized(): boolean {
-    return false;
+  public kind(): StorageKind {
+    return StorageKind.InMem;
   }
 
   public init(): Promise<void> {
