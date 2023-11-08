@@ -37,12 +37,12 @@ describe("<CategoryChip />", () => {
     const { getByRole, queryByRole } = render();
 
     fireEvent.keyDown(getByRole("button", { name: "1: Keyword A" }), { key: "Enter" });
-    expect(getByRole("dialog", { name: "Add category" })).toBeInTheDocument();
+    expect(getByRole("dialog", { name: "Modify category" })).toBeInTheDocument();
 
     fireEvent.click(getByRole("button", { name: "Discard" }));
 
     // not necessary to wait because of the immediate unmount
-    expect(queryByRole("dialog", { name: "Add category" })).not.toBeInTheDocument();
+    expect(queryByRole("dialog", { name: "Modify category" })).not.toBeInTheDocument();
   });
 
   test("chip attemts to remove itself upon Delete (or cross)", () => {
@@ -65,7 +65,7 @@ describe("<CategoryChip />", () => {
     const { getByRole } = render();
     fireEvent.click(getByRole("button", { name: "1: Keyword A" }));
 
-    expect(getByRole("button", { name: "Has" }));
+    expect(getByRole("button", { name: "Have" }));
     expect(getByRole("combobox", { name: "Keyword" })).toHaveProperty("disabled");
   });
 });
