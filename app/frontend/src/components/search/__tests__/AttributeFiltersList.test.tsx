@@ -27,7 +27,7 @@ function render(props = getProps()) {
   return rtlRender(<AttributeFiltersList {...props} />);
 }
 
-describe("<AttributeFilterList />", () => {
+describe("<AttributeFiltersList />", () => {
 
   test("render", () => {
     const { container } = render();
@@ -35,7 +35,7 @@ describe("<AttributeFilterList />", () => {
   });
 
   describe("region control", () => {
-    const names = ["Has", "Yes / No", "Numeric", "Contain text", "Include any / Exclude all"]
+    const names = ["Have", "Yes / No", "Numeric", "Contain text", "Include any / Exclude all"]
 
     it("should contain buttons and regions", () => {
       const { getByRole } = render();
@@ -70,7 +70,7 @@ describe("<AttributeFilterList />", () => {
   describe("es region", () => {
 
     it("should collapse and expand region", async () => {
-      const obj = { name: "Has" };
+      const obj = { name: "Have" };
 
       const { getByRole, queryByRole } = render();
 
@@ -90,7 +90,7 @@ describe("<AttributeFilterList />", () => {
 
     it("should render checked item", () => {
       const { getByRole } = render();
-      const region = getByRole("region", { name: "Has" });
+      const region = getByRole("region", { name: "Have" });
       expect(within(region).getByText("website")).toBeInTheDocument();
       expect(within(region).getByRole("checkbox", { name: "website" })).toHaveProperty("checked", true);
     });
@@ -101,7 +101,7 @@ describe("<AttributeFilterList />", () => {
         ...getProps(),
         onExistenUpdate: onExistenUpdate
       });
-      fireEvent.click(within(getByRole("region", { name: "Has" }))
+      fireEvent.click(within(getByRole("region", { name: "Have" }))
         .getByRole("checkbox", { name: "website" }));
       expect(onExistenUpdate).toHaveBeenCalledWith("website", undefined);
     });
