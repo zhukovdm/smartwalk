@@ -1,9 +1,11 @@
 **/bin/
+**/docs/
 **/obj/
 **/TestResults/
 
 **/*.md
+Doxyfile
 Dockerfile*
 
-.gitignore
+**/.gitignore
 backend.sln
