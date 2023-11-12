@@ -26,7 +26,7 @@ import {
   setSolidWebId
 } from "../features/solidSlice";
 import { useAppDispatch, useAppSelector } from "../features/storeHooks";
-import LocalStorage from "../utils/localStorage";
+import DeviceStorage from "../utils/deviceStorage";
 import {
   solidRedirect as solidRedirectCallback
 } from "../utils/solidProvider";
@@ -90,7 +90,7 @@ export default function SessionProvider(): JSX.Element {
           dispatch(resetSolid());
           dispatch(resetSession());
           dispatch(resetFavorites());
-          context.storage = new LocalStorage();
+          context.storage = new DeviceStorage();
           navigate(FAVORITES_ADDR);
         }
       );

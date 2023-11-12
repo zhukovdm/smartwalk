@@ -13,7 +13,7 @@ import StorageErrorGenerator from "./storageErrorGenerator";
 /**
  * Wrapper over standard IndexedDB.
  */
-export default class LocalStorage implements IStorage {
+export default class DeviceStorage implements IStorage {
 
   private static db = "smartwalk";
 
@@ -32,13 +32,13 @@ export default class LocalStorage implements IStorage {
   }
 
   public init(): Promise<void> {
-    const request = indexedDB.open(LocalStorage.db);
+    const request = indexedDB.open(DeviceStorage.db);
 
     request.onupgradeneeded = (evt) => {
       const db = (evt.target as IDBOpenDBRequest).result;
-      db.createObjectStore(LocalStorage.direcs, { keyPath: "direcId" });
-      db.createObjectStore(LocalStorage.places, { keyPath: "placeId" });
-      db.createObjectStore(LocalStorage.routes, { keyPath: "routeId" });
+      db.createObjectStore(DeviceStorage.direcs, { keyPath: "direcId" });
+      db.createObjectStore(DeviceStorage.places, { keyPath: "placeId" });
+      db.createObjectStore(DeviceStorage.routes, { keyPath: "routeId" });
     };
 
     return new Promise((res, rej) => {
@@ -77,17 +77,17 @@ export default class LocalStorage implements IStorage {
 
   public createDirec(direc: StoredDirec): Promise<void> {
     return this.fallback?.createDirec(direc)
-      ?? LocalStorage.createT(LocalStorage.direcs, direc, direc.direcId);
+      ?? DeviceStorage.createT(DeviceStorage.direcs, direc, direc.direcId);
   }
 
   public createPlace(place: StoredPlace): Promise<void> {
     return this.fallback?.createPlace(place)
-      ?? LocalStorage.createT(LocalStorage.places, place, place.placeId);
+      ?? DeviceStorage.createT(DeviceStorage.places, place, place.placeId);
   }
 
   public createRoute(route: StoredRoute): Promise<void> {
     return this.fallback?.createRoute(route)
-      ?? LocalStorage.createT(LocalStorage.routes, route, route.routeId);
+      ?? DeviceStorage.createT(DeviceStorage.routes, route, route.routeId);
   }
 
   // get identifiers
@@ -116,26 +116,26 @@ export default class LocalStorage implements IStorage {
 
   public getDirecIdentifiers(): Promise<string[]> {
     return this.fallback?.getDirecIdentifiers()
-      ?? LocalStorage.getTIdentifiers(LocalStorage.direcs);
+      ?? DeviceStorage.getTIdentifiers(DeviceStorage.direcs);
   }
 
   public getPlaceIdentifiers(): Promise<string[]> {
     return this.fallback?.getPlaceIdentifiers()
-      ?? LocalStorage.getTIdentifiers(LocalStorage.places);
+      ?? DeviceStorage.getTIdentifiers(DeviceStorage.places);
   }
 
   public getRouteIdentifiers(): Promise<string[]> {
     return this.fallback?.getRouteIdentifiers()
-      ?? LocalStorage.getTIdentifiers(LocalStorage.routes);
+      ?? DeviceStorage.getTIdentifiers(DeviceStorage.routes);
   }
 
   // get by identifier
 
   private static getT<T>(store: string, itemId: string): Promise<T | undefined> {
     return new Promise((res, rej) => {
-      const r1 = indexedDB.open(LocalStorage.db);
+      const r1 = indexedDB.open(DeviceStorage.db);
       r1.onsuccess = (evt) => {
-        const r2 = LocalStorage
+        const r2 = DeviceStorage
           .getDb(evt)
           .transaction(store)
           .objectStore(store)
@@ -155,26 +155,26 @@ export default class LocalStorage implements IStorage {
 
   public getDirec(direcId: string): Promise<StoredDirec | undefined> {
     return this.fallback?.getDirec(direcId)
-      ?? LocalStorage.getT(LocalStorage.direcs, direcId);
+      ?? DeviceStorage.getT(DeviceStorage.direcs, direcId);
   }
 
   public getPlace(placeId: string): Promise<StoredPlace | undefined> {
     return this.fallback?.getPlace(placeId)
-      ?? LocalStorage.getT(LocalStorage.places, placeId);
+      ?? DeviceStorage.getT(DeviceStorage.places, placeId);
   }
 
   public getRoute(routeId: string): Promise<StoredRoute | undefined> {
     return this.fallback?.getRoute(routeId)
-      ?? LocalStorage.getT(LocalStorage.routes, routeId);
+      ?? DeviceStorage.getT(DeviceStorage.routes, routeId);
   }
 
   // update
 
   private static updateT<T>(store: string, item: T, itemId: string): Promise<void> {
     return new Promise((res, rej) => {
-      const r1 = indexedDB.open(LocalStorage.db);
+      const r1 = indexedDB.open(DeviceStorage.db);
       r1.onsuccess = (evt) => {
-        const r2 = LocalStorage
+        const r2 = DeviceStorage
           .getDb(evt)
           .transaction(store, "readwrite")
           .objectStore(store)
@@ -194,26 +194,26 @@ export default class LocalStorage implements IStorage {
 
   public updateDirec(direc: StoredDirec): Promise<void> {
     return this.fallback?.updateDirec(direc)
-      ?? LocalStorage.updateT(LocalStorage.direcs, direc, direc.direcId);
+      ?? DeviceStorage.updateT(DeviceStorage.direcs, direc, direc.direcId);
   }
 
   public updatePlace(place: StoredPlace): Promise<void> {
     return this.fallback?.updatePlace(place)
-      ?? LocalStorage.updateT(LocalStorage.places, place, place.placeId);
+      ?? DeviceStorage.updateT(DeviceStorage.places, place, place.placeId);
   }
 
   public updateRoute(route: StoredRoute): Promise<void> {
     return this.fallback?.updateRoute(route)
-      ?? LocalStorage.updateT(LocalStorage.routes, route, route.routeId);
+      ?? DeviceStorage.updateT(DeviceStorage.routes, route, route.routeId);
   }
 
   // delete
 
   private static deleteT(store: string, itemId: string): Promise<void> {
     return new Promise((res, rej) => {
-      const r1 = indexedDB.open(LocalStorage.db);
+      const r1 = indexedDB.open(DeviceStorage.db);
       r1.onsuccess = (evt) => {
-        const r2 = LocalStorage
+        const r2 = DeviceStorage
           .getDb(evt)
           .transaction(store, "readwrite")
           .objectStore(store)
@@ -233,16 +233,16 @@ export default class LocalStorage implements IStorage {
 
   public deleteDirec(direcId: string): Promise<void> {
     return this.fallback?.deleteDirec(direcId)
-      ?? LocalStorage.deleteT(LocalStorage.direcs, direcId);
+      ?? DeviceStorage.deleteT(DeviceStorage.direcs, direcId);
   }
 
   public deletePlace(placeId: string): Promise<void> {
     return this.fallback?.deletePlace(placeId)
-      ?? LocalStorage.deleteT(LocalStorage.places, placeId);
+      ?? DeviceStorage.deleteT(DeviceStorage.places, placeId);
   }
 
   public deleteRoute(routeId: string): Promise<void> {
     return this.fallback?.deleteRoute(routeId)
-      ?? LocalStorage.deleteT(LocalStorage.routes, routeId);
+      ?? DeviceStorage.deleteT(DeviceStorage.routes, routeId);
   }
 }
