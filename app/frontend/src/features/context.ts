@@ -5,7 +5,7 @@ import type {
   KeywordAdviceItem
 } from "../domain/types";
 import { IMap, IStorage } from "../domain/interfaces";
-import LocalStorage from "../utils/localStorage";
+import DeviceStorage from "../utils/deviceStorage";
 
 export type AppContextValue = {
   map?: IMap;
@@ -31,7 +31,7 @@ export class MapFactory {
  * Use application context for all non-serializable data!
  */
 export const context: AppContextValue = {
-  storage: new LocalStorage(),
+  storage: new DeviceStorage(),
   smart: {
     entityPlaces: new Map(),
     adviceKeywords: new Map()
