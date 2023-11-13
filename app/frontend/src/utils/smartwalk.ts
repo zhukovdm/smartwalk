@@ -44,7 +44,10 @@ async function smartwalkFetch(url: string): Promise<any> {
 
   const res = await axios.get(url, {
     method: "GET",
-    headers: { "Accept": content }
+    headers: {
+      "Accept": content
+    },
+    validateStatus: null // disable validation!
   });
 
   switch (res.status) {
