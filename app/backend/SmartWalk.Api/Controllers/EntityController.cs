@@ -45,13 +45,15 @@ public sealed class EntityController : ControllerBase
 
         try
         {
-            var place = await new GetPlaceHandler(_ctx.EntityStore).Handle(new() { smartId = smartId });
-            return (place is not null) ? place : NotFound();
+            var result = await new GetPlaceHandler(_ctx.EntityStore)
+                .Handle(new() { smartId = smartId });
+
+            return new GetPlaceResponder().Respond(result);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new GetPlaceResponder().Failure();
         }
     }
 }

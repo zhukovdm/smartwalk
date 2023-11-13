@@ -37,13 +37,15 @@ public sealed class AdviceController : ControllerBase
     {
         try
         {
-            return await new AdviseKeywordsHandler(_ctx.KeywordAdvicer)
+            var result = await new AdviseKeywordsHandler(_ctx.KeywordAdvicer)
                 .Handle(new() { prefix = request.prefix, count = request.count.Value });
+
+            return new AdviseKeywordsResponder().Respond(result);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new AdviseKeywordsResponder().Failure();
         }
     }
 }
