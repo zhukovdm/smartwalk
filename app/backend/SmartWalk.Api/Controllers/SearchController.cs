@@ -38,12 +38,14 @@ public sealed class SearchController : ControllerBase
 
         try
         {
-            return await handler.Handle(queryObject);
+            var result = await handler.Handle(queryObject);
+
+            return new SearchTResponder<T>().Respond(result);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex.Message);
-            return StatusCode(StatusCodes.Status500InternalServerError);
+            return new SearchTResponder<T>().Failure();
         }
     }
 
