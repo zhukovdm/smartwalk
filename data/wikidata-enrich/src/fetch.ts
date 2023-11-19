@@ -286,6 +286,7 @@ OPTIONAL {
 
 async function fetchFromWikidata(query: string) {
 
+  // POST verb for long queries
   const res = await axios.post(WIKIDATA_SPARQL_ENDPOINT, "query=" + encodeURIComponent(query), {
     headers: {
       Accept: `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
@@ -293,7 +294,15 @@ async function fetchFromWikidata(query: string) {
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
-  const arr = await jsonld.fromRDF(res.data, { format: WIKIDATA_ACCEPT_CONTENT });
+
+  // empty graph
+  if (res.data.length === 0) {
+    return [];
+  }
+
+  const arr = await jsonld.fromRDF(res.data, {
+    format: WIKIDATA_ACCEPT_CONTENT
+  });
   const jsn = await jsonld.compact(arr, WIKIDATA_JSONLD_CONTEXT);
   return jsn["@graph"] ?? [];
 }
