@@ -1,15 +1,11 @@
 import axios from "axios";
 import jsonld, { type ContextDefinition } from "jsonld";
-import Streamify from "streamify-string";
-import stringifyStream from "stream-to-string";
-import rdfParser from "rdf-parse";
-import rdfSerializer from "rdf-serialize";
 import Logger from "./logger";
 
-const DBPEDIA_ACCEPT_CONTENT = "text/turtle";
-const DBPEDIA_SPARQL_ENDPOINT = "https://dbpedia.org/sparql?query=";
+const DBPEDIA_ACCEPT_CONTENT = "application/n-triples";
+const DBPEDIA_RDF_FORMAT = "application/n-quads";
 
-const NQUADS_ACCEPT_CONTENT = "application/n-quads";
+const DBPEDIA_SPARQL_ENDPOINT = "https://dbpedia.org/sparql?query=";
 
 const DBPEDIA_JSONLD_CONTEXT = {
   "my": "http://example.com/",
@@ -95,24 +91,24 @@ OPTIONAL {
 
 async function fetchFromDbPedia(query: string) {
 
-  const response = await axios.get(DBPEDIA_SPARQL_ENDPOINT + encodeURIComponent(query), {
+  const res = await axios.get(DBPEDIA_SPARQL_ENDPOINT + encodeURIComponent(query), {
     headers: {
       Accept: `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
-  const quadStream = rdfParser.parse(Streamify(response.data), {
-    contentType: DBPEDIA_ACCEPT_CONTENT
+
+  // empty graph
+  if ((res.data as string).startsWith("# Empty NT")) {
+    return [];
+  }
+
+  const arr = await jsonld.fromRDF(res.data, {
+    format: DBPEDIA_RDF_FORMAT // look at n-triples as if it were n-quads!
   });
-  const readableStream = rdfSerializer.serialize(quadStream, {
-    contentType: NQUADS_ACCEPT_CONTENT
-  });
-  const serializedStream = await stringifyStream(readableStream);
-  const expandedJsonLd = await jsonld.fromRDF(serializedStream as any, {
-    format: NQUADS_ACCEPT_CONTENT
-  });
-  const compactedJsonLd = await jsonld.compact(expandedJsonLd, DBPEDIA_JSONLD_CONTEXT);
-  return compactedJsonLd["@graph"] ?? [];
+
+  const jsn = await jsonld.compact(arr, DBPEDIA_JSONLD_CONTEXT);
+  return jsn["@graph"] ?? [];
 }
 
 const getFirst = (obj: unknown) => (Array.isArray(obj) ? obj[0] : obj);

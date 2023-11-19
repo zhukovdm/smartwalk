@@ -32,7 +32,6 @@ const WIKIDATA_JSONLD_CONTEXT = {
 };
 
 /**
- * - 
  * - https://www.wikidata.org/wiki/Property:P11693
  * - https://www.wikidata.org/wiki/Property:P10689
  * - https://www.wikidata.org/wiki/Property:P402
@@ -82,7 +81,15 @@ async function fetchFromWikidata(query: string) {
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
-  const arr = await jsonld.fromRDF(res.data, { format: WIKIDATA_ACCEPT_CONTENT });
+
+  // empty graph
+  if (res.data.length === 0) {
+    return [];
+  }
+
+  const arr = await jsonld.fromRDF(res.data, {
+    format: WIKIDATA_ACCEPT_CONTENT
+  });
   const jsn = await jsonld.compact(arr, WIKIDATA_JSONLD_CONTEXT);
   return jsn["@graph"] ?? [];
 }
