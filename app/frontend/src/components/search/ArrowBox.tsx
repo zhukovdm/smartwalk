@@ -13,10 +13,7 @@ import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import EastIcon from "@mui/icons-material/East";
-import type {
-  PlaceCategory,
-  PrecedenceEdge
-} from "../../domain/types";
+import type { Arrow, PlaceCategory } from "../../domain/types";
 import CycleDetector from "../../utils/cycleDetector";
 import ArrowList from "../_shared/ArrowList";
 import ArrowDrawing from "../_shared/ArrowDrawing";
@@ -73,13 +70,13 @@ export type ArrowBoxProps = {
   categories: PlaceCategory[];
 
   /** Confirmed arrows */
-  arrows: PrecedenceEdge[];
+  arrows: Arrow[];
 
   /** Callback deleting an arrow */
   deleteArrow: (i: number) => void;
 
   /** Callback appending an arrow */
-  appendArrow: (e: PrecedenceEdge) => void;
+  appendArrow: (e: Arrow) => void;
 };
 
 /**
@@ -93,7 +90,7 @@ export default function ArrowBox(
   const [showDialog, setShowDialog] = useState(false);
   const [catFr, setCatFr] = useState<number | undefined>(undefined);
   const [catTo, setCatTo] = useState<number | undefined>(undefined);
-  const [arrow, setArrow] = useState<PrecedenceEdge | undefined>(undefined);
+  const [arrow, setArrow] = useState<Arrow | undefined>(undefined);
 
   useEffect(() => {
     setArrow((catFr !== undefined && catTo !== undefined)

@@ -7,10 +7,7 @@ import IconButton from "@mui/material/IconButton";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import CloseIcon from "@mui/icons-material/Close";
-import {
-  PlaceCategory,
-  PrecedenceEdge
-} from "../../domain/types";
+import type { Arrow, PlaceCategory } from "../../domain/types";
 import ArrowList from "./ArrowList";
 import ArrowDrawing from "./ArrowDrawing";
 
@@ -23,7 +20,7 @@ export type ArrowViewDialogProps = {
   categories: PlaceCategory[];
 
   /** User-defined arrows */
-  arrows: PrecedenceEdge[];
+  arrows: Arrow[];
 
   /** Callback hiding dialog */
   onHide: () => void;

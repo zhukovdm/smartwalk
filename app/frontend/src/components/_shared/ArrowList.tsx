@@ -1,12 +1,12 @@
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
 import Stack from "@mui/material/Stack";
-import { PrecedenceEdge } from "../../domain/types";
+import type { Arrow } from "../../domain/types";
 
 export type ArrowListProps = {
 
   /** Confirmed arrows */
-  arrows: PrecedenceEdge[];
+  arrows: Arrow[];
 
   /** Callback deleting an arrow */
   onDelete?: (index: number) => void;

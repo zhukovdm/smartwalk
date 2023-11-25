@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { KeywordCategory, PrecedenceEdge, UiPlace } from "../domain/types";
+import type { Arrow, KeywordCategory, UiPlace } from "../domain/types";
 import { deleteItemImmutable, updateItemImmutable } from "../utils/functions";
 
 export type SearchRoutesState = {
@@ -7,7 +7,7 @@ export type SearchRoutesState = {
   target?: UiPlace;
   maxDistance: number;
   categories: KeywordCategory[];
-  arrows: PrecedenceEdge[];
+  arrows: Arrow[];
 };
 
 export const initialSearchRoutesState = (): SearchRoutesState => ({
@@ -42,7 +42,7 @@ export const searchRoutesSlice = createSlice({
       const { category, i } = action.payload;
       state.categories = updateItemImmutable(state.categories, category, i);
     },
-    appendSearchRoutesArrow: (state, action: PayloadAction<PrecedenceEdge>) => {
+    appendSearchRoutesArrow: (state, action: PayloadAction<Arrow>) => {
       state.arrows.push(action.payload);
     },
     deleteSearchRoutesArrow: (state, action: PayloadAction<number>) => {

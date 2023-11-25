@@ -4,7 +4,7 @@ import {
   waitFor,
   within
 } from "@testing-library/react";
-import type { PrecedenceEdge } from "../../domain/types";
+import type { Arrow } from "../../domain/types";
 import {
   getKeywordAdviceItem,
   getPlace
@@ -456,7 +456,7 @@ describe("<SearchRoutesPanel />", () => {
 
   describe("arrows", () => {
 
-    const getPreloadedState = (arrows: PrecedenceEdge[]) => ({
+    const getPreloadedState = (arrows: Arrow[]) => ({
       searchRoutes: {
         ...initialSearchRoutesState(),
         categories: ["bridge", "castle", "museum", "statue"].map((keyword) => ({

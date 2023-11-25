@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { PrecedenceEdge } from "../domain/types";
+import type { Arrow } from "../domain/types";
 import { RESULT_ROUTES_ADDR } from "../utils/routing";
 import { fetchSearchRoutes } from "../utils/smartwalk";
 import { setBlock } from "../features/panelSlice";
@@ -127,7 +127,7 @@ export default function SearchRoutesPanel(): JSX.Element {
           categories={categories}
           arrows={arrows}
           deleteArrow={(i: number) => { dispatch(deleteSearchRoutesArrow(i)); }}
-          appendArrow={(e: PrecedenceEdge) => { dispatch(appendSearchRoutesArrow(e)); }}
+          appendArrow={(e: Arrow) => { dispatch(appendSearchRoutesArrow(e)); }}
         />
         <BottomButtons
           disabled={!source || !target || !(categories.length > 0)}

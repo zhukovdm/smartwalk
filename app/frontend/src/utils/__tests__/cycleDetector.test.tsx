@@ -1,4 +1,4 @@
-import type { PrecedenceEdge } from "../../domain/types";
+import type { Arrow } from "../../domain/types";
 import CycleDetector from "../cycleDetector";
 
 describe("CycleDetector", () => {
@@ -16,7 +16,7 @@ describe("CycleDetector", () => {
   });
 
   test("valid input, large graph", () => {
-    const arrows: PrecedenceEdge[] = [];
+    const arrows: Arrow[] = [];
 
     for (let fr = 0; fr < 100; ++fr) {
       for (let to = fr + 1; to < 100; ++to) {

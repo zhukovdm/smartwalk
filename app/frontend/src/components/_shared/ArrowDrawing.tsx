@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import Paper from "@mui/material/Paper";
 import { Edge, Network, Node, Options } from "vis-network";
-import { PlaceCategory, PrecedenceEdge } from "../../domain/types";
+import type { Arrow, PlaceCategory } from "../../domain/types";
 
 export type ArrowDrawingProps = {
 
@@ -9,10 +9,10 @@ export type ArrowDrawingProps = {
   categories: PlaceCategory[];
 
   /** Confirmed arrows */
-  arrows: PrecedenceEdge[];
+  arrows: Arrow[];
 
   /** New `red` arrow */
-  arrow?: PrecedenceEdge;
+  arrow?: Arrow;
 };
 
 /**

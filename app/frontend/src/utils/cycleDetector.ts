@@ -1,4 +1,4 @@
-import { PrecedenceEdge } from "../domain/types";
+import { Arrow } from "../domain/types";
 
 enum Color {
   A,
@@ -28,7 +28,7 @@ export default class CycleDetector {
   private readonly vs: Vertex[];
   private readonly es: Set<number>[];
 
-  constructor(order: number, arrows: PrecedenceEdge[]) {
+  constructor(order: number, arrows: Arrow[]) {
     this.vs = CycleDetector
       .getArrayBase(order)
       .map(() => CycleDetector.getCycleDetectorV());

@@ -416,7 +416,7 @@ export type PlaceCategory = {
  */
 export type KeywordCategory = PlaceCategory & KeywordAdviceItem;
 
-export type PrecedenceEdge = {
+export type Arrow = {
 
   /** Category from. */
   fr: number;
@@ -524,7 +524,7 @@ export type RoutesRequest = {
   categories: PlaceCategory[];
 
   /** Poset on categories. */
-  arrows: PrecedenceEdge[];
+  arrows: Arrow[];
 };
 
 type RouteAttributes = RoutesRequest & {
