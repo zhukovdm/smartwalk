@@ -93,8 +93,8 @@ public static class Spherical
     /// 
     /// hav(x) = sin^2 (x^2 / 2.0), arcsin(x) = arctan(x / sqrt(1.0 - x^2)).
     /// <list>
-    /// <item>https://www.movable-type.co.uk/scripts/latlong.html</item>
     /// <item>https://en.wikipedia.org/wiki/Haversine_formula#Formulation</item>
+    /// <item>https://www.movable-type.co.uk/scripts/latlong.html#distance</item>
     /// </list>
     /// </summary>
     /// <returns>The distance in meters.</returns>
