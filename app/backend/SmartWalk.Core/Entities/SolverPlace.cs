@@ -3,7 +3,7 @@ namespace SmartWalk.Core.Entities;
 public sealed class SolverPlace
 {
     /// <summary>
-    /// Index in the distance matrix.
+    /// Identifier for the distance function.
     /// </summary>
     public int idx { get; }
 

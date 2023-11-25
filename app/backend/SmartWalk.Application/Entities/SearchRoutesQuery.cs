@@ -4,7 +4,7 @@ using SmartWalk.Application.Entities;
 using SmartWalk.Core.Entities;
 
 /// <summary>
-/// Type used for model (V)alidation.
+/// Type used for model validation.
 /// </summary>
 public sealed class ConstrainedSearchRoutesQuery
 {
@@ -38,11 +38,11 @@ public sealed class ConstrainedSearchRoutesQuery
     /// User-defined ordering on categories.
     /// </summary>
     [Required]
-    public List<WebPrecedenceEdge> arrows { get; init; }
+    public List<WebArrow> arrows { get; init; }
 }
 
 /// <summary>
-/// Type used for (D)eserialization.
+/// Type used for deserialization.
 /// </summary>
 public sealed class SearchRoutesQuery
 {
@@ -54,5 +54,5 @@ public sealed class SearchRoutesQuery
 
     public List<Category> categories { get; init; }
 
-    public List<PrecedenceEdge> arrows { get; init; }
+    public List<Arrow> arrows { get; init; }
 }

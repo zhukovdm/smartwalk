@@ -13,24 +13,24 @@ namespace SmartWalk.Core.Algorithms;
 /// </summary>
 public static class Spherical
 {
-    private static readonly double _deg2rad = Math.PI / 180.0;
+    private static readonly double deg2rad = Math.PI / 180.0;
 
-    private static readonly double _rad2deg = 180.0 / Math.PI;
+    private static readonly double rad2deg = 180.0 / Math.PI;
 
     /// <summary>
     /// Sphere radius used by Web Mercator projection (semi-major axis).
     /// </summary>
-    private static readonly double _earthRadius = 6_378_137.0;
+    private static readonly double earthRadius = 6_378_137.0;
 
     /// <summary>
     /// Convert degrees to radians.
     /// </summary>
-    private static double DegToRad(double deg) => deg * _deg2rad;
+    private static double DegToRad(double deg) => deg * deg2rad;
 
     /// <summary>
     /// Convert radians to degrees.
     /// </summary>
-    private static double RadToDeg(double rad) => rad * _rad2deg;
+    private static double RadToDeg(double rad) => rad * rad2deg;
 
     /// <summary>
     /// The ratio r / R, where R is the Earth radius and r is the radius of
@@ -45,7 +45,7 @@ public static class Spherical
     /// </summary>
     /// <param name="lat">Latitude in radians.</param>
     /// <returns>Length in meters.</returns>
-    private static double LonRadLeng(double lat) => _earthRadius * LonRadCost(lat);
+    private static double LonRadLeng(double lat) => earthRadius * LonRadCost(lat);
 
     /// <summary>
     /// Weight of one latitudinal radian at a certain latitude.
@@ -58,7 +58,7 @@ public static class Spherical
     /// </summary>
     /// <param name="lat">Latitude in radians.</param>
     /// <returns>Length in meters.</returns>
-    private static double LatRadLeng(double lat) => _earthRadius * LatRadCost(lat);
+    private static double LatRadLeng(double lat) => earthRadius * LatRadCost(lat);
 
     /// <summary>
     /// Approximate the midpoint between two points on a sphere (use <b>ONLY</b> for small distances).
@@ -108,7 +108,7 @@ public static class Spherical
 
         var ang = 2.0 * Math.Atan2(Math.Sqrt(hav), Math.Sqrt(1.0 - hav));
 
-        return _earthRadius * ang;
+        return earthRadius * ang;
     }
 
     /// <summary>

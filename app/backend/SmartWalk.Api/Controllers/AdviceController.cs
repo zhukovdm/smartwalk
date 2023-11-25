@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using SmartWalk.Application.Entities;
 using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
+using SmartWalk.Application.Validators;
 using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Api.Controllers;
@@ -16,12 +17,12 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/advice")]
 public sealed class AdviceController : ControllerBase
 {
-    private readonly IAdviceContext _ctx;
-    private readonly ILogger<AdviceController> _logger;
+    private readonly IAdviceContext ctx;
+    private readonly ILogger<AdviceController> logger;
 
     public AdviceController(IAdviceContext ctx, ILogger<AdviceController> logger)
     {
-        _ctx = ctx; _logger = logger;
+        this.ctx = ctx; this.logger = logger;
     }
 
     /// <param name="request">Valid request object.</param>
@@ -35,17 +36,24 @@ public sealed class AdviceController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<KeywordAdviceItem>>> AdviseKeywords([FromQuery] AdviseKeywordsRequest request)
     {
+        var responder = new AdviseKeywordsResponder();
+
+        if (!new AdviseKeywordsValidator(new ModelStateWrapper(ModelState)).Validate(new()))
+        {
+            return responder.Invalid(this);
+        }
+
         try
         {
-            var result = await new AdviseKeywordsHandler(_ctx.KeywordAdvicer)
+            var result = await new AdviseKeywordsHandler(ctx.KeywordAdvicer)
                 .Handle(new() { prefix = request.prefix, count = request.count.Value });
 
-            return new AdviseKeywordsResponder().Respond(result);
+            return responder.Respond(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return new AdviseKeywordsResponder().Failure();
+            logger.LogError(ex.Message);
+            return responder.Failure();
         }
     }
 }

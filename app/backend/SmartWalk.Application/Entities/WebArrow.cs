@@ -5,7 +5,7 @@ namespace SmartWalk.Application.Entities;
 /// <summary>
 /// An arrow.
 /// </summary>
-public sealed class WebPrecedenceEdge
+public sealed class WebArrow
 {
     /// <example>0</example>
     [Required]

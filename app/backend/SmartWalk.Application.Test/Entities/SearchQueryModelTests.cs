@@ -78,7 +78,7 @@ public class WebPointValidationTests
 }
 
 [TestClass]
-public class WebPrecedenceEdgeValidationTests
+public class WebArrowValidationTests
 {
     [TestMethod]
     public void MissingFr()
@@ -86,7 +86,7 @@ public class WebPrecedenceEdgeValidationTests
         var serialization = @"{
             ""to"": 0
         }";
-        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
+        Assert.IsFalse(SerializationValidator<WebArrow>.Validate(serialization, out var _));
     }
 
     [TestMethod]
@@ -96,7 +96,7 @@ public class WebPrecedenceEdgeValidationTests
             ""fr"": -1,
             ""to"": 0
         }";
-        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
+        Assert.IsFalse(SerializationValidator<WebArrow>.Validate(serialization, out var _));
     }
 
     [TestMethod]
@@ -105,7 +105,7 @@ public class WebPrecedenceEdgeValidationTests
         var serialization = @"{
             ""fr"": 0
         }";
-        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
+        Assert.IsFalse(SerializationValidator<WebArrow>.Validate(serialization, out var _));
     }
 
     [TestMethod]
@@ -115,7 +115,7 @@ public class WebPrecedenceEdgeValidationTests
             ""fr"": 0,
             ""to"": -1
         }";
-        Assert.IsFalse(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
+        Assert.IsFalse(SerializationValidator<WebArrow>.Validate(serialization, out var _));
     }
 
     [TestMethod]
@@ -125,7 +125,7 @@ public class WebPrecedenceEdgeValidationTests
             ""fr"": 0,
             ""to"": 0
         }";
-        Assert.IsTrue(SerializationValidator<WebPrecedenceEdge>.Validate(serialization, out var _));
+        Assert.IsTrue(SerializationValidator<WebArrow>.Validate(serialization, out var _));
     }
 }
 

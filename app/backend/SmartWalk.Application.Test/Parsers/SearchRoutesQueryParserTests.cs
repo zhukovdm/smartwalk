@@ -11,7 +11,7 @@ public class ArrowValidationTests
     [TestMethod]
     public void ShouldDetectOutOfBoundEdge()
     {
-        var arrows = new List<PrecedenceEdge>
+        var arrows = new List<Arrow>
         {
             new(0, 1),
             new(1, 2),
@@ -27,7 +27,7 @@ public class ArrowValidationTests
     [TestMethod]
     public void ShouldDetectLoop()
     {
-        var arrows = new List<PrecedenceEdge>
+        var arrows = new List<Arrow>
         {
             new(0, 1),
             new(1, 2),
@@ -43,7 +43,7 @@ public class ArrowValidationTests
     [TestMethod]
     public void ShouldDetectRepeatedEdge()
     {
-        var arrows = new List<PrecedenceEdge>
+        var arrows = new List<Arrow>
         {
             new(0, 1),
             new(1, 2), // !
@@ -61,7 +61,7 @@ public class ArrowValidationTests
     [TestMethod]
     public void ShouldDetectCycle()
     {
-        var arrows = new List<PrecedenceEdge>
+        var arrows = new List<Arrow>
         {
             new(0, 1),
             new(1, 2), // !
@@ -81,7 +81,7 @@ public class ArrowValidationTests
     public void WellFormed()
     {
         var N = 100;
-        var arrows = new List<PrecedenceEdge>();
+        var arrows = new List<Arrow>();
 
         for (int fr = N - 1; fr >= 0; --fr)
         {

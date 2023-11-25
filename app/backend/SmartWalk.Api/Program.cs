@@ -17,13 +17,13 @@ namespace SmartWalk.Api;
 
 public class Program
 {
-    private static readonly string _policy = "SmartWalkCors";
-
     public static void Main(string[] args)
     {
+        var policy = "SmartWalkCors";
+
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddCors(cors => cors.AddPolicy(_policy, builder =>
+        builder.Services.AddCors(cors => cors.AddPolicy(policy, builder =>
         {
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
         }));
@@ -73,7 +73,7 @@ public class Program
             });
         }
 
-        wapp.UseCors(_policy)
+        wapp.UseCors(policy)
 //          .UseHttpsRedirection()
             .UseAuthorization()
             .UseAuthentication();

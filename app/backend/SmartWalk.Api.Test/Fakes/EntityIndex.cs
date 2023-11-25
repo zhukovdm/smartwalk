@@ -10,7 +10,7 @@ namespace SmartWalk.Api.Test;
 
 internal sealed class FakeWorkingEntityIndex : IEntityIndex
 {
-    private static readonly List<Place> _places;
+    private static readonly List<Place> places;
 
     private static double GenerateRandomInInterval(double min, double max)
     {
@@ -41,17 +41,17 @@ internal sealed class FakeWorkingEntityIndex : IEntityIndex
                 categories = new() { 0, 1, 2 }
             });
         }
-        _places = buffer.Values.ToList();
+        places = buffer.Values.ToList();
     }
 
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
     {
-        return Task.FromResult(_places);
+        return Task.FromResult(places);
     }
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
     {
-        return Task.FromResult(_places);
+        return Task.FromResult(places);
     }
 }
 

@@ -10,13 +10,13 @@ namespace SmartWalk.Application.Validators;
 /// <typeparam name="V">Validated against.</typeparam>
 public static class SerializationValidator<V>
 {
-    private static readonly JsonSchema _schema = JsonSchema.FromType<V>();
+    private static readonly JsonSchema schema = JsonSchema.FromType<V>();
 
     public static bool Validate(string serialization, out string[] errors)
     {
         try
         {
-            errors = _schema.Validate(serialization)
+            errors = schema.Validate(serialization)
                 .Select((error) => $"{error.Kind} at {error.Path}, line {error.LineNumber}, position {error.LinePosition}.").ToArray();
         }
         catch (Exception) { errors = new[] { "Invalid serialization." }; }

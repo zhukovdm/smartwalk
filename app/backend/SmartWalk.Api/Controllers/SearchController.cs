@@ -31,30 +31,32 @@ public sealed class SearchController : ControllerBase
     private async Task<ActionResult<T>> SearchT<V, D, T>(
         string query, Func<Model, IQueryParser<V, D>> parser, IQueryHandler<D, T> handler)
     {
+        var responder = new SearchTResponder<T>();
+
         if (!parser(new ModelStateWrapper(ModelState)).TryParse(query, out var queryObject))
         {
-            return ValidationProblem();
+            return responder.Invalid(this);
         }
 
         try
         {
             var result = await handler.Handle(queryObject);
 
-            return new SearchTResponder<T>().Respond(result);
+            return responder.Respond(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return new SearchTResponder<T>().Failure();
+            logger.LogError(ex.Message);
+            return responder.Failure();
         }
     }
 
-    private readonly ISearchContext _ctx;
-    private readonly ILogger<SearchController> _logger;
+    private readonly ISearchContext ctx;
+    private readonly ILogger<SearchController> logger;
 
     public SearchController(ISearchContext ctx, ILogger<SearchController> logger)
     {
-        _ctx = ctx; _logger = logger;
+        this.ctx = ctx; this.logger = logger;
     }
 
     /// <param name="request">Request object with embedded query.</param>
@@ -70,7 +72,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] SearchDirecsRequest request)
     {
-        return SearchT(request.query, (Model model) => new SearchDirecsQueryParser(model), new SearchDirecsHandler(_ctx.RoutingEngine));
+        return SearchT(request.query, (Model model) => new SearchDirecsQueryParser(model), new SearchDirecsHandler(ctx.RoutingEngine));
     }
 
     /// <param name="request">Request object with embedded query.</param>
@@ -86,7 +88,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] SearchPlacesRequest request)
     {
-        return SearchT(request.query, (Model model) => new SearchPlacesQueryParser(model), new SearchPlacesHandler(_ctx.EntityIndex));
+        return SearchT(request.query, (Model model) => new SearchPlacesQueryParser(model), new SearchPlacesHandler(ctx.EntityIndex));
     }
 
     /// <param name="request">Request object with embedded query.</param>
@@ -102,6 +104,6 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] SearchRoutesRequest request)
     {
-        return SearchT(request.query, (Model model) => new SearchRoutesQueryParser(model), new SearchRoutesHandler(_ctx.EntityIndex, _ctx.RoutingEngine));
+        return SearchT(request.query, (Model model) => new SearchRoutesQueryParser(model), new SearchRoutesHandler(ctx.EntityIndex, ctx.RoutingEngine));
     }
 }
