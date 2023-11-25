@@ -3,11 +3,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace SmartWalk.Infrastructure.Test;
 
 [TestClass]
-public class OsrmDistanceMatrixQueryExecutorTests
+public class OsrmDistanceFunctionQueryExecutorTests
 {
     [TestMethod]
     public void ShouldPass()
     {
-        // Class `OsrmDistanceMatrixQueryExecutor` is currently not used.
+        // Class `OsrmDistanceFunctionQueryExecutor` is currently not used.
     }
 }

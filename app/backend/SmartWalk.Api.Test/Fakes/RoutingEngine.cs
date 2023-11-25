@@ -8,7 +8,7 @@ namespace SmartWalk.Api.Test;
 
 internal sealed class FakeWorkingRoutingEngine : IRoutingEngine
 {
-    public Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
+    public Task<IDistanceFunction> GetDistanceFunction(IReadOnlyList<WgsPoint> waypoints)
     {
         throw new NotImplementedException();
     }
@@ -25,9 +25,9 @@ internal sealed class FakeWorkingRoutingEngine : IRoutingEngine
 
 internal sealed class FakeFailingRoutingEngine : IRoutingEngine
 {
-    public Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
+    public Task<IDistanceFunction> GetDistanceFunction(IReadOnlyList<WgsPoint> waypoints)
     {
-        throw new Exception($"{this.GetType()}: GetDistanceMatrix");
+        throw new Exception($"{this.GetType()}: GetDistanceFunction");
     }
 
     public Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints)

@@ -16,11 +16,11 @@ using Filter = FilterDefinition<ExtendedPlace>;
 
 public sealed class MongoEntityIndex : IEntityIndex
 {
-    private readonly IMongoCollection<ExtendedPlace> _collection;
+    private readonly IMongoCollection<ExtendedPlace> collection;
 
     private MongoEntityIndex(IMongoCollection<ExtendedPlace> collection)
     {
-        _collection = collection;
+        this.collection = collection;
     }
 
     private static IEnumerable<T> Deserialize<T>(List<BsonDocument> docs)
@@ -34,7 +34,7 @@ public sealed class MongoEntityIndex : IEntityIndex
     /// <returns>List of places that satisfy at least one category filter.</returns>
     private async Task<List<Place>> FetchPlaces(Filter filter, int? categoryId)
     {
-        var docs = await _collection
+        var docs = await collection
             .Find(filter)
             .Project(Builders<ExtendedPlace>.Projection
                 .Exclude(p => p.linked)

@@ -21,7 +21,7 @@ internal sealed class OsrmTableFetcher : OsrmFetcherBase, IOsrmTableFetcher
 
     private string GetUrl(IEnumerable<WgsPoint> waypoints)
     {
-        return _baseUrl + "/table/v1/foot/" + Chain(waypoints) + "?annotations=distance&skip_waypoints=true";
+        return baseUrl + "/table/v1/foot/" + Chain(waypoints) + "?annotations=distance&skip_waypoints=true";
     }
 
     public OsrmTableFetcher(string baseUrl) : base(baseUrl) { }

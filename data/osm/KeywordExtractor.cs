@@ -14,13 +14,13 @@ internal static class KeywordExtractor
         public string value { get; set; }
     }
 
-    private static readonly SortedSet<string> _wi;
-    private static readonly SortedSet<string> _wo;
-    private static readonly Dictionary<string, SortedSet<string>> _ts = new();
+    private static readonly SortedSet<string> wi;
+    private static readonly SortedSet<string> wo;
+    private static readonly Dictionary<string, SortedSet<string>> ts = new();
 
     static KeywordExtractor()
     {
-        _wi = new()
+        wi = new()
         {
             "aerialway",
             "aeroway",
@@ -33,7 +33,7 @@ internal static class KeywordExtractor
             "tourism"
         };
 
-        _wo = new()
+        wo = new()
         {
             "amenity",
             "artwork_type",
@@ -52,12 +52,12 @@ internal static class KeywordExtractor
             "theatre:genre"
         };
 
-        var union = _wi.Union(_wo);
+        var union = wi.Union(wo);
 
         foreach (var key in union)
         {
             var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(key));
-            _ts.Add(key, new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)));
+            ts.Add(key, new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)));
         }
     }
 
@@ -69,7 +69,7 @@ internal static class KeywordExtractor
     {
         if (otags.TryGetValue(tag, out var val))
         {
-            var allow = _ts[tag];
+            var allow = ts[tag];
 
             var vs = val.Split(';', StringSplitOptions.RemoveEmptyEntries)
                 .Select(v => v.Trim())
@@ -88,12 +88,12 @@ internal static class KeywordExtractor
 
     public static void Extract(TagsCollectionBase otags, SortedSet<string> keywords)
     {
-        foreach (var w in _wi)
+        foreach (var w in wi)
         {
             ExtractImpl(w, otags, keywords, true);
         }
 
-        foreach (var w in _wo)
+        foreach (var w in wo)
         {
             ExtractImpl(w, otags, keywords, false);
         }

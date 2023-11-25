@@ -9,9 +9,12 @@ internal static class Inspector
     /// <summary>
     /// Round coordinate to the allowed number of fractional digits.
     /// </summary>
-    private static double Round(double coordinate) => Math.Round(coordinate, 7);
+    private static double Round(double coordinate)
+    {
+        return Math.Round(coordinate, 7);
+    }
 
-    private static readonly Dictionary<long, Point> _nodes = new();
+    private static readonly Dictionary<long, Point> nodes = new();
 
     public static Place Inspect(Node node)
     {
@@ -34,7 +37,7 @@ internal static class Inspector
 
             // keep node for later usage
 
-            _nodes.Add(node.Id.Value, loc);
+            nodes.Add(node.Id.Value, loc);
 
             if (node.Tags is null || node.Tags.Count == 0) { return null; }
 
@@ -64,7 +67,7 @@ internal static class Inspector
 
         foreach (var id in way.Nodes)
         {
-            if (!_nodes.TryGetValue(id, out var node)) { return false; }
+            if (!nodes.TryGetValue(id, out var node)) { return false; }
             sequence.Add(new() { lon = node.lon, lat = node.lat });
         }
 

@@ -10,7 +10,7 @@ namespace SmartWalk.Infrastructure.Test;
 [TestClass]
 public class OsrmShortestPathQueryExecutorTests
 {
-    private static readonly List<OsrmRoute> _routes = new()
+    private static readonly List<OsrmRoute> routes = new()
     {
         new() { distance = 3.0, duration = 3.0, geometry = new(new [] { new[] { 0.0, 0.0 }, new[] { 0.0, 0.0 } }) },
         new() { distance = 2.0, duration = 2.0, geometry = new(new [] { new[] { 0.0, 0.0 }, new[] { 0.0, 0.0 } }) },
@@ -27,16 +27,16 @@ public class OsrmShortestPathQueryExecutorTests
     [TestMethod]
     public async Task ShouldReturnListOfTheSameLength()
     {
-        var fetch = new FakeOsrmRouteFetcher(_routes);
+        var fetch = new FakeOsrmRouteFetcher(routes);
         var paths = await OsrmShortestPathQueryExecutor.Execute(fetch, new List<WgsPoint>());
 
-        Assert.AreEqual(_routes.Count, paths.Count);
+        Assert.AreEqual(routes.Count, paths.Count);
     }
 
     [TestMethod]
     public async Task ShouldReturnSortedList()
     {
-        var fetch = new FakeOsrmRouteFetcher(_routes);
+        var fetch = new FakeOsrmRouteFetcher(routes);
         var paths = await OsrmShortestPathQueryExecutor.Execute(fetch, new List<WgsPoint>());
 
         var expected = new List<double>() { 1.0, 2.0, 3.0 };

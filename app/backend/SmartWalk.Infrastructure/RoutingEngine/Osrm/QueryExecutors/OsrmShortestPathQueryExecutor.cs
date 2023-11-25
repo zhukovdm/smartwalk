@@ -12,12 +12,14 @@ internal static class OsrmShortestPathQueryExecutor
     {
         private PathComparer() { }
 
-        private static readonly Lazy<PathComparer> _instance = new(() => new());
+        private static readonly Lazy<PathComparer> instance = new(() => new());
 
-        public static PathComparer Instance { get { return _instance.Value; } }
+        public static PathComparer Instance { get { return instance.Value; } }
 
         public int Compare(ShortestPath l, ShortestPath r)
-            => l.distance.CompareTo(r.distance);
+        {
+            return l.distance.CompareTo(r.distance);
+        }
     }
 
     /// <summary>

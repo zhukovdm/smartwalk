@@ -22,7 +22,7 @@ internal sealed class OsrmRouteFetcher : OsrmFetcherBase, IOsrmRouteFetcher
     /// </summary>
     private string GetUrl(IEnumerable<WgsPoint> waypoints)
     {
-        return _baseUrl + "/route/v1/foot/" + Chain(waypoints) + "?alternatives=true&geometries=geojson&skip_waypoints=true";
+        return baseUrl + "/route/v1/foot/" + Chain(waypoints) + "?alternatives=true&geometries=geojson&skip_waypoints=true";
     }
 
     public OsrmRouteFetcher(string baseUrl) : base(baseUrl) { }
