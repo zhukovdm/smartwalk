@@ -18,7 +18,7 @@ internal static class AttributeExtractor
     }
 
     private static readonly SortedSet<string>
-        _clothes, _cuisine, _denomination, _rental;
+        clothes, cuisine, denomination, rental;
 
     private static SortedSet<string> GetCollection(string file)
     {
@@ -28,10 +28,10 @@ internal static class AttributeExtractor
 
     static AttributeExtractor()
     {
-        _clothes = GetCollection("clothes");
-        _cuisine = GetCollection("cuisine");
-        _denomination = GetCollection("denomination");
-        _rental = GetCollection("rental");
+        clothes = GetCollection("clothes");
+        cuisine = GetCollection("cuisine");
+        denomination = GetCollection("denomination");
+        rental = GetCollection("rental");
     }
 
     // supporting functions
@@ -480,7 +480,7 @@ internal static class AttributeExtractor
     {
         if (tags.TryGetValue("clothes", out var v))
         {
-            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => _clothes.Contains(item)));
+            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => clothes.Contains(item)));
             attributes.clothes = (res.Count > 0) ? res : null;
         }
     }
@@ -494,7 +494,7 @@ internal static class AttributeExtractor
 
         if (tags.TryGetValue("cuisine", out v))
         {
-            var items = Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => _cuisine.Contains(item));
+            var items = Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => cuisine.Contains(item));
             foreach (var item in items) { res.Add(item); }
         }
 
@@ -509,7 +509,7 @@ internal static class AttributeExtractor
     {
         if (tags.TryGetValue("denomination", out var v))
         {
-            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => _denomination.Contains(item)));
+            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => denomination.Contains(item)));
             attributes.denomination = (res.Count > 0) ? res : null;
         }
     }
@@ -518,7 +518,7 @@ internal static class AttributeExtractor
     {
         if (tags.TryGetValue("rental", out var v))
         {
-            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => _rental.Contains(item)));
+            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => rental.Contains(item)));
             attributes.rental = (res.Count > 0) ? res : null;
         }
     }

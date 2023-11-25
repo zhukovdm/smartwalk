@@ -9,9 +9,8 @@ public sealed class MongoKeywordAdvicer
 {
     public static IKeywordAdvicer GetInstance()
     {
-        var coll = MongoCollectionFactory.GetKeywordCollection();
-
-        var docs = coll
+        var docs = MongoCollectionFactory
+            .GetKeywordCollection()
             .Find(FilterDefinition<Item>.Empty)
             .ToEnumerable(); // synchronous!
 

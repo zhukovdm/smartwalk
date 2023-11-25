@@ -9,17 +9,21 @@ using Item = TrieKeywordAdvicer.Item;
 
 internal static class MongoCollectionFactory
 {
-    private static readonly IMongoDatabase _db;
+    private static readonly IMongoDatabase db;
 
     static MongoCollectionFactory()
     {
         var url = new MongoUrl(Environment.GetEnvironmentVariable("SMARTWALK_MONGO_CONN_STR"));
-        _db = new MongoClient(url).GetDatabase("smartwalk");
+        db = new MongoClient(url).GetDatabase("smartwalk");
     }
 
     public static IMongoCollection<Item> GetKeywordCollection()
-        => _db.GetCollection<Item>("keyword");
+    {
+        return db.GetCollection<Item>("keyword");
+    }
 
     public static IMongoCollection<ExtendedPlace> GetPlaceCollection()
-        => _db.GetCollection<ExtendedPlace>("place");
+    {
+        return db.GetCollection<ExtendedPlace>("place");
+    }
 }

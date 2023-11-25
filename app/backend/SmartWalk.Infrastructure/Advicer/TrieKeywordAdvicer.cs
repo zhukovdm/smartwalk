@@ -14,8 +14,8 @@ using Trie = PruningRadixTrie.PruningRadixTrie;
 /// </summary>
 internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
 {
-    private readonly Trie _trie = new();
-    private readonly Dictionary<string, KeywordAdviceItem> _items = new();
+    private readonly Trie trie = new();
+    private readonly Dictionary<string, KeywordAdviceItem> items = new();
 
     private TrieKeywordAdvicer() { }
 
@@ -24,15 +24,15 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
     /// </summary>
     private void Add(string term, KeywordAdviceItem item, long freq)
     {
-        _items[term] = item;
-        _trie.AddTerm(term, freq);
+        items[term] = item;
+        trie.AddTerm(term, freq);
     }
 
     public Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count)
     {
-        var result = _trie
+        var result = trie
             .GetTopkTermsForPrefix(prefix, count, out _)
-            .Select((triePair) => _items[triePair.term])
+            .Select((triePair) => items[triePair.term])
             .ToList();
 
         return Task.FromResult(result);

@@ -7,16 +7,16 @@ namespace SmartWalk.Infrastructure.EntityStore;
 
 public sealed class MongoEntityStore : IEntityStore
 {
-    private readonly IMongoCollection<ExtendedPlace> _collection;
+    private readonly IMongoCollection<ExtendedPlace> collection;
 
     private MongoEntityStore(IMongoCollection<ExtendedPlace> collection)
     {
-        _collection = collection;
+        this.collection = collection;
     }
 
     public Task<ExtendedPlace> GetPlace(string smartId)
     {
-        return _collection
+        return collection
             .Find(place => place.smartId == smartId)
             .FirstOrDefaultAsync();
     }

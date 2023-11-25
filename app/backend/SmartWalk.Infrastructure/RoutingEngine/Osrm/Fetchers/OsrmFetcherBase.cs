@@ -8,9 +8,9 @@ namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 
 internal abstract class OsrmFetcherBase
 {
-    protected readonly string _baseUrl;
+    protected readonly string baseUrl;
 
-    protected OsrmFetcherBase(string baseUrl) { _baseUrl = baseUrl; }
+    protected OsrmFetcherBase(string baseUrl) { this.baseUrl = baseUrl; }
 
     protected string Chain(IEnumerable<WgsPoint> waypoints)
     {

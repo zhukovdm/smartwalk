@@ -6,11 +6,11 @@ using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
 
-internal static class OsrmDistanceMatrixQueryExecutor
+internal static class OsrmDistanceFunctionQueryExecutor
 {
-    public static async Task<IDistanceMatrix> Execute(IOsrmTableFetcher fetcher, IReadOnlyList<WgsPoint> waypoints)
+    public static async Task<IDistanceFunction> Execute(IOsrmTableFetcher fetcher, IReadOnlyList<WgsPoint> waypoints)
     {
         var table = await fetcher.Fetch(waypoints);
-        return (table is not null) ? new ListDistanceMatrix(table) : null;
+        return (table is not null) ? new MatrixDistanceFunction(table) : null;
     }
 }
