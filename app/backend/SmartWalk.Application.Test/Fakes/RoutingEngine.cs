@@ -12,7 +12,7 @@ internal abstract class FakeRoutingEngine : IRoutingEngine
 
     protected abstract int Delay { get; }
 
-    public Task<IDistanceMatrix> GetDistanceMatrix(IReadOnlyList<WgsPoint> waypoints)
+    public Task<IDistanceFunction> GetDistanceFunction(IReadOnlyList<WgsPoint> waypoints)
     {
         throw new NotImplementedException();
     }

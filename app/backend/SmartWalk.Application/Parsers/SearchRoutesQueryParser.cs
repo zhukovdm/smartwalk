@@ -11,16 +11,18 @@ namespace SmartWalk.Application.Parsers;
 /// </summary>
 public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQuery, SearchRoutesQuery>
 {
-    private sealed class ArrowComparer : IComparer<PrecedenceEdge>
+    private sealed class ArrowComparer : IComparer<Arrow>
     {
         private ArrowComparer() { }
 
-        private static readonly Lazy<ArrowComparer> _instance = new(() => new());
+        private static readonly Lazy<ArrowComparer> instance = new(() => new());
 
-        public static ArrowComparer Instance { get { return _instance.Value; } }
+        public static ArrowComparer Instance { get { return instance.Value; } }
 
-        public int Compare(PrecedenceEdge l, PrecedenceEdge r)
-            => l.fr != r.fr ? l.fr.CompareTo(r.fr) : l.to.CompareTo(r.to);
+        public int Compare(Arrow l, Arrow r)
+        {
+            return l.fr != r.fr ? l.fr.CompareTo(r.fr) : l.to.CompareTo(r.to);
+        }
     }
 
     /// <summary>
@@ -31,12 +33,12 @@ public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQu
     /// <param name="order">Number of categories.</param>
     /// <param name="error">Possible error.</param>
     /// <returns></returns>
-    internal static bool ValidateArrows(IEnumerable<PrecedenceEdge> arrows, int order, out string error)
+    internal static bool ValidateArrows(IEnumerable<Arrow> arrows, int order, out string error)
     {
         error = null;
 
         var cycleDetector = new CycleDetector(order);
-        var uniqueArrows = new SortedSet<PrecedenceEdge>(ArrowComparer.Instance);
+        var uniqueArrows = new SortedSet<Arrow>(ArrowComparer.Instance);
 
         foreach (var arrow in arrows)
         {
@@ -89,13 +91,13 @@ public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQu
     {
         if (!ValidateArrows(query.arrows, query.categories.Count, out var arrowError))
         {
-            _result.AddError("query", arrowError);
+            result.AddError("query", arrowError);
             return false;
         }
 
         if (!ValidateRouteMaxDistance(query.source, query.target, query.maxDistance))
         {
-            _result.AddError("query", "Starting point and destination are too far from each other.");
+            result.AddError("query", "Starting point and destination are too far from each other.");
             return false;
         }
         return true;

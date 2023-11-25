@@ -6,9 +6,9 @@ namespace SmartWalk.Application.Parsers;
 
 public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
 {
-    protected readonly IValidationResult _result;
+    protected readonly IValidationResult result;
 
-    public QueryParserBase(IValidationResult result) { _result = result; }
+    public QueryParserBase(IValidationResult result) { this.result = result; }
 
     /// <summary>
     /// Additional domain-specific validation (e.g. arrow configuration).
@@ -31,7 +31,7 @@ public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
         {
             foreach (var error in errors)
             {
-                _result.AddError("query", error);
+                result.AddError("query", error);
             }
             return false;
         }

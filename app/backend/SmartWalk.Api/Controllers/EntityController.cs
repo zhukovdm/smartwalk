@@ -15,12 +15,12 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/entity")]
 public sealed class EntityController : ControllerBase
 {
-    private readonly IEntityContext _ctx;
-    private readonly ILogger<EntityController> _logger;
+    private readonly IEntityContext ctx;
+    private readonly ILogger<EntityController> logger;
 
     public EntityController(IEntityContext ctx, ILogger<EntityController> logger)
     {
-        _ctx = ctx; _logger = logger;
+        this.ctx = ctx; this.logger = logger;
     }
 
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
@@ -38,22 +38,24 @@ public sealed class EntityController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
     {
+        var responder = new GetPlaceResponder();
+
         if (!new GetPlaceValidator(new ModelStateWrapper(ModelState)).Validate(smartId))
         {
-            return ValidationProblem();
+            return responder.Invalid(this);
         }
 
         try
         {
-            var result = await new GetPlaceHandler(_ctx.EntityStore)
+            var result = await new GetPlaceHandler(ctx.EntityStore)
                 .Handle(new() { smartId = smartId });
 
-            return new GetPlaceResponder().Respond(result);
+            return responder.Respond(result);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.Message);
-            return new GetPlaceResponder().Failure();
+            logger.LogError(ex.Message);
+            return responder.Failure();
         }
     }
 }

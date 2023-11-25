@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Core.Entities;
 
-public sealed class PrecedenceEdge
+public sealed class Arrow
 {
     /// <summary>
     /// Source category.
@@ -17,7 +17,7 @@ public sealed class PrecedenceEdge
     [Required]
     public int to { get; }
 
-    public PrecedenceEdge(int fr, int to) { this.fr = fr; this.to = to; }
+    public Arrow(int fr, int to) { this.fr = fr; this.to = to; }
 }
 
 public sealed class Waypoint
