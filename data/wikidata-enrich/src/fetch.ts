@@ -3,6 +3,7 @@ import jsonld, { type ContextDefinition } from "jsonld";
 import Logger from "./logger";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
+
 const WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql";
 
 const KEYWORD_LENGTH_LIMIT_MIN = 3;

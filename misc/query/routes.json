@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-04/schema#",
   "title": "SearchRoutesQuery",
   "type": "object",
-  "description": "Type used for (D)eserialization.",
+  "description": "Type used for deserialization.",
   "additionalProperties": false,
   "properties": {
     "source": {
@@ -44,7 +44,7 @@
         "null"
       ],
       "items": {
-        "$ref": "#/definitions/PrecedenceEdge"
+        "$ref": "#/definitions/Arrow"
       }
     }
   },
@@ -489,7 +489,7 @@
         }
       }
     },
-    "PrecedenceEdge": {
+    "Arrow": {
       "type": "object",
       "additionalProperties": false,
       "required": [

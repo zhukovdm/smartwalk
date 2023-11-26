@@ -8,6 +8,7 @@ const roundCoordinate = (num: number): number => (
   parseFloat(num.toFixed(LOCATION_PRECISION)));
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
+
 const WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql?query=";
 
 const WIKIDATA_JSONLD_CONTEXT = {
