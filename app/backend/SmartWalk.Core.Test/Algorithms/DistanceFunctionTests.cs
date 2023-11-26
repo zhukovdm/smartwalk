@@ -8,7 +8,7 @@ using SmartWalk.Core.Entities;
 namespace SmartWalk.Core.Test;
 
 [TestClass]
-public class ListDistanceMatrixTests
+public class MatrixDistanceFunctionTests
 {
     private static List<List<double>> GetMatrix()
     {
@@ -23,7 +23,7 @@ public class ListDistanceMatrixTests
     [TestMethod]
     public void ShouldReturnExpectedDistance()
     {
-        var m = new ListDistanceMatrix(GetMatrix());
+        var m = new MatrixDistanceFunction(GetMatrix());
         Assert.AreEqual(m.GetDistance(0, 2), 2.0);
     }
 
@@ -31,12 +31,12 @@ public class ListDistanceMatrixTests
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void ShouldThrowUponOutOfRangeQuery()
     {
-        var _ = new ListDistanceMatrix(GetMatrix()).GetDistance(3, 3);
+        var _ = new MatrixDistanceFunction(GetMatrix()).GetDistance(3, 3);
     }
 }
 
 [TestClass]
-public class HaversineDistanceMatrixTests
+public class HaversineDistanceFunctionTests
 {
     private static Place GetPlace(string handle, double lon, double lat)
     {
@@ -59,15 +59,15 @@ public class HaversineDistanceMatrixTests
     [TestMethod]
     public void ShouldCalculateDistance()
     {
-        var m = new HaversineDistanceMatrix(GetPlaces(new() { "A", "B" }));
+        var m = new HaversineDistanceFunction(GetPlaces(new() { "A", "B" }));
         Assert.AreNotEqual(m.GetDistance(0, 1), 0.0);
     }
 
     [TestMethod]
     public void ShouldScaleDistances()
     {
-        var m1 = new HaversineDistanceMatrix(GetPlaces(new() { "A", "B" }), 1.0);
-        var m2 = new HaversineDistanceMatrix(GetPlaces(new() { "A", "B" }), 2.0);
+        var m1 = new HaversineDistanceFunction(GetPlaces(new() { "A", "B" }), 1.0);
+        var m2 = new HaversineDistanceFunction(GetPlaces(new() { "A", "B" }), 2.0);
         Assert.IsTrue(Math.Abs(m1.GetDistance(0, 1) * 2.0 - m2.GetDistance(0, 1)) < 0.000001);
     }
 
@@ -75,6 +75,6 @@ public class HaversineDistanceMatrixTests
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void ShouldThrowUponOutOfRangeQuery()
     {
-        new HaversineDistanceMatrix(GetPlaces(new () { "A", "B", "C" })).GetDistance(3, 3);
+        new HaversineDistanceFunction(GetPlaces(new () { "A", "B", "C" })).GetDistance(3, 3);
     }
 }

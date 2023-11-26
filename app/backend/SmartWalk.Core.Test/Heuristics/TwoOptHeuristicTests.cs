@@ -21,21 +21,21 @@ public class TwoOptHeuristicTests
         public Point(double x, double y) { X = x; Y = y; }
     }
 
-    private sealed class CartesianDistanceMatrix : IDistanceMatrix
+    private sealed class CartesianDistanceFunction : IDistanceFunction
     {
-        private readonly List<Point> _points;
+        private readonly List<Point> points;
 
-        public CartesianDistanceMatrix(List<Point> points)
+        public CartesianDistanceFunction(List<Point> points)
         {
-            _points = points;
+            this.points = points;
         }
 
-        public int Count => _points.Count;
+        public int Count => points.Count;
 
         public double GetDistance(int fr, int to)
         {
-            var l = _points[fr];
-            var r = _points[to];
+            var l = points[fr];
+            var r = points[to];
             return Math.Sqrt(Math.Pow(r.X - l.X, 2) + Math.Pow(r.Y - l.Y, 2));
         }
     }
@@ -45,7 +45,7 @@ public class TwoOptHeuristicTests
     {
         // there is only one correct answer
 
-        var distMatrix = new CartesianDistanceMatrix(new()
+        var distMatrix = new CartesianDistanceFunction(new()
         {
             new(0.0, 0.0),
             new(0.0, 1.0),
@@ -53,7 +53,7 @@ public class TwoOptHeuristicTests
             new(1.0, 0.0),
         });
 
-        var seq = TwoOptHeuristic.Refine(new List<SolverPlace>
+        var seq = TwoOptHeuristic.Advise(new List<SolverPlace>
         {
             new(0, 0),
             new(2, 2),
@@ -87,7 +87,7 @@ public class TwoOptHeuristicTests
             .Select((_) => new Point(rnd.NextDouble(), rnd.NextDouble()))
             .ToList();
 
-        var distMatrix = new CartesianDistanceMatrix(points);
+        var distMatrix = new CartesianDistanceFunction(points);
 
         var seq = Enumerable
             .Range(0, order)
@@ -110,7 +110,7 @@ public class TwoOptHeuristicTests
         var target0 = seq[^1];
         var distance0 = calculateDistance(seq);
 
-        seq = TwoOptHeuristic.Refine(seq, distMatrix);
+        seq = TwoOptHeuristic.Advise(seq, distMatrix);
 
         var distanceAfter = calculateDistance(seq);
 

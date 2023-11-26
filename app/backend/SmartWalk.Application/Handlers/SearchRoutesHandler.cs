@@ -17,8 +17,8 @@ namespace SmartWalk.Application.Handlers;
 /// </summary>
 public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<Route>>
 {
-    private readonly IEntityIndex _entityIndex;
-    private readonly IRoutingEngine _routingEngine;
+    private readonly IEntityIndex entityIndex;
+    private readonly IRoutingEngine routingEngine;
 
     /// <summary>
     /// Time span dedicated to route calculation (in milliseconds).
@@ -29,55 +29,38 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     {
         private SolverPlaceComparer() { }
 
-        private static readonly Lazy<SolverPlaceComparer> _instance = new(() => new());
+        private static readonly Lazy<SolverPlaceComparer> instance = new(() => new());
 
-        public static SolverPlaceComparer Instance { get { return _instance.Value; } }
+        public static SolverPlaceComparer Instance { get { return instance.Value; } }
 
         public int Compare(SolverPlace l, SolverPlace r)
-            => (l.idx != r.idx) ? l.idx.CompareTo(r.idx) : l.cat.CompareTo(r.cat);
+        {
+            return (l.idx != r.idx) ? l.idx.CompareTo(r.idx) : l.cat.CompareTo(r.cat);
+        }
     }
 
     private sealed class RouteComparer : IComparer<Route>
     {
         private RouteComparer() { }
 
-        private static readonly Lazy<RouteComparer> _instance = new(() => new());
+        private static readonly Lazy<RouteComparer> instance = new(() => new());
 
-        public static RouteComparer Instance { get { return _instance.Value; } }
+        public static RouteComparer Instance { get { return instance.Value; } }
 
-        public int Compare(Route l, Route r) => l.path.distance.CompareTo(r.path.distance);
+        public int Compare(Route l, Route r)
+        {
+            return l.path.distance.CompareTo(r.path.distance);
+        }
     }
 
     /// <summary>
-    /// Source before all (&amp; no loops!)
-    /// </summary>
-    /// <param name="sourceCat">CategoryId of the source point.</param>
-    /// <param name="catsCount">Number of categories.</param>
-    /// <returns></returns>
-    private static IEnumerable<PrecedenceEdge> GetSourceEs(int sourceCat, int catsCount)
-    {
-        return from to in Enumerable.Range(0, catsCount) where to != sourceCat select new PrecedenceEdge(sourceCat, to);
-    }
-
-    /// <summary>
-    /// All before target (&amp; no loops!)
-    /// </summary>
-    /// <param name="targetCat">CategoryId of the target point.</param>
-    /// <param name="catsCount">Number of categories.</param>
-    /// <returns></returns>
-    private static IEnumerable<PrecedenceEdge> GetTargetEs(int targetCat, int catsCount)
-    {
-        return from fr in Enumerable.Range(0, catsCount) where fr != targetCat select new PrecedenceEdge(fr, targetCat);
-    }
-
-    /// <summary>
-    /// Expand places to disjunct solver places.
+    /// Expand places into disjunct solver places.
     /// </summary>
     /// <param name="sourceCat">CategoryId of the source point.</param>
     /// <param name="targetCat">CategoryId of the target point.</param>
-    /// <param name="places">All places.</param>
-    /// <returns>Places prepared for a particular solver.</returns>
-    private static (SolverPlace, SolverPlace, SortedSet<SolverPlace>) GetSolverPlaces(int sourceCat, int targetCat, IEnumerable<Place> places)
+    /// <param name="places">Places from the index.</param>
+    /// <returns>Places in a solver format.</returns>
+    private static (SolverPlace, SolverPlace, SortedSet<SolverPlace>) GetSolverPlaces(IEnumerable<Place> places, int sourceCat, int targetCat)
     {
         var solverSource = default(SolverPlace);
         var solverTarget = default(SolverPlace);
@@ -89,10 +72,21 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
                 foreach (var cat in item.place.categories)
                 {
                     SolverPlace solverPlace = new(item.index, cat);
-                    _ = acc.Add(solverPlace);
 
-                    if (cat == sourceCat) { solverSource = solverPlace; }
-                    if (cat == targetCat) { solverTarget = solverPlace; }
+                    if (cat != sourceCat && cat != targetCat)
+                    {
+                        _ = acc.Add(solverPlace);
+                    }
+
+                    if (cat == sourceCat)
+                    {
+                        solverSource = solverPlace;
+                    }
+
+                    if (cat == targetCat)
+                    {
+                        solverTarget = solverPlace;
+                    }
                 }
                 return acc;
             });
@@ -104,12 +98,12 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     /// Plan simple path through a given sequence.
     /// </summary>
     /// <param name="fullSeq">Sequence of places with terminal points.</param>
-    /// <param name="places">All places.</param>
+    /// <param name="places">Places from the index.</param>
     /// <param name="maxDistance">Maximum allowed distance of a route.</param>
     /// <returns>A path or nothing.</returns>
     private async Task<ShortestPath> GetPath(IEnumerable<SolverPlace> fullSeq, List<Place> places, double maxDistance)
     {
-        return (await _routingEngine.GetShortestPaths(fullSeq.Select((sp) => places[sp.idx].location).ToList()))
+        return (await routingEngine.GetShortestPaths(fullSeq.Select((sp) => places[sp.idx].location).ToList()))
             .Where((p) => p.distance <= maxDistance)
             .FirstOrDefault();
     }
@@ -150,45 +144,38 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
 
     public SearchRoutesHandler(IEntityIndex entityIndex, IRoutingEngine routingEngine)
     {
-        _entityIndex = entityIndex; _routingEngine = routingEngine;
+        this.entityIndex = entityIndex; this.routingEngine = routingEngine;
     }
 
     public async Task<List<Route>> Handle(SearchRoutesQuery query)
     {
         var result = new List<Route>();
 
-        var source = query.source;
-        var target = query.target;
-        var arrows = query.arrows;
         var categories = query.categories;
 
         var sourceCat = categories.Count + 0;
         var targetCat = categories.Count + 1;
-        var catsCount = categories.Count + 2;
 
-        var sourceEs = GetSourceEs(sourceCat, catsCount);
-        var targetEs = GetTargetEs(targetCat, catsCount);
+        var source = new Place() { location = query.source, categories = new() { sourceCat } };
+        var target = new Place() { location = query.target, categories = new() { targetCat } };
 
-        var ellipse = Spherical.BoundingEllipse(source, target, query.maxDistance);
+        var ellipse = Spherical.BoundingEllipse(source.location, target.location, query.maxDistance);
 
         var places = new List<Place>()
-            .Concat(await _entityIndex.GetWithin(ellipse, categories))
-            .Concat(new[] { new Place() { location = source, categories = new() { sourceCat } } })
-            .Concat(new[] { new Place() { location = target, categories = new() { targetCat } } })
+            .Concat(await entityIndex.GetWithin(ellipse, categories))
+            .Concat(new[] { source })
+            .Concat(new[] { target })
             .ToList();
 
-        var distMatrix = new HaversineDistanceMatrix(places);
+        var distFn = new HaversineDistanceFunction(places);
+        var (solverSource, solverTarget, solverPlaces) = GetSolverPlaces(places, sourceCat, targetCat);
 
-        var precMatrix = SolverFactory
-            .GetPrecedenceMatrix(arrows.Concat(sourceEs).Concat(targetEs), catsCount, arrows.Count > 0);
-
-        var (solverSource, solverTarget, solverPlaces) = GetSolverPlaces(sourceCat, targetCat, places);
+        var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
 
         var watch = Stopwatch.StartNew();
         do
         {
-            var fullSeq = SolverFactory.GetSolver()
-                .Solve(solverSource, solverTarget, solverPlaces, distMatrix, precMatrix);
+            var fullSeq = factory.GetSolver().Solve(solverPlaces);
 
             // only waypoints
             var trimmedSeq = fullSeq.Skip(1).SkipLast(1).ToList();

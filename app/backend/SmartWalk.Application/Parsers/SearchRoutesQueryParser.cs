@@ -27,7 +27,7 @@ public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQu
 
     /// <summary>
     /// Check if edges define directed acyclic loop-free graph, repeated edges
-    /// are tolerable.
+    /// are NOT tolerable.
     /// </summary>
     /// <param name="arrows">User-defined ordering on categories.</param>
     /// <param name="order">Number of categories.</param>
