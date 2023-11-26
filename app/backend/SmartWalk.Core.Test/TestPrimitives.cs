@@ -25,7 +25,7 @@ public static class TestPrimitives
         return result;
     }
 
-    public static IDistanceMatrix GenerateRandomDistanceMatrix(int order)
+    public static IDistanceFunction GenerateRandomDistanceMatrix(int order)
     {
         var rand = new Random();
 
@@ -41,14 +41,15 @@ public static class TestPrimitives
                 }
             }
         }
-        return new ListDistanceMatrix(matrix);
+        return new MatrixDistanceFunction(matrix);
     }
 
-    public static IPrecedenceMatrix GenerateRandomPrecedenceMatrix(int order, double probability)
+    public static IReadOnlyList<Arrow> GenerateRandomArrows(int order, double probability)
     {
-        var rand = new Random();
+        // graph has to be acyclic!
 
-        var matrix = Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
+        var random = new Random();
+        var arrows = new List<Arrow>();
 
         // the last two items are always st!
 
@@ -56,34 +57,37 @@ public static class TestPrimitives
         {
             for (int col = row + 1; col < order - 2; ++col)
             {
-                if (rand.NextDouble() < probability)
+                if (random.NextDouble() < probability)
                 {
-                    matrix[row][col] = true;
+                    arrows.Add(new(row, col));
                 }
             }
         }
 
-        // (s -> ?) edges
+        return arrows;
+    }
 
-        var sourceRow = order - 2;
+    public static IReadOnlyList<IReadOnlyList<bool>> GetTransitiveClosure(int order, IReadOnlyList<Arrow> arrows)
+    {
+        var matrix = Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
 
-        for (int col = 0; col < order; ++col)
+        foreach(var arrow in arrows)
         {
-            if (sourceRow != col)
+            matrix[arrow.fr][arrow.to] = true;
+        }
+
+        for (int k = 0; k < order; ++k)
+        {
+            for (int i = 0; i < order; ++i)
             {
-                matrix[sourceRow][col] = true;
+                for (int j = 0; j < order; ++j)
+                {
+                    matrix[i][j] = matrix[i][j] || (matrix[i][k] && matrix[k][j]);
+                }
             }
         }
 
-        // (? -> t) edges
-
-        var targetCol = order - 1;
-
-        for (int row = 0; row < order - 1; ++row)
-        {
-            matrix[row][targetCol] = true;
-        }
-        return new ListPrecedenceMatrix(TransitiveClosure.Closure(matrix), true);
+        return matrix;
     }
 
     public static List<SolverPlace> GetWaypoints(int count)

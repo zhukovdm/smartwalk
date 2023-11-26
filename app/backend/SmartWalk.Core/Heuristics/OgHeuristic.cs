@@ -29,8 +29,11 @@ internal static class OgCategoryFormer
     /// Group places by category. For each category calculate number of its
     /// predecessors, and calculate explicit set of successor categories.
     /// </summary>
+    /// <param name="places"></param>
+    /// <param name="arrows"></param>
+    /// <returns></returns>
     public static SortedDictionary<int, OgCategory> Form(
-        IEnumerable<SolverPlace> solverPlaces, IPrecedenceMatrix precMatrix, int sourceCat, int targetCat)
+        IEnumerable<SolverPlace> places, IEnumerable<Arrow> arrows)
     {
         var result = new SortedDictionary<int, OgCategory>();
 
@@ -41,31 +44,23 @@ internal static class OgCategoryFormer
 
         // group places by category
 
-        foreach (var place in solverPlaces)
+        foreach (var place in places)
         {
             ensureCat(result, place.cat);
             result[place.cat].places.Add(place);
         }
 
-        // remove source and target cats!
+        // add arrows between categories
 
-        result.Remove(sourceCat);
-        result.Remove(targetCat);
-
-        // add arrows between categories (terminal edges are skipped!)
-
-        for (int fr = 0; fr < precMatrix.CsCount; ++fr)
+        foreach (var arrow in arrows)
         {
-            for (int to = 0; to < precMatrix.CsCount; ++to)
-            {
-                if (fr != sourceCat && to != targetCat && precMatrix.IsBefore(fr, to))
-                {
-                    ensureCat(result, fr);
-                    ensureCat(result, to);
+            var fr = arrow.fr;
+            var to = arrow.to;
 
-                    if (result[fr].succ.Add(to)) { ++result[to].pred; }
-                }
-            }
+            ensureCat(result, fr);
+            ensureCat(result, to);
+
+            if (result[fr].succ.Add(to)) { ++result[to].pred; }
         }
         return result;
     }
@@ -78,20 +73,24 @@ internal static class OgCandidateSelector
     /// optimize the distance of the place from the last inserted place and
     /// straight line between the source and target.
     /// </summary>
+    /// <param name="seq"></param>
+    /// <param name="freeCats"></param>
+    /// <param name="distFn">Distance function.</param>
+    /// <returns></returns>
     public static SolverPlace SelectBest(
-        List<SolverPlace> seq, IEnumerable<OgCategory> cats, IDistanceMatrix distMatrix)
+        List<SolverPlace> seq, IEnumerable<OgCategory> freeCats, IDistanceFunction distFn)
     {
         SolverPlace best = null;
         double lastDist = double.MaxValue;
 
-        foreach (var cat in cats)
+        foreach (var cat in freeCats)
         {
             foreach (var place in cat.places)
             {
                 var candDist = 0.0
-                    + distMatrix.GetDistance(seq[ 0].idx, place.idx)
-                    + distMatrix.GetDistance(seq[^2].idx, place.idx)
-                    + distMatrix.GetDistance(place.idx, seq[^1].idx);
+                    + distFn.GetDistance(seq[ 0].idx, place.idx)
+                    + distFn.GetDistance(seq[^2].idx, place.idx)
+                    + distFn.GetDistance(place.idx, seq[^1].idx);
 
                 if (candDist < lastDist)
                 {
@@ -109,22 +108,32 @@ internal static class OgCandidateSelector
 /// </summary>
 internal static class OgHeuristic
 {
+    /// <summary></summary>
+    /// <param name="cats"></param>
+    /// <param name="catId"></param>
     private static void RemoveCategory(SortedDictionary<int, OgCategory> cats, int catId)
     {
         foreach (var succ in cats[catId].succ) { --cats[succ].pred; }
         cats.Remove(catId);
     }
 
+    /// <summary></summary>
+    /// <param name="places">All available places (without source and target).</param>
+    /// <param name="distFn"></param>
+    /// <param name="arrows"></param>
+    /// <param name="source"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
     public static List<SolverPlace> Advise(
-        SolverPlace source, SolverPlace target, IEnumerable<SolverPlace> places, IDistanceMatrix distMatrix, IPrecedenceMatrix precMatrix)
+        IEnumerable<SolverPlace> places, IDistanceFunction distFn, IEnumerable<Arrow> arrows, SolverPlace source, SolverPlace target)
     {
         var seq = new List<SolverPlace>() { source, target };
-        var cats = OgCategoryFormer.Form(places, precMatrix, source.cat, target.cat);
+        var cats = OgCategoryFormer.Form(places, arrows);
 
         while (cats.Count > 0)
         {
             var freeCats = cats.Select(kv => kv.Value).Where((cat, _) => cat.pred == 0);
-            var best = OgCandidateSelector.SelectBest(seq, freeCats, distMatrix);
+            var best = OgCandidateSelector.SelectBest(seq, freeCats, distFn);
 
             if (best is null) { break; }
 

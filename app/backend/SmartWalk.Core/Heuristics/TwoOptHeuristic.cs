@@ -5,8 +5,8 @@ using SmartWalk.Core.Interfaces;
 namespace SmartWalk.Core.Heuristics;
 
 /// <summary>
-/// 2-Opt Heuristic for TSP performed on <b>open</b> routes and <b>symmetric</b>
-/// distance matrix.
+/// 2-Opt Heuristic for the TSP performed on paths and <b>symmetric</b>
+/// distance functions.
 /// <list type="bullet">
 /// <item>https://en.wikipedia.org/wiki/2-opt</item>
 /// </list>
@@ -27,7 +27,7 @@ internal static class TwoOptHeuristic
     /// ... _ i i+1 _ _ _ _ _ j j+1 _ ...
     /// </code>
     /// </summary>
-    public static List<SolverPlace> Refine(List<SolverPlace> seq, IDistanceMatrix distMatrix)
+    public static List<SolverPlace> Advise(List<SolverPlace> seq, IDistanceFunction distFn)
     {
         bool change;
         do
@@ -39,10 +39,10 @@ internal static class TwoOptHeuristic
                 for (int j = i + 1; j < seq.Count - 1; ++j)
                 {
                     double diff = 0.0
-                        - distMatrix.GetDistance(seq[i    ].idx, seq[i + 1].idx)
-                        - distMatrix.GetDistance(seq[j    ].idx, seq[j + 1].idx)
-                        + distMatrix.GetDistance(seq[i    ].idx, seq[j    ].idx)
-                        + distMatrix.GetDistance(seq[i + 1].idx, seq[j + 1].idx);
+                        - distFn.GetDistance(seq[i    ].idx, seq[i + 1].idx)
+                        - distFn.GetDistance(seq[j    ].idx, seq[j + 1].idx)
+                        + distFn.GetDistance(seq[i    ].idx, seq[j    ].idx)
+                        + distFn.GetDistance(seq[i + 1].idx, seq[j + 1].idx);
 
                     if (diff < -epsilon)
                     {

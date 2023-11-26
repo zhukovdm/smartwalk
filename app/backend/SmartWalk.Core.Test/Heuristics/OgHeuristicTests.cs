@@ -11,7 +11,7 @@ namespace SmartWalk.Core.Test;
 [TestClass]
 public class OgCategoryFormerTests
 {
-    private static readonly int N = 4;
+    private static readonly int N = 5;
 
     [TestMethod]
     public void ShouldSeparatePlacesByCategoryAndRemoveSourceTarget()
@@ -19,20 +19,15 @@ public class OgCategoryFormerTests
         // [(0 -> 2), (1 -> 2), (2 -> 3)]
 
         var places = TestPrimitives.GetWaypoints(N);
-        places.Add(new(4, 4));
-        places.Add(new(5, 5));
 
-        var precMatrix = new ListPrecedenceMatrix(new()
+        var arrows = new List<Arrow>()
         {
-            new() { false, false, true,  false, false, true  },
-            new() { false, false, true,  false, false, true  },
-            new() { false, false, false, true,  false, true  },
-            new() { false, false, false, false, false, true  },
-            new() { true,  true,  true,  true,  false, true  },
-            new() { false, false, false, false, false, false },
-        }, true);
+            new(0, 2),
+            new(1, 2),
+            new(2, 3),
+        };
 
-        var cats = OgCategoryFormer.Form(places, precMatrix, 4, 5);
+        var cats = OgCategoryFormer.Form(places, arrows);
 
         // places
 
@@ -42,17 +37,13 @@ public class OgCategoryFormerTests
             Assert.AreEqual(obj.places.Count, N - cat.Key);
         }
 
-        // st
-
-        Assert.IsFalse(cats.ContainsKey(4));
-        Assert.IsFalse(cats.ContainsKey(5));
-
         // predecessors
 
         Assert.AreEqual(0, cats[0].pred);
         Assert.AreEqual(0, cats[1].pred);
         Assert.AreEqual(2, cats[2].pred);
         Assert.AreEqual(1, cats[3].pred);
+        Assert.AreEqual(0, cats[4].pred);
 
         // successors
 
@@ -60,6 +51,7 @@ public class OgCategoryFormerTests
         Assert.AreEqual(1, cats[1].succ.Count);
         Assert.AreEqual(1, cats[2].succ.Count);
         Assert.AreEqual(0, cats[3].succ.Count);
+        Assert.AreEqual(0, cats[4].succ.Count);
     }
 }
 
@@ -89,7 +81,7 @@ public class OgCandidateSelectorTests
 
         var cats = new List<OgCategory> { p1, p2, p3 };
 
-        var distMatrix = new ListDistanceMatrix(new()
+        var distFn = new MatrixDistanceFunction(new()
         {
             new() { 0.0, 2.0, 1.0, 3.0, 0.0, 0.0 },
             new() { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
@@ -98,7 +90,7 @@ public class OgCandidateSelectorTests
             new() { 0.0, 1.0, 1.0, 1.0, 0.0, 0.0 },
             new() { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
         });
-        var best = OgCandidateSelector.SelectBest(seq, cats, distMatrix);
+        var best = OgCandidateSelector.SelectBest(seq, cats, distFn);
 
         Assert.AreEqual(2, best.idx);
     }
@@ -114,6 +106,7 @@ public class OgHeuristicTests
 
         var source = new SolverPlace(5, 5);
         var target = new SolverPlace(6, 6);
+
         var places = new List<SolverPlace>
         {
             new(2, 2),
@@ -122,20 +115,19 @@ public class OgHeuristicTests
             new(4, 4),
             new(3, 3),
         };
-        var distMatrix = new ListDistanceMatrix(TestPrimitives.GenerateUnitDistanceMatrix(7));
 
-        var precMatrix = new ListPrecedenceMatrix(new()
+        var distFn = new MatrixDistanceFunction(
+            TestPrimitives.GenerateUnitDistanceMatrix(places.Count + 2));
+
+        var arrows = new List<Arrow>
         {
-            new() { false, true,  false, false, false, false, true  },
-            new() { false, false, true,  false, false, false, true  },
-            new() { false, false, false, true,  false, false, true  },
-            new() { false, false, false, false, true,  false, true  },
-            new() { false, false, false, false, false, false, true  },
-            new() { true,  true,  true,  true,  true,  false, true  },
-            new() { false, false, false, false, false, false, false },
-        }, true);
+            new(0, 1),
+            new(1, 2),
+            new(2, 3),
+            new(3, 4),
+        };
 
-        var seq = OgHeuristic.Advise(source, target, places, distMatrix, precMatrix);
+        var seq = OgHeuristic.Advise(places, distFn, arrows, source, target);
 
         var ans = new List<int> { 5, 0, 1, 2, 3, 4, 6 };
 
@@ -168,13 +160,12 @@ public class OgHeuristicTests
             .ToList()
             .DurstenfeldShuffle()
             .Select((idx) => new SolverPlace(idx, idx))
-            .Concat(new[] { source, target })
             .ToList();
 
-        var distMatrix = TestPrimitives.GenerateRandomDistanceMatrix(order);
-        var precMatrix = TestPrimitives.GenerateRandomPrecedenceMatrix(order, probability);
+        var distFn = TestPrimitives.GenerateRandomDistanceMatrix(order);
+        var arrows = TestPrimitives.GenerateRandomArrows(order, probability);
 
-        var result = OgHeuristic.Advise(source, target, places, distMatrix, precMatrix);
+        var result = OgHeuristic.Advise(places, distFn, arrows, source, target);
 
         // length
 
@@ -187,6 +178,8 @@ public class OgHeuristicTests
 
         // arrows
 
+        var closure = TestPrimitives.GetTransitiveClosure(order, arrows);
+
         for (int row = 0; row < result.Count - 1; ++row)
         {
             for (int col = row + 1; col < result.Count; ++col)
@@ -194,7 +187,7 @@ public class OgHeuristicTests
                 var fr = result[row].cat;
                 var to = result[col].cat;
 
-                Assert.IsFalse(precMatrix.IsBefore(to, fr));
+                Assert.IsFalse(closure[to][fr]);
             }
         }
     }

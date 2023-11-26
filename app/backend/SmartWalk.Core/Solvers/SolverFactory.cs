@@ -4,36 +4,29 @@ using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Core.Solvers;
 
-public static class SolverFactory
+public partial class SolverFactory
 {
-    /*
-     ***************************************************************************
-     *
-     *                  NOTE THAT THE PROCEDURE FOR FINDING
-     *                 PRECEDENCE MATRIX IS SOLVER-DEPENDENT
-     *
-     ***************************************************************************
-     */
-    //
+    readonly IDistanceFunction distFn;
+    readonly IReadOnlyList<Arrow> arrows;
+    readonly SolverPlace source, target;
 
-    /// <summary>
-    /// <b>Solver-specific</b> precedence matrix.
-    /// </summary>
-    /// <param name="edges"></param>
-    /// <param name="catsCount"></param>
-    /// <param name="hasArrows">
-    /// Set <c>true</c> if the matrix has at least one edge with both vertices
-    /// different from the source and target.
-    /// </param>
-    public static IPrecedenceMatrix GetPrecedenceMatrix(
-        IEnumerable<PrecedenceEdge> edges, int catsCount, bool hasArrows)
+    /// <summary></summary>
+    /// <param name="distFn">Distance function defined for all pairs of places.</param>
+    /// <param name="arrows">A valid list of arrows.</param>
+    /// <param name="source">Starting point.</param>
+    /// <param name="target">Destination.</param>
+    public SolverFactory(IDistanceFunction distFn, IReadOnlyList<Arrow> arrows, SolverPlace source, SolverPlace target)
     {
-    //  return IfSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
-        return OgSolver.GetPrecedenceMatrix(edges, catsCount, hasArrows);
+        this.distFn = distFn;
+        this.arrows = arrows;
+        this.source = source;
+        this.target = target;
     }
-    public static ISolver GetSolver()
+
+    /// <summary></summary>
+    /// <returns>Standard solver based on arrow configuration.</returns>
+    public ISolver GetSolver()
     {
-    //  return new IfSolver();
-        return new OgSolver();
+        return (arrows.Count == 0) ? new FloatSolver(this) : new ArrowSolver(this);
     }
 }
