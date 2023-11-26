@@ -45,7 +45,7 @@ public class TwoOptHeuristicTests
     {
         // there is only one correct answer
 
-        var distMatrix = new CartesianDistanceFunction(new()
+        var distFn = new CartesianDistanceFunction(new()
         {
             new(0.0, 0.0),
             new(0.0, 1.0),
@@ -59,7 +59,7 @@ public class TwoOptHeuristicTests
             new(2, 2),
             new(1, 1),
             new(3, 3),
-        }, distMatrix);
+        }, distFn);
 
         var ans = new List<int> { 0, 1, 2, 3 };
 
@@ -87,7 +87,7 @@ public class TwoOptHeuristicTests
             .Select((_) => new Point(rnd.NextDouble(), rnd.NextDouble()))
             .ToList();
 
-        var distMatrix = new CartesianDistanceFunction(points);
+        var distFn = new CartesianDistanceFunction(points);
 
         var seq = Enumerable
             .Range(0, order)
@@ -101,7 +101,7 @@ public class TwoOptHeuristicTests
 
             foreach (var (l, r) in sequence.Zip(sequence.Skip(1)))
             {
-                result += distMatrix.GetDistance(l.idx, r.idx);
+                result += distFn.GetDistance(l.idx, r.idx);
             }
             return result;
         };
@@ -110,7 +110,7 @@ public class TwoOptHeuristicTests
         var target0 = seq[^1];
         var distance0 = calculateDistance(seq);
 
-        seq = TwoOptHeuristic.Advise(seq, distMatrix);
+        seq = TwoOptHeuristic.Advise(seq, distFn);
 
         var distanceAfter = calculateDistance(seq);
 
