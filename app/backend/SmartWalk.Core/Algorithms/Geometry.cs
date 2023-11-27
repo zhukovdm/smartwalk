@@ -18,7 +18,7 @@ public static class Spherical
     private static readonly double rad2deg = 180.0 / Math.PI;
 
     /// <summary>
-    /// Sphere radius used by Web Mercator projection (semi-major axis).
+    /// Sphere radius used by the Web Mercator projection (semi-major axis).
     /// </summary>
     private static readonly double earthRadius = 6_378_137.0;
 
