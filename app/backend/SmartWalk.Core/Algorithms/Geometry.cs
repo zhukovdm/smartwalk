@@ -25,12 +25,12 @@ public static class Spherical
     /// <summary>
     /// Convert degrees to radians.
     /// </summary>
-    private static double DegToRad(double deg) => deg * deg2rad;
+    internal static double DegToRad(double deg) => deg * deg2rad;
 
     /// <summary>
     /// Convert radians to degrees.
     /// </summary>
-    private static double RadToDeg(double rad) => rad * rad2deg;
+    internal static double RadToDeg(double rad) => rad * rad2deg;
 
     /// <summary>
     /// The ratio r / R, where R is the Earth radius and r is the radius of
@@ -70,7 +70,7 @@ public static class Spherical
     /// Approximate an angle in the counter-clockwise direction.
     /// </summary>
     /// <returns>Angle in radians.</returns>
-    private static double RotAngle(WgsPoint p1, WgsPoint p2)
+    internal static double RotAngle(WgsPoint p1, WgsPoint p2)
     {
         var lat = DegToRad(Midpoint(p1, p2).lat);
 
