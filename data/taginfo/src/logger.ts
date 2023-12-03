@@ -5,7 +5,7 @@ import {
   type Logger as WinstonLogger
 } from "winston";
 
-export class Logger {
+export default class Logger {
 
   private readonly logger: WinstonLogger;
 
