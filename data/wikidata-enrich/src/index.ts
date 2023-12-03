@@ -1,33 +1,33 @@
-import { fetch } from "./fetch";
-import Logger from "./logger";
-import Model from "./model";
-import { parseArgs } from "./parse";
+import Logger from "./logger.js";
+import Parser from "./parser.js";
+import Source from "./source.js";
+import Target from "./target.js";
+
+const PAYLOAD_WINDOW = 100;
 
 async function wikidataEnrich() {
 
-  const WINDOW = 100;
-  const { conn } = parseArgs();
+  const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();
-  const model = new Model(logger, conn);
+  const source = new Source(logger);
+  const target = new Target(logger, conn);
 
   try {
     logger.logStarted();
+    let payload = await target.getPayloadIter(PAYLOAD_WINDOW);
 
-    let payload = await model.getPayload();
-
-    while (payload.length > 0) {
-      const slice = payload.slice(0, WINDOW);
-      const items = await fetch(logger, slice);
-      await model.enrich(items);
-      payload = payload.slice(WINDOW);
+    for (const slice of payload) {
+      const _e = await source.e(slice);
+      const _t = await source.t(_e);
+      const _l = await target.l(_t);
     }
 
     logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }
   finally {
-    await model.dispose();
+    await target.dispose();
   }
 }
 

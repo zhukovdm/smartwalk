@@ -1,16 +1,16 @@
 import axios from "axios";
 import jsonld, { type ContextDefinition } from "jsonld";
-import Logger from "./logger";
+import {
+  SafeFetcher,
+  ensureArray,
+  getFirst,
+  isValidKeyword
+} from "../../shared/index.js";
+import Logger from "./logger.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 
 const WIKIDATA_SPARQL_ENDPOINT = "https://query.wikidata.org/sparql";
-
-const KEYWORD_LENGTH_LIMIT_MIN = 3;
-
-const KEYWORD_LENGTH_LIMIT_MAX = 50;
-
-const KEYWORD_PATTERN = /^[a-z]+(?:[ ][a-z]+)*$/;
 
 /**
  * Note that {`@container`: `@language`} is a valid definition even though d.ts
@@ -133,7 +133,12 @@ const WIKIDATA_JSONLD_CONTEXT = {
   "wikidata": "@id"
 } as ContextDefinition;
 
-const wikidataQuery = (payload: string[]) => `PREFIX dct: <http://purl.org/dc/terms/>
+/**
+ * @param payload List of identifiers
+ * @returns query as a string
+ */
+const getWikidataQuery = (payload: string[]) => {
+  return `PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX my: <http://example.com/>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -283,14 +288,14 @@ OPTIONAL {
 }
 OPTIONAL {
   ?wikidataId wdt:P281 ?postalCode.
-}}`;
+}}`};
 
-async function fetchFromWikidata(query: string) {
+async function fetchFromWikidata(query: string): Promise<any[]> {
 
   // POST verb for long queries
   const res = await axios.post(WIKIDATA_SPARQL_ENDPOINT, "query=" + encodeURIComponent(query), {
     headers: {
-      Accept: `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
+      "Accept": `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
       "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
@@ -305,21 +310,11 @@ async function fetchFromWikidata(query: string) {
     format: WIKIDATA_ACCEPT_CONTENT
   });
   const jsn = await jsonld.compact(arr, WIKIDATA_JSONLD_CONTEXT);
-  return jsn["@graph"] ?? [];
+  return (jsn["@graph"] ?? []) as any[];
 }
 
-function isValidKeyword(keyword: string) {
-  return KEYWORD_PATTERN.test(keyword)
-    && keyword.length >= KEYWORD_LENGTH_LIMIT_MIN
-    && keyword.length <= KEYWORD_LENGTH_LIMIT_MAX
-};
-
-const getFirst = (obj: unknown) => (Array.isArray(obj) ? obj[0] : obj);
-
-function wrapArray<T>(t: T | T[]): T[] { return (Array.isArray(t) ? t : [t]); }
-
 function handleKeywordArray(arr: { en: string | string[] } = { en: [] }) {
-  return wrapArray(arr.en)
+  return ensureArray(arr.en)
     .map((instance) => instance.toLowerCase())
     .map((instance) => isValidKeyword(instance) ? instance : undefined)
     .filter((instance) => instance !== undefined) as string[];
@@ -414,30 +409,40 @@ function constructFromEntity(entity: any): any {
   return object;
 }
 
-const wait = (seconds: number): Promise<void> => (
-  new Promise((resolve) => setTimeout(resolve, seconds * 1000.0)));
+export default class Source {
+  readonly logger: Logger;
 
-export async function fetch(logger: Logger, items: string[]): Promise<any[]> {
-  let result: any[] | undefined = undefined;
+  constructor(logger: Logger) {
+    this.logger = logger;
+  }
 
-  let attempt = 0;
-  const query = wikidataQuery(items);
-  await wait(3);
+  /**
+   * Extract phase.
+   * @param items List of identifiers.
+   * @returns List of raw items.
+   */
+  async e(items: string[]): Promise<any[]> {
 
-  do {
-    ++attempt;
-    try {
-      result = ((await fetchFromWikidata(query)) as any[])
-        .map((entity: any) => constructFromEntity(entity));
-    }
-    catch (ex) {
-      logger.logFailedFetchAttempt(attempt, ex);
-      await wait(10);
-    }
-  } while (result === undefined && attempt < 3);
+    const result = await new SafeFetcher<any[]>(3, 3, 10)
+      .fetchWithRetry(
+        () => fetchFromWikidata(getWikidataQuery(items)),
+        (attempt: number, err: unknown) => {
+          this.logger.logFailedFetchAttempt(attempt, err);
+        },
+        []
+      );
+    this.logger.logFetchedEntities(result.length, items.length);
+    return result;
+  }
 
-  result ??= [];
-  logger.logFetchedEntities(result.length, items.length);
-
-  return result;
+  /**
+   * Transform raw items into well-formed items. Due to the complexity
+   * of the target type, type definition is omitted.
+   * @param items raw items.
+   * @returns proper items.
+   */
+  t(items: any[]): Promise<any[]> {
+    items = items.map((entity) => constructFromEntity(entity));
+    return Promise.resolve(items);
+  }
 }
