@@ -1,5 +1,7 @@
 import { Collection, MongoClient } from "mongodb";
-import { getDateTime } from "../../shared/index.js";
+import {
+  getDateTime
+} from "../../shared/src/index.js";
 import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";

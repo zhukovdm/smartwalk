@@ -4,7 +4,7 @@ import {
   transports,
   type Logger as WinstonLogger
 } from "winston";
-import { getTime } from "../../shared/index.js"
+import { getTime } from "../../shared/src/index.js"
 
 export default class Logger {
 
@@ -25,20 +25,20 @@ export default class Logger {
   }
 
   logSquare({ w, n, e, s }: Bbox) {
-    this.logger.info(`[${getTime()}] >  Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s}...`);
+    this.logger.info(`[${getTime()}] > Contacting Wikidata SPARQL endpoint for square w=${w} n=${n} e=${e} s=${s}...`);
   }
 
   logFailedFetchAttempt(attempt: number, err: unknown) {
-    this.logger.warn(`[${getTime()}] >   Failed to fetch, ${attempt} attempt.`);
+    this.logger.warn(`[${getTime()}] >  Failed to fetch, ${attempt} attempt.`);
     this.logger.info(err);
   }
 
   logFetchedEntities(count: number) {
-    this.logger.info(`[${getTime()}] >  Fetched ${count} entities.`);
+    this.logger.info(`[${getTime()}] > Fetched ${count} entities.`);
   }
 
   logWritingObjects() {
-    this.logger.info(`[${getTime()}] >  Writing objects for fetched batch...`);
+    this.logger.info(`[${getTime()}] > Writing objects for fetched batch...`);
   }
 
   logFailedWrite(wikidataId: string, err: unknown) {
@@ -47,7 +47,7 @@ export default class Logger {
   }
 
   logItemsWritten(batchWritten: number, totalWritten: number) {
-    this.logger.info(`[${getTime()}] >  Wrote ${batchWritten} from this batch, written total ${totalWritten} entities.`);
+    this.logger.info(`[${getTime()}] > Wrote ${batchWritten} from this batch, written total ${totalWritten} entities.`);
   }
 
   logFinished() {

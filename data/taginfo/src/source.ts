@@ -1,6 +1,12 @@
 import axios from "axios";
-import { SafeFetcher, isValidKeyword } from "../../shared/index.js"
-import type { ValueItem, ValueObject } from "./types.js";
+import {
+  SafeFetcher,
+  isValidKeyword
+} from "../../shared/src/index.js"
+import type {
+  ValueItem,
+  ValueObject
+} from "./types.js";
 import Logger from "./logger.js";
 
 /** Extracted value should occur at least `COUNT_LIMIT` times. */
@@ -121,7 +127,7 @@ const FORBIDDEN_KEYWORDS = new Set<string>([
 /**
  * Construct target url.
  */
-function getQuery(key: string, page: number): string {
+function getTaginfoQuery(key: string, page: number): string {
   return `https://taginfo.openstreetmap.org/api/4/key/values?key=${key}&page=${page}&rp=100&filter=all&lang=en&sortname=count&sortorder=desc&qtype=value&format=json`;
 };
 
@@ -158,7 +164,7 @@ export default class Source {
 
       const obj = await new SafeFetcher<ValueObject>(3, 1, 10)
         .fetchWithRetry(
-          async () => (await axios.get(getQuery(key, page))).data,
+          async () => (await axios.get(getTaginfoQuery(key, page))).data,
           (attempt: number, err: unknown) => {
             this.logger.logFailedFetchAttempt(key, page, attempt, err);
           },

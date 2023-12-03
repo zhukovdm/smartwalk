@@ -1,3 +1,15 @@
+import { Command } from "commander";
+import {
+  Collection,
+  MongoClient
+} from "mongodb";
+import {
+  createLogger,
+  format,
+  transports,
+  type Logger as WinstonLogger
+} from "winston";
+
 /** Extracted value should have lehgth at least `MIN` chars. */
 const KEYWORD_LENGTH_LIMIT_MIN = 3;
 
@@ -136,5 +148,138 @@ export class SafeFetcher<T> {
     } while (result === undefined && attempt < this.attempts);
 
     return result ?? defaultValue;
+  }
+}
+
+export class EnrichLogger {
+
+  private readonly logger: WinstonLogger;
+
+  constructor() {
+    this.logger = createLogger({
+      level: "info",
+      format: format.combine(format.colorize(), format.simple()),
+      transports: [
+        new transports.Console()
+      ]
+    });
+  }
+
+  logStarted() {
+    this.logger.info(`[${getTime()}] Started processing entities...`);
+  }
+
+  logPayloadLength(payloadLength: number) {
+    this.logger.info(`[${getTime()}] > Constructed payload with ${payloadLength} unique identifiers.`);
+  }
+
+  logFailedFetchAttempt(attempt: number, err: unknown) {
+    this.logger.warn(`[${getTime()}] >  Failed to fetch, ${attempt} attempt.`);
+    this.logger.info(err);
+  }
+
+  logFetchedEntities(fetched: number, given: number) {
+    this.logger.info(`[${getTime()}] > Fetched ${fetched} entities for given ${given} identifiers.`);
+  }
+
+  logFailedEnrich(wikidataId: string, err: unknown) {
+    this.logger.warn(`[${getTime()}] >  Failed to enrich an item with ${wikidataId} identifier.`);
+    this.logger.info(err);
+  }
+
+  logItemsEnriched(batchEnriched: number, totalEnriched: number) {
+    this.logger.info(`[${getTime()}] > Enriched ${batchEnriched} from this batch, enriched total ${totalEnriched} entities.`);
+  }
+
+  logFinished() {
+    this.logger.info(`[${getTime()}] Finished processing entities.`);
+  }
+
+  logError(err: unknown) { this.logger.error(err); }
+}
+
+export class EnrichParser {
+
+  /**
+   * Parse connection string.
+   */
+  parseArgs(): {
+    conn: string;
+  } {
+    const args = new Command()
+      .option("--conn <string>", "Database connection string");
+    return args.parse().opts();
+  }
+}
+
+export abstract class EnrichSource {
+  private readonly logger: EnrichLogger;
+
+  constructor(logger: EnrichLogger) {
+    this.logger = logger;
+  }
+
+  abstract getQuery(items: string[]): string;
+
+  abstract fetchFrom(query: string): Promise<any[]>;
+
+  abstract constructFromEntity(entity: any): any;
+
+  /**
+   * Extract phase.
+   * @param items List of identifiers.
+   * @returns List of raw items.
+   */
+  async e(items: string[]): Promise<any[]> {
+
+    const result = await new SafeFetcher<any[]>(3, 3, 10)
+      .fetchWithRetry(
+        () => this.fetchFrom(this.getQuery(items)),
+        (attempt: number, err: unknown) => {
+          this.logger.logFailedFetchAttempt(attempt, err);
+        },
+        []
+      );
+    this.logger.logFetchedEntities(result.length, items.length);
+    return result;
+  }
+
+  /**
+   * Transform raw items into well-formed items. Due to the complexity
+   * of the target type, type definition is omitted.
+   * @param items raw items.
+   * @returns proper items.
+   */
+  t(items: any[]): Promise<any[]> {
+    items = items.map((entity) => this.constructFromEntity(entity));
+    return Promise.resolve(items);
+  }
+}
+
+export class EnrichTarget {
+
+  protected readonly client: MongoClient;
+  protected readonly collection: Collection;
+
+  constructor(conn: string) {
+    this.client = new MongoClient(conn);
+    this.collection = this.client.db("smartwalk").collection("place");
+  }
+
+  /**
+   * Get all place identifiers in the database.
+   * @param window Maximum number of items in one batch.
+   * @returns Iterator over a list of identifiers.
+   */
+  protected async getPayload(window: number): Promise<string[]> {
+    const target = "linked.wikidata";
+
+    let promise = this.collection
+      .find({ [target]: { $exists: true } })
+      .project({ [target]: 1 })
+      .toArray();
+
+    return (await promise)
+      .map((doc) => `wd:${doc.linked.wikidata}`);
   }
 }

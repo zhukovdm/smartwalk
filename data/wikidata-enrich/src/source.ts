@@ -1,12 +1,12 @@
 import axios from "axios";
 import jsonld, { type ContextDefinition } from "jsonld";
 import {
-  SafeFetcher,
+  EnrichLogger,
+  EnrichSource,
   ensureArray,
   getFirst,
   isValidKeyword
-} from "../../shared/index.js";
-import Logger from "./logger.js";
+} from "../../shared/src/index.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 
@@ -134,10 +134,10 @@ const WIKIDATA_JSONLD_CONTEXT = {
 } as ContextDefinition;
 
 /**
- * @param payload List of identifiers
- * @returns query as a string
+ * @param payload List of identifiers.
+ * @returns Query as a string.
  */
-const getWikidataQuery = (payload: string[]) => {
+function getWikidataQuery(payload: string[]): string {
   return `PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
 PREFIX my: <http://example.com/>
@@ -409,40 +409,21 @@ function constructFromEntity(entity: any): any {
   return object;
 }
 
-export default class Source {
-  readonly logger: Logger;
+export default class Source extends EnrichSource {
 
-  constructor(logger: Logger) {
-    this.logger = logger;
+  constructor(logger: EnrichLogger) {
+    super(logger);
   }
 
-  /**
-   * Extract phase.
-   * @param items List of identifiers.
-   * @returns List of raw items.
-   */
-  async e(items: string[]): Promise<any[]> {
-
-    const result = await new SafeFetcher<any[]>(3, 3, 10)
-      .fetchWithRetry(
-        () => fetchFromWikidata(getWikidataQuery(items)),
-        (attempt: number, err: unknown) => {
-          this.logger.logFailedFetchAttempt(attempt, err);
-        },
-        []
-      );
-    this.logger.logFetchedEntities(result.length, items.length);
-    return result;
+  getQuery(items: string[]): string {
+    return getWikidataQuery(items);
   }
 
-  /**
-   * Transform raw items into well-formed items. Due to the complexity
-   * of the target type, type definition is omitted.
-   * @param items raw items.
-   * @returns proper items.
-   */
-  t(items: any[]): Promise<any[]> {
-    items = items.map((entity) => constructFromEntity(entity));
-    return Promise.resolve(items);
+  fetchFrom(query: string): Promise<any[]> {
+    return fetchFromWikidata(query);
+  }
+
+  constructFromEntity(entity: any) {
+    return constructFromEntity(entity);
   }
 }
