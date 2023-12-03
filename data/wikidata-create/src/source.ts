@@ -4,7 +4,7 @@ import {
   SafeFetcher,
   getFirst,
   roundCoordinate
-} from "../../shared/index.js";
+} from "../../shared/src/index.js";
 import Logger from "./logger.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";

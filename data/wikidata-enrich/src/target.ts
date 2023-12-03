@@ -1,22 +1,18 @@
-import { Collection, MongoClient } from "mongodb";
 import {
+  EnrichLogger,
+  EnrichTarget,
   getDateTime,
   getPayloadIter
-} from "../../shared/index.js";
-import Logger from "./logger.js";
+} from "../../shared/src/index.js";
 
-export default class Target {
+export default class Target extends EnrichTarget {
 
   private totalEnriched = 0;
+  private readonly logger: EnrichLogger;
 
-  private readonly logger: Logger;
-  private readonly client: MongoClient;
-  private readonly collection: Collection;
-
-  constructor(logger: Logger, conn: string) {
+  constructor(logger: EnrichLogger, conn: string) {
+    super(conn);
     this.logger = logger;
-    this.client = new MongoClient(conn);
-    this.collection = this.client.db("smartwalk").collection("place");
   }
 
   /**
@@ -27,24 +23,15 @@ export default class Target {
   async getPayloadIter(window: number): Promise<{
     [Symbol.iterator](): Generator<string[], void, unknown>;
   }> {
-    const target = "linked.wikidata";
-
-    let promise = this.collection
-      .find({ [target]: { $exists: true } })
-      .project({ [target]: 1 })
-      .toArray();
-
-    let payload = (await promise)
-      .map((doc) => `wd:${doc.linked.wikidata}`);
-
+    const payload = await this.getPayload(window);
     this.logger.logPayloadLength(payload.length);
+
     return getPayloadIter(payload, window);
   }
 
   /**
    * Load phase.
    * @param items Well-formed items.
-   * @returns Nothing.
    */
   async l(items: any[]): Promise<void> {
     let batchEnriched = 0;
