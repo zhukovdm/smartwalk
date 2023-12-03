@@ -1,7 +1,10 @@
 {
   "compilerOptions": {
     "allowJs": true,
+    "downlevelIteration": true,
     "esModuleInterop": true,
+    "module": "ES6",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "./dist",
