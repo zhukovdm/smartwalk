@@ -1,23 +1,23 @@
 import Logger from "./logger";
-import Model from "./model";
-import { parseArgs } from "./parse";
+import Parser from "./parser";
+import Target from "./target";
 
 async function init() {
 
-  const { conn } = parseArgs();
+  const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();
-  const model = new Model(logger, conn);
+  const target = new Target(logger, conn);
 
   try {
-    await model.dropDatabase();
-    await model.createDatabase();
+    await target.dropDatabase();
+    await target.createDatabase();
 
     logger.reportFinished();
   }
   catch (ex) { logger.reportError(ex); }
   finally {
-    await model.dispose();
+    await target.dispose();
   }
 }
 

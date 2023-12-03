@@ -4,7 +4,7 @@ import Logger from "./logger";
 const DATABASE_NAME = "smartwalk";
 const COLLECTION_NAME = "place";
 
-export default class Model {
+export default class Target {
 
   private readonly logger: Logger;
   private readonly client: MongoClient;
