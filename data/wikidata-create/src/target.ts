@@ -1,10 +1,11 @@
 import { Collection, MongoClient } from "mongodb";
-import Logger from "./logger";
+import { getDateTime } from "../../shared/index.js";
+import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";
 const COLLECTION_NAME = "place";
 
-export default class Model {
+export default class Target {
 
   private totalCreated = 0;
   private readonly logger: Logger;
@@ -17,7 +18,7 @@ export default class Model {
     this.collection = this.client.db(DATABASE_NAME).collection(COLLECTION_NAME);
   }
 
-  async write(items: Item[]): Promise<void> {
+  async l(items: Item[]): Promise<void> {
     let batchWritten = 0;
     this.logger.logWritingObjects();
 
@@ -25,6 +26,8 @@ export default class Model {
 
     for (const { location, wikidata, osm } of items) {
       try {
+        const time = getDateTime();
+
         // update existing
 
         if (!!osm && !!(await this.collection.findOne({ "linked.osm": osm }))) {
@@ -33,7 +36,8 @@ export default class Model {
           };
           const update: Record<string, any> = {
             $set: {
-              "linked.wikidata": wikidata
+              "linked.wikidata": wikidata,
+              "metadata.updated": time,
             }
           };
           await this.collection.updateMany(filter, update, options);
@@ -51,6 +55,10 @@ export default class Model {
             linked: {
               osm: osm,
               wikidata: wikidata
+            },
+            metadata: {
+              created: time,
+              updated: time
             }
           };
 

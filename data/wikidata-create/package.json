@@ -2,10 +2,11 @@
   "name": "wikidata-create",
   "description": "Fetch reduced data items from Wikidata SPARQL endpoint and create stubs.",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "./dist/wikidata-create/src/index.js",
+  "type": "module",
   "scripts": {
     "build": "npx tsc",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/wikidata-create/src/index.js"
   },
   "license": "MIT",
   "author": "Dmitry Zhukov",
@@ -17,5 +18,7 @@
     "mongodb": "^6.0.0",
     "typescript": "^5.2.2",
     "winston": "^3.10.0"
-  }
+  },
+  "devDependencies": {},
+  "keywords": []
 }

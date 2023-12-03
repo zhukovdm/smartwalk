@@ -1,11 +1,11 @@
 import axios from "axios";
 import jsonld from "jsonld";
-import Logger from "./logger";
-
-const LOCATION_PRECISION = 7;
-
-const roundCoordinate = (num: number): number => (
-  parseFloat(num.toFixed(LOCATION_PRECISION)));
+import {
+  SafeFetcher,
+  getFirst,
+  roundCoordinate
+} from "../../shared/index.js";
+import Logger from "./logger.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 
@@ -40,7 +40,8 @@ const WIKIDATA_JSONLD_CONTEXT = {
  * @param bbox Bounding box
  * @returns query as a string
  */
-const wikidataQuery = ({ w, n, e, s }: Bbox) => (`PREFIX bd: <http://www.bigdata.com/rdf#>
+function getWikidataQuery({ w, n, e, s }: Bbox) {
+  return `PREFIX bd: <http://www.bigdata.com/rdf#>
 PREFIX geo: <http://www.opengis.net/ont/geosparql#>
 PREFIX my: <http://example.com/>
 PREFIX wd: <http://www.wikidata.org/entity/>
@@ -68,17 +69,17 @@ WHERE {
   OPTIONAL {
     ?wikidataId wdt:P402 ?osmR.
   }
-}`);
+}`};
 
 /**
  * @param query SPARQL query compliant with Wikidata KG.
  * @returns Graph represented as a list of entities.
  */
-async function fetchFromWikidata(query: string) {
+async function fetchFromWikidata(query: string): Promise<any[]> {
 
   const res = await axios.get(WIKIDATA_SPARQL_ENDPOINT + encodeURIComponent(query), {
     headers: {
-      Accept: `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
+      "Accept": `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
@@ -92,10 +93,9 @@ async function fetchFromWikidata(query: string) {
     format: WIKIDATA_ACCEPT_CONTENT
   });
   const jsn = await jsonld.compact(arr, WIKIDATA_JSONLD_CONTEXT);
-  return jsn["@graph"] ?? [];
-}
 
-const getFirst = (obj: unknown) => (Array.isArray(obj) ? obj[0] : obj);
+  return (jsn["@graph"] ?? []) as any[];
+}
 
 /**
  * Extract longitude and latitude from WKT literal.
@@ -121,60 +121,68 @@ const constructFromEntity = (entity: any): Item => ({
   wikidata: entity.wikidata.substring(3) as string // cut off `wd:`
 });
 
-function wait(seconds: number): Promise<void> {
-  return new Promise((resolve) => setTimeout(resolve, seconds * 1000.0))
-}
+export default class Source {
+  readonly logger: Logger;
 
-async function fetchSquare(logger: Logger, bbox: Bbox): Promise<Item[]> {
-  let result: Item[] | undefined = undefined;
-  logger.logSquare(bbox);
-
-  let attempt = 0;
-  const query = wikidataQuery(bbox);
-  await wait(3);
-
-  do {
-    ++attempt;
-    try {
-      result = ((await fetchFromWikidata(query)) as any)
-        .map((entity: any) => constructFromEntity(entity));
-    }
-    catch (ex) {
-      logger.logFailedFetchAttempt(attempt, ex);
-      await wait(10);
-    }
-  } while (result === undefined && attempt < 3);
-
-  return result ?? [];
-}
-
-export async function fetchBbox(logger: Logger, bbox: Bbox, rows: number, cols: number): Promise<Item[]> {
-
-  const result = new Map<string, Item>();
-  const {
-    w: xW,
-    n: xN,
-    e: xE,
-    s: xS
-  } = bbox;
-  const rowStep = (xN - xS) / rows;
-  const colStep = (xE - xW) / cols;
-  
-  for (let row = 0; row < rows; ++row) {
-    for (let col = 0; col < cols; ++col) {
-
-      const s = roundCoordinate(xS + rowStep * row);
-      const n = roundCoordinate(s + rowStep);
-
-      const w = roundCoordinate(xW + colStep * col);
-      const e = roundCoordinate(w + colStep);
-
-      (await fetchSquare(logger, { w: w, n: n, e: e, s: s })).forEach((item) => {
-        result.set(item.wikidata, item);
-      });
-    }
+  constructor(logger: Logger) {
+    this.logger = logger;
   }
 
-  logger.logFetchedEntities(result.size);
-  return Array.from(result.values());
+  /**
+   * Extract phase.
+   * @param bbox Bounding box.
+   * @param rows Divide Bbox into N rows.
+   * @param cols Divide Bbox into N cols.
+   * @returns Raw items.
+   */
+  async e(bbox: Bbox, rows: number, cols: number): Promise<any[]> {
+
+    const result = new Map<string, any>();
+    const {
+      w: xW,
+      n: xN,
+      e: xE,
+      s: xS
+    } = bbox;
+    const rowStep = (xN - xS) / rows;
+    const colStep = (xE - xW) / cols;
+    
+    for (let row = 0; row < rows; ++row) {
+      for (let col = 0; col < cols; ++col) {
+  
+        const s = roundCoordinate(xS + rowStep * row);
+        const n = roundCoordinate(s + rowStep);
+  
+        const w = roundCoordinate(xW + colStep * col);
+        const e = roundCoordinate(w + colStep);
+
+        const bbox = { w, n, e, s };
+        this.logger.logSquare(bbox);
+
+        const lst = await new SafeFetcher<any[]>(3, 3, 10)
+          .fetchWithRetry(
+            () => fetchFromWikidata(getWikidataQuery(bbox)),
+            (attempt: number, err: unknown) => {
+              this.logger.logFailedFetchAttempt(attempt, err);
+            },
+            []
+          );
+
+        lst.forEach((itm) => { result.set(itm.wikidata, itm); });
+      }
+    }
+
+    this.logger.logFetchedEntities(result.size);
+    return Array.from(result.values());
+  }
+
+  /**
+   * Transform raw items into Item type.
+   * @param items raw items.
+   * @returns proper items.
+   */
+  async t(items: any[]): Promise<Item[]> {
+    items = items.map((entity: any) => constructFromEntity(entity));
+    return Promise.resolve(items);
+  }
 }
