@@ -1,6 +1,10 @@
 import axios from "axios";
 import jsonld, { type ContextDefinition } from "jsonld";
-import Logger from "./logger";
+import {
+  EnrichSource,
+  EnrichLogger,
+  getFirst
+} from "../../shared/src/index.js";
 
 const DBPEDIA_ACCEPT_CONTENT = "application/n-triples";
 const DBPEDIA_RDF_FORMAT = "application/n-quads";
@@ -44,7 +48,12 @@ const DBPEDIA_JSONLD_CONTEXT = {
   "wikidata": "@id"
 } as ContextDefinition;
 
-const dbpediaQuery = (payload: string[]) => `PREFIX dbo: <http://dbpedia.org/ontology/>
+/**
+ * @param payload List of identifiers.
+ * @returns Query as a string.
+ */
+function getDbpediaQuery(payload: string[]): string {
+  return `PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX dbp: <http://dbpedia.org/property/>
 PREFIX dbr: <http://dbpedia.org/resource/>
 PREFIX foaf: <http://xmlns.com/foaf/0.1/>
@@ -87,13 +96,13 @@ OPTIONAL {
 }
 OPTIONAL {
   ?dbPediaId dbo:foundingDate | dbp:established | dbo:openingDate | dbp:opening | dbp:completionDate ?date.
-}}`;
+}}`};
 
-async function fetchFromDbPedia(query: string) {
+async function fetchFromDbPedia(query: string): Promise<any[]> {
 
   const res = await axios.get(DBPEDIA_SPARQL_ENDPOINT + encodeURIComponent(query), {
     headers: {
-      Accept: `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
+      "Accept": `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
@@ -108,10 +117,8 @@ async function fetchFromDbPedia(query: string) {
   });
 
   const jsn = await jsonld.compact(arr, DBPEDIA_JSONLD_CONTEXT);
-  return jsn["@graph"] ?? [];
+  return (jsn["@graph"] ?? []) as any[];
 }
-
-const getFirst = (obj: unknown) => (Array.isArray(obj) ? obj[0] : obj);
 
 function handleDate(value: string) {
   const d = new Date(value).getFullYear();
@@ -142,30 +149,21 @@ function constructFromEntity(entity: any): any {
   return object;
 }
 
-const wait = (seconds: number): Promise<void> => (
-  new Promise((resolve) => setTimeout(resolve, seconds * 1000.0)));
+export default class Source extends EnrichSource {
 
-export async function fetch(logger: Logger, items: string[]) {
-  let result: any[] | undefined = undefined;
+  constructor(logger: EnrichLogger) {
+    super(logger);
+  }
 
-  let attempt = 0;
-  const query = dbpediaQuery(items);
-  await wait(3);
+  getQuery(items: string[]): string {
+    return getDbpediaQuery(items);
+  }
 
-  do {
-    ++attempt;
-    try {
-      result = ((await fetchFromDbPedia(query)) as any[])
-        .map((entity: any) => constructFromEntity(entity));
-    }
-    catch (ex) {
-      logger.logFailedFetchAttempt(attempt, ex);
-      await wait(10);
-    }
-  } while (result === undefined && attempt < 3);
+  fetchFrom(query: string): Promise<any[]> {
+    return fetchFromDbPedia(query);
+  }
 
-  result ??= [];
-  logger.logFetchedEntities(result.length, items.length);
-
-  return result;
+  constructFromEntity(entity: any) {
+    return constructFromEntity(entity);
+  }
 }
