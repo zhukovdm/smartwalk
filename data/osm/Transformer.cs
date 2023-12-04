@@ -4,7 +4,7 @@ using OsmSharp;
 
 namespace osm;
 
-internal static class Inspector
+internal class Transformer
 {
     /// <summary>
     /// Round coordinate to the allowed number of fractional digits.
@@ -14,9 +14,15 @@ internal static class Inspector
         return Math.Round(coordinate, 7);
     }
 
-    private static readonly Dictionary<long, Point> nodes = new();
+    private readonly Dictionary<long, Point> nodes = new();
+    private readonly ElementLocator locator;
 
-    public static Place Inspect(Node node)
+    public Transformer(ElementLocator locator)
+    {
+        this.locator = locator;
+    }
+
+    private Place Transform(Node node)
     {
         if (node is not null)
         {
@@ -61,7 +67,7 @@ internal static class Inspector
         return null;
     }
 
-    private static bool TryGetSequence(Way way, out List<Point> sequence)
+    private bool TryGetSequence(Way way, out List<Point> sequence)
     {
         sequence = new();
 
@@ -74,7 +80,7 @@ internal static class Inspector
         return true;
     }
 
-    public static Place Inspect(Way way)
+    private Place Transform(Way way)
     {
         if (way is not null)
         {
@@ -117,7 +123,7 @@ internal static class Inspector
         return null;
     }
 
-    public static Place Inspect(Relation relation, ElementLocator locator)
+    private Place Transform(Relation relation)
     {
         if (relation is not null)
         {
@@ -144,5 +150,10 @@ internal static class Inspector
         }
 
         return null;
+    }
+
+    public Place Transform(OsmGeo element)
+    {
+        return Transform(element as Node) ?? Transform(element as Way) ?? Transform(element as Relation);
     }
 }
