@@ -4,6 +4,7 @@ import {
   transports,
   type Logger as WinstonLogger
 } from "winston";
+import { getTime } from "../../shared/dist/src/index.js";
 
 export default class Logger {
 
@@ -20,40 +21,40 @@ export default class Logger {
   }
 
   logStarted() {
-    this.logger.info("Started building advice...");
+    this.logger.info(`[${getTime()}] Started building advice...`);
   }
 
   logCollectionDropped(collName: string) {
-    this.logger.info(`> Collection ${collName} has been dropped.`);
+    this.logger.info(`[${getTime()}] > Collection ${collName} has been dropped.`);
   }
 
   logCollecting() {
-    this.logger.info("> Collecting information about stored entities...");
+    this.logger.info(`[${getTime()}] > Collecting information about stored entities...`);
   }
 
   logProcessedCur(count: number) {
-    this.logger.info(`>  Still working... Already processed ${count} entities.`);
+    this.logger.info(`[${getTime()}] >  Still working... Already processed ${count} entities.`);
   }
 
   logProcessedTot(count: number) {
-    this.logger.info(`> Processed a total of ${count} entities, creating advice items...`);
+    this.logger.info(`[${getTime()}] > Processed a total of ${count} entities, creating advice items...`);
   }
 
   logFailedCreate(keyword: string, err: unknown) {
-    this.logger.warn(`>  Failed to create an item for keyword "${keyword}".`);
+    this.logger.warn(`[${getTime()}] >  Failed to create an item for keyword "${keyword}".`);
     this.logger.info(err);
   }
 
   logCreatedTot(count: number) {
-    this.logger.info(`> Created ${count} advice items.`);
+    this.logger.info(`[${getTime()}] > Created ${count} advice items.`);
   }
 
   logWriteKeywordsToFile() {
-    this.logger.info("> Writing keywords to the file...");
+    this.logger.info(`[${getTime()}] > Writing keywords to the file...`);
   }
 
   logFinished() {
-    this.logger.info("Advice has been completed.");
+    this.logger.info(`[${getTime()}] Advice has been completed.`);
   }
 
   logError(err: unknown) { this.logger.error(err); }
