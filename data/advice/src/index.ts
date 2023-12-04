@@ -1,36 +1,42 @@
-import Extractor from "./extractor";
-import Logger from "./logger";
-import Model from "./model";
-import { parseArgs } from "./parse";
-import writeToFile from "./write";
+import {
+  SimpleParser as Parser
+} from "../../shared/dist/src/index.js";
+import Logger from "./logger.js";
+import Source from "./source.js";
+import Target from "./target.js";
+
+import Transformer from "./transformer.js";
+import writeToFile from "./write.js";
 
 async function advice() {
   
-  const { conn } = parseArgs();
+  const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();
-  const model = new Model(logger, conn);
-  const extractor = new Extractor(logger);
+  const source = new Source(conn);
+  const target = new Target(logger, conn);
+
+  const transformer = new Transformer(logger);
 
   logger.logStarted();
-  await model.safeDropCollection();
+  await target.init(); // !
 
   try {
     logger.logCollecting();
     const keywords = new Map<string, Item>();
 
-    for await (const place of model) {
-      extractor.extract(place, keywords);
+    for await (const place of source) {
+      transformer.reduce(place, keywords);
     }
-    extractor.reportProcessedTot();
+    transformer.reportProcessedTot();
 
     const items = Array.from(keywords.values())
       .sort((l, r) => (l.keyword.localeCompare(r.keyword)));
 
     for (const item of items) {
-      await model.create(item);
+      await target.load(item);
     }
-    model.reportCreatedTot();
+    target.reportCreatedTot();
 
     logger.logWriteKeywordsToFile();
     writeToFile(items.map(({ keyword }) => keyword));
@@ -39,7 +45,8 @@ async function advice() {
   }
   catch (ex) { logger.logError(ex); }
   finally {
-    await model.dispose();
+    await source.dispose();
+    await target.dispose();
   }
 }
 

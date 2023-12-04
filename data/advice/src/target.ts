@@ -1,71 +1,45 @@
 import {
   Collection,
   Db,
-  type Document,
-  FindCursor,
-  MongoClient,
-  type WithId
+  MongoClient
 } from "mongodb";
-import Logger from "./logger";
+import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";
-const PLACE_COLLECTION = "place";
 const KEYWD_COLLECTION = "keyword";
 
 const set2arr = (set: Set<string> | undefined) => (set ? Array.from(set).sort() : undefined);
 
-class ModelIterator implements AsyncIterator<Place> {
-
-  private readonly cursor: FindCursor<WithId<Place>>;
-
-  constructor(cursor: FindCursor<WithId<Document>>) {
-    this.cursor = cursor as FindCursor<WithId<Place>>;
-  }
-
-  async next(): Promise<IteratorResult<Place, Place | undefined>> {
-    const hasNext = await this.cursor.hasNext();
-    if (!hasNext) {
-      await this.cursor.close();
-    }
-    return !hasNext
-      ? { done: true, value: undefined }
-      : { done: false, value: (await this.cursor.next()) as Place };
-  }
-}
-
-export default class Model implements AsyncIterable<Place> {
+export default class Target {
 
   private createdTot = 0;
   private readonly logger: Logger;
 
   private readonly client: MongoClient;
   private readonly database: Db;
-
-  private readonly placeColl: Collection;
   private readonly keywdColl: Collection;
 
   constructor(logger: Logger, conn: string) {
     this.logger = logger;
-
     this.client = new MongoClient(conn);
     this.database = this.client.db(DATABASE_NAME);
-
-    this.placeColl = this.database.collection(PLACE_COLLECTION);
     this.keywdColl = this.database.collection(KEYWD_COLLECTION);
   }
 
-  [Symbol.asyncIterator](): AsyncIterator<Place> {
-    return new ModelIterator(this.placeColl.find());
-  }
-
-  async safeDropCollection(): Promise<void> {
+  /**
+   * Initialize target (clean up the previous state).
+   */
+  async init(): Promise<void> {
     try {
       await this.database.dropCollection(KEYWD_COLLECTION);
       this.logger.logCollectionDropped(KEYWD_COLLECTION);
     } catch (ex) { this.logger.logError(ex); }
   }
 
-  async create(item: Item): Promise<void> {
+  /**
+   * @param item Item to be loaded.
+   */
+  async load(item: Item): Promise<void> {
     const { attributeList, collectBounds } = item;
 
     try {
@@ -90,9 +64,15 @@ export default class Model implements AsyncIterable<Place> {
     }
   }
 
+  /**
+   * Report total number of items created.
+   */
   reportCreatedTot() {
     this.logger.logCreatedTot(this.createdTot);
   }
 
+  /**
+   * Release allocated resources gracefully.
+   */
   async dispose(): Promise<void> { this.client.close(); }
 }

@@ -1,6 +1,6 @@
-import Logger from "./logger";
+import Logger from "./logger.js";
 
-export default class Extractor {
+export default class Transformer {
   
   private processedTot = 0;
   private processedCur = 0;
@@ -20,11 +20,11 @@ export default class Extractor {
     };
   }
 
-  extract(place: Place, keywords: Map<string, Item>): void {
+  reduce(place: Place, keywords: Map<string, Item>): void {
     place.keywords.forEach((keyword) => {
 
       if (!keywords.has(keyword)) {
-        keywords.set(keyword, Extractor.getBaseItem(keyword));
+        keywords.set(keyword, Transformer.getBaseItem(keyword));
       }
   
       const item = keywords.get(keyword)!;
