@@ -1,40 +1,39 @@
-import Logger from "./logger";
-import Model from "./model";
-import { parseArgs } from "./parse";
+import Logger from "./logger.js";
+import Parser from "./parser.js";
 import {
   getKeywordLines,
   getPlaceLines
-} from "./reader";
+} from "./source.js";
+import Target from "./target.js";
 
 async function restore() {
 
-  const { conn } = parseArgs();
+  const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();
-  const model = new Model(logger, conn);
+  const target = new Target(logger, conn);
 
   try {
     logger.logStarted();
-
     logger.logStartedPlaces();
 
     for await (const placeLine of getPlaceLines()) {
-      await model.createPlace(JSON.parse(placeLine));
+      await target.createPlace(JSON.parse(placeLine));
     }
-    await model.flushPlaces();
+    await target.flushRemainingPlaces();
 
     logger.logStartedKeywords();
 
     for await (const keywordLine of getKeywordLines()) {
-      await model.createKeyword(JSON.parse(keywordLine));
+      await target.createKeyword(JSON.parse(keywordLine));
     }
-    await model.flushKeywords();
+    await target.flushRemainingKeywords();
 
     logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }
   finally {
-    await model.dispose();
+    await target.dispose();
   }
 }
 

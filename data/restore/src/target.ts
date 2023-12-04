@@ -1,9 +1,9 @@
 import { Db, MongoClient, ObjectId } from "mongodb";
-import Logger from "./logger";
+import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";
 
-export default class Model {
+export default class Target {
 
   private placesCur = 0;
   private placesTot = 0;
@@ -44,7 +44,7 @@ export default class Model {
     }
   }
 
-  async flushPlaces(): Promise<void> {
+  async flushRemainingPlaces(): Promise<void> {
     if (this.objects.length > 0) {
       await this.write("place");
     }
@@ -58,7 +58,7 @@ export default class Model {
     ++this.keywordsTot;
   }
 
-  async flushKeywords(): Promise<void> {
+  async flushRemainingKeywords(): Promise<void> {
     if (this.objects.length > 0) {
       await this.write("keyword");
     }
