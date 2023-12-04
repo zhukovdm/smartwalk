@@ -151,6 +151,18 @@ export class SafeFetcher<T> {
   }
 }
 
+export class SimpleParser {
+
+  /**
+   * Read connection string.
+   */
+  parseArgs(): { conn: string } {
+    const args = new Command()
+      .option("--conn <string>", "Database connection string");
+    return args.parse().opts();
+  }
+}
+
 export class EnrichLogger {
 
   private readonly logger: WinstonLogger;
@@ -196,20 +208,6 @@ export class EnrichLogger {
   }
 
   logError(err: unknown) { this.logger.error(err); }
-}
-
-export class EnrichParser {
-
-  /**
-   * Parse connection string.
-   */
-  parseArgs(): {
-    conn: string;
-  } {
-    const args = new Command()
-      .option("--conn <string>", "Database connection string");
-    return args.parse().opts();
-  }
 }
 
 export abstract class EnrichSource {

@@ -1,5 +1,7 @@
+import {
+  SimpleParser as Parser
+} from "../../shared/dist/src/index.js";
 import Logger from "./logger.js";
-import Parser from "./parser.js";
 import {
   KeywordSource,
   PlaceSource

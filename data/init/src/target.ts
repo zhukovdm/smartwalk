@@ -1,5 +1,5 @@
 import { MongoClient } from "mongodb";
-import Logger from "./logger";
+import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";
 const COLLECTION_NAME = "place";
