@@ -1,39 +1,42 @@
-import Logger from "./logger";
-import { parseArgs } from "./parse";
-import { KeywordStore, PlaceStore } from "./store";
-import Writer from "./writer";
+import Logger from "./logger.js";
+import Parser from "./parser.js";
+import {
+  KeywordSource,
+  PlaceSource
+} from "./source.js";
+import Target from "./target.js";
 
 async function dump() {
 
-  const { conn } = parseArgs();
+  const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();
-  const writer = new Writer(logger);
+  const target = new Target(logger);
 
-  const placeStore = new PlaceStore(conn);
-  const keywordStore = new KeywordStore(conn);
+  const placeSource = new PlaceSource(conn);
+  const keywordSource = new KeywordSource(conn);
 
   try {
     logger.logStarted();
 
     logger.logPlaces();
-    for await (const place of placeStore) {
-      writer.writePlace(place);
+    for await (const place of placeSource) {
+      target.writePlace(place);
     }
-    writer.reportPlacesProcessed();
+    target.reportPlacesProcessed();
 
     logger.logKeywords();
-    for await (const keyword of keywordStore) {
-      writer.writeKeyword(keyword);
+    for await (const keyword of keywordSource) {
+      target.writeKeyword(keyword);
     }
-    writer.reportKeywordsProcessed();
+    target.reportKeywordsProcessed();
 
     logger.logFinished();
   }
   catch (ex) { logger.logError(ex); }
   finally {
-    placeStore.dispose();
-    keywordStore.dispose();
+    placeSource.dispose();
+    keywordSource.dispose();
   }
 }
 

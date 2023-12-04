@@ -1,11 +1,11 @@
 import fs from "fs";
-import Logger from "./logger";
+import Logger from "./logger.js";
 
 const ASSETS_DIR = "../assets";
 
 type FileName = "place" | "keyword";
 
-export default class Writer {
+export default class Target {
 
   private appendedPlacesCur = 0;
   private appendedPlacesTot = 0;
