@@ -2,8 +2,7 @@ import axios from "axios";
 import jsonld, { type ContextDefinition } from "jsonld";
 import {
   EnrichSource,
-  EnrichLogger,
-  getFirst
+  EnrichLogger
 } from "../../shared/dist/src/index.js";
 
 const DBPEDIA_ACCEPT_CONTENT = "application/n-triples";
@@ -120,36 +119,7 @@ async function fetchFromDbPedia(query: string): Promise<any[]> {
   return (jsn["@graph"] ?? []) as any[];
 }
 
-function handleDate(value: string) {
-  const d = new Date(value).getFullYear();
-  return isNaN(d) ? undefined : d;
-}
-
-function constructFromEntity(entity: any): any {
-  const object = {} as any;
-
-  // en-containers
-  object.name = getFirst(entity.name?.en);
-  object.description = getFirst(entity.description?.en);
-
-  // lists
-  object.image = getFirst(entity.image);
-  object.website = getFirst(entity.website);
-
-  // dates
-  object.year = handleDate(getFirst(entity.date));
-
-  // linked
-  object.dbpedia = (getFirst(entity.dbpedia))?.substring(3);
-  object.yago = (getFirst(entity.yago))?.substring(3);
-
-  // existing
-  object.wikidata = entity.wikidata.substring(3);
-
-  return object;
-}
-
-export default class Source extends EnrichSource {
+export default class Source extends EnrichSource<any> {
 
   constructor(logger: EnrichLogger) {
     super(logger);
@@ -161,9 +131,5 @@ export default class Source extends EnrichSource {
 
   fetchFrom(query: string): Promise<any[]> {
     return fetchFromDbPedia(query);
-  }
-
-  constructFromEntity(entity: any) {
-    return constructFromEntity(entity);
   }
 }

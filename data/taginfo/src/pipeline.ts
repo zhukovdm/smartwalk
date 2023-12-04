@@ -7,12 +7,11 @@ export default class Pipeline {
 
   private readonly source: Source;
   private readonly target: Target;
-  private readonly transformer: Transformer;
+  private readonly transformer = new Transformer();
 
   constructor(source: Source, target: Target) {
     this.source = source;
     this.target = target;
-    this.transformer = new Transformer();
   }
 
   /**

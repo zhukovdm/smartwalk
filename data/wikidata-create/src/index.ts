@@ -1,5 +1,6 @@
 import Logger from "./logger.js";
 import Parser from "./parser.js";
+import Pipeline from "./pipeline.js";
 import Source from "./source.js";
 import Target from "./target.js";
 
@@ -8,18 +9,19 @@ import Target from "./target.js";
  */
 async function wikidataCreate() {
 
-  const logger = new Logger();
   const { w, n, e, s, rows, cols, conn } = new Parser().parseArgs();
 
+  const logger = new Logger();
   const source = new Source(logger);
   const target = new Target(logger, conn);
 
   try {
     logger.logStarted();
+    const pipeline = new Pipeline(source, target);
 
-    const _e = await source.e({ w, n, e, s }, rows, cols);
-    const _t = await source.t(_e);
-    const _l = await target.l(_t);
+    const _e = await pipeline.e({ w, n, e, s }, rows, cols);
+    const _t = await pipeline.t(_e);
+    const _l = await pipeline.l(_t);
 
     logger.logFinished();
   }

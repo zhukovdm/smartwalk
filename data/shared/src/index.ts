@@ -210,7 +210,7 @@ export class EnrichLogger {
   logError(err: unknown) { this.logger.error(err); }
 }
 
-export abstract class EnrichSource {
+export abstract class EnrichSource<S> {
   private readonly logger: EnrichLogger;
 
   constructor(logger: EnrichLogger) {
@@ -219,18 +219,11 @@ export abstract class EnrichSource {
 
   abstract getQuery(items: string[]): string;
 
-  abstract fetchFrom(query: string): Promise<any[]>;
+  abstract fetchFrom(query: string): Promise<S[]>;
 
-  abstract constructFromEntity(entity: any): any;
+  async load(items: string[]): Promise<S[]> {
 
-  /**
-   * Extract phase.
-   * @param items List of identifiers.
-   * @returns List of raw items.
-   */
-  async e(items: string[]): Promise<any[]> {
-
-    const result = await new SafeFetcher<any[]>(3, 3, 10)
+    const result = await new SafeFetcher<S[]>(3, 3, 10)
       .fetchWithRetry(
         () => this.fetchFrom(this.getQuery(items)),
         (attempt: number, err: unknown) => {
@@ -241,20 +234,9 @@ export abstract class EnrichSource {
     this.logger.logFetchedEntities(result.length, items.length);
     return result;
   }
-
-  /**
-   * Transform raw items into well-formed items. Due to the complexity
-   * of the target type, type definition is omitted.
-   * @param items raw items.
-   * @returns proper items.
-   */
-  t(items: any[]): Promise<any[]> {
-    items = items.map((entity) => this.constructFromEntity(entity));
-    return Promise.resolve(items);
-  }
 }
 
-export class EnrichTarget {
+export abstract class EnrichTarget<T> {
 
   protected readonly client: MongoClient;
   protected readonly collection: Collection;
@@ -264,12 +246,14 @@ export class EnrichTarget {
     this.collection = this.client.db("smartwalk").collection("place");
   }
 
+  abstract load(items: T[]): Promise<void>;
+
   /**
    * Get all place identifiers in the database.
    * @param window Maximum number of items in one batch.
    * @returns Iterator over a list of identifiers.
    */
-  protected async getPayload(window: number): Promise<string[]> {
+  protected async getPayload(): Promise<string[]> {
     const target = "linked.wikidata";
 
     let promise = this.collection
@@ -279,5 +263,59 @@ export class EnrichTarget {
 
     return (await promise)
       .map((doc) => `wd:${doc.linked.wikidata}`);
+  }
+}
+
+export abstract class EnrichTransformer<S, T> {
+
+  abstract constructFromEntity(entity: S): T;
+
+  /**
+   * Transform raw items into well-formed ones.
+   * @param ts raw items.
+   * @returns proper items.
+   */
+  transform(items: S[]): Promise<T[]> {
+    const us = items.map((entity) => this.constructFromEntity(entity));
+    return Promise.resolve(us);
+  }
+}
+
+export abstract class EnrichPipeline<S, T> {
+
+  private readonly source: EnrichSource<S>;
+  private readonly target: EnrichTarget<T>;
+  private readonly transformer: EnrichTransformer<S, T>;
+
+  constructor(source: EnrichSource<S>, target: EnrichTarget<T>, transformer: EnrichTransformer<S, T>) {
+    this.source = source;
+    this.target = target;
+    this.transformer = transformer;
+  }
+
+  /**
+   * Extract phase.
+   * @param items List of identifiers.
+   * @returns List of raw items.
+   */
+  e(items: string[]): Promise<S[]> {
+    return this.source.load(items);
+  }
+
+  /**
+   * Transform phase.
+   * @param items Raw items.
+   * @returns Well-formed items.
+   */
+  t(items: S[]): Promise<T[]> {
+    return this.transformer.transform(items);
+  }
+
+  /**
+   * Load phase.
+   * @param items Well-formed items.
+   */
+  l(items: T[]): Promise<void> {
+    return this.target.load(items);
   }
 }
