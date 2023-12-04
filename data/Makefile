@@ -43,13 +43,13 @@ REGION_S=49.90
 
 A_DIR=${PWD}/assets
 
-NODE_DIRS=advice dbpedia dump init restore taginfo wikidata-create wikidata-enrich
+NODE_DIRS=shared advice dbpedia dump init restore taginfo wikidata-create wikidata-enrich
 DATA_DIRS=database routing taginfo
 
 # routing engine
 R_CMD=docker run --rm -t -v $(A_DIR)/routing:/data osrm/osrm-backend:v5.24.0
 
-# entity store
+# entity store and index
 M_URL=mongodb://localhost:27017
 
 ################################################################################
