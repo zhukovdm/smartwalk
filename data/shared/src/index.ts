@@ -75,7 +75,7 @@ export function getTime(): string {
  */
 export function getDateTime(): string {
   const date = new Date();
-  return `${date.getFullYear()}-${paddedWithZeros(date.getMonth())}-${paddedWithZeros(date.getDate())} ${paddedWithZeros(date.getHours())}:${paddedWithZeros(date.getMinutes())}:${paddedWithZeros(date.getSeconds())}`
+  return `${date.getFullYear()}-${paddedWithZeros(date.getMonth() + 1)}-${paddedWithZeros(date.getDate())} ${paddedWithZeros(date.getHours())}:${paddedWithZeros(date.getMinutes())}:${paddedWithZeros(date.getSeconds())}`
 }
 
 /**
@@ -83,14 +83,16 @@ export function getDateTime(): string {
  * @param window Number of item in one batch.
  * @returns Generator.
  */
-export function getPayloadIter<T>(payload: T[], window: number): {
+export function getPayloadIter<T>(payload: T[], window: number, logger: EnrichLogger): {
   [Symbol.iterator](): Generator<T[], void, unknown>;
 } {
+  let length = payload.length;
   return {
     *[Symbol.iterator]() {
       while (payload.length > 0) {
         yield payload.slice(0, window);
         payload = payload.slice(window);
+        logger.logPayloadRemain(1 - (length - payload.length) / length);
       }
     }
   }
@@ -183,6 +185,10 @@ export class EnrichLogger {
 
   logPayloadLength(payloadLength: number) {
     this.logger.info(`[${getTime()}] > Constructed payload with ${payloadLength} unique identifiers.`);
+  }
+
+  logPayloadRemain(payloadRatio: number) {
+    this.logger.info(`[${getTime()}] > ${(payloadRatio * 100.0).toFixed(0)}% of the initial payload are left...`);
   }
 
   logFailedFetchAttempt(attempt: number, err: unknown) {

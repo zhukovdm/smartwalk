@@ -26,7 +26,7 @@ export default class Target extends EnrichTarget<any> {
     const payload = await this.getPayload();
     this.logger.logPayloadLength(payload.length);
 
-    return getPayloadIter(payload, window);
+    return getPayloadIter(payload, window, this.logger);
   }
 
   async load(items: any[]): Promise<void> {
