@@ -42,14 +42,20 @@ internal class Program
             var locator = await OverpassElementLocatorFactory
                 .GetInstance(log, opt.Bbox.ToList(), opt.Rows, opt.Cols);
 
+            var transformer = new Transformer(locator);
+
             var source = SourceFactory
-                .GetInstance(log, opt.File, opt.Bbox.ToList(), locator);
+                .GetInstance(log, opt.File, opt.Bbox.ToList());
 
             var target = TargetFactory.GetInstance(log, opt.Conn);
 
-            foreach (var place in source)
+            foreach (var item in source)
             {
-                target.Consume(place);
+                var place = transformer.Transform(item);
+                if (place is not null)
+                {
+                    target.Load(place);
+                }
             }
             target.Complete();
         }

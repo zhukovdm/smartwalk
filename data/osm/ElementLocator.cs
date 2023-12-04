@@ -12,15 +12,15 @@ namespace osm;
 
 internal class ElementLocator
 {
-    private readonly Dictionary<long, Point> _locs;
+    private readonly Dictionary<long, Point> locs;
 
     public ElementLocator(ILogger logger, Dictionary<long, Point> locs)
     {
-        _locs = locs;
+        this.locs = locs;
         logger.LogInformation("Created element locator with {0} OSM elements.", locs.Count);
     }
 
-    public bool TryGetLocation(long id, out Point location) => _locs.TryGetValue(id, out location);
+    public bool TryGetLocation(long id, out Point location) => locs.TryGetValue(id, out location);
 }
 
 internal static class OverpassElementLocatorFactory

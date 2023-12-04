@@ -17,7 +17,7 @@ internal static class UpdateDefinitionExtensions
 internal abstract class Target
 {
     protected long step = 0;
-    private readonly ILogger _logger;
+    private readonly ILogger logger;
 
     protected void Increment()
     {
@@ -25,33 +25,35 @@ internal abstract class Target
 
         if (step % 1000 == 0)
         {
-            _logger.LogInformation("Still working... {0} places already processed.", step);
+            logger.LogInformation("Still working... {0} places already processed.", step);
         }
     }
 
-    protected void Total() { _logger.LogInformation("Finished, processed a total of {0} places.", step); }
+    protected void Total() { logger.LogInformation("Finished, processed a total of {0} places.", step); }
 
-    public Target(ILogger logger) { _logger = logger; }
+    public Target(ILogger logger) { this.logger = logger; }
 
-    public abstract void Consume(Place place);
+    public abstract void Load(Place place);
 
     public abstract void Complete();
 }
 
 internal class MongoTarget : Target
 {
-    private readonly IMongoDatabase _database;
-    private readonly List<Place> _places = new();
+    private readonly IMongoDatabase database;
+    private readonly List<Place> places = new();
 
     private void Write()
     {
         var bulk = new List<WriteModel<Place>>();
-        var coll = MongoBuilder.GetCollection(_database);
+        var coll = MongoBuilder.GetCollection(database);
 
-        foreach (var place in _places)
+        foreach (var place in places)
         {
             var filter = Builders<Place>.Filter.Eq(p => p.linked.osm, place.linked.osm);
             var exists = coll.Find(filter).Limit(1).Any();
+
+            var time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
             if (exists) // update
             {
@@ -59,6 +61,7 @@ internal class MongoTarget : Target
                     .AddToSetEach(p => p.keywords, place.keywords)
                     .SetValue(p => p.name, place.name)
                     .SetValue(p => p.linked.wikidata, place.linked.wikidata)
+                    .SetValue(p => p.metadata.updated, time)
                     .SetValue(p => p.attributes.polygon, place.attributes.polygon)
                     .SetValue(p => p.attributes.image, place.attributes.image)
                     .SetValue(p => p.attributes.website, place.attributes.website)
@@ -93,29 +96,31 @@ internal class MongoTarget : Target
 
             else // insert
             {
+                place.metadata.created = time;
+                place.metadata.updated = time;
                 bulk.Add(new InsertOneModel<Place>(place));
             }
         }
         _ = coll.BulkWrite(bulk);
 
-        _places.Clear();
+        places.Clear();
     }
 
     public MongoTarget(ILogger logger, IMongoDatabase database) : base(logger)
     {
-        _database = database;
+        this.database = database;
     }
 
-    public override void Consume(Place place)
+    public override void Load(Place place)
     {
-        _places.Add(place);
-        if (_places.Count >= 1000) { Write(); }
+        places.Add(place);
+        if (places.Count >= 1000) { Write(); }
         Increment();
     }
 
     public override void Complete()
     {
-        if (_places.Count > 0) { Write(); }
+        if (places.Count > 0) { Write(); }
         Total();
     }
 }
@@ -128,6 +133,6 @@ internal static class TargetFactory
         {
             return new MongoTarget(logger, MongoBuilder.GetDatabase(conn));
         }
-        catch (Exception) { throw new Exception("Failed to get database instance from the given connection string."); }
+        catch (Exception) { throw new Exception("Failed to construct a database instance from the given connection string."); }
     }
 }

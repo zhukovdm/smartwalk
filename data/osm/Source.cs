@@ -9,36 +9,33 @@ using OsmSharp.Streams;
 
 namespace osm;
 
-internal class Source : IEnumerable<Place>
+internal class Source : IEnumerable<OsmGeo>
 {
-    private readonly double _w, _n, _e, _s;
-    private readonly ILogger _logger;
-    private readonly OsmStreamSource _stream;
-    private readonly ElementLocator _locator;
+    private readonly ILogger logger;
+    private readonly OsmStreamSource stream;
+    private readonly double w, n, e, s;
 
-    public Source(ILogger logger, OsmStreamSource stream, (double, double, double, double) bbox, ElementLocator locator)
+    public Source(ILogger logger, OsmStreamSource stream, (double, double, double, double) bbox)
     {
-        _logger = logger; _stream = stream; (_w, _n, _e, _s) = bbox; _locator = locator;
+        this.logger = logger; this.stream = stream; (w, n, e, s) = bbox;
     }
 
-    public IEnumerator<Place> GetEnumerator()
+    public IEnumerator<OsmGeo> GetEnumerator()
     {
-        var source = from item in _stream.FilterBox((float)_w, (float)_n, (float)_e, (float)_s) select item;
+        var source = from element in stream.FilterBox((float)w, (float)n, (float)e, (float)s) select element;
 
         long step = 0;
 
-        foreach (var item in source)
+        foreach (var element in source)
         {
             ++step;
 
             if (step % 10_000_000 == 0)
             {
-                _logger.LogInformation("Still working... {0} objects already processed.", step);
+                logger.LogInformation("Still working... {0} objects already processed.", step);
             }
 
-            var place = Inspector.Inspect(item as Node) ?? Inspector.Inspect(item as Way) ?? Inspector.Inspect(item as Relation, _locator);
-
-            if (place is not null) { yield return place; }
+            yield return element;
         }
     }
 
@@ -72,7 +69,7 @@ internal static class SourceFactory
 
         if (func is null)
         {
-            throw new Exception($"Name of the file should have .pbf or .osm extension.");
+            throw new Exception($"Name of the file should have .osm or .pbf extension.");
         }
 
         try
@@ -82,8 +79,8 @@ internal static class SourceFactory
         catch (Exception) { throw new Exception($"Cannot create OSM stream from ${fStream}."); }
     }
 
-    public static Source GetInstance(ILogger logger, string file, List<string> bbox, ElementLocator locator)
+    public static Source GetInstance(ILogger logger, string file, List<string> bbox)
     {
-        return new(logger, ToStream(file), Converter.ToBbox(bbox), locator);
+        return new(logger, ToStream(file), Converter.ToBbox(bbox));
     }
 }

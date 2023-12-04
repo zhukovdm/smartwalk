@@ -151,6 +151,15 @@ internal sealed class Linked
     public string wikidata { get; set; }
 }
 
+internal sealed class Metadata
+{
+    [BsonIgnoreIfNull]
+    public string created { get; set; }
+
+    [BsonIgnoreIfNull]
+    public string updated { get; set; }
+}
+
 internal sealed class Place
 {
     public string name { get; set; }
@@ -160,6 +169,8 @@ internal sealed class Place
     public SortedSet<string> keywords { get; set; } = new();
 
     public Linked linked { get; set; } = new();
+
+    public Metadata metadata { get; set; } = new();
 
     public Attributes attributes { get; set; } = new();
 }
