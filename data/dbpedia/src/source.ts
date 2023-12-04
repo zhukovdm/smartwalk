@@ -4,7 +4,7 @@ import {
   EnrichSource,
   EnrichLogger,
   getFirst
-} from "../../shared/src/index.js";
+} from "../../shared/dist/src/index.js";
 
 const DBPEDIA_ACCEPT_CONTENT = "application/n-triples";
 const DBPEDIA_RDF_FORMAT = "application/n-quads";

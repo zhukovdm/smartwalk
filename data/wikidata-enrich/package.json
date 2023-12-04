@@ -2,11 +2,11 @@
   "name": "wikidata-enrich",
   "description": "Fetch extended data items from Wikidata SPARQL endpoint and enrich entities.",
   "version": "1.0.0",
-  "main": "./dist/wikidata-enrich/src/index.js",
+  "main": "./dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node ./dist/wikidata-enrich/src/index.js"
+    "build": "npx tsc -b",
+    "start": "node ./dist/index.js"
   },
   "license": "MIT",
   "author": "Dmitry Zhukov",

@@ -2,11 +2,11 @@
   "name": "taginfo",
   "description": "Fetch data from https://taginfo.openstreetmap.org/",
   "version": "1.0.0",
-  "main": "./dist/taginfo/src/index.js",
+  "main": "./dist/index.js",
   "type": "module",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node ./dist/taginfo/src/index.js"
+    "build": "npx tsc -b",
+    "start": "node ./dist/index.js"
   },
   "license": "MIT",
   "author": "Dmitry Zhukov",
@@ -17,5 +17,7 @@
     "mongodb": "^6.0.0",
     "typescript": "^5.2.2",
     "winston": "^3.10.0"
-  }
+  },
+  "devDependencies": {},
+  "keywords": []
 }

@@ -3,7 +3,7 @@ import {
   EnrichTarget,
   getDateTime,
   getPayloadIter
-} from "../../shared/src/index.js";
+} from "../../shared/dist/src/index.js";
 
 export default class Target extends EnrichTarget {
 

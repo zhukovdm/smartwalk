@@ -1,7 +1,7 @@
 import {
   EnrichLogger as Logger,
   EnrichParser as Parser
-} from "../../shared/src/index.js";
+} from "../../shared/dist/src/index.js";
 import Source from "./source.js";
 import Target from "./target.js";
 

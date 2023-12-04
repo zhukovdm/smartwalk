@@ -2,7 +2,7 @@ import axios from "axios";
 import {
   SafeFetcher,
   isValidKeyword
-} from "../../shared/src/index.js"
+} from "../../shared/dist/src/index.js";
 import type {
   ValueItem,
   ValueObject
