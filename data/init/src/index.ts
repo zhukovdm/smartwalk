@@ -1,6 +1,8 @@
-import Logger from "./logger";
-import Parser from "./parser";
-import Target from "./target";
+import {
+  SimpleParser as Parser
+} from "../../shared/dist/src/index.js";
+import Logger from "./logger.js";
+import Target from "./target.js";
 
 async function init() {
 
