@@ -9,9 +9,6 @@ import type {
 } from "./types.js";
 import Logger from "./logger.js";
 
-/** Extracted value should occur at least `COUNT_LIMIT` times. */
-const COUNT_LIMIT = 50;
-
 /** Extract first number of pages. */
 const COUNT_PAGES = 5;
 
@@ -152,11 +149,7 @@ export default class Source {
     this.logger = logger;
   }
 
-  /**
-   * Extract phase.
-   * @param key concrete OSM key.
-   */
-  async e(key: string): Promise<Map<string, number>> {
+  async load(key: string): Promise<Map<string, number>> {
     const result = new Map<string, number>();
 
     for (let page = 1; page <= COUNT_PAGES; ++page) {
@@ -175,19 +168,5 @@ export default class Source {
     }
 
     return result;
-  }
-
-  /**
-   * Transform phase. Prepare for write to file. Note that Map does not
-   * maintain lexicographic order!
-   * @param col collection of elements.
-   */
-  async t(col: Map<string, number>): Promise<ValueItem[]> {
-    const result = Array.from(col.keys())
-      .map((key) => ({ value: key, count: col.get(key)! }))
-      .sort((l, r) => r.count - l.count)
-      .filter((pair) => pair.count >= COUNT_LIMIT);
-
-    return Promise.resolve(result);
   }
 }
