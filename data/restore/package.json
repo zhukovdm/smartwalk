@@ -2,10 +2,11 @@
   "name": "restore",
   "description": "Restore object store and index from dump files.",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "./dist/restore/src/index.js",
+  "type": "module",
   "scripts": {
     "build": "npx tsc",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/restore/src/index.js"
   },
   "license": "MIT",
   "author": "Dmitry Zhukov",

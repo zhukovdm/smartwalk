@@ -2,6 +2,8 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
+    "module": "ES6",
+    "moduleResolution": "Node",
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "./dist",

@@ -4,6 +4,7 @@ import {
   transports,
   type Logger as WinstonLogger
 } from "winston";
+import { getTime } from "../../shared/src/index.js";
 
 export default class Logger {
 
@@ -20,31 +21,31 @@ export default class Logger {
   }
 
   logStarted() {
-    this.logger.info("Started restoring a dump...");
+    this.logger.info(`[${getTime()}] Started restoring a dump...`);
   }
 
   logStartedPlaces() {
-    this.logger.info("> Started processing places...");
+    this.logger.info(`[${getTime()}] > Started processing places...`);
   }
 
   logPlacesCur(count: number) {
-    this.logger.info(`>  Created ${count} places.`);
+    this.logger.info(`[${getTime()}] >  Created ${count} places.`);
   }
 
   logPlacesTot(count: number) {
-    this.logger.info(`> Created a total of ${count} places.`);
+    this.logger.info(`[${getTime()}] > Created a total of ${count} places.`);
   }
 
   logStartedKeywords() {
-    this.logger.info("> Started processing keywords...");
+    this.logger.info(`[${getTime()}] > Started processing keywords...`);
   }
 
   logKeywordsTot(count: number) {
-    this.logger.info(`> Created a total of ${count} keywords.`);
+    this.logger.info(`[${getTime()}] > Created a total of ${count} keywords.`);
   }
 
   logFinished() {
-    this.logger.info("The dump has been restored.");
+    this.logger.info(`[${getTime()}] The dump has been restored.`);
   }
 
   logError(err: unknown) { this.logger.error(err); }
