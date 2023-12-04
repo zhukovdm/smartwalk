@@ -6,7 +6,7 @@ import {
   ensureArray,
   getFirst,
   isValidKeyword
-} from "../../shared/src/index.js";
+} from "../../shared/dist/src/index.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 

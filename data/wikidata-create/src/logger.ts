@@ -4,7 +4,7 @@ import {
   transports,
   type Logger as WinstonLogger
 } from "winston";
-import { getTime } from "../../shared/src/index.js"
+import { getTime } from "../../shared/dist/src/index.js"
 
 export default class Logger {
 
