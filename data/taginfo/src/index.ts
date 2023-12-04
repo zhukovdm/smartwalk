@@ -1,4 +1,5 @@
 import Logger from "./logger.js";
+import Pipeline from "./pipeline.js";
 import Source from "./source.js";
 import Target from "./target.js";
 
@@ -15,12 +16,11 @@ async function taginfo(keys: string[]) {
 
     for (const key of keys) {
       logger.logKeyProcessing(key);
-      const source = new Source(logger);
-      const target = new Target();
+      const pipeline = new Pipeline(new Source(logger), new Target());
 
-      const _e = await source.e(key);
-      const _t = await source.t(_e);
-      const _l = await target.l(key, _t);
+      const _e = await pipeline.e(key);
+      const _t = await pipeline.t(_e);
+      const _l = await pipeline.l(key, _t);
 
       logger.logFinishedKey(key, _t.length);
     }
