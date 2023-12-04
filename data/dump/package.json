@@ -2,10 +2,11 @@
   "name": "dump",
   "description": "Store data from object store and index to dump files.",
   "version": "1.0.0",
-  "main": "dist/index.js",
+  "main": "./dist/dump/src/index.js",
+  "type": "module",
   "scripts": {
     "build": "npx tsc",
-    "start": "node ./dist/index.js"
+    "start": "node ./dist/dump/src/index.js"
   },
   "license": "MIT",
   "author": "Dmitry Zhukov",
@@ -14,5 +15,7 @@
     "mongodb": "^6.0.0",
     "typescript": "^5.2.2",
     "winston": "^3.10.0"
-  }
+  },
+  "devDependencies": {},
+  "keywords": []
 }

@@ -11,7 +11,7 @@ const DATABASE_NAME = "smartwalk";
 const PLACE_COLLECTION = "place";
 const KEYWORD_COLLECTION = "keyword";
 
-class StoreIterator implements AsyncIterator<any> {
+class SourceIterator implements AsyncIterator<any> {
 
   private readonly cursor: FindCursor<WithId<any>>;
 
@@ -30,7 +30,7 @@ class StoreIterator implements AsyncIterator<any> {
   }
 }
 
-export class PlaceStore implements AsyncIterable<any> {
+export class PlaceSource implements AsyncIterable<any> {
 
   private readonly client: MongoClient;
   private readonly placeColl: Collection;
@@ -41,13 +41,13 @@ export class PlaceStore implements AsyncIterable<any> {
   }
 
   [Symbol.asyncIterator](): AsyncIterator<any> {
-    return new StoreIterator(this.placeColl.find());
+    return new SourceIterator(this.placeColl.find());
   }
 
   async dispose() { this.client.close(); }
 }
 
-export class KeywordStore implements AsyncIterable<any> {
+export class KeywordSource implements AsyncIterable<any> {
 
   private readonly client: MongoClient;
   private readonly keywordColl: Collection;
@@ -58,7 +58,7 @@ export class KeywordStore implements AsyncIterable<any> {
   }
 
   [Symbol.asyncIterator](): AsyncIterator<any> {
-    return new StoreIterator(this.keywordColl.find());
+    return new SourceIterator(this.keywordColl.find());
   }
 
   async dispose() { this.client.close(); }
