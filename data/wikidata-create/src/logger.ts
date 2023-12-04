@@ -46,8 +46,8 @@ export default class Logger {
     this.logger.info(err);
   }
 
-  logItemsWritten(batchWritten: number, totalWritten: number) {
-    this.logger.info(`[${getTime()}] > Wrote ${batchWritten} from this batch, written total ${totalWritten} entities.`);
+  logItemsWritten(updated: number, created: number) {
+    this.logger.info(`[${getTime()}] > Updated ${updated}, created ${created} entities.`);
   }
 
   logFinished() {

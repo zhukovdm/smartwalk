@@ -5,7 +5,7 @@ import {
   getPayloadIter
 } from "../../shared/dist/src/index.js";
 
-export default class Target extends EnrichTarget {
+export default class Target extends EnrichTarget<any> {
 
   private totalEnriched = 0;
   private readonly logger: EnrichLogger;
@@ -23,17 +23,13 @@ export default class Target extends EnrichTarget {
   async getPayloadIter(window: number): Promise<{
     [Symbol.iterator](): Generator<string[], void, unknown>;
   }> {
-    const payload = await this.getPayload(window);
+    const payload = await this.getPayload();
     this.logger.logPayloadLength(payload.length);
 
     return getPayloadIter(payload, window);
   }
 
-  /**
-   * Load phase.
-   * @param items Well-formed items.
-   */
-  async l(items: any[]): Promise<void> {
+  async load(items: any[]): Promise<void> {
     let batchEnriched = 0;
 
     for (const item of items) {

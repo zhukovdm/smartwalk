@@ -9,7 +9,6 @@ const COLLECTION_NAME = "place";
 
 export default class Target {
 
-  private totalCreated = 0;
   private readonly logger: Logger;
   private readonly client: MongoClient;
   private readonly collection: Collection;
@@ -20,8 +19,9 @@ export default class Target {
     this.collection = this.client.db(DATABASE_NAME).collection(COLLECTION_NAME);
   }
 
-  async l(items: Item[]): Promise<void> {
-    let batchWritten = 0;
+  async load(items: Item[]): Promise<void> {
+    let updated = 0;
+    let created = 0;
     this.logger.logWritingObjects();
 
     const options = { ignoreUndefined: true };
@@ -30,7 +30,7 @@ export default class Target {
       try {
         const time = getDateTime();
 
-        // update existing
+        // update existing (do nothing, add missing wikidata, or fix wrong one)
 
         if (!!osm && !!(await this.collection.findOne({ "linked.osm": osm }))) {
           const filter = {
@@ -43,7 +43,7 @@ export default class Target {
             }
           };
           await this.collection.updateMany(filter, update, options);
-          ++batchWritten;
+          ++updated;
         }
 
         // or insert non-existent!
@@ -65,7 +65,7 @@ export default class Target {
           };
 
           await this.collection.insertOne(create, options);
-          ++batchWritten;
+          ++created;
         }
       }
       catch (ex) {
@@ -73,8 +73,7 @@ export default class Target {
       }
     }
 
-    this.totalCreated += batchWritten;
-    this.logger.logItemsWritten(batchWritten, this.totalCreated);
+    this.logger.logItemsWritten(updated, created);
   }
 
   async dispose(): Promise<void> { this.client.close(); }

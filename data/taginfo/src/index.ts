@@ -10,13 +10,15 @@ import Target from "./target.js";
  */
 async function taginfo(keys: string[]) {
   const logger = new Logger();
+  const source = new Source(logger);
+  const target = new Target();
 
   try {
     logger.logStarted();
 
     for (const key of keys) {
       logger.logKeyProcessing(key);
-      const pipeline = new Pipeline(new Source(logger), new Target());
+      const pipeline = new Pipeline(source, target);
 
       const _e = await pipeline.e(key);
       const _t = await pipeline.t(_e);
