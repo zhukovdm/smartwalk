@@ -1,10 +1,8 @@
 /*
  * Project EPSG:4326 coordinates into EPSG:3857.
  * 
- * - https://epsg.io/3857
  * - https://epsg.io/4326
- * 
- * Verify at https://epsg.io/transform.
+ * - https://epsg.io/3857
  */
 
 const BASE_LON = 14.4035264;
@@ -46,6 +44,8 @@ function main() {
   console.log("EPSG:3857 to EPSG:4326");
   console.log(`  eas = ${eas} -> lon = ${lon}`);
   console.log(`  nor = ${nor} -> lat = ${lat}`);
+
+  console.log(`Verify results at https://epsg.io/transform.`);
 }
 
 main();
