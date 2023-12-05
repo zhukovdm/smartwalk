@@ -4,40 +4,82 @@
 
 REGION_FILE=czech-republic-latest
 
-# Prague
+# Prague (prod)
 
 REGION_W=14.18
 REGION_N=50.20
 REGION_E=14.80
 REGION_S=49.90
 
-# Brno
+# Prague (perf)
+
+# REGION_W=14.18
+# REGION_N=50.20
+# REGION_E=14.80
+# REGION_S=49.90
+
+# Brno (perf)
 
 # REGION_W=16.52
 # REGION_N=49.27
 # REGION_E=16.72
 # REGION_S=49.12
 
-# Ostrava
+# Ostrava (perf)
 
 # REGION_W=18.14
 # REGION_N=49.88
 # REGION_E=18.36
 # REGION_S=49.75
 
-# Plzen
+# Plzen (perf)
 
 # REGION_W=13.29
 # REGION_N=49.79
 # REGION_E=13.44
 # REGION_S=49.69
 
-# Liberec
+# Liberec (perf)
 
 # REGION_W=14.99
 # REGION_N=50.81
 # REGION_E=15.11
 # REGION_S=50.68
+
+# Olomouc (perf)
+
+# REGION_W=16.96
+# REGION_N=49.78
+# REGION_E=17.54
+# REGION_S=49.40
+
+# Ceske Budejovice (perf)
+
+# REGION_W=14.18
+# REGION_N=49.17
+# REGION_E=14.76
+# REGION_S=48.78
+
+# Hradec Kralove (perf)
+
+# REGION_W=15.54
+# REGION_N=50.40
+# REGION_E=16.12
+# REGION_S=50.02
+
+# Pardubice (perf)
+
+# REGION_W=15.49
+# REGION_N=50.22
+# REGION_E=16.07
+# REGION_S=49.85
+
+# Usti nad Labem (perf)
+
+# REGION_W=13.74
+# REGION_N=50.85
+# REGION_E=14.32
+# REGION_S=50.48
 
 ################################################################################
 

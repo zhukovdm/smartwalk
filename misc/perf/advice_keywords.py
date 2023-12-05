@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy import stats
@@ -6,13 +7,22 @@ import time
 from lib.store import Store
 from lib.smartwalk import baseUrl, make_request
 
-advice_item_counts = [1, 3, 5, 7]
-measurements = [[] for _ in range(len(advice_item_counts))]
+TRIALS = 100
+ADVICE_ITEM_COUNTS = [1, 3, 5, 7]
+MEASUREMENTS = [[] for _ in range(len(ADVICE_ITEM_COUNTS))]
+
+plt.rc("text", usetex=True)
+plt.rc("font", family="serif")
+matplotlib.rcParams.update({'font.size': 15})
 
 def get_url(prefix: str, count: int) -> str:
     return f"{baseUrl}/advice/keywords?prefix={prefix.replace(' ', '+')}&count={count}"
 
 def make_trial(prefix: str, count: int) -> float:
+    """
+    Time of one request in milliseconds.
+    """
+
     t0 = time.perf_counter_ns()
     res = make_request(get_url(prefix, count))
     t1 = time.perf_counter_ns()
@@ -23,13 +33,13 @@ def make_trial(prefix: str, count: int) -> float:
     return (t1 - t0) / 1_000_000
 
 def measure() -> None:
-    global advice_item_counts, measurements
+    global ADVICE_ITEM_COUNTS, MEASUREMENTS
 
     with Store() as store:
         (keywords, keywordRv) = store.get_keywords()
 
-        for i in range(len(advice_item_counts)):
-            for _ in range(100):
+        for i in range(len(ADVICE_ITEM_COUNTS)):
+            for _ in range(TRIALS):
                 keyword = keywords[keywordRv.rvs()]
                 prefix_max_len = min(len(keyword), 5)
 
@@ -41,18 +51,19 @@ def measure() -> None:
                 prefixRv = stats.rv_discrete(values=(np.arange(prefix_max_len), seq))
                 prefix_len = prefixRv.rvs() + 1
 
-                measurements[i].append(make_trial(keyword[:prefix_len], advice_item_counts[i]))
+                MEASUREMENTS[i].append(make_trial(keyword[:prefix_len], ADVICE_ITEM_COUNTS[i]))
 
 def draw() -> None:
-    global advice_item_counts, measurements
+    global ADVICE_ITEM_COUNTS, MEASUREMENTS
 
     fig, ax = plt.subplots()
 
-    ax.boxplot(measurements)
+    ax.boxplot(MEASUREMENTS)
 
-    plt.xticks(list(range(1, len(advice_item_counts) + 1)), advice_item_counts)
+    plt.xticks(list(range(1, len(ADVICE_ITEM_COUNTS) + 1)), ADVICE_ITEM_COUNTS)
     ax.set_xlabel("Max number of options")
     ax.set_ylabel("Response time, ms")
+    ax.tick_params(labelsize=12)
 
     fig.tight_layout()
     plt.savefig(f"./perf-advice-keywords.pdf", format="pdf")
@@ -60,5 +71,6 @@ def draw() -> None:
 def main() -> None:
     measure()
     draw()
+    print("Done.")
 
 main()
