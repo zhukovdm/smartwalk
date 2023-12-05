@@ -1,3 +1,4 @@
+import matplotlib
 import matplotlib.pyplot as plt
 import random
 import time
@@ -5,8 +6,13 @@ import time
 from lib.store import Store
 from lib.smartwalk import baseUrl, bboxes, make_request, serialize_request
 
-point_count = [0, 1, 3, 5]
-measurements = [([], []) for _ in range(len(point_count))]
+TRIALS = 50
+PLACE_COUNT = [0, 1, 3, 5]
+MEASUREMENTS = [([], []) for _ in range(len(PLACE_COUNT))]
+
+plt.rc("text", usetex=True)
+plt.rc("font", family="serif")
+matplotlib.rcParams.update({'font.size': 12})
 
 def get_url(request: dict) -> str:
     return f"{baseUrl}/search/direcs?query={serialize_request(request)}"
@@ -25,35 +31,40 @@ def make_trial(request: dict) -> (float, float):
     return (distance / 1000.0, time_dif)
 
 def measure() -> None:
-    global point_count, measurements
+    """
+    For each count, for each city in the list, draw at random `count` places
+    and construct a direction.
+    """
+
+    global PLACE_COUNT, MEASUREMENTS, TRIALS
 
     with Store() as store:
         cities = [store.get_locations_within(bbox) for (bbox, _) in bboxes]
 
-        for i in range(len(point_count)):
-            (xpoints, ypoints) = measurements[i]
+        for i in range(len(PLACE_COUNT)):
+            (xpoints, ypoints) = MEASUREMENTS[i]
 
             for city in cities:
-                for _ in range(50):
-                    seq = [city[random.randint(0, len(city) - 1)]["location"] for _ in range(point_count[i] + 2)]
+                for _ in range(TRIALS):
+                    seq = [city[random.randint(0, len(city) - 1)]["location"] for _ in range(PLACE_COUNT[i] + 2)]
                     (x, y) = make_trial({ "waypoints": seq })
 
                     xpoints.append(x)
                     ypoints.append(y)
 
 def draw() -> None:
-    global point_count, measurements
+    global PLACE_COUNT, MEASUREMENTS
 
     fig, axs = plt.subplots(2, 2)
 
-    for i in range(len(point_count)):
+    for i in range(len(PLACE_COUNT)):
         row = i // 2
-        col = i % 2
+        col = i  % 2
 
         ax = axs[row, col]
-        (xpoints, ypoints) = measurements[i]
+        (xpoints, ypoints) = MEASUREMENTS[i]
 
-        ax.set_title(f"{point_count[i] + 2} points", fontsize=10)
+        ax.set_title(f"{PLACE_COUNT[i] + 2} points", fontsize=12)
         ax.scatter(xpoints, ypoints, facecolors="none", edgecolors="#0380fc", linewidth=0.55)
 
         if (row == 1):
@@ -62,11 +73,14 @@ def draw() -> None:
         if (col == 0):
             ax.set_ylabel("Response time, ms")
 
+        ax.tick_params(labelsize=10)
+
     fig.tight_layout()
     plt.savefig(f"./perf-search-direcs.pdf", format="pdf")
 
 def main() -> None:
     measure()
     draw()
+    print("Done.")
 
 main()
