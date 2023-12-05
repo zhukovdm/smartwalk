@@ -24,15 +24,14 @@ WHERE {
 }
 LIMIT 10`;
 
-async function main() {
+export default async function wikidata() {
   const response = await axios.get(WIKIDATA_SPARQL_ENDPOINT + encodeURIComponent(wikidataQuery()), {
     headers: {
-      Accept: `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
+      "Accept": `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
+  console.log("\nWikidata\n");
   console.log(response.data);
-  console.log(typeof response.data);
+  console.log(`Type of response data: ${typeof response.data}.`);
 }
-
-main();

@@ -24,15 +24,14 @@ WHERE {
 }
 LIMIT 10`;
 
-async function main() {
+export default async function dbpedia() {
   const response = await axios.get(DBPEDIA_SPARQL_ENDPOINT + encodeURIComponent(dbpediaQuery()), {
     headers: {
-      Accept: `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
+      "Accept": `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
     }
   });
+  console.log("\nDBPedia\n");
   console.log(response.data);
-  console.log(typeof response.data);
+  console.log(`Type of response data: ${typeof response.data}.`);
 }
-
-main();
