@@ -9,7 +9,7 @@ import PanelDrawer from "./PanelDrawer";
 import SessionProvider from "./SessionProvider";
 
 /**
- * Main panel drawer with routing capabilities.
+ * Panel ensemble with session provider and main panel drawer.
  */
 export default function PanelEnsemble(): JSX.Element {
 
