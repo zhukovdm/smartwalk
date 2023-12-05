@@ -46,6 +46,6 @@ internal class Program
             GeoJsonSerializer.Create().Serialize(jsonWriter, c);
         }
 //      Console.WriteLine(writer);
-        File.WriteAllText("./result.json", writer.ToString());
+        File.WriteAllText("./ellipse.json", writer.ToString());
     }
 }
