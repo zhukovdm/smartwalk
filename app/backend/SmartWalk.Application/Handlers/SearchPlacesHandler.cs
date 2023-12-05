@@ -12,15 +12,15 @@ namespace SmartWalk.Application.Handlers;
 /// </summary>
 public sealed class SearchPlacesHandler : IQueryHandler<SearchPlacesQuery, List<Place>>
 {
-    private readonly IEntityIndex _entityIndex;
+    private readonly IEntityIndex entityIndex;
 
     public SearchPlacesHandler(IEntityIndex entityIndex)
     {
-        _entityIndex = entityIndex;
+        this.entityIndex = entityIndex;
     }
 
     public Task<List<Place>> Handle(SearchPlacesQuery query)
     {
-        return _entityIndex.GetAround(query.center, query.radius, query.categories);
+        return entityIndex.GetAround(query.center, query.radius, query.categories);
     }
 }

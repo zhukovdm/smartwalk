@@ -8,9 +8,6 @@ namespace SmartWalk.Core.Heuristics;
 
 internal static class IfCategoryFormer
 {
-    /// <summary>
-    /// Categories with less items are more relevant.
-    /// </summary>
     internal sealed class CategoryComparer : IComparer<List<SolverPlace>>
     {
         private CategoryComparer() { }
@@ -19,6 +16,9 @@ internal static class IfCategoryFormer
 
         public static CategoryComparer Instance { get { return instance.Value; } }
 
+        /// <summary>
+        /// Categories with less items are more relevant (smaller).
+        /// </summary>
         public int Compare(List<SolverPlace> l, List<SolverPlace> r)
         {
             return l.Count.CompareTo(r.Count);
@@ -28,7 +28,7 @@ internal static class IfCategoryFormer
     /// <summary>
     /// Separate points by category.
     /// </summary>
-    /// <param name="places"></param>
+    /// <param name="places">Input places</param>
     /// <returns></returns>
     private static List<List<SolverPlace>> Group(IEnumerable<SolverPlace> places)
     {
@@ -49,7 +49,7 @@ internal static class IfCategoryFormer
     /// <summary>
     /// Sort categories by number of elements in ascending order.
     /// </summary>
-    /// <param name="cats"></param>
+    /// <param name="cats">List of categories.</param>
     /// <returns>Sorted list of categories.</returns>
     private static List<List<SolverPlace>> Sort(List<List<SolverPlace>> cats)
     {
@@ -60,8 +60,8 @@ internal static class IfCategoryFormer
     /// <summary>
     /// Group places by category and sort categories by relevancy.
     /// </summary>
-    /// <param name="places"></param>
-    /// <returns></returns>
+    /// <param name="places">Input places.</param>
+    /// <returns>Sorted list of category clusters.</returns>
     public static List<List<SolverPlace>> Form(IEnumerable<SolverPlace> places)
     {
         return Sort(Group(places));
@@ -122,7 +122,7 @@ internal sealed class IfHeuristic
     /// <param name="distFn">Distance matrix.</param>
     /// <param name="source">Starting place.</param>
     /// <param name="target">Destination.</param>
-    /// <returns></returns>
+    /// <returns>Sequence.</returns>
     public static List<SolverPlace> Advise(
         IEnumerable<SolverPlace> places, IDistanceFunction distFn, SolverPlace source, SolverPlace target)
     {

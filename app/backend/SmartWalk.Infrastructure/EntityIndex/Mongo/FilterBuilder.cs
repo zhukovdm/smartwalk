@@ -22,16 +22,24 @@ using EN = Expression<Func<ExtendedPlace, double?>>;
 internal static class FilterDefinitionExtensions
 {
     public static F existen(this F filter, B builder, object x, EE expr)
-        => (x is null) ? filter : filter & builder.Exists(expr);
+    {
+        return (x is null) ? filter : filter & builder.Exists(expr);
+    }
 
     public static F boolean(this F filter, B builder, bool? x, EB expr)
-        => (x is null) ? filter : filter & builder.Eq(expr, x);
+    {
+        return (x is null) ? filter : filter & builder.Eq(expr, x);
+    }
 
     public static F numeric(this F filter, B builder, AttributeFilterNumeric x, EN expr)
-        => (x is null) ? filter : filter & builder.Gte(expr, x.min) & builder.Lte(expr, x.max);
+    {
+        return (x is null) ? filter : filter & builder.Gte(expr, x.min) & builder.Lte(expr, x.max);
+    }
 
     public static F textual(this F filter, B builder, string x, ET expr)
-        => (x is null) ? filter : filter & builder.StringIn(expr, new BsonRegularExpression(Regex.Escape(x), "i"));
+    {
+        return (x is null) ? filter : filter & builder.StringIn(expr, new BsonRegularExpression(Regex.Escape(x), "i"));
+    }
 
     public static F collect(this F filter, B builder, AttributeFilterCollect x, EC expr)
     {

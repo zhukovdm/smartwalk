@@ -11,12 +11,12 @@ namespace SmartWalk.Application.Handlers;
 /// </summary>
 public sealed class GetPlaceHandler : IQueryHandler<GetPlaceQuery, ExtendedPlace>
 {
-    private readonly IEntityStore _store;
+    private readonly IEntityStore store;
 
-    public GetPlaceHandler(IEntityStore store) { _store = store; }
+    public GetPlaceHandler(IEntityStore store) { this.store = store; }
 
     public Task<ExtendedPlace> Handle(GetPlaceQuery query)
     {
-        return _store.GetPlace(query.smartId);
+        return store.GetPlace(query.smartId);
     }
 }

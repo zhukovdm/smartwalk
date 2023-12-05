@@ -14,42 +14,42 @@ public sealed class CycleDetector
         public Vertex() { Color = Color.A; Predecessor = -1; }
     }
 
-    private int _cycleRef = -1;
-    private readonly List<Vertex> _Vs;
-    private readonly List<SortedSet<int>> _Es;
+    private int cycleRef = -1;
+    private readonly List<Vertex> Vs;
+    private readonly List<SortedSet<int>> Es;
 
     private bool CycleImpl(int u)
     {
-        _Vs[u].Color = Color.B;
+        Vs[u].Color = Color.B;
 
-        foreach (var v in _Es[u])
+        foreach (var v in Es[u])
         {
-            _Vs[v].Predecessor = u;
-            switch (_Vs[v].Color)
+            Vs[v].Predecessor = u;
+            switch (Vs[v].Color)
             {
                 case Color.A:
                     if (CycleImpl(v)) { return true; }
                     break;
                 case Color.B:
-                    _cycleRef = v;
+                    cycleRef = v;
                     return true;
             }
         }
 
-        _Vs[u].Color = Color.C;
+        Vs[u].Color = Color.C;
         return false;
     }
 
     public CycleDetector(int order)
     {
-        _Vs = Enumerable.Range(0, order).Select(_ => new Vertex()).ToList();
-        _Es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
+        Vs = Enumerable.Range(0, order).Select(_ => new Vertex()).ToList();
+        Es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
     }
 
     /// <summary>
     /// Add directed edge (fr -> to), repeated edges are allowed.
     /// </summary>
-    public CycleDetector AddEdge(int fr, int to) { _ = _Es[fr].Add(to); return this; }
+    public CycleDetector AddEdge(int fr, int to) { _ = Es[fr].Add(to); return this; }
 
     /// <summary>
     /// Detect a cycle in a directed graph using standard 3-color recursive
@@ -59,19 +59,19 @@ public sealed class CycleDetector
     {
         var res = new List<int>();
 
-        for (int u = 0; u < _Vs.Count; ++u)
+        for (int u = 0; u < Vs.Count; ++u)
         {
-            if (_Vs[u].Color == Color.A && CycleImpl(u)) { break; }
+            if (Vs[u].Color == Color.A && CycleImpl(u)) { break; }
         }
 
-        if (_cycleRef > -1)
+        if (cycleRef > -1)
         {
-            var cur = _cycleRef;
+            var cur = cycleRef;
             do
             {
                 res.Add(cur);
-                cur = _Vs[cur].Predecessor;
-            } while (cur != _cycleRef);
+                cur = Vs[cur].Predecessor;
+            } while (cur != cycleRef);
             res.Add(cur);
         }
 

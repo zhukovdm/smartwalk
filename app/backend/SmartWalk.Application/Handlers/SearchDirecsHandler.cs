@@ -12,15 +12,15 @@ namespace SmartWalk.Application.Handlers;
 /// </summary>
 public sealed class SearchDirecsHandler : IQueryHandler<SearchDirecsQuery, List<ShortestPath>>
 {
-    private readonly IRoutingEngine _routingEngine;
+    private readonly IRoutingEngine routingEngine;
 
     public SearchDirecsHandler(IRoutingEngine routingEngine)
     {
-        _routingEngine = routingEngine;
+        this.routingEngine = routingEngine;
     }
 
     public Task<List<ShortestPath>> Handle(SearchDirecsQuery query)
     {
-        return _routingEngine.GetShortestPaths(query.waypoints);
+        return routingEngine.GetShortestPaths(query.waypoints);
     }
 }

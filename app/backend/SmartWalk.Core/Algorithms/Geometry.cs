@@ -64,7 +64,9 @@ public static class Spherical
     /// Approximate the midpoint between two points on a sphere (use <b>ONLY</b> for small distances).
     /// </summary>
     private static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
-        => new((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
+    {
+        return new((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
+    }
 
     /// <summary>
     /// Approximate an angle in the counter-clockwise direction.
