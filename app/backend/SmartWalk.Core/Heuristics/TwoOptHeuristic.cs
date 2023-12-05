@@ -27,6 +27,9 @@ internal static class TwoOptHeuristic
     /// ... _ i i+1 _ _ _ _ _ j j+1 _ ...
     /// </code>
     /// </summary>
+    /// <param name="seq">Unordered sequence of places.</param>
+    /// <param name="distFn">Distance function.</param>
+    /// <returns>Improved sequence.</returns>
     public static List<SolverPlace> Advise(List<SolverPlace> seq, IDistanceFunction distFn)
     {
         bool change;

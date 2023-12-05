@@ -4,8 +4,7 @@
 **/TestResults/
 
 **/*.md
-Doxyfile
-Dockerfile*
-
 **/.gitignore
+
+Doxyfile
 backend.sln

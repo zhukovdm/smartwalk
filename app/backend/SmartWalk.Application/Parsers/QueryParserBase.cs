@@ -4,6 +4,11 @@ using SmartWalk.Application.Validators;
 
 namespace SmartWalk.Application.Parsers;
 
+/// <summary>
+/// Standard parser for search `query` strings.
+/// </summary>
+/// <typeparam name="V">Validation type.</typeparam>
+/// <typeparam name="D">Deserialization type.</typeparam>
 public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
 {
     protected readonly IValidationResult result;

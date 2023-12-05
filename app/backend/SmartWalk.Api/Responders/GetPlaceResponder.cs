@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using SmartWalk.Core.Entities;
 
+/// <summary>
+/// Endpoint-specific responder.
+/// </summary>
 internal class GetPlaceResponder : ResponderBase<ExtendedPlace>
 {
     public override ActionResult<ExtendedPlace> Respond(ExtendedPlace result)

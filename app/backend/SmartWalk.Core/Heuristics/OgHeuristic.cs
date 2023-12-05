@@ -29,8 +29,8 @@ internal static class OgCategoryFormer
     /// Group places by category. For each category calculate number of its
     /// predecessors, and calculate explicit set of successor categories.
     /// </summary>
-    /// <param name="places"></param>
-    /// <param name="arrows"></param>
+    /// <param name="places">Places to be categorized.</param>
+    /// <param name="arrows">Category constraints.</param>
     /// <returns></returns>
     public static SortedDictionary<int, OgCategory> Form(
         IEnumerable<SolverPlace> places, IEnumerable<Arrow> arrows)
@@ -69,12 +69,12 @@ internal static class OgCategoryFormer
 internal static class OgCandidateSelector
 {
     /// <summary>
-    /// Given feasible categories, find the best place from some category that
-    /// optimize the distance of the place from the last inserted place and
-    /// straight line between the source and target.
+    /// Given unconstrained categories, find the best place from some category
+    /// that optimize the distance of the place from the last inserted place
+    /// and straight line between the source and target.
     /// </summary>
-    /// <param name="seq"></param>
-    /// <param name="freeCats"></param>
+    /// <param name="seq">Current sequence.</param>
+    /// <param name="freeCats">Unconstrained categories.</param>
     /// <param name="distFn">Distance function.</param>
     /// <returns></returns>
     public static SolverPlace SelectBest(
@@ -109,8 +109,8 @@ internal static class OgCandidateSelector
 internal static class OgHeuristic
 {
     /// <summary></summary>
-    /// <param name="cats"></param>
-    /// <param name="catId"></param>
+    /// <param name="cats">Category collection.</param>
+    /// <param name="catId">Identifier of the category to be removed.</param>
     private static void RemoveCategory(SortedDictionary<int, OgCategory> cats, int catId)
     {
         foreach (var succ in cats[catId].succ) { --cats[succ].pred; }
@@ -119,10 +119,10 @@ internal static class OgHeuristic
 
     /// <summary></summary>
     /// <param name="places">All available places (without source and target).</param>
-    /// <param name="distFn"></param>
-    /// <param name="arrows"></param>
-    /// <param name="source"></param>
-    /// <param name="target"></param>
+    /// <param name="distFn">Distance function.</param>
+    /// <param name="arrows">Arrows forming valid directed acyclic graph.</param>
+    /// <param name="source">Starting point.</param>
+    /// <param name="target">Destination.</param>
     /// <returns></returns>
     public static List<SolverPlace> Advise(
         IEnumerable<SolverPlace> places, IDistanceFunction distFn, IEnumerable<Arrow> arrows, SolverPlace source, SolverPlace target)

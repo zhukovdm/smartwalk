@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
+/// <summary>
+/// Responder to determine the final response representation.
+/// </summary>
 /// <typeparam name="T">Type of a result object.</typeparam>
 internal abstract class ResponderBase<T>
 {
