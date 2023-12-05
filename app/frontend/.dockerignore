@@ -1,13 +1,12 @@
 **/build/
 **/docs/
-node_modules/
-
+**/node_modules/
 **/__tests__/
 
-jest*.ts
 **/*.md
 **/.gitignore
 **/.eslintignore
 
+jest*.ts
 .env.*
 typedoc.json

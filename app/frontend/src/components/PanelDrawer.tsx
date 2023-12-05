@@ -35,6 +35,9 @@ import ViewerDirecPanel from "./ViewerDirecPanel";
 import ViewerPlacePanel from "./ViewerPlacePanel";
 import ViewerRoutePanel from "./ViewerRoutePanel";
 
+/**
+ * Main drawer with client-side routing.
+ */
 export default function PanelDrawer(): JSX.Element {
 
   const { show } = useAppSelector((state) => state.panel);
