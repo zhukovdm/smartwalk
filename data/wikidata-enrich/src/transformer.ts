@@ -19,7 +19,7 @@ function handleDate(value: string) {
 
 function handleNumber(value: string) {
   const n = parseFloat(value);
-  return isNaN(n) ? undefined : n;
+  return isNaN(n) ? undefined : Math.round(n);
 }
 
 function handleFacebook(value: string | undefined) {

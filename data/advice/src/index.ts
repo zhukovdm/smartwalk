@@ -4,9 +4,8 @@ import {
 import Logger from "./logger.js";
 import Source from "./source.js";
 import Target from "./target.js";
-
 import Transformer from "./transformer.js";
-import writeToFile from "./write.js";
+import writeToFile from "./writer.js";
 
 async function advice() {
   

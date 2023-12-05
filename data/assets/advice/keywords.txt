@@ -101,6 +101,7 @@ artificial waterfall
 artificial whitewater
 arts centre
 artwork
+artwork copy
 assassination
 assay office
 assembly hall
@@ -136,7 +137,6 @@ barefoot path
 barn
 baroque
 baroque architecture
-baroque art
 baroque revival
 barracks
 baseball
@@ -217,6 +217,7 @@ branch
 brand
 brewery
 brewery building
+brick and mortar
 brickworks
 bridge
 bridge group
@@ -408,6 +409,7 @@ convention center
 convitto
 cooling tower
 cooperative
+copper engraving print
 copper engraving technique
 copyshop
 cornerstone
@@ -516,7 +518,6 @@ driveway
 driving school
 dry cleaning
 dual education system
-duty free
 earth bank
 eastern orthodox cathedral
 eastern orthodox church building
@@ -525,7 +526,7 @@ education
 educational institution
 educational organization
 educational trail
-electoral district
+electoral unit
 electrical
 electrical substation
 electrician
@@ -543,6 +544,7 @@ engineer
 engineering school
 ensemble of small monuments
 enterprise
+entertainment centre
 entrance
 environment ministry
 environmental protection
@@ -555,7 +557,6 @@ estate agent
 etching technique
 european mixed curling championship
 european union space programme
-event venue
 events venue
 execution
 execution site
@@ -587,6 +588,7 @@ ferry terminal
 festival
 festival grounds
 field hockey
+field name
 filling station
 film
 film archive
@@ -630,6 +632,7 @@ foreshore bridge
 forest
 formation
 former bridge
+former building or structure
 former church
 former educational institution
 former entity
@@ -686,6 +689,7 @@ gatehouse
 gazebo
 geodesist
 geographic location
+geographical area
 geographical feature
 geomorphological district
 geopark
@@ -825,7 +829,6 @@ ice rink
 ice skating
 image
 imax theatre
-important tree
 incineration
 incinerator
 inclined elevator
@@ -912,6 +915,7 @@ lawyer
 learned society
 leather
 ledger stone
+left luggage
 legislative house
 legislature
 letter box
@@ -1045,18 +1049,17 @@ movie theater
 mtb
 multi
 multifamily residential
-multistorey car park
 municipal archive
+municipal building
 municipal district of prague
 municipal office
-municipal office building
 municipal part in czechia
 municipal part of prague
 municipality of the czech republic
 municipality with authorized municipal office
 mural
 museum
-museum archives
+museum archive
 museum building
 museum storage
 music
@@ -1145,6 +1148,7 @@ parcel locker
 parish
 park
 park and ride car park
+parking garage
 parking lot
 parkour
 parliament
@@ -1153,12 +1157,13 @@ parliamentary library
 party
 passing loop
 pastry
-pavement
+paver
 pavilion
 pawnbroker
 payment centre
 payment terminal
 peak
+pedestrian crossing
 pedestrian tunnel
 peninsula
 pension
@@ -1219,6 +1224,7 @@ post office building
 post office partner
 postal museum
 postal station
+postmodern architecture
 pottery
 power station
 practical joke
@@ -1235,7 +1241,6 @@ printery
 prison
 prison cell
 pritcha
-private collection
 private school
 project
 property management
@@ -1283,6 +1288,7 @@ railway bridge
 railway building
 railway line
 railway network
+railway platform
 railway roundhouse
 railway station
 railway stop
@@ -1341,6 +1347,7 @@ resistance during world war ii
 restaurant
 restoration
 retail
+retail chain
 retention basin
 retirement home
 revenue house
@@ -1390,6 +1397,7 @@ sand mine
 satellite state
 sauna
 sawmill
+scale model
 scattering meadow
 scenic viewpoint
 school
@@ -1455,7 +1463,6 @@ small bell tower
 small monument
 smithy
 smoking area
-snowboard
 soccer
 soccer golf
 social
@@ -1466,6 +1473,7 @@ society
 softball
 sokol house
 solitary
+solitary plant
 spa
 spa building
 space agency
@@ -1477,6 +1485,7 @@ spices
 spillway
 spoil tip
 sport
+sport shop
 sports
 sports award
 sports centre
@@ -1585,6 +1594,7 @@ terrace
 terrace house
 territory
 terrorist attack
+textile factory
 theatre
 theatre company
 theatre festival
@@ -1639,6 +1649,7 @@ transmitter station
 travel agency
 travel agent
 tree shrine
+tree stump
 triangulation station
 trivia
 trolley bay
@@ -1693,12 +1704,14 @@ wagonway
 waldorf education
 walkway
 wall
+wallow
 war memorial
 warehouse
 waste disposal
 wastewater treatment plant
 watches
 watchmaker
+watchtower
 water park
 water pipeline
 water point
