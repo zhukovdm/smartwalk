@@ -51,8 +51,8 @@ export default class Transformer {
             min: Number.MAX_VALUE,
             max: Number.MIN_VALUE
           };
-          numeric.min = Math.min(numeric.min, num);
-          numeric.max = Math.max(numeric.max, num);
+          numeric.min = Math.round(Math.min(numeric.min, num));
+          numeric.max = Math.round(Math.max(numeric.max, num));
           numerics[label] = numeric;
         }
       });
