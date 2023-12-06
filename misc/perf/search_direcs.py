@@ -6,13 +6,19 @@ import time
 from lib.store import Store
 from lib.smartwalk import baseUrl, bboxes, make_request, serialize_request
 
+PLACE_COUNT = [
+    0,
+    1,
+    3,
+    5
+]
 TRIALS = 50
-PLACE_COUNT = [0, 1, 3, 5]
 MEASUREMENTS = [([], []) for _ in range(len(PLACE_COUNT))]
 
 plt.rc("text", usetex=True)
 plt.rc("font", family="serif")
-matplotlib.rcParams.update({'font.size': 12})
+matplotlib.rcParams.update({ 'font.size': 12 })
+matplotlib.rcParams["axes.titlepad"] = 9
 
 def get_url(request: dict) -> str:
     return f"{baseUrl}/search/direcs?query={serialize_request(request)}"
@@ -64,7 +70,7 @@ def draw() -> None:
         ax = axs[row, col]
         (xpoints, ypoints) = MEASUREMENTS[i]
 
-        ax.set_title(f"{PLACE_COUNT[i] + 2} points", fontsize=12)
+        ax.set_title(f"{PLACE_COUNT[i] + 2} points", fontsize=14)
         ax.scatter(xpoints, ypoints, facecolors="none", edgecolors="#0380fc", linewidth=0.55)
 
         if (row == 1):

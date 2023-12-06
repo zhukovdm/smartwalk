@@ -12,7 +12,7 @@ MEASUREMENTS = []
 
 plt.rc("text", usetex=True)
 plt.rc("font", family="serif")
-matplotlib.rcParams.update({'font.size': 15})
+matplotlib.rcParams.update({ 'font.size': 26 })
 
 def get_url(smartId: str) -> str:
     return f"{baseUrl}/entity/places/{smartId}"
@@ -55,10 +55,10 @@ def draw() -> None:
 
     ax.boxplot(MEASUREMENTS)
 
+    plt.xticks([1], [1])
+    ax.set_xlabel("Number of retrieved places")
     ax.set_ylabel("Response time, ms")
-    ax.set(xticklabels=[])
-    ax.tick_params(bottom=False)
-    ax.tick_params(labelsize=12)
+    ax.tick_params(labelsize=22)
 
     fig.tight_layout()
     plt.savefig(f"./perf-entity-places.pdf", format="pdf")

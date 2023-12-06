@@ -7,13 +7,18 @@ import time
 from lib.store import Store
 from lib.smartwalk import baseUrl, make_request
 
+ADVICE_ITEM_COUNTS = [
+    1,
+    3,
+    5,
+    7
+]
 TRIALS = 100
-ADVICE_ITEM_COUNTS = [1, 3, 5, 7]
 MEASUREMENTS = [[] for _ in range(len(ADVICE_ITEM_COUNTS))]
 
 plt.rc("text", usetex=True)
 plt.rc("font", family="serif")
-matplotlib.rcParams.update({'font.size': 15})
+matplotlib.rcParams.update({ 'font.size': 26 })
 
 def get_url(prefix: str, count: int) -> str:
     return f"{baseUrl}/advice/keywords?prefix={prefix.replace(' ', '+')}&count={count}"
@@ -54,6 +59,9 @@ def measure() -> None:
                 MEASUREMENTS[i].append(make_trial(keyword[:prefix_len], ADVICE_ITEM_COUNTS[i]))
 
 def draw() -> None:
+    """
+    Render a graph.
+    """
     global ADVICE_ITEM_COUNTS, MEASUREMENTS
 
     fig, ax = plt.subplots()
@@ -63,7 +71,7 @@ def draw() -> None:
     plt.xticks(list(range(1, len(ADVICE_ITEM_COUNTS) + 1)), ADVICE_ITEM_COUNTS)
     ax.set_xlabel("Max number of options")
     ax.set_ylabel("Response time, ms")
-    ax.tick_params(labelsize=12)
+    ax.tick_params(labelsize=22)
 
     fig.tight_layout()
     plt.savefig(f"./perf-advice-keywords.pdf", format="pdf")
