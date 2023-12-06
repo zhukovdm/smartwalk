@@ -7,7 +7,6 @@ from lib.drawing import enrich_subplot
 from lib.store import Store
 from lib.smartwalk import baseUrl, make_request, serialize_request
 
-TRIALS = 50
 CATEGORY_COUNTS = [
     1,
     2,
@@ -15,21 +14,20 @@ CATEGORY_COUNTS = [
     0
 ]
 RADII = [
-    0.5,
     1.0,
-    2.0,
     3.0,
     5.0,
     7.0,
     10.0,
     15.0
 ]
-
+TRIALS = 50
 MEASUREMENTS = [[[] for _ in range(len(RADII))] for _ in range(len(CATEGORY_COUNTS))]
 
 plt.rc("text", usetex=True)
 plt.rc("font", family="serif")
-matplotlib.rcParams.update({'font.size': 12})
+matplotlib.rcParams.update({ 'font.size': 12 })
+matplotlib.rcParams["axes.titlepad"] = 9
 
 def get_url(request: dict) -> str:
     return f"{baseUrl}/search/places?query={serialize_request(request)}"
@@ -71,14 +69,14 @@ def measure() -> None:
 def draw() -> None:
     global CATEGORY_COUNTS, RADII, MEASUREMENTS
 
-    fig, axs = plt.subplots(2, 2, figsize=(10, 5))
+    fig, axs = plt.subplots(2, 2)
 
     #
 
     ax = axs[0, 0]
     ax.boxplot(MEASUREMENTS[0])
     enrich_subplot(ax, RADII)
-    ax.set_title("1 category", fontsize=12)
+    ax.set_title("1 category", fontsize=14)
     ax.set_ylabel("Response time, ms")
     ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], 1_000))
     ax.tick_params(labelsize=10)
@@ -89,7 +87,7 @@ def draw() -> None:
 
     ax.boxplot(MEASUREMENTS[1])
     enrich_subplot(ax, RADII)
-    ax.set_title("2 categories", fontsize=12)
+    ax.set_title("2 categories", fontsize=14)
     ax.tick_params(labelsize=10)
 
     #
@@ -98,7 +96,7 @@ def draw() -> None:
 
     ax.boxplot(MEASUREMENTS[2])
     enrich_subplot(ax, RADII)
-    ax.set_title("3 categories", fontsize=12)
+    ax.set_title("3 categories", fontsize=14)
     ax.set_xlabel("Radius, km")
     ax.set_ylabel("Response time, ms")
     ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], 1_000))
@@ -110,7 +108,7 @@ def draw() -> None:
 
     ax.boxplot(MEASUREMENTS[3])
     enrich_subplot(ax, RADII)
-    ax.set_title("$\infty$ categories", fontsize=12)
+    ax.set_title("$\infty$ categories", fontsize=14)
     ax.set_xlabel("Radius, km")
     ax.tick_params(labelsize=10)
 
