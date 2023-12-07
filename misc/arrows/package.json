@@ -1,0 +1,17 @@
+{
+  "name": "arrows",
+  "description": "Project created for testing purposes.",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "./src/index.js",
+  "scripts": {
+    "start": "node ./src/index.js"
+  },
+  "license": "MIT",
+  "author": "Dmitry Zhukov",
+  "dependencies": {
+    "axios": "^1.6.2"
+  },
+  "devDependencies": {},
+  "keywords": []
+}
