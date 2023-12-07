@@ -7,7 +7,6 @@ import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
 import { AppContext } from "../../App";
 import type { UiPlace } from "../../domain/types";
-import { escapeHtml } from "../../utils/functions";
 import IdGenerator from "../../utils/idGenerator";
 import { SEARCH_DIRECS_ADDR } from "../../utils/routing";
 import {
@@ -144,7 +143,7 @@ export default function ResultRoutesContent(): JSX.Element {
               />
             }
           >
-            Saved as <strong>{escapeHtml(name)}</strong>.
+            Saved as <strong>{name}</strong>.
           </Alert>
         : <Alert
             icon={false}

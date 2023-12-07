@@ -4,7 +4,6 @@ import Box from "@mui/material/Box";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { escapeHtml } from "../../utils/functions";
 import IdGenerator from "../../utils/idGenerator";
 import { AppContext } from "../../App";
 import {
@@ -85,7 +84,7 @@ export default function ResultDirecsContent(): JSX.Element {
             severity={"success"}
             action={<SomethingActionMenu />}
           >
-            Saved as <strong>{escapeHtml(name)}</strong>.
+            Saved as <strong>{name}</strong>.
           </Alert>
         : <Alert
             icon={false}

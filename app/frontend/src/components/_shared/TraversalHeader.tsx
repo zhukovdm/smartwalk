@@ -1,7 +1,6 @@
 import Divider from "@mui/material/Divider";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { escapeHtml } from "../../utils/functions";
 
 export type TraversalHeaderProps = {
 
@@ -19,7 +18,7 @@ export default function TraversalHeader({ name }: TraversalHeaderProps): JSX.Ele
         fontSize={"1.25rem"}
         fontWeight={"medium"}
       >
-        {escapeHtml(name)}
+        {name}
       </Typography>
       <Divider sx={{ background: "lightgrey" }} />
     </Stack>

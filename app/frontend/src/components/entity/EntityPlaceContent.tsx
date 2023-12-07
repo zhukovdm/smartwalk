@@ -23,7 +23,6 @@ import {
   type ExtendedPlace,
   type PlaceAddress
 } from "../../domain/types";
-import { escapeHtml } from "../../utils/functions";
 import IdGenerator from "../../utils/idGenerator";
 import { createFavoritePlace } from "../../features/favoritesSlice";
 import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
@@ -175,7 +174,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
           fontSize={"1.25rem"}
           fontWeight={"medium"}
         >
-          {escapeHtml(name)}
+          {name}
         </Typography>
         <Divider sx={{ background: "lightgrey" }} />
         <PlaceLocation
@@ -198,7 +197,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               />
             }
           >
-            Saved as <strong>{escapeHtml(storedPlace.name)}</strong>.
+            Saved as <strong>{storedPlace.name}</strong>.
           </Alert>
         : <Alert
             icon={false}
@@ -242,7 +241,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 className={"entity-place"}
                 titleAccess={"Address"}
               />
-              <Typography>{escapeHtml(composeAddress(address))}</Typography>
+              <Typography>{composeAddress(address)}</Typography>
             </Stack>
           }
           {website &&
@@ -439,7 +438,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 titleAccess={"Opening hours"}
               />
               <Stack direction={"column"} rowGap={1}>
-                {openingHours.map((o, i) => (<Typography key={i}>{escapeHtml(o)}</Typography>))}
+                {openingHours.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
             </Stack>
           }
@@ -456,7 +455,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 titleAccess={"Charge"}
               />
               <Stack direction="column" rowGap={1}>
-                {charge.map((o, i) => (<Typography key={i}>{escapeHtml(o)}</Typography>))}
+                {charge.map((o, i) => (<Typography key={i}>{o}</Typography>))}
               </Stack>
             </Stack>
           }
@@ -480,7 +479,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
       }
       {(description) &&
         <Typography aria-label={"Description"}>
-          {escapeHtml(description)}
+          {description}
         </Typography>
       }
       {(sectionWithAdditionalInformation) &&
