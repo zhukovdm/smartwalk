@@ -29,17 +29,6 @@ export function fromToItemImmutable<T>(arr: T[], fr: number, to: number): T[] {
 }
 
 /**
- * Present the content safely.
- * - https://stackoverflow.com/a/4835406
- */
-export function escapeHtml(text: string): string {
-  const map = new Map<string, string>([
-    ["&", "&amp;"], ["<", "&lt;"], [">", "&gt;"], ["\"", "&quot;"], ["'", "&#039;"]
-  ]);
-  return text.replace(/[&<>"']/g, (m) => { return map.get(m)!; });
-}
-
-/**
  * Convert `aB...` to `a b...`
  */
 export function camelCaseToLabel(token: string): string {
