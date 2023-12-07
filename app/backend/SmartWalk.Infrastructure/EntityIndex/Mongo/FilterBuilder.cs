@@ -12,9 +12,9 @@ using B = FilterDefinitionBuilder<ExtendedPlace>;
 using F = FilterDefinition<ExtendedPlace>;
 using EE = Expression<Func<ExtendedPlace, object>>;
 using EB = Expression<Func<ExtendedPlace, bool?>>;
-using EC = Expression<Func<ExtendedPlace, IEnumerable<string>>>;
-using ET = Expression<Func<ExtendedPlace, string>>;
 using EN = Expression<Func<ExtendedPlace, double?>>;
+using ET = Expression<Func<ExtendedPlace, string>>;
+using EC = Expression<Func<ExtendedPlace, IEnumerable<string>>>;
 
 /// <summary>
 /// Mongo-specific filter definition.
@@ -41,15 +41,15 @@ internal static class FilterDefinitionExtensions
         return (x is null) ? filter : filter & builder.StringIn(expr, new BsonRegularExpression(Regex.Escape(x), "i"));
     }
 
-    public static F collect(this F filter, B builder, AttributeFilterCollect x, EC expr)
+    public static F collect(this F filter, B builder, AttributeFilterCollect x, EE existExpr, EC matchExpr)
     {
         filter = (x is null || x.inc.Count == 0)
             ? filter
-            : filter & builder.AnyIn(expr, x.inc);
+            : filter & builder.AnyIn(matchExpr, x.inc);
 
         filter = (x is null || x.exc.Count == 0)
             ? filter
-            : filter & builder.Not(builder.AnyIn(expr, x.exc));
+            : filter & builder.Exists(existExpr) & builder.Not(builder.AnyIn(matchExpr, x.exc));
 
         return filter;
     }
@@ -111,11 +111,11 @@ internal static class FilterBuilder
 
         if (fs.cs is not null) {
             filter = filter
-                .collect(builder, fs.cs.clothes, p => p.attributes.clothes)
-                .collect(builder, fs.cs.cuisine, p => p.attributes.cuisine)
-                .collect(builder, fs.cs.denomination, p => p.attributes.denomination)
-                .collect(builder, fs.cs.payment, p => p.attributes.payment)
-                .collect(builder, fs.cs.rental, p => p.attributes.rental);
+                .collect(builder, fs.cs.clothes, p => p.attributes.clothes, p => p.attributes.clothes)
+                .collect(builder, fs.cs.cuisine, p => p.attributes.cuisine, p => p.attributes.cuisine)
+                .collect(builder, fs.cs.denomination, p => p.attributes.denomination, p => p.attributes.denomination)
+                .collect(builder, fs.cs.payment, p => p.attributes.payment, p => p.attributes.payment)
+                .collect(builder, fs.cs.rental, p => p.attributes.rental, p => p.attributes.rental);
         }
 
         return filter;
