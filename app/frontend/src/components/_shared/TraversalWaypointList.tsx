@@ -1,6 +1,6 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
-import { IMap } from "../../domain/interfaces";
+import { Map as IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import InformPlaceListItem from "./InformPlaceListItem";
 

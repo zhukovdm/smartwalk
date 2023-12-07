@@ -3,7 +3,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import SwapVertIcon from "@mui/icons-material/SwapVert";
-import { IMap } from "../../domain/interfaces";
+import { Map as IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { useAppDispatch } from "../../features/storeHooks";
 import {

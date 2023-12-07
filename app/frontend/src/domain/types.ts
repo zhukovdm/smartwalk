@@ -67,7 +67,7 @@ export type UiPlace = PlaceAttributes & {
 };
 
 /**
- * Place as per stored in the IStorage.
+ * Place as per stored in the Storage.
  */
 export type StoredPlace = PlaceAttributes & {
 
@@ -465,7 +465,7 @@ export type UiDirec = DirecAttributes & {
 };
 
 /**
- * Direction result as per stored in the IStorage.
+ * Direction result as per stored in the Storage.
  */
 export type StoredDirec = DirecAttributes & {
 

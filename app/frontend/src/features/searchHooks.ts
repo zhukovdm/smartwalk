@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { IMap } from "../domain/interfaces";
+import { Map as IMap } from "../domain/interfaces";
 import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { point2place } from "../utils/functions";
 import { fetchAdviceKeywords } from "../utils/smartwalk";

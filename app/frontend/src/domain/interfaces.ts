@@ -7,22 +7,22 @@ import {
   WgsPoint
 } from "./types";
 
-export interface IPin {
+export interface Pin {
 
   /**
    * Calls `drag` on a new position.
    */
-  withDrag(drag: (point: WgsPoint) => void): IPin;
+  withDrag(drag: (point: WgsPoint) => void): Pin;
 
   /**
    * Attach circle-drawing functionality.
    * @param map currently used map
    * @param radius in meters!
    */
-  withCirc(map: IMap, radius: number): IPin;
+  withCirc(map: Map, radius: number): Pin;
 }
 
-export interface IMap {
+export interface Map {
 
   /**
    * Delete all existing, user-defined objects from a map.
@@ -44,27 +44,27 @@ export interface IMap {
   /**
    * @param place stored place
    */
-  addStored(place: UiPlace, categories: PlaceCategory[]): IPin;
+  addStored(place: UiPlace, categories: PlaceCategory[]): Pin;
 
   /**
    * @param place not stored place
    */
-  addCommon(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
+  addCommon(place: UiPlace, categories: PlaceCategory[], draggable: boolean): Pin;
 
   /**
    * @param place starting point of a route in `Routes` form
    */
-  addSource(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
+  addSource(place: UiPlace, categories: PlaceCategory[], draggable: boolean): Pin;
 
   /**
    * @param place destination of a route in `Routes` form
    */
-  addTarget(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
+  addTarget(place: UiPlace, categories: PlaceCategory[], draggable: boolean): Pin;
 
   /**
    * @param place the center of a circle in `Places` form
    */
-  addCenter(place: UiPlace, categories: PlaceCategory[], draggable: boolean): IPin;
+  addCenter(place: UiPlace, categories: PlaceCategory[], draggable: boolean): Pin;
 
   /**
    * @param center Location of the center of a circle.
@@ -100,7 +100,7 @@ export enum StorageKind {
 /**
  * Standard operations over an arbitrary object storage.
  */
-export interface IStorage {
+export interface Storage {
 
   /** Storage kind. */
   kind(): StorageKind;

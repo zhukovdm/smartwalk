@@ -1,5 +1,5 @@
 import {
-  IStorage,
+  Storage as IStorage,
   StorageKind
 } from "../domain/interfaces";
 import type {
