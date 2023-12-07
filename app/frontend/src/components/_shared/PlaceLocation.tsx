@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import { IMap } from "../../domain/interfaces";
+import { Map as IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import { point2text } from "../../utils/functions";
 import PlaceButton from "./PlaceButton";

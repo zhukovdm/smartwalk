@@ -1,6 +1,6 @@
 import { useContext, useEffect, useMemo } from "react";
 import { AppContext } from "../App";
-import { IMap } from "../domain/interfaces";
+import { Map as IMap } from "../domain/interfaces";
 import type { Path, UiPlace, UiRoute } from "../domain/types";
 import {
   usePlace,

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import Box from "@mui/material/Box";
-import { IMap } from "../../domain/interfaces";
+import { Map as IMap } from "../../domain/interfaces";
 import { UiPlace } from "../../domain/types";
 import RemovablePlaceListItem from "../_shared/RemovablePlaceListItem";
 import VacantPlaceListItem from "../_shared/VacantPlaceListItem";

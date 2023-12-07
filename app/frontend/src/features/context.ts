@@ -4,7 +4,10 @@ import type {
   ExtendedPlace,
   KeywordAdviceItem
 } from "../domain/types";
-import { IMap, IStorage } from "../domain/interfaces";
+import {
+  Map as IMap,
+  Storage as IStorage
+} from "../domain/interfaces";
 import DeviceStorage from "../utils/deviceStorage";
 
 export type AppContextValue = {
