@@ -10,7 +10,7 @@ import {
 import { fetch } from "@inrupt/solid-client-authn-browser";
 import namespace from "@rdfjs/namespace";
 import {
-  IStorage,
+  Storage as IStorage,
   StorageKind
 } from "../domain/interfaces";
 import type {
@@ -21,7 +21,8 @@ import type {
 import StorageErrorGenerator from "./storageErrorGenerator";
 
 const ns = {
-  ldp: namespace("http://www.w3.org/ns/ldp#")
+  ldp: namespace("http://www.w3.org/ns/ldp#"),
+  rdf: namespace("http://www.w3.org/1999/02/22-rdf-syntax-ns#")
 };
 
 /**
@@ -82,7 +83,17 @@ export default class SolidStorage implements IStorage {
 
     for (const dir of dirs) {
       try {
-        await getSolidDataset(dir, { fetch: fetch });
+        const d = await getSolidDataset(dir, { fetch: fetch });
+        const t = getUrlAll(getThing(d, dir)!, ns.rdf.type);
+
+        // not a container!
+
+        if (!t.includes(ns.ldp.BasicContainer.value)) {
+          throw Error();
+        }
+
+        // RW-operations
+        // Since the current user is the owner, access rights are assumed implicitly.
       }
       catch {
         try {

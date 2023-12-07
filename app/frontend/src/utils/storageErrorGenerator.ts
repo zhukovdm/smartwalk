@@ -8,7 +8,7 @@ export default class StorageErrorGenerator {
   // Local storage
 
   private static generateLocalError(msg: string) {
-    return new Error(`[Local error] ${msg}`);
+    return new Error(`[Local] ${msg}`);
   }
 
   public static generateLocalErrorOpen() {
@@ -26,7 +26,7 @@ export default class StorageErrorGenerator {
   // Solid storage
 
   private static generateSolidError(msg: string) {
-    return new Error(`[Solid error] ${msg}`);
+    return new Error(`[Solid] ${msg}`);
   }
 
   public static generateSolidErrorPods() {
