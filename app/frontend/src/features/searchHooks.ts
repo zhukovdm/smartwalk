@@ -15,7 +15,7 @@ import { useAppDispatch } from "./storeHooks";
 /**
  * Obtain keyword advice from a SmartWalk endpoint.
  */
-export function useSearchKeywordAdvice(
+export function useKeywordAdvice(
   input: string, value: KeywordAdviceItem | null): { loading: boolean; options: KeywordAdviceItem[] } {
 
   const { adviceKeywords } = useContext(AppContext).smart;

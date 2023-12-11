@@ -26,7 +26,7 @@ import {
 import IdGenerator from "../../utils/idGenerator";
 import { createFavoritePlace } from "../../features/favoritesSlice";
 import { appendSearchDirecsPlace } from "../../features/searchDirecsSlice";
-import { useExtendedPlace } from "../../features/entityHooks";
+import { useExtendedPlaceMap } from "../../features/entityHooks";
 import { useAppDispatch } from "../../features/storeHooks";
 import PlaceAppendDialog from "../_shared/PlaceAppendDialog";
 import PlaceLocation from "../_shared/PlaceLocation";
@@ -92,7 +92,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
   const composeAddress = ({ country, settlement, district, place, house, postalCode }: PlaceAddress) => (
     [place, house, postalCode, district, settlement, country].filter((str) => !!str).join(", "));
 
-  const { map, storage, storedPlace } = useExtendedPlace(place);
+  const { map, storage, storedPlace } = useExtendedPlaceMap(place);
   const isNonEmptyArray = useCallback((arr: any): boolean => (Array.isArray(arr) && arr.length > 0), []);
 
   const booleanChips = [

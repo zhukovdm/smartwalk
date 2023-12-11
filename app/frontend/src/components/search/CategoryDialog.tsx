@@ -27,7 +27,7 @@ import type {
   KeywordAdviceItem,
   KeywordCategory
 } from "../../domain/types";
-import { useSearchKeywordAdvice } from "../../features/searchHooks";
+import { useKeywordAdvice } from "../../features/searchHooks";
 import AttributeFiltersList from "./AttributeFiltersList";
 
 export type CategoryDialogProps = {
@@ -78,7 +78,7 @@ export default function CategoryDialog(
   const {
     loading,
     options
-  } = useSearchKeywordAdvice(input, value);
+  } = useKeywordAdvice(input, value);
 
   const discardAction = () => {
     onHide();

@@ -4,7 +4,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { ExtendedPlace } from "../domain/types";
+import type { ExtendedPlace } from "../domain/types";
 import { fetchEntityPlaces } from "../utils/smartwalk";
 import { AppContext } from "../App";
 import { useAppSelector } from "./storeHooks";
@@ -48,7 +48,7 @@ export function useSmartPlace(smartId: string) {
 /**
  * Draw map primitives for an extended place.
  */
-export function useExtendedPlace(place: ExtendedPlace) {
+export function useExtendedPlaceMap(place: ExtendedPlace) {
 
   const { polygon } = place.attributes;
 
