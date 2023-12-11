@@ -44,6 +44,7 @@ export default class SolidStorage implements IStorage {
   private static readonly places = "places/";
   private static readonly routes = "routes/";
 
+  private initialized = false;
   private readonly storageUrl: string;
 
   private getDirUrl(what: string): string {
@@ -75,6 +76,10 @@ export default class SolidStorage implements IStorage {
   }
 
   public async init(): Promise<void> {
+    if (this.initialized) {
+      return Promise.resolve();
+    }
+
     const dirs = [
       this.getDirecsDirUrl(),
       this.getPlacesDirUrl(),
@@ -83,28 +88,29 @@ export default class SolidStorage implements IStorage {
 
     for (const dir of dirs) {
       try {
-        const d = await getSolidDataset(dir, { fetch: fetch });
-        const t = getUrlAll(getThing(d, dir)!, ns.rdf.type);
+        await createContainerAt(dir, { fetch: fetch });
+      }
+      catch (_) { /* do nothing */ }
+
+      try {
+        const data = await getSolidDataset(dir, { fetch: fetch });
+        const type = getUrlAll(getThing(data, dir)!, ns.rdf.type);
 
         // not a container!
 
-        if (!t.includes(ns.ldp.BasicContainer.value)) {
+        if (!type.includes(ns.ldp.BasicContainer.value)) {
           throw Error();
         }
 
-        // RW-operations
-        // Since the current user is the owner, access rights are assumed implicitly.
+        // Since the current user is the owner, RW access rights are assumed implicitly.
       }
-      catch {
-        try {
-          await createContainerAt(dir, { fetch: fetch });
-        }
-        catch (ex) {
-          console.log(ex);
-          throw StorageErrorGenerator.generateSolidErrorInit(dir);
-        }
+      catch (ex) {
+        console.log(ex);
+        throw StorageErrorGenerator.generateSolidErrorInit(dir);
       }
     }
+
+    this.initialized = true;
   }
 
   // overwrite

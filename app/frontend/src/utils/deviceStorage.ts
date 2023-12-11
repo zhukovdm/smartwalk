@@ -25,6 +25,7 @@ export default class DeviceStorage implements IStorage {
     return (e.target as IDBOpenDBRequest).result;
   }
 
+  private initialized = false;
   private fallback?: IStorage = new InmemStorage();
 
   public kind(): StorageKind {
@@ -32,6 +33,10 @@ export default class DeviceStorage implements IStorage {
   }
 
   public init(): Promise<void> {
+    if (this.initialized) {
+      return Promise.resolve();
+    }
+
     const request = indexedDB.open(DeviceStorage.db);
 
     request.onupgradeneeded = (evt) => {
@@ -43,9 +48,12 @@ export default class DeviceStorage implements IStorage {
 
     return new Promise((res, rej) => {
       request.onsuccess = () => {
-        this.fallback = undefined; res();
+        this.initialized = true;
+        this.fallback = undefined;
+        res();
       };
       request.onerror = () => {
+        this.initialized = true;
         rej();
       };
     });
