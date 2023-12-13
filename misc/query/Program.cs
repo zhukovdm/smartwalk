@@ -2,7 +2,7 @@ using System.IO;
 using NJsonSchema;
 using SmartWalk.Application.Entities;
 
-namespace schema;
+namespace query;
 
 public class Program
 {
