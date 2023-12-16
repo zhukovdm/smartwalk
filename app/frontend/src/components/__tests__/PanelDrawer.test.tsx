@@ -51,7 +51,7 @@ const getOptions = (): AppRenderOptions => {
   }
 };
 
-function render(props = getProps(), options: AppRenderOptions = getOptions()) {
+function render(props = getProps(), options = getOptions()) {
   return renderWithProviders(<PanelDrawer {...props} />, options);
 }
 
