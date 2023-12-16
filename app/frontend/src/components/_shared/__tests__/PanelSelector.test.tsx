@@ -1,6 +1,5 @@
 import {
-  fireEvent,
-  screen
+  fireEvent
 } from "@testing-library/react";
 import {
   FAVORITES_ADDR,
@@ -27,26 +26,26 @@ function render(panel: number) {
 describe("<PanelSelector />", () => {
 
   test("routes button redirects to routes panel", () => {
-    render(0);
-    fireEvent.click(screen.getByTestId("smartwalk-search-routes-button"));
+    const { getByRole } = render(0);
+    fireEvent.click(getByRole("button", { name: "Search routes" }));
     expect(mockUseNavigate).toHaveBeenCalledWith(SEARCH_ROUTES_ADDR);
   });
 
   test("places button redirects to places panel", () => {
-    render(1);
-    fireEvent.click(screen.getByTestId("smartwalk-search-places-button"));
+    const { getByRole } = render(1);
+    fireEvent.click(getByRole("button", { name: "Search places" }));
     expect(mockUseNavigate).toHaveBeenCalledWith(SEARCH_PLACES_ADDR);
   });
 
   test("direcs button redirects to direcs panel", () => {
-    render(2);
-    fireEvent.click(screen.getByTestId("smartwalk-search-direcs-button"));
+    const { getByRole } = render(2);
+    fireEvent.click(getByRole("button", { name: "Search directions" }));
     expect(mockUseNavigate).toHaveBeenCalledWith(SEARCH_DIRECS_ADDR);
   });
 
   test("favors button redirects to favors panel", () => {
-    render(3);
-    fireEvent.click(screen.getByTestId("smartwalk-search-favors-button"));
+    const { getByRole } = render(3);
+    fireEvent.click(getByRole("button", { name: "Favorites" }));
     expect(mockUseNavigate).toHaveBeenCalledWith(FAVORITES_ADDR);
   });
 });
