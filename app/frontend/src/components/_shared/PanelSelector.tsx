@@ -39,7 +39,6 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
         <BottomNavigationAction
           aria-label={"Search routes"}
           label={"Routes"}
-          data-testid={"smartwalk-search-routes-button"}
           icon={<RouteIcon />}
           disabled={block}
           onClick={() => { navigate(SEARCH_ROUTES_ADDR); }}
@@ -47,7 +46,6 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
         <BottomNavigationAction
           aria-label={"Search places"}
           label={"Places"}
-          data-testid={"smartwalk-search-places-button"}
           icon={<PlaceIcon />}
           disabled={block}
           onClick={() => { navigate(SEARCH_PLACES_ADDR); }}
@@ -55,14 +53,12 @@ export default function PanelSelector({ panel }: PanelSelectorProps): JSX.Elemen
         <BottomNavigationAction
           aria-label={"Search directions"}
           label={"Directions"}
-          data-testid={"smartwalk-search-direcs-button"}
           icon={<DirectionsIcon />}
           disabled={block}
           onClick={() => { navigate(SEARCH_DIRECS_ADDR); }}
         />
         <BottomNavigationAction
           label={"Favorites"}
-          data-testid={"smartwalk-search-favors-button"}
           icon={<FavoriteIcon />}
           disabled={block}
           onClick={() => { navigate(FAVORITES_ADDR); }}
