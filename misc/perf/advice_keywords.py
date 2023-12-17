@@ -18,7 +18,8 @@ MEASUREMENTS = [[] for _ in range(len(ADVICE_ITEM_COUNTS))]
 
 plt.rc("text", usetex=True)
 plt.rc("font", family="serif")
-matplotlib.rcParams.update({ 'font.size': 26 })
+matplotlib.rcParams["figure.figsize"] = (4, 3)
+matplotlib.rcParams.update({ 'font.size': 16 })
 
 def get_url(prefix: str, count: int) -> str:
     return f"{baseUrl}/advice/keywords?prefix={prefix.replace(' ', '+')}&count={count}"
@@ -71,7 +72,7 @@ def draw() -> None:
     plt.xticks(list(range(1, len(ADVICE_ITEM_COUNTS) + 1)), ADVICE_ITEM_COUNTS)
     ax.set_xlabel("Max number of options")
     ax.set_ylabel("Response time, ms")
-    ax.tick_params(labelsize=22)
+    ax.tick_params(labelsize=12)
 
     fig.tight_layout()
     plt.savefig(f"./perf-advice-keywords.pdf", format="pdf")

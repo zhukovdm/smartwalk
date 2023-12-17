@@ -19,14 +19,10 @@ Restore dependencies:
 $ pip install -r requirements.txt
 ```
 
-Execute tests:
+Execute tests, where `file_name` should be without the `.py` extension:
 
 ```bash
-$ python3 -m advice_keywords
-$ python3 -m entity_places
-$ python3 -m search_direcs
-$ python3 -m search_places
-$ python3 -m search_routes
+$ python3 -m [file_name]
 ```
 
 Deactivate virtual environment:
