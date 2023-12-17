@@ -7,9 +7,12 @@ namespace SmartWalk.Infrastructure.Test.Fakes;
 
 internal sealed class FakeOsrmRouteFetcher : IOsrmRouteFetcher
 {
-    private readonly List<OsrmRoute> _routes;
+    private readonly List<OsrmRoute> routes;
 
-    public FakeOsrmRouteFetcher(List<OsrmRoute> routes) { _routes = routes; }
+    public FakeOsrmRouteFetcher(List<OsrmRoute> routes) { this.routes = routes; }
 
-    public Task<List<OsrmRoute>> Fetch(IEnumerable<WgsPoint> _) => Task.FromResult(_routes);
+    public Task<List<OsrmRoute>> Fetch(IEnumerable<WgsPoint> _)
+    {
+        return Task.FromResult(routes);
+    }
 }
