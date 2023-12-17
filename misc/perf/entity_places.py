@@ -12,7 +12,8 @@ MEASUREMENTS = []
 
 plt.rc("text", usetex=True)
 plt.rc("font", family="serif")
-matplotlib.rcParams.update({ 'font.size': 26 })
+matplotlib.rcParams["figure.figsize"] = (4, 3)
+matplotlib.rcParams.update({ 'font.size': 16 })
 
 def get_url(smartId: str) -> str:
     return f"{baseUrl}/entity/places/{smartId}"
@@ -58,7 +59,7 @@ def draw() -> None:
     plt.xticks([1], [1])
     ax.set_xlabel("Number of retrieved places")
     ax.set_ylabel("Response time, ms")
-    ax.tick_params(labelsize=22)
+    ax.tick_params(labelsize=12)
 
     fig.tight_layout()
     plt.savefig(f"./perf-entity-places.pdf", format="pdf")
