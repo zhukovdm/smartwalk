@@ -4,7 +4,7 @@ To run performance test make sure that the following prerequisites are met:
 
 - [python3](https://www.python.org/downloads/) and [venv](https://docs.python.org/3/library/venv.html) are installed on the target system,
 - the latest `perf` dump is loaded to the database,
-- the application is up and running in production mode.
+- the application is up and running in `production` mode.
 
 Create and activate new virtual environment, activate it, and restore dependencies:
 
