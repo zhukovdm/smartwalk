@@ -69,16 +69,17 @@ def measure() -> None:
 def draw() -> None:
     global CATEGORY_COUNTS, RADII, MEASUREMENTS
 
+    lim = 1_000
     fig, axs = plt.subplots(2, 2)
 
     #
 
     ax = axs[0, 0]
     ax.boxplot(MEASUREMENTS[0])
-    enrich_subplot(ax, RADII)
+    enrich_subplot(ax, RADII, lim)
     ax.set_title("1 category", fontsize=14)
     ax.set_ylabel("Response time, ms")
-    ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], 1_000))
+    ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], lim))
     ax.tick_params(labelsize=10)
 
     #
@@ -86,8 +87,9 @@ def draw() -> None:
     ax = axs[0, 1]
 
     ax.boxplot(MEASUREMENTS[1])
-    enrich_subplot(ax, RADII)
+    enrich_subplot(ax, RADII, lim)
     ax.set_title("2 categories", fontsize=14)
+    ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], lim))
     ax.tick_params(labelsize=10)
 
     #
@@ -95,11 +97,11 @@ def draw() -> None:
     ax = axs[1, 0]
 
     ax.boxplot(MEASUREMENTS[2])
-    enrich_subplot(ax, RADII)
+    enrich_subplot(ax, RADII, lim)
     ax.set_title("3 categories", fontsize=14)
     ax.set_xlabel("Radius, km")
     ax.set_ylabel("Response time, ms")
-    ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], 1_000))
+    ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], lim))
     ax.tick_params(labelsize=10)
 
     #
@@ -107,9 +109,10 @@ def draw() -> None:
     ax = axs[1, 1]
 
     ax.boxplot(MEASUREMENTS[3])
-    enrich_subplot(ax, RADII)
+    enrich_subplot(ax, RADII, lim)
     ax.set_title("$\infty$ categories", fontsize=14)
     ax.set_xlabel("Radius, km")
+    ax.set_ylim(ax.get_ylim()[0], max(ax.get_ylim()[1], lim))
     ax.tick_params(labelsize=10)
 
     fig.tight_layout()
