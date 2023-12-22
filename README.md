@@ -1,35 +1,21 @@
 # SmartWalk
 
-Most of the mainstream web mapping applications implement location based rather standardized  A typical workflow 
+This repository contains the source code for [**SmartWalk**](https://www.github.com/zhukovdm/smartwalk), a web application for keyword-aware walking route search.
 
-Another is related to data ownership. Most service providers, including Google Maps, Mapy.cz, and many more, lock 
+Check out the [**Demo**](https://smartwalk.vercel.app/) (although *not* connected to a backend) to get a sense of how the application might look and feel.
 
-SmartWalk is a web application for keyword-aware walking route search that addresses two interesting problems: declarative route search and .
+The documentation is hosted at [https://zhukovdm.github.io/smartwalk-docs/](https://zhukovdm.github.io/smartwalk-docs/).
 
-## Route search
+## Motivation
 
-Instead of location-based planning, the system allows users to express query in a declarative way, similar to [programming paradigms](https://stackoverflow.com/a/1784702).
+Most of the mainstream web mapping applications ([Mapy.cz](https://mapy.cz/), [Google Maps](https://maps.google.com/), etc.) implement explicit location-based *direction* search. A typical workflow involves building a sequence, with the following three steps applied for *each* waypoint.
 
-A short example is when a tourist want to go for a walk to visit a `castle` and `museum` with certain properties, and stop by a `restaurant` on the way to the hotel.
+1. Search for places that might satisfy imposed constraints (e.g., a museum free of charge).
+1. Append one of them to the sequence, with possible manual reordering.
+1. New path is presented to the user right after the sequence configuration is altered.
 
-Each query within SmartWalk contains the following three steps:
+*SmartWalk* enables users to formulate search queries in terms of *categories*. A category is composed of a *keyword* and *attribute filters*.
 
-- configure customized categories (keyword with a set of quantifiable attributes);
-- order them by optional arrows, for example both `castle` and `museum` should be `before` a `restaurant`;
-- set a maximum walking distance.
+Given a starting point, destination, set of categories, and maximum walking distance, *SmartWalk* attempts to find *routes* with a length never longer than the predefined limit that visit at least one place from each category.
 
-A valid route is never longer than the predefined limit, visits at least one place from each category, and preserves ordering for all arrows.
-
-The app supports a couple of other things, including standard directions.
-
-## Data ownership
-
-The app makes use of a [Solid](https://solidproject.org/about)-based decentralized storage so that the user can decide where to store personal data and who will have an access to it.
-
-## I want to know details
-
-See [frontend demo](https://smartwalk.vercel.app/) (although not connected to a backend), and [User documentation](https://zhukovdm.github.io/smartwalk/usr) with the comprehensive description of how to accomplish basic tasks.
-
-[Administrator guide](https://zhukovdm.github.io/smartwalk/usr) provides the step-by-step procedure to get an instance of the system up and running on a personal computer with data samples covering beautiful [Prague](https://en.wikipedia.org/wiki/Prague), the capital of the Czech Republic.
-
-If you want to participate, skim through [Programmer manual](https://zhukovdm.github.io/smartwalk/usr) to learn more about internals. Contributing is possible using standard [Pull Request](./CONTRIBUTING.md) workflow.
+Besides routes, the application also supports *place* and standard location-based direction search.
