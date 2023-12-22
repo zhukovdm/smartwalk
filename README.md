@@ -14,7 +14,7 @@ Most of the mainstream web mapping applications ([Mapy.cz](https://mapy.cz/), [G
 1. Append one of them to the sequence, with possible manual reordering.
 1. New path is presented to the user right after the sequence configuration is altered.
 
-*SmartWalk* enables users to formulate search queries in terms of *categories*. A category is composed of a *keyword* and *attribute filters*.
+In contrast, *SmartWalk* enables users to formulate search queries in terms of *categories*. A category is composed of a *keyword* (castle, museum, statue, etc.) and *attribute filters* (has an image, with WiFi, capacity &geq; *N*, etc.). For a place to be matched by a category, it must satisfy all constraints.
 
 Given a starting point, destination, set of categories, and maximum walking distance, *SmartWalk* attempts to find *routes* with a length never longer than the predefined limit that visit at least one place from each category.
 
