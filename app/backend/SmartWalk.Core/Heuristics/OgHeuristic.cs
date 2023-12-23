@@ -135,6 +135,11 @@ internal static class OgHeuristic
             var freeCats = cats.Select(kv => kv.Value).Where((cat, _) => cat.pred == 0);
             var best = OgCandidateSelector.SelectBest(seq, freeCats, distFn);
 
+            /*
+             * This check eliminates empty categories that were created due
+             * to the arrow configuration, see OgCategoryFormer for details.
+             */
+
             if (best is null) { break; }
 
             seq.Insert(seq.Count - 1, best);
