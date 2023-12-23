@@ -21,6 +21,32 @@ public class ListExtensionsTests
         };
     }
 
+    // Swap
+
+    [TestMethod]
+    public void ShouldSwapElementsOfList()
+    {
+        var lst = new List<int> { 0, 1, 2, 3, 4, 5 };
+        lst.Swap(1, 4);
+        Assert.AreEqual(4, lst[1]);
+        Assert.AreEqual(1, lst[4]);
+    }
+
+    // Durstenfeld shuffle
+
+    [TestMethod]
+    public void ShouldRetainAllElementsAfterShuffle()
+    {
+        var lst = new List<int> { 0, 1, 2, 3, 4, 5 };
+        lst = lst.DurstenfeldShuffle();
+        foreach (var item in new[] { 0, 1, 2, 3, 4, 5 })
+        {
+            Assert.IsTrue(lst.Contains(item));
+        }
+    }
+
+    // Merged categories
+
     [TestMethod]
     public void ShouldHandleEmptyListGracefully()
     {

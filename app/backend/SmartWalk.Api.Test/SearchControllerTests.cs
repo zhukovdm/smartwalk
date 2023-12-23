@@ -23,6 +23,8 @@ public class SearchControllerSearchDirecsTests
         ]
     }";
 
+    // Parser
+
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidQueryString()
     {
@@ -39,19 +41,7 @@ public class SearchControllerSearchDirecsTests
         Assert.IsTrue(hasError);
     }
 
-    [TestMethod]
-    public async Task ShouldReturnServerErrorDueToFailingRoutingEngine()
-    {
-        var context = new SearchContext()
-        {
-            RoutingEngine = new FakeFailingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
-
-        var result = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Result as StatusCodeResult;
-
-        Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
-    }
+    // Handler
 
     [TestMethod]
     public async Task ShouldReturnListOfDirections()
@@ -65,6 +55,22 @@ public class SearchControllerSearchDirecsTests
         var value = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Value;
 
         Assert.IsTrue(value is not null);
+    }
+
+    // Exception
+
+    [TestMethod]
+    public async Task ShouldReturnServerErrorDueToFailingRoutingEngine()
+    {
+        var context = new SearchContext()
+        {
+            RoutingEngine = new FakeFailingRoutingEngine()
+        };
+        var controller = new SearchController(context, new FakeLogger<SearchController>());
+
+        var result = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Result as StatusCodeResult;
+
+        Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
     }
 }
 
@@ -93,6 +99,8 @@ public class SearchControllerSearchPlacesTests
         ]
     }";
 
+    // Parser
+
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidQueryString()
     {
@@ -108,19 +116,7 @@ public class SearchControllerSearchPlacesTests
         Assert.IsTrue(hasError);
     }
 
-    [TestMethod]
-    public async Task ShouldReturnServerErrorDueToFailingEntityIndex()
-    {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeFailingEntityIndex()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
-
-        var result = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Result as StatusCodeResult;
-
-        Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
-    }
+    // Handler
 
     [TestMethod]
     public async Task ShouldReturnListOfPlaces()
@@ -134,6 +130,22 @@ public class SearchControllerSearchPlacesTests
         var value = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Value;
 
         Assert.IsTrue(value is not null);
+    }
+
+    // Exception
+
+    [TestMethod]
+    public async Task ShouldReturnServerErrorDueToFailingEntityIndex()
+    {
+        var context = new SearchContext()
+        {
+            EntityIndex = new FakeFailingEntityIndex()
+        };
+        var controller = new SearchController(context, new FakeLogger<SearchController>());
+
+        var result = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Result as StatusCodeResult;
+
+        Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
     }
 }
 
@@ -175,6 +187,8 @@ public class SearchControllerSearchRoutesTests
             }
         ]
     }";
+
+    // Parser
 
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidQueryString()
@@ -297,6 +311,25 @@ public class SearchControllerSearchRoutesTests
         Assert.IsTrue(hasError);
     }
 
+    // Handler
+
+    [TestMethod]
+    public async Task ShouldReturnListOfRoutes()
+    {
+        var context = new SearchContext()
+        {
+            EntityIndex = new FakeWorkingEntityIndex(),
+            RoutingEngine = new FakeWorkingRoutingEngine()
+        };
+        var controller = new SearchController(context, new FakeLogger<SearchController>());
+
+        var value = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Value;
+
+        Assert.IsTrue(value is not null);
+    }
+
+    // Exception
+
     [TestMethod]
     public async Task ShouldReturnServerErrorDueToFailingEntityIndex()
     {
@@ -325,20 +358,5 @@ public class SearchControllerSearchRoutesTests
         var result = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Result as StatusCodeResult;
 
         Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
-    }
-
-    [TestMethod]
-    public async Task ShouldReturnListOfRoutes()
-    {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex(),
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
-
-        var value = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Value;
-
-        Assert.IsTrue(value is not null);
     }
 }
