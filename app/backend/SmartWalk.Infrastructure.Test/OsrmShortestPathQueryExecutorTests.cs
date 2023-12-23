@@ -34,7 +34,7 @@ public class OsrmShortestPathQueryExecutorTests
     }
 
     [TestMethod]
-    public async Task ShouldReturnSortedList()
+    public async Task ShouldReturnListSortedByDistance()
     {
         var fetch = new FakeOsrmRouteFetcher(routes);
         var paths = await OsrmShortestPathQueryExecutor.Execute(fetch, new List<WgsPoint>());

@@ -11,7 +11,7 @@ using Item = TrieKeywordAdvicer.Item;
 [TestClass]
 public class TrieKeywordAdvicerTests
 {
-    private static readonly List<Item> _items = new()
+    private static readonly List<Item> items = new()
     {
         new() { keyword = "abc", count = 1 },
         new() { keyword = "abd", count = 2 },
@@ -21,9 +21,15 @@ public class TrieKeywordAdvicerTests
     };
 
     [TestMethod]
+    public void ShouldConstructTrieAdvicer()
+    {
+        Assert.IsNotNull(TrieKeywordAdvicer.GetInstance(items));
+    }
+
+    [TestMethod]
     public async Task ShouldGetItemsByPrefixOrderedByCount()
     {
-        var advicer = TrieKeywordAdvicer.GetInstance(_items);
+        var advicer = TrieKeywordAdvicer.GetInstance(TrieKeywordAdvicerTests.items);
         var items = (await advicer.GetTopK("ab", int.MaxValue))
             .Select((item) => item.keyword).ToList();
 
@@ -37,10 +43,15 @@ public class TrieKeywordAdvicerTests
         }
     }
 
+    /*
+     * Note that empty strings are eliminated on the input by
+     * the request pipeline and, therefore, are not tested.
+     */
+
     [TestMethod]
     public async Task ShouldReturnEmptyResult()
     {
-        var advicer = TrieKeywordAdvicer.GetInstance(_items);
+        var advicer = TrieKeywordAdvicer.GetInstance(TrieKeywordAdvicerTests.items);
         var items = await advicer.GetTopK("c", int.MaxValue);
 
         Assert.AreEqual(0, items.Count);
@@ -49,7 +60,7 @@ public class TrieKeywordAdvicerTests
     [TestMethod]
     public async Task ShouldBoundNumberOfReturnedItemsByCount()
     {
-        var advicer = TrieKeywordAdvicer.GetInstance(_items);
+        var advicer = TrieKeywordAdvicer.GetInstance(TrieKeywordAdvicerTests.items);
         var items = await advicer.GetTopK("ab", 2);
 
         Assert.AreEqual(2, items.Count);

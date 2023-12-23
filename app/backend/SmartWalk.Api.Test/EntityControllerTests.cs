@@ -10,6 +10,8 @@ namespace SmartWalk.Api.Test;
 [TestClass]
 public class EntityControllerGetPlaceTests
 {
+    // Validator
+
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToMalformedSmartId()
     {
@@ -24,6 +26,8 @@ public class EntityControllerGetPlaceTests
 
         Assert.IsTrue(hasError);
     }
+
+    // Handler
 
     [TestMethod]
     public async Task ShouldReturnNotFoundDueToMissingSmartId()
@@ -40,20 +44,6 @@ public class EntityControllerGetPlaceTests
     }
 
     [TestMethod]
-    public async Task ShouldReturnServerErrorDueToFailingEntityStore()
-    {
-        var context = new EntityContext()
-        {
-            EntityStore = new FakeFailingEntityStore()
-        };
-        var controller = new EntityController(context, new FakeLogger<EntityController>());
-
-        var result = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Result as StatusCodeResult;
-
-        Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
-    }
-
-    [TestMethod]
     public async Task ShouldReturnValidValueObject()
     {
         var context = new EntityContext()
@@ -65,5 +55,21 @@ public class EntityControllerGetPlaceTests
         var responseValue = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Value;
 
         Assert.IsTrue(responseValue is not null);
+    }
+
+    // Exception
+
+    [TestMethod]
+    public async Task ShouldReturnServerErrorDueToFailingEntityStore()
+    {
+        var context = new EntityContext()
+        {
+            EntityStore = new FakeFailingEntityStore()
+        };
+        var controller = new EntityController(context, new FakeLogger<EntityController>());
+
+        var result = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Result as StatusCodeResult;
+
+        Assert.AreEqual(StatusCodes.Status500InternalServerError, result.StatusCode);
     }
 }

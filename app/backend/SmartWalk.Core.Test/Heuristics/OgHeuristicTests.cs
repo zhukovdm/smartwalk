@@ -14,7 +14,7 @@ public class OgCategoryFormerTests
     private static readonly int N = 5;
 
     [TestMethod]
-    public void ShouldSeparatePlacesByCategoryAndRemoveSourceTarget()
+    public void ShouldGroupPlacesByCategory()
     {
         // [(0 -> 2), (1 -> 2), (2 -> 3)]
 
@@ -130,6 +130,39 @@ public class OgHeuristicTests
         var seq = OgHeuristic.Advise(places, distFn, arrows, source, target);
 
         var ans = new List<int> { 5, 0, 1, 2, 3, 4, 6 };
+
+        Assert.AreEqual(ans.Count, seq.Count);
+
+        for (int i = 0; i < ans.Count; ++i)
+        {
+            Assert.AreEqual(ans[i], seq[i].idx);
+        }
+    }
+
+    [TestMethod]
+    public void ShouldExitEarlyDueToEmptyCategory()
+    {
+        var places = new List<SolverPlace>
+        {
+        //  new(0, 0),
+            new(1, 1),
+            new(2, 2),
+        };
+
+        var source = new SolverPlace(3, 3);
+        var target = new SolverPlace(4, 4);
+
+        var distFn = TestPrimitives.GenerateRandomDistanceMatrix(5);
+
+        var arrows = new List<Arrow>
+        {
+            new(0, 2), // this arrow creates an empty free cat
+            new(1, 2),
+        };
+
+        var seq = OgHeuristic.Advise(places, distFn, arrows, source, target);
+
+        var ans = new List<int> { 3, 1, 4 };
 
         Assert.AreEqual(ans.Count, seq.Count);
 

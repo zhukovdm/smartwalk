@@ -9,7 +9,23 @@ namespace SmartWalk.Application.Test;
 public class ArrowValidationTests
 {
     [TestMethod]
-    public void ShouldDetectOutOfBoundEdge()
+    public void ShouldDetectOutOfBoundFrEdge()
+    {
+        var arrows = new List<Arrow>
+        {
+            new(0, 1),
+            new(1, 2),
+            new(3, 2), // !
+            new(0, 2)
+        };
+
+        var valid = SearchRoutesQueryParser.ValidateArrows(arrows, 3, out var _);
+
+        Assert.IsFalse(valid);
+    }
+
+    [TestMethod]
+    public void ShouldDetectOutOfBoundToEdge()
     {
         var arrows = new List<Arrow>
         {
@@ -92,6 +108,32 @@ public class ArrowValidationTests
         }
 
         var valid = SearchRoutesQueryParser.ValidateArrows(arrows, N, out var _);
+
+        Assert.IsTrue(valid);
+    }
+}
+
+[TestClass]
+public class DistanceValidationTests
+{
+    [TestMethod]
+    public void ShouldDetectLongDistance()
+    {
+        var source = new WgsPoint(0.0, 0.0);
+        var target = new WgsPoint(1.0, 1.0);
+
+        var valid = SearchRoutesQueryParser.ValidateRouteMaxDistance(source, target, 30000.0);
+
+        Assert.IsFalse(valid);
+    }
+
+    [TestMethod]
+    public void DistanceWithinBounds()
+    {
+        var source = new WgsPoint(0.0, 0.0);
+        var target = new WgsPoint(0.0, 0.0);
+
+        var valid = SearchRoutesQueryParser.ValidateRouteMaxDistance(source, target, 30000.0);
 
         Assert.IsTrue(valid);
     }

@@ -14,7 +14,7 @@ public class IfCategoryFormerTests
     private static readonly int N = 5;
 
     [TestMethod]
-    public void ShouldSeparatePlacesByCategory()
+    public void ShouldGroupPlacesByCategory()
     {
         var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N));
 
@@ -79,6 +79,30 @@ public class IfCandidateSelectorTests
 [TestClass]
 public class IfHeuristicTests
 {
+    [TestMethod]
+    public void ShouldUseNonConsecutiveCategories()
+    {
+        var places = new List<SolverPlace>()
+        {
+            new(0, 0),
+            new(1, 1),
+        //  new(2, 2),
+        //  new(3, 3),
+            new(4, 4),
+            new(5, 5),
+        };
+
+        var source = new SolverPlace(6, 6);
+        var target = new SolverPlace(7, 7);
+
+        var order = 8;
+
+        var distFn = TestPrimitives.GenerateRandomDistanceMatrix(order);
+        var result = IfHeuristic.Advise(places, distFn, source, target);
+
+        Assert.AreEqual(places.Count + 2, result.Count);
+    }
+
     [TestMethod]
     [DataRow(0.0)]
     [DataRow(0.2)]
