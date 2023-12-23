@@ -44,6 +44,11 @@ internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
         public int count { get; init; }
     }
 
+    /// <summary>
+    /// Construct a trie advicer.
+    /// </summary>
+    /// <param name="items">Items to be accommodated in a trie.</param>
+    /// <returns>Trie advicer.</returns>
     internal static IKeywordAdvicer GetInstance(IEnumerable<Item> items)
     {
         var advicer = new TrieKeywordAdvicer();

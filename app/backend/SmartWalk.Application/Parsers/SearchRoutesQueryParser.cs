@@ -78,9 +78,9 @@ public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQu
     /// </summary>
     /// <param name="source">Starting point.</param>
     /// <param name="target">Destination.</param>
-    /// <param name="maxDistance">Maximum allowed distance.</param>
+    /// <param name="maxDistance">Maximum allowed distance (in meters).</param>
     /// <returns></returns>
-    private static bool ValidateRouteMaxDistance(WgsPoint source, WgsPoint target, double maxDistance)
+    internal static bool ValidateRouteMaxDistance(WgsPoint source, WgsPoint target, double maxDistance)
     {
         return Spherical.HaversineDistance(source, target) <= maxDistance;
     }

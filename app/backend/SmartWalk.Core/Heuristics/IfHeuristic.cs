@@ -136,6 +136,12 @@ internal sealed class IfHeuristic
             var (best, nextDist, seqIdx) = IfCandidateSelector
                 .SelectBest(seq, cat, distFn, currDist);
 
+            /*
+             * This check does nothing _as long as_ we do not limit the
+             * distance and do not consider arrows. Categories are non-empty,
+             * and at least one place is always selected.
+             */
+
             if (best is null) { break; } // no candidates left!
 
             currDist = nextDist;
