@@ -78,7 +78,7 @@ export default function CategoryFilterDialog(
   const { keyword, filters } = category;
   const { es, bs, ns, ts, cs } = filters;
 
-  const extractKeys = (xs: any) => Object.keys(xs ?? {}).filter((x) => !!(xs as any)[x]);
+  const extractKeys = (xs: any) => Object.keys(xs ?? {}).filter((x) => (xs as any)[x] !== undefined);
   const [esKeys, bsKeys, nsKeys, tsKeys, csKeys] = [es, bs, ns, ts, cs].map((xs) => extractKeys(xs));
 
   return (
