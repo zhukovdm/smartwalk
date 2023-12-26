@@ -1,5 +1,6 @@
 import Accordion from "@mui/material/Accordion";
 import AccordionDetails from "@mui/material/AccordionDetails";
+import Divider from "@mui/material/Divider";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import Typography from "@mui/material/Typography";
 import {
@@ -39,6 +40,7 @@ export default function MyPlacesSection(): JSX.Element {
       </AccordionSummary>
       <AccordionDetails>
         <MyPlacesList aria-labelledby={head} />
+        <Divider />
         <MyPlacesCreateDialog />
       </AccordionDetails>
     </Accordion>

@@ -38,10 +38,7 @@ export default function FavoriteStub(
         </IconButton>
       </Box>
       <Box display={"flex"} justifyContent={"center"}>
-        <Typography
-          fontSize="large"
-          sx={{ fontWeight: "medium" }}
-        >
+        <Typography fontSize="large">
           {`No ${what}s found`}
         </Typography>
       </Box>

@@ -20,7 +20,7 @@ export default function MyPlacesList(props: MyPlacesListProps): JSX.Element {
   const { places } = useAppSelector((state) => state.favorites);
 
   return (
-    <Box>
+    <Box sx={{ mb: 2 }}>
       {places.length > 0
         ? <Stack
             {...props}
