@@ -6,10 +6,10 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Link from "@mui/material/Link";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
 import HelpOutline from "@mui/icons-material/HelpOutline";
@@ -98,11 +98,11 @@ export default function CategoryDialog(
     >
       <DialogTitle>{!!category ? "Modify" : "Add"} category</DialogTitle>
       <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2 }}
+        sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: "470px" }}
       >
-        <DialogContentText>
+        <Typography>
           Enter a keyword<sup><Link rel={"noopener noreferrer"} target={"_blank"} href={"https://raw.githubusercontent.com/zhukovdm/smartwalk/main/data/assets/advice/keywords.txt"} fontSize={"small"}><HelpOutline fontSize={"small"} titleAccess={"examples of keywords"} /></Link></sup> that places should associate with:
-        </DialogContentText>
+        </Typography>
         <Autocomplete
           value={value}
           disabled={!!category}
@@ -146,9 +146,9 @@ export default function CategoryDialog(
           size={"small"}
           isOptionEqualToValue={(o, v) => (o.keyword === v.keyword)}
         />
-        <DialogContentText>
-          Configure attributes to customize this category (optional):
-        </DialogContentText>
+        <Typography>
+          Configure attributes to customize this keyword (optional):
+        </Typography>
         {(!!value)
           ? <AttributeFiltersList
               adviceItem={value}
@@ -164,6 +164,9 @@ export default function CategoryDialog(
               Attributes are keyword-specific.
             </Alert>
         }
+        <Typography fontSize={"small"}>
+          Keywords have an <strong>&quot;is-a&quot;</strong> relationship with places (e.g., castle, museum, or statue). In contrast, attributes are non-defining features (e.g. has an image, capacity &ge; 100, or regional cuisine).
+        </Typography>
       </DialogContent>
       <DialogActions
         sx={{ display: "flex", justifyContent: "space-between" }}
