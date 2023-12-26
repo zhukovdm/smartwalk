@@ -165,7 +165,7 @@ export default function CategoryDialog(
             </Alert>
         }
         <Typography fontSize={"small"}>
-          Keywords have an <strong>&quot;is-a&quot;</strong> relationship with places (e.g., castle, museum, or statue). In contrast, attributes are non-defining features (e.g. has an image, capacity &ge; 100, or regional cuisine).
+          Keywords have an <strong>&quot;instance of&quot;</strong> relationship with places (e.g., castle or museum). In contrast, attributes are non-defining features (e.g. has an image, capacity &ge; 100, or regional cuisine).
         </Typography>
       </DialogContent>
       <DialogActions
