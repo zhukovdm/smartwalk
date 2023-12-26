@@ -126,13 +126,13 @@ export default function MyPlacesCreateDialog(): JSX.Element {
   }
 
   return (
-    <Box sx={{ mt: 4, mb: 1 }}>
+    <Box sx={{ mt: 3, mb: 1 }}>
       <details open={createExpanded}>
         <summary
           onClick={onToggle}
           style={{ cursor: "pointer" }}
         >
-          <Typography sx={{ display: "inline-block" }}>
+          <Typography sx={{ display: "inline-block", fontWeight: "medium" }}>
             Create custom place
           </Typography>
         </summary>
