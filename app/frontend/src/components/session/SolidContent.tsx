@@ -102,10 +102,7 @@ export default function SolidContent(): JSX.Element {
         <Typography align={"center"}>
           <Link
             href={webId}
-            rel={"noopener noreferrer"}
-            target={"_blank"}
             title={"Web Identity and Discovery"}
-            underline={"hover"}
             noWrap={true}
           >
             {webId}

@@ -259,12 +259,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 noWrap={true}
                 sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                <Link
-                  href={website}
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
-                  underline={"none"}
-                >
+                <Link href={website}>
                   {website}
                 </Link>
               </Typography>
@@ -285,12 +280,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 noWrap={true}
                 sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                <Link
-                  href={`tel:${phone}`}
-                  rel={"noopener noreferrer"}
-                  target={"_top"}
-                  underline={"none"}
-                >
+                <Link href={`tel:${phone}`}>
                   {phone}
                 </Link>
               </Typography>
@@ -311,12 +301,7 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
                 noWrap={true}
                 sx={{ overflow: "hidden", textOverflow: "ellipsis" }}
               >
-                <Link
-                  href={`mailto:${email}`}
-                  rel={"noopener noreferrer"}
-                  target={"_top"}
-                  underline={"none"}
-                >
+                <Link href={`mailto:${email}`}>
                   {email}
                 </Link>
               </Typography>
@@ -334,8 +319,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
             >
               {socialNetworks.facebook &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.facebook}
                   aria-label={socialNetworks.facebook}
                 >
@@ -347,8 +330,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
               {socialNetworks.instagram &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.instagram}
                   aria-label={socialNetworks.instagram}
                 >
@@ -360,8 +341,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
               {socialNetworks.linkedin &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.linkedin}
                   aria-label={socialNetworks.linkedin}
                 >
@@ -373,8 +352,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
               {socialNetworks.pinterest &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.pinterest}
                   aria-label={socialNetworks.pinterest}
                 >
@@ -386,8 +363,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
               {socialNetworks.telegram &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.telegram}
                   aria-label={socialNetworks.telegram}
                 >
@@ -399,8 +374,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
               {socialNetworks.twitter &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.twitter}
                   aria-label={socialNetworks.twitter}
                 >
@@ -412,8 +385,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
               }
               {socialNetworks.youtube &&
                 <Link
-                  rel={"noopener noreferrer"}
-                  target={"_blank"}
                   href={socialNetworks.youtube}
                   aria-label={socialNetworks.youtube}
                 >
@@ -464,8 +435,6 @@ export default function EntityPlaceContent({ place }: EntityPlaceContentProps): 
       {(image) &&
         <Link
           href={image}
-          rel={"noopener noreferrer"}
-          target={"_blank"}
           aria-label={"Image as an external resource"}
         >
           <Image

@@ -28,7 +28,7 @@ export default function ArrowsLinkButton(
       onClick={onClick}
       fontWeight={"medium"}
     >
-      arrows
+      arrow-ordered
     </Link>
   );
 }
