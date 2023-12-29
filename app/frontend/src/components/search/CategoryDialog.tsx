@@ -100,7 +100,7 @@ export default function CategoryDialog(
         sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: "470px" }}
       >
         <Typography>
-          Enter a <Link href={"https://raw.githubusercontent.com/zhukovdm/smartwalk/main/data/assets/advice/keywords.html"} title={"See examples of keywords at the link."}>keyword</Link> that places should associate with:
+          Enter a <Link href={"https://raw.githubusercontent.com/zhukovdm/smartwalk/main/data/assets/advice/keywords.txt"} title={"See examples of keywords at the link."}>keyword</Link> that places should associate with:
         </Typography>
         <Autocomplete
           value={value}
