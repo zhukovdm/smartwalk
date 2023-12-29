@@ -8,12 +8,7 @@ export default function SolidPodLink(): JSX.Element {
   const url = "https://solidproject.org/users/get-a-pod";
 
   return (
-    <Link
-      href={url}
-      rel={"noopener noreferrer"}
-      target={"_blank"}
-      title={url}
-    >
+    <Link href={url} title={url}>
       Solid Pod
     </Link>
   );
