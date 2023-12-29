@@ -80,13 +80,13 @@ describe("<ResultRoutesContent />", () => {
         }
       });
       expect(getByText("Found a total of", { exact: false }))
-        .toHaveTextContent("Found a total of 1 route with a distance of at most 5 km, visiting at least one place from the following category (arranged by arrows):");
+        .toHaveTextContent("Found a total of 1 route with a distance of at most 5 km, visiting at least one place from each of the following arrow-ordered categories:");
     });
 
     it("should generate text for >1 route, and >1 category", () => {
       const { getByText } = render();
       expect(getByText("Found a total of", { exact: false }))
-        .toHaveTextContent("Found a total of 3 routes with distances of at most 5 km, visiting at least one place from each of the following categories (arranged by arrows):");
+        .toHaveTextContent("Found a total of 3 routes with distances of at most 5 km, visiting at least one place from each of the following arrow-ordered categories:");
     });
   });
 

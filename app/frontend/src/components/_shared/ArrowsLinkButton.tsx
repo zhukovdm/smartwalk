@@ -21,6 +21,7 @@ export default function ArrowsLinkButton(
 
   return (
     <Link
+      aria-label={"arrows"}
       role={"button"}
       tabIndex={0}
       onKeyDown={keyboardAction}
