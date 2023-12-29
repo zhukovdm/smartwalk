@@ -12,7 +12,6 @@ import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { useTheme } from "@mui/material/styles";
-import HelpOutline from "@mui/icons-material/HelpOutline";
 import type {
   AttributeFilterBoolean,
   AttributeFilterBooleanLabel,
