@@ -34,7 +34,7 @@ export default function MapControl(): JSX.Element {
 
   const cnt = new LatLng(50.088349, 14.403679);
   const url = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
-  const att = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> | <a href=\"https://zhukovdm.github.io/smartwalk-docs/usr/\">SmartWalk Docs</a>";
+  const att = "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> | <a href=\"https://zhukovdm.github.io/smartwalk-docs/\">SmartWalk Docs</a>";
 
   return (
     <MapContainer
