@@ -4,7 +4,7 @@ This repository contains the source code for [**SmartWalk**](https://www.github.
 
 Check out the [**Demo**](https://smartwalk.vercel.app/) (although *not* connected to a backend) to get a sense of how the application might look and feel.
 
-The documentation is hosted at [https://zhukovdm.github.io/smartwalk-docs/](https://zhukovdm.github.io/smartwalk-docs/).
+The documentation is hosted at https://zhukovdm.github.io/smartwalk-docs/.
 
 ## Motivation
 
