@@ -184,7 +184,9 @@ check-restore-files:
 		[ -f $(A_DIR)/dump/$$file.txt ] || { echo "File $$file.txt has not been found..."; exit 1; } \
 	done
 
-restore: check-restore-files
+restore-init: init-node-dirs check-restore-files
+
+restore:
 	@cd ./restore && npm run build && npm run start -- \
 		--conn $(M_URL)
 
