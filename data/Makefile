@@ -96,7 +96,7 @@ M_URL=mongodb://localhost:27017
 
 ################################################################################
 
-.PHONY: advice check-clean dump init restore routing taginfo
+.PHONY: advice check-clean dump restore routing taginfo
 
 init-data-dirs:
 	@for dir in $(DATA_DIRS); do mkdir -p $(A_DIR)/$$dir; done
@@ -108,7 +108,7 @@ check-region-file:
 	@[ -f $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf ] \
 		|| { echo "File $(REGION_FILE).osm.pbf has not been found..."; exit 1; }
 
-init: init-data-dirs init-node-dirs check-region-file
+init-data: init-data-dirs init-node-dirs check-region-file
 
 routing:
 	@cp $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf $(A_DIR)/routing && \
@@ -148,7 +148,7 @@ taginfo:
 		tourism
 # man_made
 
-database-init:
+init-database:
 	@cd ./init && npm run build && npm run start -- \
 		--conn $(M_URL)
 
@@ -184,7 +184,7 @@ check-restore-files:
 		[ -f $(A_DIR)/dump/$$file.txt ] || { echo "File $$file.txt has not been found..."; exit 1; } \
 	done
 
-restore-init: init-data-dirs init-node-dirs check-restore-files
+init-restore: init-data-dirs init-node-dirs check-restore-files
 
 restore:
 	@cd ./restore && npm run build && npm run start -- \
