@@ -1,7 +1,5 @@
 name: test
-
 on:
-
   push:
     branches:
       - master
@@ -11,7 +9,6 @@ on:
       - master
 
 jobs:
-
   test:
     runs-on: ubuntu-latest
 
@@ -20,23 +17,22 @@ jobs:
       working-directory: ./app/backend
 
   steps:
-
-  - name: Checkout
-    uses: actions/checkout@v3
-
-  - name: Setting up .NET 6
-    uses: actions/setup-dotnet@v3
-    with:
-      dotnet-version: 6.0.x
-
-  - name: Clean
-    run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
-
-  - name: Install dependencies
-    run: dotnet restore
-
-  - name: Build
-    run: dotnet build --no-restore
-
-  - name: Run tests
-    run: dotnet test --no-restore --no-build || true
+    - name: Checkout
+      uses: actions/checkout@v3
+  
+    - name: Setting up .NET 6
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+  
+    - name: Clean
+      run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
+  
+    - name: Install dependencies
+      run: dotnet restore
+  
+    - name: Build
+      run: dotnet build --no-restore
+  
+    - name: Run tests
+      run: dotnet test --no-restore --no-build || true
