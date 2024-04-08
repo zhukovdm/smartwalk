@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartWalk.Application.Entities;
 using SmartWalk.Application.Handlers;
-using SmartWalk.Application.Interfaces;
 using SmartWalk.Application.Validators;
 using SmartWalk.Core.Entities;
 
@@ -17,12 +16,13 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/advice")]
 public sealed class AdviceController : ControllerBase
 {
-    private readonly IAdviceContext ctx;
+    private readonly AdviseKeywordsHandler handler;
     private readonly ILogger<AdviceController> logger;
 
-    public AdviceController(IAdviceContext ctx, ILogger<AdviceController> logger)
+    public AdviceController(ILogger<AdviceController> logger, AdviseKeywordsHandler handler)
     {
-        this.ctx = ctx; this.logger = logger;
+        this.logger = logger;
+        this.handler = handler;
     }
 
     /// <param name="request">Valid request object.</param>
@@ -45,7 +45,7 @@ public sealed class AdviceController : ControllerBase
 
         try
         {
-            var result = await new AdviseKeywordsHandler(ctx.KeywordAdvicer)
+            var result = await handler
                 .Handle(new() { prefix = request.prefix, count = request.count.Value });
 
             return responder.Respond(result);
