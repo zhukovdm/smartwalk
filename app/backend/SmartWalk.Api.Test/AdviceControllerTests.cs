@@ -23,7 +23,7 @@ public class AdviceControllerAdviseKeywordsTests
     public async Task ShouldReturnKeywordAdviceItems()
     {
         var controller = new AdviceController(
-            new FakeLogger<AdviceController>(), new(new FakeWorkingKeywordAdvicer()));
+            new FakeLogger<AdviceController>(), new FakeWorkingKeywordAdvicer());
 
         var items = (await controller.AdviseKeywords(GetValidAdviseKeywordsRequest())).Value;
 
@@ -36,7 +36,7 @@ public class AdviceControllerAdviseKeywordsTests
     public async Task ShouldReturnServerErrorDueToFailingAdvicer()
     {
         var controller = new AdviceController(
-            new FakeLogger<AdviceController>(), new(new FakeFailingKeywordAdvicer()));
+            new FakeLogger<AdviceController>(), new FakeFailingKeywordAdvicer());
 
         var response = (await controller.AdviseKeywords(GetValidAdviseKeywordsRequest())).Result as StatusCodeResult;
 

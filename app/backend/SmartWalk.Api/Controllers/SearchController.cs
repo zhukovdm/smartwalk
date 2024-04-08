@@ -10,6 +10,7 @@ using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Application.Parsers;
 using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Api.Controllers;
 
@@ -51,12 +52,13 @@ public sealed class SearchController : ControllerBase
         }
     }
 
-    private readonly ISearchContext ctx;
+    private readonly IEntityIndex index;
+    private readonly IRoutingEngine engine;
     private readonly ILogger<SearchController> logger;
 
-    public SearchController(ISearchContext ctx, ILogger<SearchController> logger)
+    public SearchController(ILogger<SearchController> logger, IEntityIndex index, IRoutingEngine engine)
     {
-        this.ctx = ctx; this.logger = logger;
+        this.logger = logger; this.index = index; this.engine = engine;
     }
 
     /// <param name="request">Request object with embedded query.</param>
@@ -72,7 +74,8 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<ActionResult<List<Direc>>> SearchDirecs([FromQuery] SearchDirecsRequest request)
     {
-        return SearchT(request.query, (Model model) => new SearchDirecsQueryParser(model), new SearchDirecsHandler(ctx.RoutingEngine));
+        return SearchT(request.query, (Model model) =>
+            new SearchDirecsQueryParser(model), new SearchDirecsHandler(engine));
     }
 
     /// <param name="request">Request object with embedded query.</param>
@@ -88,7 +91,8 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<ActionResult<List<Place>>> SearchPlaces([FromQuery] SearchPlacesRequest request)
     {
-        return SearchT(request.query, (Model model) => new SearchPlacesQueryParser(model), new SearchPlacesHandler(ctx.EntityIndex));
+        return SearchT(request.query, (Model model) =>
+            new SearchPlacesQueryParser(model), new SearchPlacesHandler(index));
     }
 
     /// <param name="request">Request object with embedded query.</param>
@@ -104,6 +108,7 @@ public sealed class SearchController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public Task<ActionResult<List<Route>>> SearchRoutes([FromQuery] SearchRoutesRequest request)
     {
-        return SearchT(request.query, (Model model) => new SearchRoutesQueryParser(model), new SearchRoutesHandler(ctx.EntityIndex, ctx.RoutingEngine));
+        return SearchT(request.query, (Model model) =>
+            new SearchRoutesQueryParser(model), new SearchRoutesHandler(index, engine));
     }
 }

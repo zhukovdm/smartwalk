@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartWalk.Application.Handlers;
-using SmartWalk.Application.Interfaces;
 using SmartWalk.Application.Validators;
 using SmartWalk.Core.Entities;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Api.Controllers;
 
@@ -15,12 +15,12 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/entity")]
 public sealed class EntityController : ControllerBase
 {
-    private readonly GetPlaceHandler handler;
+    private readonly IEntityStore store;
     private readonly ILogger<EntityController> logger;
 
-    public EntityController(ILogger<EntityController> logger, GetPlaceHandler handler)
+    public EntityController(ILogger<EntityController> logger, IEntityStore store)
     {
-        this.logger = logger; this.handler = handler;
+        this.logger = logger; this.store = store;
     }
 
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
@@ -47,7 +47,7 @@ public sealed class EntityController : ControllerBase
 
         try
         {
-            var result = await handler.Handle(new() { smartId = smartId });
+            var result = await new GetPlaceHandler(store).Handle(new() { smartId = smartId });
 
             return responder.Respond(result);
         }
