@@ -8,7 +8,9 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using SmartWalk.Application.Entities;
+using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
+using SmartWalk.Core.Interfaces;
 using SmartWalk.Infrastructure.Advicer;
 using SmartWalk.Infrastructure.EntityIndex;
 using SmartWalk.Infrastructure.EntityStore;
@@ -65,11 +67,11 @@ public static class AppConfigurator
                 .ForEach(f => g.IncludeXmlComments(f));
         });
 
-        Log.Information("{Phase}: Advice Context", phase);
-        builder.Services.AddSingleton<IAdviceContext>(new AdviceContext()
-        {
-            KeywordAdvicer = MongoKeywordAdvicer.GetInstance()
-        });
+        Log.Information("{Phase}: Keyword Advicer Singleton", phase);
+        builder.Services.AddSingleton<IKeywordAdvicer>(MongoKeywordAdvicer.GetInstance());
+
+        Log.Information("{Phase}: AdviseKeywords Handler Singleton", phase);
+        builder.Services.AddSingleton<AdviseKeywordsHandler>();
 
         Log.Information("{Phase}: Entity Context", phase);
         builder.Services.AddSingleton<IEntityContext>(new EntityContext()

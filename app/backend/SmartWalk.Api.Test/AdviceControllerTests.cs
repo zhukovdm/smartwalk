@@ -22,11 +22,8 @@ public class AdviceControllerAdviseKeywordsTests
     [TestMethod]
     public async Task ShouldReturnKeywordAdviceItems()
     {
-        var context = new AdviceContext()
-        {
-            KeywordAdvicer = new FakeWorkingKeywordAdvicer()
-        };
-        var controller = new AdviceController(context, new FakeLogger<AdviceController>());
+        var controller = new AdviceController(
+            new FakeWorkingKeywordAdvicer(), new FakeLogger<AdviceController>());
 
         var items = (await controller.AdviseKeywords(GetValidAdviseKeywordsRequest())).Value;
 
@@ -38,11 +35,8 @@ public class AdviceControllerAdviseKeywordsTests
     [TestMethod]
     public async Task ShouldReturnServerErrorDueToFailingAdvicer()
     {
-        var context = new AdviceContext()
-        {
-            KeywordAdvicer = new FakeFailingKeywordAdvicer()
-        };
-        var controller = new AdviceController(context, new FakeLogger<AdviceController>());
+        var controller = new AdviceController(
+            new FakeFailingKeywordAdvicer(), new FakeLogger<AdviceController>());
 
         var response = (await controller.AdviseKeywords(GetValidAdviseKeywordsRequest())).Result as StatusCodeResult;
 
