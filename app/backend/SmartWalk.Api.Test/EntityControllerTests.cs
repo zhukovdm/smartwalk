@@ -15,7 +15,7 @@ public class EntityControllerGetPlaceTests
     public async Task ShouldReturnBadRequestDueToMalformedSmartId()
     {
         var controller = new EntityController(
-            new FakeLogger<EntityController>(), new(new FakeWorkingEntityStore()));
+            new FakeLogger<EntityController>(), new FakeWorkingEntityStore());
 
         var value = ((await controller.GetPlace("a0")).Result as ObjectResult).Value;
         var hasError = (value as ValidationProblemDetails).Errors.ContainsKey("smartId");
@@ -29,7 +29,7 @@ public class EntityControllerGetPlaceTests
     public async Task ShouldReturnNotFoundDueToMissingSmartId()
     {
         var controller = new EntityController(
-            new FakeLogger<EntityController>(), new(new FakeWorkingEntityStore()));
+            new FakeLogger<EntityController>(), new FakeWorkingEntityStore());
 
         var result = (await controller.GetPlace("707f1f77bcf86cd799439011")).Result as StatusCodeResult;
 
@@ -40,7 +40,7 @@ public class EntityControllerGetPlaceTests
     public async Task ShouldReturnValidValueObject()
     {
         var controller = new EntityController(
-            new FakeLogger<EntityController>(), new(new FakeWorkingEntityStore()));
+            new FakeLogger<EntityController>(), new FakeWorkingEntityStore());
 
         var responseValue = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Value;
 
@@ -53,7 +53,7 @@ public class EntityControllerGetPlaceTests
     public async Task ShouldReturnServerErrorDueToFailingEntityStore()
     {
         var controller = new EntityController(
-            new FakeLogger<EntityController>(), new(new FakeFailingEntityStore()));
+            new FakeLogger<EntityController>(), new FakeFailingEntityStore());
 
         var result = (await controller.GetPlace(FakeWorkingEntityStore.EXISTING_SMART_ID)).Result as StatusCodeResult;
 

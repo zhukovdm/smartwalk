@@ -28,11 +28,8 @@ public class SearchControllerSearchDirecsTests
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidQueryString()
     {
-        var context = new SearchContext()
-        {
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), null, new FakeWorkingRoutingEngine());
 
         var query = "{}";
         var value = ((await controller.SearchDirecs(new() { query = query })).Result as ObjectResult).Value;
@@ -46,11 +43,8 @@ public class SearchControllerSearchDirecsTests
     [TestMethod]
     public async Task ShouldReturnListOfDirections()
     {
-        var context = new SearchContext()
-        {
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), null, new FakeWorkingRoutingEngine());
 
         var value = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Value;
 
@@ -62,11 +56,8 @@ public class SearchControllerSearchDirecsTests
     [TestMethod]
     public async Task ShouldReturnServerErrorDueToFailingRoutingEngine()
     {
-        var context = new SearchContext()
-        {
-            RoutingEngine = new FakeFailingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), null, new FakeFailingRoutingEngine());
 
         var result = (await controller.SearchDirecs(new() { query = VALID_DIRECS_QUERY })).Result as StatusCodeResult;
 
@@ -104,11 +95,8 @@ public class SearchControllerSearchPlacesTests
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidQueryString()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), null);
 
         var value = ((await controller.SearchPlaces(new() { query = "{}" })).Result as ObjectResult).Value;
         var hasError = (value as ValidationProblemDetails).Errors.ContainsKey("query");
@@ -121,11 +109,8 @@ public class SearchControllerSearchPlacesTests
     [TestMethod]
     public async Task ShouldReturnListOfPlaces()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), null);
 
         var value = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Value;
 
@@ -137,11 +122,8 @@ public class SearchControllerSearchPlacesTests
     [TestMethod]
     public async Task ShouldReturnServerErrorDueToFailingEntityIndex()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeFailingEntityIndex()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeFailingEntityIndex(), null);
 
         var result = (await controller.SearchPlaces(new() { query = VALID_PLACES_QUERY })).Result as StatusCodeResult;
 
@@ -193,12 +175,8 @@ public class SearchControllerSearchRoutesTests
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidQueryString()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex(),
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), new FakeWorkingRoutingEngine());
 
         var query = "{}";
         var value = ((await controller.SearchRoutes(new() { query = query })).Result as ObjectResult).Value;
@@ -210,12 +188,8 @@ public class SearchControllerSearchRoutesTests
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToInvalidArrowConfiguration()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex(),
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), new FakeWorkingRoutingEngine());
 
         var query = @"{
             ""source"": {
@@ -262,12 +236,8 @@ public class SearchControllerSearchRoutesTests
     [TestMethod]
     public async Task ShouldReturnBadRequestDueToTooLargeDistance()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex(),
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), new FakeWorkingRoutingEngine());
 
         var query = @"{
             ""source"": {
@@ -316,12 +286,8 @@ public class SearchControllerSearchRoutesTests
     [TestMethod]
     public async Task ShouldReturnListOfRoutes()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex(),
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), new FakeWorkingRoutingEngine());
 
         var value = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Value;
 
@@ -333,12 +299,8 @@ public class SearchControllerSearchRoutesTests
     [TestMethod]
     public async Task ShouldReturnServerErrorDueToFailingEntityIndex()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeFailingEntityIndex(),
-            RoutingEngine = new FakeWorkingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeFailingEntityIndex(), new FakeWorkingRoutingEngine());
 
         var result = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Result as StatusCodeResult;
 
@@ -348,12 +310,8 @@ public class SearchControllerSearchRoutesTests
     [TestMethod]
     public async Task ShouldReturnServerErrorDueToFailingRoutingEngine()
     {
-        var context = new SearchContext()
-        {
-            EntityIndex = new FakeWorkingEntityIndex(),
-            RoutingEngine = new FakeFailingRoutingEngine()
-        };
-        var controller = new SearchController(context, new FakeLogger<SearchController>());
+        var controller = new SearchController(
+            new FakeLogger<SearchController>(), new FakeWorkingEntityIndex(), new FakeFailingRoutingEngine());
 
         var result = (await controller.SearchRoutes(new() { query = VALID_ROUTES_QUERY })).Result as StatusCodeResult;
 

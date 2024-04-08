@@ -7,9 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using SmartWalk.Application.Entities;
-using SmartWalk.Application.Handlers;
-using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Interfaces;
 using SmartWalk.Infrastructure.Advicer;
 using SmartWalk.Infrastructure.EntityIndex;
@@ -20,7 +17,7 @@ namespace SmartWalk.Api;
 
 public static class AppConfigurator
 {
-    private static readonly string _corsPolicy = "SmartWalkCors";
+    private static readonly string corsPolicy = "SmartWalkCors";
 
     public static void CreateLogger()
     {
@@ -33,7 +30,7 @@ public static class AppConfigurator
         Log.Information(phase);
 
         Log.Information("{Phase}: CORS Policy Definition", phase);
-        builder.Services.AddCors(cors => cors.AddPolicy(_corsPolicy, builder =>
+        builder.Services.AddCors(cors => cors.AddPolicy(corsPolicy, builder =>
         {
             builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
         }));
@@ -67,24 +64,17 @@ public static class AppConfigurator
                 .ForEach(f => g.IncludeXmlComments(f));
         });
 
-        Log.Information("{Phase}: Keyword Advicer Singleton", phase);
+        Log.Information("{Phase}: IKeywordAdvicer Singleton", phase);
         builder.Services.AddSingleton<IKeywordAdvicer>(MongoKeywordAdvicer.GetInstance());
 
-        Log.Information("{Phase}: AdviseKeywordsHandler Singleton", phase);
-        builder.Services.AddSingleton<AdviseKeywordsHandler>();
-
-        Log.Information("{Phase}: Entity Store Singleton", phase);
+        Log.Information("{Phase}: IEntityStore Singleton", phase);
         builder.Services.AddSingleton<IEntityStore>(MongoEntityStore.GetInstance());
 
-        Log.Information("{Phase}: GetPlaceHandler Singleton", phase);
-        builder.Services.AddSingleton<GetPlaceHandler>();
+        Log.Information("{Phase}: IEntityIndex Singleton", phase);
+        builder.Services.AddSingleton<IEntityIndex>(MongoEntityIndex.GetInstance());
 
-        Log.Information("{Phase}: Search Context", phase);
-        builder.Services.AddSingleton<ISearchContext>(new SearchContext()
-        {
-            EntityIndex = MongoEntityIndex.GetInstance(),
-            RoutingEngine = OsrmRoutingEngine.GetInstance()
-        });
+        Log.Information("{Phase}: IRoutingEngine Singleton", phase);
+        builder.Services.AddSingleton<IRoutingEngine>(OsrmRoutingEngine.GetInstance());
 
         return builder;
     }
@@ -104,7 +94,7 @@ public static class AppConfigurator
         }
 
         Log.Information("{Phase}: Use CORS Policy", phase);
-        app.UseCors(_corsPolicy);
+        app.UseCors(corsPolicy);
 
         Log.Information("{Phase}: Use Authorization", phase);
         app.UseAuthorization();
