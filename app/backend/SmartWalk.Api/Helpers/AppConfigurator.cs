@@ -70,14 +70,14 @@ public static class AppConfigurator
         Log.Information("{Phase}: Keyword Advicer Singleton", phase);
         builder.Services.AddSingleton<IKeywordAdvicer>(MongoKeywordAdvicer.GetInstance());
 
-        Log.Information("{Phase}: AdviseKeywords Handler Singleton", phase);
+        Log.Information("{Phase}: AdviseKeywordsHandler Singleton", phase);
         builder.Services.AddSingleton<AdviseKeywordsHandler>();
 
-        Log.Information("{Phase}: Entity Context", phase);
-        builder.Services.AddSingleton<IEntityContext>(new EntityContext()
-        {
-            EntityStore = MongoEntityStore.GetInstance()
-        });
+        Log.Information("{Phase}: Entity Store Singleton", phase);
+        builder.Services.AddSingleton<IEntityStore>(MongoEntityStore.GetInstance());
+
+        Log.Information("{Phase}: GetPlaceHandler Singleton", phase);
+        builder.Services.AddSingleton<GetPlaceHandler>();
 
         Log.Information("{Phase}: Search Context", phase);
         builder.Services.AddSingleton<ISearchContext>(new SearchContext()

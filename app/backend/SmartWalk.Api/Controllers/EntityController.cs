@@ -15,12 +15,12 @@ namespace SmartWalk.Api.Controllers;
 [Route("api/entity")]
 public sealed class EntityController : ControllerBase
 {
-    private readonly IEntityContext ctx;
+    private readonly GetPlaceHandler handler;
     private readonly ILogger<EntityController> logger;
 
-    public EntityController(IEntityContext ctx, ILogger<EntityController> logger)
+    public EntityController(ILogger<EntityController> logger, GetPlaceHandler handler)
     {
-        this.ctx = ctx; this.logger = logger;
+        this.logger = logger; this.handler = handler;
     }
 
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
@@ -47,8 +47,7 @@ public sealed class EntityController : ControllerBase
 
         try
         {
-            var result = await new GetPlaceHandler(ctx.EntityStore)
-                .Handle(new() { smartId = smartId });
+            var result = await handler.Handle(new() { smartId = smartId });
 
             return responder.Respond(result);
         }
