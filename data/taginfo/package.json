@@ -12,12 +12,11 @@
   "author": "Dmitry Zhukov",
   "dependencies": {
     "@types/node": "^20.6.0",
-    "axios": "^1.5.0",
+    "axios": "^1.7.4",
     "commander": "^11.0.0",
     "mongodb": "^6.0.0",
     "typescript": "^5.2.2",
     "winston": "^3.10.0"
   },
-  "devDependencies": {},
   "keywords": []
 }
