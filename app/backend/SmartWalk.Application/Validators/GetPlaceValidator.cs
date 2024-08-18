@@ -6,7 +6,7 @@ namespace SmartWalk.Application.Validators;
 /// <summary>
 /// Handler-specific validator.
 /// </summary>
-public class GetPlaceValidator : RequestValidatorBase<string>
+public sealed class GetPlaceValidator : RequestValidatorBase<string>
 {
     public GetPlaceValidator(IValidationResult result) : base(result) { }
 
