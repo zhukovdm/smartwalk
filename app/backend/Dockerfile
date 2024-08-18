@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
 WORKDIR /opt/build/
 COPY ./WolfGarbe.PruningRadixTrie/PruningRadixTrie/*.csproj ./WolfGarbe.PruningRadixTrie/PruningRadixTrie/
@@ -20,7 +20,7 @@ COPY ./SmartWalk.Api/. ./SmartWalk.Api/
 WORKDIR /opt/build/SmartWalk.Api/
 RUN dotnet publish --use-current-runtime --self-contained false --no-restore -o /opt/app/
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
 
 RUN apt-get update ; apt-get -y install curl
 
