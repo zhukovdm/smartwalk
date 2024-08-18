@@ -6,7 +6,7 @@ namespace SmartWalk.Application.Parsers;
 /// <summary>
 /// Parser specific for /search/direcs requests.
 /// </summary>
-public class SearchDirecsQueryParser : QueryParserBase<ConstrainedSearchDirecsQuery, SearchDirecsQuery>
+public sealed class SearchDirecsQueryParser : QueryParserBase<ConstrainedSearchDirecsQuery, SearchDirecsQuery>
 {
     public SearchDirecsQueryParser(IValidationResult result) : base(result) { }
 

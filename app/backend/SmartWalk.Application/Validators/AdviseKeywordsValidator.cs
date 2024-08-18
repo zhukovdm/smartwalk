@@ -5,7 +5,7 @@ namespace SmartWalk.Application.Validators;
 /// <summary>
 /// Handler-specific validator.
 /// </summary>
-public class AdviseKeywordsValidator : RequestValidatorBase<object>
+public sealed class AdviseKeywordsValidator : RequestValidatorBase<object>
 {
     public AdviseKeywordsValidator(IValidationResult result) : base(result) { }
 

@@ -9,7 +9,8 @@ namespace SmartWalk.Application.Parsers;
 /// <summary>
 /// Parser specific for /search/routes requests.
 /// </summary>
-public class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQuery, SearchRoutesQuery>
+public sealed class SearchRoutesQueryParser
+    : QueryParserBase<ConstrainedSearchRoutesQuery, SearchRoutesQuery>
 {
     private sealed class ArrowComparer : IComparer<Arrow>
     {
