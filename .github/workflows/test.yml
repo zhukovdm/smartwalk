@@ -18,10 +18,10 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Setting up .NET 6
+      - name: Setting up .NET 8
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 6.0.x
+          dotnet-version: 8.0.x
     
       - name: Clean
         run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
