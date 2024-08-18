@@ -25,7 +25,10 @@ internal abstract class OsrmFetcherBase
     /// <returns>Response content</returns>
     protected async Task<string> MakeHttpRequest(string url)
     {
-        var response = await new HttpClient().GetAsync(url);
-        return (response.IsSuccessStatusCode) ? await response.Content.ReadAsStringAsync() : null;
+        using (var client = new HttpClient())
+        {
+            var response = await client.GetAsync(url);
+            return (response.IsSuccessStatusCode) ? await response.Content.ReadAsStringAsync() : null;
+        }
     }
 }
