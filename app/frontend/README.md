@@ -43,7 +43,7 @@ Improve your code and find the most common mistakes with [ESlint](https://eslint
 To get a grasp on how source code is organized, generate project documentation using [TypeDoc](https://typedoc.org/) and store it in the `./docs` folder. Once created, you can serve files on http://localhost:3573 at any time using the following command.
 
 ```bash
-$ npx serve -l 3573 docs
+npx serve -l 3573 docs
 ```
 
 ## Learn More
