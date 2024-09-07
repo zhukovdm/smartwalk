@@ -2,8 +2,9 @@ using System.Threading.Tasks;
 using MongoDB.Driver;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
+using SmartWalk.Infrastructure.Mongo.Helpers;
 
-namespace SmartWalk.Infrastructure.EntityStore;
+namespace SmartWalk.Infrastructure.Mongo;
 
 public sealed class MongoEntityStore : IEntityStore
 {

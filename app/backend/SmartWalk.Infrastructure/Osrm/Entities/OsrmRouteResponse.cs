@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using GeoJSON.Text.Geometry;
 
-namespace SmartWalk.Infrastructure.RoutingEngine.Osrm;
+namespace SmartWalk.Infrastructure.Osrm.Entities;
 
 internal sealed class OsrmRoute
 {
@@ -24,4 +25,13 @@ internal sealed class OsrmRoute
     /// </summary>
     [Required]
     public LineString geometry { get; init; }
+}
+
+internal sealed class OsrmRouteResponse
+{
+    [Required]
+    public string code { get; init; }
+
+    [Required]
+    public List<OsrmRoute> routes { get; init; }
 }

@@ -8,9 +8,9 @@ using MongoDB.Driver.GeoJsonObjectModel;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Interfaces;
-using SmartWalk.Infrastructure.EntityIndex.Mongo;
+using SmartWalk.Infrastructure.Mongo.Helpers;
 
-namespace SmartWalk.Infrastructure.EntityIndex;
+namespace SmartWalk.Infrastructure.Mongo;
 
 using Filter = FilterDefinition<ExtendedPlace>;
 
@@ -56,14 +56,14 @@ public sealed class MongoEntityIndex : IEntityIndex
         for (int i = 0; i < categories.Count; ++i)
         {
             result.AddRange(await FetchPlaces(
-                baseFilter & FilterBuilder.CategoryToFilter(categories[i]), i));
+                baseFilter & MongoFilterBuilder.CategoryToFilter(categories[i]), i));
         }
         return result.WithMergedCategories();
     }
 
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
     {
-        // $nearSphere returns objects sorted by distance from the center!
+        // $nearSphere returns objects sorted by crow-fly distance from the center!
 
         var sf = Builders<ExtendedPlace>.Filter
             .NearSphere(p => p.location, GeoJson.Point(

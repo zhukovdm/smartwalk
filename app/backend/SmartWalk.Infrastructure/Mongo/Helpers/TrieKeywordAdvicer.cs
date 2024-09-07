@@ -5,7 +5,7 @@ using MongoDB.Bson.Serialization.Attributes;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Infrastructure.Advicer;
+namespace SmartWalk.Infrastructure.Mongo.Helpers;
 
 using Trie = PruningRadixTrie.PruningRadixTrie;
 

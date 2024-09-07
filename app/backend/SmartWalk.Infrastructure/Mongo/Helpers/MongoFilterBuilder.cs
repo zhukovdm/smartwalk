@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using MongoDB.Driver;
 using SmartWalk.Core.Entities;
 
-namespace SmartWalk.Infrastructure.EntityIndex.Mongo;
+namespace SmartWalk.Infrastructure.Mongo.Helpers;
 
 using B = FilterDefinitionBuilder<ExtendedPlace>;
 using F = FilterDefinition<ExtendedPlace>;
@@ -55,7 +55,7 @@ internal static class FilterDefinitionExtensions
     }
 }
 
-internal static class FilterBuilder
+internal static class MongoFilterBuilder
 {
     ///<summary>
     /// Construct filter out of the provided category.

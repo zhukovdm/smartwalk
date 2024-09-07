@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SmartWalk.Application\SmartWalk.Application.csproj" />
     <ProjectReference Include="..\SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj" />
   </ItemGroup>
 
