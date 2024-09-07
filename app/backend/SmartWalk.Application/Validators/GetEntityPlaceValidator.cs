@@ -6,9 +6,9 @@ namespace SmartWalk.Application.Validators;
 /// <summary>
 /// Handler-specific validator.
 /// </summary>
-public sealed class GetPlaceValidator : RequestValidatorBase<string>
+public sealed class GetEntityPlaceValidator : RequestValidatorBase<string>
 {
-    public GetPlaceValidator(IValidationResult result) : base(result) { }
+    public GetEntityPlaceValidator(IValidationResult result) : base(result) { }
 
     public override bool Validate(string smartId)
     {

@@ -15,7 +15,7 @@ namespace SmartWalk.Application.Handlers;
 /// <summary>
 /// Endpoint-specific query handler.
 /// </summary>
-public sealed class SearchRoutesQueryHandler : IQueryHandler<SearchRoutesQuery, List<Route>>
+public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
 {
     /// <summary>
     /// Time span (in ms) dedicated to route calculation.

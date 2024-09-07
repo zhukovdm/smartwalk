@@ -5,7 +5,7 @@ namespace SmartWalk.Application.Entities;
 /// <summary>
 /// Type used for model (V)alidation.
 /// </summary>
-public sealed class AdviseKeywordsRequest
+public sealed class GetAdviceKeywordsRequest
 {
     /// <example>m</example>
     [Required]
