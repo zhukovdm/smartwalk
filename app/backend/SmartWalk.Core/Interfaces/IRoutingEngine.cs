@@ -13,9 +13,9 @@ public interface IRoutingEngine
     Task<IDistanceFunction> GetDistanceFunction(IReadOnlyList<WgsPoint> waypoints);
 
     /// <summary>
-    /// Calculate polyline, distance, and duration of the fastest routes
-    /// visiting waypoints in a given order.
+    /// Calculate paths (with polyline, distance, and duration) visiting
+    /// waypoints in a given order.
     /// </summary>
-    /// <returns>Non-null, possibly empty list of shortest path objects.</returns>
-    Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints);
+    /// <returns>Non-null, possibly empty list of paths.</returns>
+    Task<List<Path>> GetPaths(IReadOnlyList<WgsPoint> waypoints);
 }
