@@ -1,9 +1,8 @@
 using System;
 using MongoDB.Driver;
 using SmartWalk.Core.Entities;
-using SmartWalk.Infrastructure.Advicer;
 
-namespace SmartWalk.Infrastructure;
+namespace SmartWalk.Infrastructure.Mongo.Helpers;
 
 using Item = TrieKeywordAdvicer.Item;
 

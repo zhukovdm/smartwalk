@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SmartWalk.Infrastructure.Advicer;
+using SmartWalk.Infrastructure.Mongo.Helpers;
 
 namespace SmartWalk.Infrastructure.Test;
 

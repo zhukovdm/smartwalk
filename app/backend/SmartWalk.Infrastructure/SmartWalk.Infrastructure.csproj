@@ -10,12 +10,14 @@
 
   <ItemGroup>
     <PackageReference Include="GeoJSON.Text" Version="1.0.2" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
     <PackageReference Include="MongoDB.Driver" Version="2.28.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj" />
     <ProjectReference Include="..\WolfGarbe.PruningRadixTrie\PruningRadixTrie\PruningRadixTrie.csproj" />
+    <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj" />
+    <ProjectReference Include="..\SmartWalk.Application\SmartWalk.Application.csproj" />
   </ItemGroup>
 
   <ItemGroup>
