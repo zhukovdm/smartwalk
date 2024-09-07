@@ -3,7 +3,7 @@ namespace SmartWalk.Core.Interfaces;
 /// <summary>
 /// Distance function abstraction.
 /// </summary>
-public interface IDistanceFunction
+public interface IDistanceFunc
 {
     /// <summary>
     /// Calculate (fr -> to)-distance.

@@ -6,7 +6,7 @@ namespace SmartWalk.Core.Solvers;
 
 public partial class SolverFactory
 {
-    readonly IDistanceFunction distFn;
+    readonly IDistanceFunc distFn;
     readonly IReadOnlyList<Arrow> arrows;
     readonly SolverPlace source, target;
 
@@ -15,7 +15,7 @@ public partial class SolverFactory
     /// <param name="arrows">A valid list of arrows.</param>
     /// <param name="source">Starting point.</param>
     /// <param name="target">Destination.</param>
-    public SolverFactory(IDistanceFunction distFn, IReadOnlyList<Arrow> arrows, SolverPlace source, SolverPlace target)
+    public SolverFactory(IDistanceFunc distFn, IReadOnlyList<Arrow> arrows, SolverPlace source, SolverPlace target)
     {
         this.distFn = distFn;
         this.arrows = arrows;

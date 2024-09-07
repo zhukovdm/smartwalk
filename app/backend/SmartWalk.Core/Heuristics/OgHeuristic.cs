@@ -78,7 +78,7 @@ internal static class OgCandidateSelector
     /// <param name="distFn">Distance function.</param>
     /// <returns></returns>
     public static SolverPlace SelectBest(
-        List<SolverPlace> seq, IEnumerable<OgCategory> freeCats, IDistanceFunction distFn)
+        List<SolverPlace> seq, IEnumerable<OgCategory> freeCats, IDistanceFunc distFn)
     {
         SolverPlace best = null;
         double lastDist = double.MaxValue;
@@ -125,7 +125,7 @@ internal static class OgHeuristic
     /// <param name="target">Destination.</param>
     /// <returns></returns>
     public static List<SolverPlace> Advise(
-        IEnumerable<SolverPlace> places, IDistanceFunction distFn, IEnumerable<Arrow> arrows, SolverPlace source, SolverPlace target)
+        IEnumerable<SolverPlace> places, IDistanceFunc distFn, IEnumerable<Arrow> arrows, SolverPlace source, SolverPlace target)
     {
         var seq = new List<SolverPlace>() { source, target };
         var cats = OgCategoryFormer.Form(places, arrows);

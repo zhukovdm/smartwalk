@@ -30,7 +30,7 @@ internal static class TwoOptHeuristic
     /// <param name="seq">Unordered sequence of places.</param>
     /// <param name="distFn">Distance function.</param>
     /// <returns>Improved sequence.</returns>
-    public static List<SolverPlace> Advise(List<SolverPlace> seq, IDistanceFunction distFn)
+    public static List<SolverPlace> Advise(List<SolverPlace> seq, IDistanceFunc distFn)
     {
         bool change;
         do

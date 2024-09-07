@@ -68,7 +68,7 @@ public class IfCandidateSelectorTests
         var matrix = TestPrimitives.GenerateUnitDistanceMatrix(6);
         matrix[2][3] = 0.9;
 
-        var distFn = new MatrixDistanceFunction(matrix);
+        var distFn = new MatrixDistanceFunc(matrix);
 
         var (best, _, _) = IfCandidateSelector.SelectBest(seq, cat, distFn, 0.0);
 
