@@ -74,7 +74,7 @@ internal static class IfCandidateSelector
     /// New distance after removing one edge and adding two new edges.
     /// </summary>
     private static double NextDistance(
-        IReadOnlyList<SolverPlace> seq, SolverPlace place, IDistanceFunction distFn, double currDist, int seqIdx)
+        IReadOnlyList<SolverPlace> seq, SolverPlace place, IDistanceFunc distFn, double currDist, int seqIdx)
     {
         return currDist
             - distFn.GetDistance(seq[seqIdx - 1].idx, seq[seqIdx].idx)
@@ -86,7 +86,7 @@ internal static class IfCandidateSelector
     /// Select the best candidate out of all available places.
     /// </summary>
     public static (SolverPlace, double, int) SelectBest(
-        IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceFunction distFn, double currDist)
+        IReadOnlyList<SolverPlace> seq, IReadOnlyList<SolverPlace> cat, IDistanceFunc distFn, double currDist)
     {
         /* WLOG, `currDist` can be 0.0. We return new distance to simplify the
          * caller's body. */
@@ -124,7 +124,7 @@ internal sealed class IfHeuristic
     /// <param name="target">Destination.</param>
     /// <returns>Sequence.</returns>
     public static List<SolverPlace> Advise(
-        IEnumerable<SolverPlace> places, IDistanceFunction distFn, SolverPlace source, SolverPlace target)
+        IEnumerable<SolverPlace> places, IDistanceFunc distFn, SolverPlace source, SolverPlace target)
     {
         var seq = new List<SolverPlace>() { source, target };
         var currDist = distFn.GetDistance(source.idx, target.idx);

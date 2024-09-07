@@ -21,11 +21,11 @@ public class TwoOptHeuristicTests
         public Point(double x, double y) { X = x; Y = y; }
     }
 
-    private sealed class CartesianDistanceFunction : IDistanceFunction
+    private sealed class CartesianDistanceFunc : IDistanceFunc
     {
         private readonly List<Point> points;
 
-        public CartesianDistanceFunction(List<Point> points)
+        public CartesianDistanceFunc(List<Point> points)
         {
             this.points = points;
         }
@@ -45,7 +45,7 @@ public class TwoOptHeuristicTests
     {
         // there is only one correct answer
 
-        var distFn = new CartesianDistanceFunction(new()
+        var distFn = new CartesianDistanceFunc(new()
         {
             new(0.0, 0.0),
             new(0.0, 1.0),
@@ -87,7 +87,7 @@ public class TwoOptHeuristicTests
             .Select((_) => new Point(rnd.NextDouble(), rnd.NextDouble()))
             .ToList();
 
-        var distFn = new CartesianDistanceFunction(points);
+        var distFn = new CartesianDistanceFunc(points);
 
         var seq = Enumerable
             .Range(0, order)

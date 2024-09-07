@@ -81,7 +81,7 @@ public class OgCandidateSelectorTests
 
         var cats = new List<OgCategory> { p1, p2, p3 };
 
-        var distFn = new MatrixDistanceFunction(new()
+        var distFn = new MatrixDistanceFunc(new()
         {
             new() { 0.0, 2.0, 1.0, 3.0, 0.0, 0.0 },
             new() { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
@@ -116,7 +116,7 @@ public class OgHeuristicTests
             new(3, 3),
         };
 
-        var distFn = new MatrixDistanceFunction(
+        var distFn = new MatrixDistanceFunc(
             TestPrimitives.GenerateUnitDistanceMatrix(places.Count + 2));
 
         var arrows = new List<Arrow>

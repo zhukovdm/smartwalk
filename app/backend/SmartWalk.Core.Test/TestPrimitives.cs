@@ -25,7 +25,7 @@ public static class TestPrimitives
         return result;
     }
 
-    public static IDistanceFunction GenerateRandomDistanceMatrix(int order)
+    public static IDistanceFunc GenerateRandomDistanceMatrix(int order)
     {
         var rand = new Random();
 
@@ -41,7 +41,7 @@ public static class TestPrimitives
                 }
             }
         }
-        return new MatrixDistanceFunction(matrix);
+        return new MatrixDistanceFunc(matrix);
     }
 
     public static IReadOnlyList<Arrow> GenerateRandomArrows(int order, double probability)

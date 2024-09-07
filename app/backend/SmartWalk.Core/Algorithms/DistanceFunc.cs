@@ -5,13 +5,13 @@ using SmartWalk.Core.Interfaces;
 namespace SmartWalk.Core.Algorithms;
 
 /// <summary>
-/// Wrapper over matrix-based distance function calculated by a routing engine.
+/// Wrapper over matrix-based distance function.
 /// </summary>
-public sealed class MatrixDistanceFunction : IDistanceFunction
+public sealed class MatrixDistanceFunc : IDistanceFunc
 {
     private readonly List<List<double>> matrix;
 
-    public MatrixDistanceFunction(List<List<double>> matrix) { this.matrix = matrix; }
+    public MatrixDistanceFunc(List<List<double>> matrix) { this.matrix = matrix; }
 
     public double GetDistance(int fr, int to) => matrix[fr][to];
 }
@@ -19,12 +19,12 @@ public sealed class MatrixDistanceFunction : IDistanceFunction
 /// <summary>
 /// Scaled wrapper over the Haversine formula.
 /// </summary>
-public sealed class HaversineDistanceFunction : IDistanceFunction
+public sealed class HaversineDistanceFunc : IDistanceFunc
 {
     private readonly double scaleFactor;
     private readonly IReadOnlyList<Place> places;
 
-    public HaversineDistanceFunction(IReadOnlyList<Place> places, double scaleFactor = 1.0)
+    public HaversineDistanceFunc(IReadOnlyList<Place> places, double scaleFactor = 1.0)
     {
         this.places = places; this.scaleFactor = scaleFactor;
     }
