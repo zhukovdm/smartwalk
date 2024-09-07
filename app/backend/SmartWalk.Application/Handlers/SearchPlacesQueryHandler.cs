@@ -8,13 +8,13 @@ using SmartWalk.Core.Interfaces;
 namespace SmartWalk.Application.Handlers;
 
 /// <summary>
-/// Endpoint-specific handler.
+/// Endpoint-specific query handler.
 /// </summary>
-public sealed class SearchPlacesHandler : IQueryHandler<SearchPlacesQuery, List<Place>>
+public sealed class SearchPlacesQueryHandler : IQueryHandler<SearchPlacesQuery, List<Place>>
 {
     private readonly IEntityIndex entityIndex;
 
-    public SearchPlacesHandler(IEntityIndex entityIndex)
+    public SearchPlacesQueryHandler(IEntityIndex entityIndex)
     {
         this.entityIndex = entityIndex;
     }

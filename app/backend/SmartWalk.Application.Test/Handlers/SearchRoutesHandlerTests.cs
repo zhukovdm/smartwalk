@@ -30,9 +30,9 @@ public class SearchRoutesHandlerTests
         var N = 10;
 
         var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
-        var routingEngine = new FakeFastRoutingEngine();
+        var shortestPathFinder = new FakeFastShortestPathFinder();
 
-        var routes = await new SearchRoutesHandler(entityIndex, routingEngine).Handle(new()
+        var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
         {
             source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
         });
@@ -46,9 +46,9 @@ public class SearchRoutesHandlerTests
         var N = 10;
 
         var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
-        var routingEngine = new FakeFastRoutingEngine();
+        var shortestPathFinder = new FakeFastShortestPathFinder();
 
-        var routes = await new SearchRoutesHandler(entityIndex, routingEngine).Handle(new()
+        var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
         {
             source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
         });
@@ -70,11 +70,11 @@ public class SearchRoutesHandlerTests
         var N = 10;
 
         var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
-        var routingEngine = new FakeDistanceRoutingEngine(1e9);
+        var shortestPathFinder = new FakeLongShortestPathFinder(1e9);
 
-        var routes = await new SearchRoutesHandler(entityIndex, routingEngine).Handle(new()
+        var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
         {
-            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 0, categories = categories, arrows = arrows
+            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 0.0, categories = categories, arrows = arrows
         });
 
         Assert.AreEqual(0, routes.Count);
@@ -86,9 +86,9 @@ public class SearchRoutesHandlerTests
         var N = 1;
 
         var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
-        var routingEngine = new FakeFastRoutingEngine();
+        var routingEngine = new FakeFastShortestPathFinder();
 
-        var routes = await new SearchRoutesHandler(entityIndex, routingEngine).Handle(new()
+        var routes = await new SearchRoutesQueryHandler(entityIndex, routingEngine).Handle(new()
         {
             source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
         });
@@ -108,9 +108,9 @@ public class SearchRoutesHandlerTests
         var N = 10;
 
         var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
-        var routingEngine = new FakeSlowRoutingEngine();
+        var routingEngine = new FakeSlowShortestPathFinder();
 
-        var routes = await new SearchRoutesHandler(entityIndex, routingEngine).Handle(new()
+        var routes = await new SearchRoutesQueryHandler(entityIndex, routingEngine).Handle(new()
         {
             source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
         });

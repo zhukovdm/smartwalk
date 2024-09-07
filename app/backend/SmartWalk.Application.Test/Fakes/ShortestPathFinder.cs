@@ -1,23 +1,17 @@
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Entities;
-using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Application.Test;
 
-internal abstract class FakeRoutingEngine : IRoutingEngine
+internal abstract class FakeShortestPathFinderBase : IShortestPathFinder
 {
     protected double distance = 0.0;
 
     protected abstract int Delay { get; }
 
-    public Task<IDistanceFunction> GetDistanceFunction(IReadOnlyList<WgsPoint> waypoints)
-    {
-        throw new NotImplementedException();
-    }
-
-    public Task<List<ShortestPath>> GetShortestPaths(IReadOnlyList<WgsPoint> waypoints)
+    public Task<List<ShortestPath>> Search(IReadOnlyList<WgsPoint> waypoints)
     {
         var routes = new List<ShortestPath>()
         {
@@ -29,19 +23,19 @@ internal abstract class FakeRoutingEngine : IRoutingEngine
     }
 }
 
-internal sealed class FakeFastRoutingEngine : FakeRoutingEngine, IRoutingEngine
+internal sealed class FakeFastShortestPathFinder : FakeShortestPathFinderBase
 {
     protected override int Delay => 0;
 }
 
-internal sealed class FakeSlowRoutingEngine : FakeRoutingEngine, IRoutingEngine
+internal sealed class FakeSlowShortestPathFinder : FakeShortestPathFinderBase
 {
     protected override int Delay => 2_000;
 }
 
-internal sealed class FakeDistanceRoutingEngine : FakeRoutingEngine
+internal sealed class FakeLongShortestPathFinder : FakeShortestPathFinderBase
 {
     protected override int Delay => 0;
 
-    public FakeDistanceRoutingEngine(double distance) { this.distance = distance; }
+    public FakeLongShortestPathFinder(double distance) { this.distance = distance; }
 }
