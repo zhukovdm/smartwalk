@@ -12,7 +12,7 @@ public sealed class MongoKeywordAdvicer
     {
         var docs = MongoCollectionFactory.GetKeywordCollection()
             .Find(FilterDefinition<Item>.Empty)
-            .ToEnumerable(); /* synchronous! */
+            .ToEnumerable(); // synchronous!
 
         return TrieKeywordAdvicer.GetInstance(docs);
     }

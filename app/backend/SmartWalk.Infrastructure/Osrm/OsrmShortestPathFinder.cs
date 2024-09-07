@@ -8,7 +8,7 @@ using SmartWalk.Infrastructure.Osrm.Helpers;
 
 namespace SmartWalk.Infrastructure.Osrm;
 
-internal sealed class OsrmShortestPathFinder : IShortestPathFinder
+public sealed class OsrmShortestPathFinder : IShortestPathFinder
 {
     private readonly OsrmHttpClient client;
 
