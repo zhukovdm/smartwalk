@@ -26,6 +26,62 @@ public sealed class SearchRoutesQueryHandler : IQueryHandler<SearchRoutesQuery, 
 
     private readonly IShortestPathFinder shortestPathFinder;
 
+    public SearchRoutesQueryHandler(IEntityIndex entityIndex, IShortestPathFinder shortestPathFinder)
+    {
+        this.entityIndex = entityIndex;
+        this.shortestPathFinder = shortestPathFinder;
+    }
+
+    public async Task<List<Route>> Handle(SearchRoutesQuery query)
+    {
+        var result = new List<Route>();
+
+        var categories = query.categories;
+
+        var sourceCat = categories.Count + 0;
+        var targetCat = categories.Count + 1;
+
+        var source = new Place() { location = query.source, categories = new() { sourceCat } };
+        var target = new Place() { location = query.target, categories = new() { targetCat } };
+
+        var ellipse = Spherical.BoundingEllipse(source.location, target.location, query.maxDistance);
+
+        var places = new List<Place>()
+            .Concat(await entityIndex.GetWithin(ellipse, categories))
+            .Concat(new[] { source })
+            .Concat(new[] { target })
+            .ToList();
+
+        var distFn = new HaversineDistanceFunc(places);
+        var (solverSource, solverTarget, solverPlaces) = GetSolverPlaces(places, sourceCat, targetCat);
+
+        var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
+
+        var watch = Stopwatch.StartNew();
+        do
+        {
+            var fullSeq = factory.GetSolver().Solve(solverPlaces);
+
+            // only waypoints
+            var trimmedSeq = fullSeq.Skip(1).SkipLast(1).ToList();
+
+            // no candidates left
+            if (trimmedSeq.Count < categories.Count) { break; }
+
+            var path = await GetShortestPath(fullSeq /* with st! */, places, query.maxDistance);
+
+            if (path is not null)
+            {
+                result.Add(GetRoute(trimmedSeq /* without st! */, places, path));
+            }
+
+            trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
+        } while (watch.ElapsedMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
+
+        result.Sort(RouteComparer.Instance);
+        return result;
+    }
+
     /// <summary>
     /// Expand places into disjunct solver places.
     /// </summary>
@@ -114,61 +170,5 @@ public sealed class SearchRoutesQueryHandler : IQueryHandler<SearchRoutesQuery, 
         });
 
         return new() { path = path, places = routePlaces, waypoints = routeWaypoints };
-    }
-
-    public SearchRoutesQueryHandler(IEntityIndex entityIndex, IShortestPathFinder shortestPathFinder)
-    {
-        this.entityIndex = entityIndex;
-        this.shortestPathFinder = shortestPathFinder;
-    }
-
-    public async Task<List<Route>> Handle(SearchRoutesQuery query)
-    {
-        var result = new List<Route>();
-
-        var categories = query.categories;
-
-        var sourceCat = categories.Count + 0;
-        var targetCat = categories.Count + 1;
-
-        var source = new Place() { location = query.source, categories = new() { sourceCat } };
-        var target = new Place() { location = query.target, categories = new() { targetCat } };
-
-        var ellipse = Spherical.BoundingEllipse(source.location, target.location, query.maxDistance);
-
-        var places = new List<Place>()
-            .Concat(await entityIndex.GetWithin(ellipse, categories))
-            .Concat(new[] { source })
-            .Concat(new[] { target })
-            .ToList();
-
-        var distFn = new HaversineDistanceFunc(places);
-        var (solverSource, solverTarget, solverPlaces) = GetSolverPlaces(places, sourceCat, targetCat);
-
-        var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
-
-        var watch = Stopwatch.StartNew();
-        do
-        {
-            var fullSeq = factory.GetSolver().Solve(solverPlaces);
-
-            // only waypoints
-            var trimmedSeq = fullSeq.Skip(1).SkipLast(1).ToList();
-
-            // no candidates left
-            if (trimmedSeq.Count < categories.Count) { break; }
-
-            var path = await GetShortestPath(fullSeq /* with st! */, places, query.maxDistance);
-
-            if (path is not null)
-            {
-                result.Add(GetRoute(trimmedSeq /* without st! */, places, path));
-            }
-
-            trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
-        } while (watch.ElapsedMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
-
-        result.Sort(RouteComparer.Instance);
-        return result;
     }
 }
