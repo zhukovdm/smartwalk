@@ -11,7 +11,7 @@ namespace SmartWalk.Application.Handlers;
 /// <summary>
 /// Endpoint-specific query handler.
 /// </summary>
-public sealed class SearchDirecsQueryHandler : IQueryHandler<SearchDirecsQuery, List<ShortestPath>>
+public sealed class SearchDirecsQueryHandler : ISearchDirecsQueryHandler
 {
     private readonly IShortestPathFinder shortestPathFinder;
 

@@ -5,7 +5,7 @@ namespace SmartWalk.Application.Validators;
 /// <summary>
 /// Validator with a result.
 /// </summary>
-/// <typeparam name="T">Input type.</typeparam>
+/// <typeparam name="T">Input type</typeparam>
 public abstract class RequestValidatorBase<T>
 {
     protected readonly IValidationResult _result;

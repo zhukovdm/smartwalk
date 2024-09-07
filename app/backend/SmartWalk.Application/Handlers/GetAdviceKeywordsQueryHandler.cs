@@ -10,16 +10,16 @@ namespace SmartWalk.Application.Handlers;
 /// <summary>
 /// Endpoint-specific query handler.
 /// </summary>
-public sealed class AdviseKeywordsQueryHandler : IQueryHandler<AdviseKeywordsQuery, List<KeywordAdviceItem>>
+public sealed class GetAdviceKeywordsQueryHandler : IGetAdviceKeywordsQueryHandler
 {
     private readonly IKeywordAdvicer advicer;
 
-    public AdviseKeywordsQueryHandler(IKeywordAdvicer advicer) { this.advicer = advicer; }
+    public GetAdviceKeywordsQueryHandler(IKeywordAdvicer advicer) { this.advicer = advicer; }
 
     /// <summary>
     /// Get a list of autocomplete items.
     /// </summary>
-    public Task<List<KeywordAdviceItem>> Handle(AdviseKeywordsQuery query)
+    public Task<List<KeywordAdviceItem>> Handle(GetAdviceKeywordsQuery query)
     {
         return advicer.GetTopK(query.prefix, query.count);
     }

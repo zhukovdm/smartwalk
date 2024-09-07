@@ -7,7 +7,7 @@ namespace SmartWalk.Application.Validators;
 /// <summary>
 /// Schema-based validator (defined by type attributes).
 /// </summary>
-/// <typeparam name="V">Input string is validated against V-type.</typeparam>
+/// <typeparam name="V">Input string is validated against V-type</typeparam>
 public static class SerializationValidator<V>
 {
     private static readonly JsonSchema schema = JsonSchema.FromType<V>();
