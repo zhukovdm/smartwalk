@@ -8,13 +8,13 @@ using SmartWalk.Core.Interfaces;
 namespace SmartWalk.Application.Handlers;
 
 /// <summary>
-/// Endpoint-specific handler.
+/// Endpoint-specific query handler.
 /// </summary>
-public sealed class AdviseKeywordsHandler : IQueryHandler<AdviseKeywordsQuery, List<KeywordAdviceItem>>
+public sealed class AdviseKeywordsQueryHandler : IQueryHandler<AdviseKeywordsQuery, List<KeywordAdviceItem>>
 {
     private readonly IKeywordAdvicer advicer;
 
-    public AdviseKeywordsHandler(IKeywordAdvicer advicer) { this.advicer = advicer; }
+    public AdviseKeywordsQueryHandler(IKeywordAdvicer advicer) { this.advicer = advicer; }
 
     /// <summary>
     /// Get a list of autocomplete items.

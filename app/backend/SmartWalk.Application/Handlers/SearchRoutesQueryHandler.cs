@@ -1,8 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartWalk.Application.Helpers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Algorithms;
 using SmartWalk.Core.Entities;
@@ -13,45 +13,18 @@ using SmartWalk.Core.Solvers;
 namespace SmartWalk.Application.Handlers;
 
 /// <summary>
-/// Endpoint-specific handler.
+/// Endpoint-specific query handler.
 /// </summary>
-public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<Route>>
+public sealed class SearchRoutesQueryHandler : IQueryHandler<SearchRoutesQuery, List<Route>>
 {
-    private readonly IEntityIndex entityIndex;
-    private readonly IRoutingEngine routingEngine;
-
     /// <summary>
-    /// Time span dedicated to route calculation (in milliseconds).
+    /// Time span (in ms) dedicated to route calculation.
     /// </summary>
     private static readonly int ROUTE_CALCULATION_TIME_LIMIT_MS = 1_000;
 
-    private sealed class SolverPlaceComparer : IComparer<SolverPlace>
-    {
-        private SolverPlaceComparer() { }
+    private readonly IEntityIndex entityIndex;
 
-        private static readonly Lazy<SolverPlaceComparer> instance = new(() => new());
-
-        public static SolverPlaceComparer Instance { get { return instance.Value; } }
-
-        public int Compare(SolverPlace l, SolverPlace r)
-        {
-            return (l.idx != r.idx) ? l.idx.CompareTo(r.idx) : l.cat.CompareTo(r.cat);
-        }
-    }
-
-    private sealed class RouteComparer : IComparer<Route>
-    {
-        private RouteComparer() { }
-
-        private static readonly Lazy<RouteComparer> instance = new(() => new());
-
-        public static RouteComparer Instance { get { return instance.Value; } }
-
-        public int Compare(Route l, Route r)
-        {
-            return l.path.distance.CompareTo(r.path.distance);
-        }
-    }
+    private readonly IShortestPathFinder shortestPathFinder;
 
     /// <summary>
     /// Expand places into disjunct solver places.
@@ -95,16 +68,17 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
     }
 
     /// <summary>
-    /// Plan simple path through a given sequence.
+    /// Plan a simple path through a given sequence.
     /// </summary>
     /// <param name="fullSeq">Sequence of places with terminal points.</param>
     /// <param name="places">Places from the index.</param>
     /// <param name="maxDistance">Maximum allowed distance of a route.</param>
-    /// <returns>A path or nothing.</returns>
-    private async Task<ShortestPath> GetPath(IEnumerable<SolverPlace> fullSeq, List<Place> places, double maxDistance)
+    /// <returns>The shortest path or nothing.</returns>
+    private async Task<ShortestPath> GetShortestPath(IEnumerable<SolverPlace> fullSeq, List<Place> places, double maxDistance)
     {
-        return (await routingEngine.GetShortestPaths(fullSeq.Select((sp) => places[sp.idx].location).ToList()))
+        return (await shortestPathFinder.Search(fullSeq.Select((sp) => places[sp.idx].location).ToList()))
             .Where((p) => p.distance <= maxDistance)
+            .OrderBy(s => s, ShortestPathComparer.Instance)
             .FirstOrDefault();
     }
 
@@ -142,9 +116,10 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
         return new() { path = path, places = routePlaces, waypoints = routeWaypoints };
     }
 
-    public SearchRoutesHandler(IEntityIndex entityIndex, IRoutingEngine routingEngine)
+    public SearchRoutesQueryHandler(IEntityIndex entityIndex, IShortestPathFinder shortestPathFinder)
     {
-        this.entityIndex = entityIndex; this.routingEngine = routingEngine;
+        this.entityIndex = entityIndex;
+        this.shortestPathFinder = shortestPathFinder;
     }
 
     public async Task<List<Route>> Handle(SearchRoutesQuery query)
@@ -167,7 +142,7 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
             .Concat(new[] { target })
             .ToList();
 
-        var distFn = new HaversineDistanceFunction(places);
+        var distFn = new HaversineDistanceFunc(places);
         var (solverSource, solverTarget, solverPlaces) = GetSolverPlaces(places, sourceCat, targetCat);
 
         var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
@@ -183,7 +158,7 @@ public sealed class SearchRoutesHandler : IQueryHandler<SearchRoutesQuery, List<
             // no candidates left
             if (trimmedSeq.Count < categories.Count) { break; }
 
-            var path = await GetPath(fullSeq /* with st! */, places, query.maxDistance);
+            var path = await GetShortestPath(fullSeq /* with st! */, places, query.maxDistance);
 
             if (path is not null)
             {

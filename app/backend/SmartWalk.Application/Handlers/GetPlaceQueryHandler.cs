@@ -7,13 +7,13 @@ using SmartWalk.Core.Interfaces;
 namespace SmartWalk.Application.Handlers;
 
 /// <summary>
-/// Endpoint-specific handler.
+/// Endpoint-specific query handler.
 /// </summary>
-public sealed class GetPlaceHandler : IQueryHandler<GetPlaceQuery, ExtendedPlace>
+public sealed class GetPlaceQueryHandler : IQueryHandler<GetPlaceQuery, ExtendedPlace>
 {
     private readonly IEntityStore store;
 
-    public GetPlaceHandler(IEntityStore store) { this.store = store; }
+    public GetPlaceQueryHandler(IEntityStore store) { this.store = store; }
 
     public Task<ExtendedPlace> Handle(GetPlaceQuery query)
     {
