@@ -39,7 +39,7 @@ public sealed class Route
     /// Ordered sequence of points representing connected linestring.
     /// </summary>
     [Required]
-    public ShortestPath path { get; init; }
+    public Path path { get; init; }
 
     /// <summary>
     /// Unordered list of visited places.

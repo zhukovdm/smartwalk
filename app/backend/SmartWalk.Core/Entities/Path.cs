@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Core.Entities;
 
-public sealed class ShortestPath
+public sealed class Path
 {
     /// <summary>
     /// Distance of the route in <b>meters</b>.
