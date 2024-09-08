@@ -1,11 +1,11 @@
 namespace SmartWalk.Application.Interfaces;
 
-public interface IValidationResult
+public interface IErrors
 {
     /// <summary>
-    /// Report validation errors to the user.
+    /// Collection of validation and parse errors.
     /// </summary>
     /// <param name="item">Name of the invalid item.</param>
     /// <param name="errorMessage">Error message.</param>
-    void AddError(string item, string errorMessage);
+    void Add(string item, string errorMessage);
 }

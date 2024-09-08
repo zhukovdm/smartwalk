@@ -6,17 +6,15 @@ namespace SmartWalk.Application.Validators;
 /// <summary>
 /// Handler-specific validator.
 /// </summary>
-public sealed class GetEntityPlaceValidator : RequestValidatorBase<string>
+public sealed class GetEntityPlaceValidator : IInputValidator<string>
 {
-    public GetEntityPlaceValidator(IValidationResult result) : base(result) { }
-
-    public override bool Validate(string smartId)
+    public bool Validate(IErrors validErrors, string smartId)
     {
         var valid = ObjectId.TryParse(smartId, out _);
 
         if (!valid)
         {
-            _result.AddError("smartId", "Malformed identifier.");
+            validErrors.Add("smartId", "Malformed identifier.");
         }
         return valid;
     }

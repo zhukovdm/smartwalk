@@ -11,24 +11,22 @@ namespace SmartWalk.Application.Parsers;
 /// <typeparam name="D">Deserialization type.</typeparam>
 public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
 {
-    protected readonly IValidationResult result;
-
-    public QueryParserBase(IValidationResult result) { this.result = result; }
-
     /// <summary>
     /// Additional domain-specific validation (e.g. arrow configuration).
     /// </summary>
+    /// <param name="parseErrors">Errors occured during validation.</param>
     /// <param name="queryObject">Query object.</param>
     /// <returns></returns>
-    protected abstract bool PostValidate(D queryObject);
+    protected abstract bool PostValidate(IErrors parseErrors, D queryObject);
 
     /// <summary>
     /// Parse procedure with domain-specific logic.
     /// </summary>
+    /// <param name="parseErrors">Errors occured during parsing.</param>
     /// <param name="query">Query string.</param>
     /// <param name="queryObject">Query object.</param>
     /// <returns>True if parsed and passed by a domain-specific validator.</returns>
-    public bool TryParse(string query, out D queryObject)
+    public bool TryParse(IErrors parseErrors, string query, out D queryObject)
     {
         queryObject = default(D);
 
@@ -36,11 +34,11 @@ public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
         {
             foreach (var error in errors)
             {
-                result.AddError("query", error);
+                parseErrors.Add("query", error);
             }
             return false;
         }
         queryObject = JsonSerializer.Deserialize<D>(query);
-        return PostValidate(queryObject);
+        return PostValidate(parseErrors, queryObject);
     }
 }

@@ -8,7 +8,5 @@ namespace SmartWalk.Application.Parsers;
 /// </summary>
 public sealed class SearchDirecsQueryParser : QueryParserBase<ConstrainedSearchDirecsQuery, SearchDirecsQuery>
 {
-    public SearchDirecsQueryParser(IValidationResult result) : base(result) { }
-
-    protected override bool PostValidate(SearchDirecsQuery _) => true;
+    protected override bool PostValidate(IErrors parseErrors, SearchDirecsQuery _) => true;
 }
