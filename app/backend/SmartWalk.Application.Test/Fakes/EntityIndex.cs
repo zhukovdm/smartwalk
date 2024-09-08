@@ -10,7 +10,7 @@ namespace SmartWalk.Application.Test;
 
 internal class FakeEntityIndex : IEntityIndex
 {
-    private readonly List<Place> _places = new();
+    private readonly List<Place> _places = [];
 
     public FakeEntityIndex(int order, IReadOnlyList<string> categories)
     {

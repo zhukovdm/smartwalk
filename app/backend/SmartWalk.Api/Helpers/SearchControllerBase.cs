@@ -14,7 +14,7 @@ public abstract class SearchControllerBase : ControllerBase
 
     public SearchControllerBase(ILogger logger)
     {
-        this.parseErrors = new ModelStateWrapper(ModelState); this.logger = logger;
+        parseErrors = new ModelStateWrapper(ModelState); this.logger = logger;
     }
 
     /// <summary>Concrete handling</summary>

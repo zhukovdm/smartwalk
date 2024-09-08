@@ -15,12 +15,12 @@ internal sealed class OgCategory
     /// <summary>
     /// The set of successors.
     /// </summary>
-    public SortedSet<int> succ { get; } = new();
+    public SortedSet<int> succ { get; } = [];
 
     /// <summary>
     /// Places belonging to this category.
     /// </summary>
-    public List<SolverPlace> places { get; } = new();
+    public List<SolverPlace> places { get; } = [];
 }
 
 internal static class OgCategoryFormer
@@ -37,10 +37,10 @@ internal static class OgCategoryFormer
     {
         var result = new SortedDictionary<int, OgCategory>();
 
-        var ensureCat = (SortedDictionary<int, OgCategory> dict, int cat) =>
+        static void ensureCat(SortedDictionary<int, OgCategory> dict, int cat)
         {
             if (!dict.ContainsKey(cat)) { dict.Add(cat, new()); }
-        };
+        }
 
         // group places by category
 

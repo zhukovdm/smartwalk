@@ -23,7 +23,7 @@ public sealed class AdviceKeywordsController : ControllerBase
 
     public AdviceKeywordsController(ILogger<AdviceKeywordsController> logger, IGetAdviceKeywordsQueryHandler handler)
     {
-        this.errors = new ModelStateWrapper(ModelState); this.logger = logger; this.handler = handler;
+        errors = new ModelStateWrapper(ModelState); this.logger = logger; this.handler = handler;
     }
 
     /// <param name="request">Valid request object.</param>
