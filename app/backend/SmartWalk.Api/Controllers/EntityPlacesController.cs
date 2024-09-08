@@ -21,7 +21,7 @@ public sealed class EntityPlacesController : ControllerBase
 
     public EntityPlacesController(ILogger<EntityPlacesController> logger, IGetEntityPlaceQueryHandler handler)
     {
-        this.errors = new ModelStateWrapper(ModelState); this.logger = logger; this.handler = handler;
+        errors = new ModelStateWrapper(ModelState); this.logger = logger; this.handler = handler;
     }
 
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>

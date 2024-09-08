@@ -105,8 +105,8 @@ public static class Spherical
         var deltaLam = DegToRad(p2.lon - p1.lon);
         var deltaPhi = DegToRad(p2.lat - p1.lat);
 
-        var hav = Math.Pow((Math.Sin(deltaPhi / 2.0)), 2.0)
-                + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow((Math.Sin(deltaLam / 2.0)), 2.0);
+        var hav = Math.Pow(Math.Sin(deltaPhi / 2.0), 2.0)
+                + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow(Math.Sin(deltaLam / 2.0), 2.0);
 
         var ang = 2.0 * Math.Atan2(Math.Sqrt(hav), Math.Sqrt(1.0 - hav));
 
@@ -131,8 +131,10 @@ public static class Spherical
         var a = ((distance > (2.0 * c)) ? distance : (2.0 * c + 200.0)) / 2.0;
         var b = Math.Sqrt(a * a - c * c);
 
-        var factory = new GeometricShapeFactory();
-        factory.Envelope = new(-a, +a, -b, +b);
+        var factory = new GeometricShapeFactory
+        {
+            Envelope = new(-a, +a, -b, +b)
+        };
         var e1 = factory.CreateEllipse();
 
         // rotate ellipse

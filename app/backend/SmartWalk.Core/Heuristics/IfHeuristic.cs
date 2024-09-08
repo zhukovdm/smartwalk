@@ -37,7 +37,7 @@ internal static class IfCategoryFormer
             {
                 if (!acc.ContainsKey(place.cat))
                 {
-                    acc.Add(place.cat, new());
+                    acc.Add(place.cat, []);
                 }
                 acc[place.cat].Add(place);
                 return acc;

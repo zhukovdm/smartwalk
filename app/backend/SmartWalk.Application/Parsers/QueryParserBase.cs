@@ -28,7 +28,7 @@ public abstract class QueryParserBase<V, D> : IQueryParser<V, D>
     /// <returns>True if parsed and passed by a domain-specific validator.</returns>
     public bool TryParse(IErrors parseErrors, string query, out D queryObject)
     {
-        queryObject = default(D);
+        queryObject = default;
 
         if (!SerializationValidator<V>.Validate(query, out var errors))
         {
