@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Api.Test;
+namespace SmartWalk.Api.Test.Fakes;
 
 internal class FakeWorkingKeywordAdvicer : IKeywordAdvicer
 {
@@ -18,6 +18,6 @@ internal class FakeFailingKeywordAdvicer : IKeywordAdvicer
 {
     public Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count)
     {
-        throw new Exception($"{this.GetType()}: GetTopK");
+        throw new Exception($"{GetType()}: GetTopK");
     }
 }

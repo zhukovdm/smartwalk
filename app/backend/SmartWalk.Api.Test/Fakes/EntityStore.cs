@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Api.Test;
+namespace SmartWalk.Api.Test.Fakes;
 
 internal sealed class FakeWorkingEntityStore : IEntityStore
 {
@@ -26,6 +26,6 @@ internal sealed class FakeFailingEntityStore : IEntityStore
 {
     public Task<ExtendedPlace> GetPlace(string smartId)
     {
-        throw new Exception($"{this.GetType()}: GetPlace");
+        throw new Exception($"{GetType()}: GetPlace");
     }
 }
