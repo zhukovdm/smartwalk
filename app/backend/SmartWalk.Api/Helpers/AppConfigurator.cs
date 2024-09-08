@@ -9,7 +9,6 @@ using Microsoft.OpenApi.Models;
 using Serilog;
 using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
-using SmartWalk.Core.Interfaces;
 using SmartWalk.Infrastructure.Mongo;
 using SmartWalk.Infrastructure.Osrm;
 
@@ -46,6 +45,9 @@ public static class AppConfigurator
         Log.Information("{Phase}: Endpoints API Explorer", phase);
         builder.Services.AddEndpointsApiExplorer();
 
+        Log.Information("{Phase}: Http Client Factory", phase);
+        builder.Services.AddHttpClient();
+
         Log.Information("{Phase}: Health Checks", phase);
         builder.Services.AddHealthChecks();
 
@@ -65,19 +67,19 @@ public static class AppConfigurator
         });
 
         Log.Information("{Phase}: IKeywordAdvicer Singleton", phase);
-        builder.Services.AddSingleton<IKeywordAdvicer>(MongoKeywordAdvicer.GetInstance());
+        builder.Services.AddSingleton(MongoKeywordAdvicer.GetInstance());
 
         Log.Information("{Phase}: IEntityStore Singleton", phase);
-        builder.Services.AddSingleton<IEntityStore>(MongoEntityStore.GetInstance());
+        builder.Services.AddSingleton(MongoEntityStore.GetInstance());
 
         Log.Information("{Phase}: IEntityIndex Singleton", phase);
-        builder.Services.AddSingleton<IEntityIndex>(MongoEntityIndex.GetInstance());
+        builder.Services.AddSingleton(MongoEntityIndex.GetInstance());
 
-        Log.Information("{Phase}: IShortestPathFinder Http Client", phase);
-        builder.Services.AddHttpClient<IShortestPathFinder, OsrmShortestPathFinder>();
+        Log.Information("{Phase}: IShortestPathFinder Transient", phase);
+        builder.Services.AddTransient<IShortestPathFinder, OsrmShortestPathFinder>();
 
-        // Log.Information("{Phase}: IDistanceFuncFinder Http Client", phase);
-        // builder.Services.AddHttpClient<IDistanceFuncFinder, OsrmDistanceFuncFinder>();
+        // Log.Information("{Phase}: IDistanceFuncFinder Transient", phase);
+        // builder.Services.AddTransient<IDistanceFuncFinder, OsrmDistanceFuncFinder>();
 
         Log.Information("{Phase}: IGetAdviceKeywordsQueryHandler Transient", phase);
         builder.Services.AddTransient<IGetAdviceKeywordsQueryHandler, GetAdviceKeywordsQueryHandler>();
