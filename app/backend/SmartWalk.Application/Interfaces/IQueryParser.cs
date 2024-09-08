@@ -8,10 +8,11 @@ namespace SmartWalk.Application.Interfaces;
 public interface IQueryParser<V, D>
 {
     /// <summary>
-    /// Parse with possible fail.
+    /// Parsing with possible fail.
     /// </summary>
-    /// <param name="query">Query string.</param>
-    /// <param name="queryObject">Deserialized query object.</param>
-    /// <returns>True if parsing has succeeded.</returns>
-    bool TryParse(string query, out D queryObject);
+    /// <param name="parseErrors">Reasons for parsing failures</param>
+    /// <param name="query">Query string</param>
+    /// <param name="queryObject">Deserialized query object</param>
+    /// <returns>True if parsing has succeeded, and False otherwise</returns>
+    bool TryParse(IErrors parseErrors, string query, out D queryObject);
 }

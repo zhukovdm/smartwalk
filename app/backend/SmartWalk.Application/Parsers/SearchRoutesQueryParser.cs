@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using SmartWalk.Application.Helpers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Algorithms;
 using SmartWalk.Core.Entities;
@@ -11,20 +11,6 @@ namespace SmartWalk.Application.Parsers;
 /// </summary>
 public sealed class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchRoutesQuery, SearchRoutesQuery>
 {
-    private sealed class ArrowComparer : IComparer<Arrow>
-    {
-        private ArrowComparer() { }
-
-        private static readonly Lazy<ArrowComparer> instance = new(() => new());
-
-        public static ArrowComparer Instance { get { return instance.Value; } }
-
-        public int Compare(Arrow l, Arrow r)
-        {
-            return l.fr != r.fr ? l.fr.CompareTo(r.fr) : l.to.CompareTo(r.to);
-        }
-    }
-
     /// <summary>
     /// Check if edges define directed acyclic loop-free graph, repeated edges
     /// are NOT tolerable.
@@ -85,19 +71,17 @@ public sealed class SearchRoutesQueryParser : QueryParserBase<ConstrainedSearchR
         return Spherical.HaversineDistance(source, target) <= maxDistance;
     }
 
-    public SearchRoutesQueryParser(IValidationResult result) : base(result) { }
-
-    protected override bool PostValidate(SearchRoutesQuery query)
+    protected override bool PostValidate(IErrors parseErrors, SearchRoutesQuery query)
     {
         if (!ValidateArrows(query.arrows, query.categories.Count, out var arrowError))
         {
-            result.AddError("query", arrowError);
+            parseErrors.Add("query", arrowError);
             return false;
         }
 
         if (!ValidateRouteMaxDistance(query.source, query.target, query.maxDistance))
         {
-            result.AddError("query", "Starting point and destination are too far from each other.");
+            parseErrors.Add("query", "Starting point and destination are too far from each other.");
             return false;
         }
         return true;

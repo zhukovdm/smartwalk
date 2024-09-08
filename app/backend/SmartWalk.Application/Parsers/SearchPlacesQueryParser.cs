@@ -8,7 +8,5 @@ namespace SmartWalk.Application.Parsers;
 /// </summary>
 public sealed class SearchPlacesQueryParser : QueryParserBase<ConstrainedSearchPlacesQuery, SearchPlacesQuery>
 {
-    public SearchPlacesQueryParser(IValidationResult result) : base(result) { }
-
-    protected override bool PostValidate(SearchPlacesQuery _) => true;
+    protected override bool PostValidate(IErrors parseErrors, SearchPlacesQuery _) => true;
 }
