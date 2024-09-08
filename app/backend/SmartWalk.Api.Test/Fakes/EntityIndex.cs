@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Api.Test;
+namespace SmartWalk.Api.Test.Fakes;
 
 internal sealed class FakeWorkingEntityIndex : IEntityIndex
 {
@@ -59,11 +59,11 @@ internal sealed class FakeFailingEntityIndex : IEntityIndex
 {
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
     {
-        throw new Exception($"{this.GetType()}: GetAround");
+        throw new Exception($"{GetType()}: GetAround");
     }
 
     public Task<List<Place>> GetWithin(IReadOnlyList<WgsPoint> polygon, IReadOnlyList<Category> categories)
     {
-        throw new Exception($"{this.GetType()}: GetWithin");
+        throw new Exception($"{GetType()}: GetWithin");
     }
 }
