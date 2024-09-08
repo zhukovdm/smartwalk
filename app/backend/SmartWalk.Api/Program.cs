@@ -1,6 +1,7 @@
 using System;
 using Microsoft.AspNetCore.Builder;
 using Serilog;
+using SmartWalk.Api.Helpers;
 
 namespace SmartWalk.Api;
 

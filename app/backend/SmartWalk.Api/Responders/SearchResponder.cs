@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 /// <summary>
 /// Endpoint-specific responder.
 /// </summary>
-internal class SearchTResponder<T> : ResponderBase<T>
+internal class SearchResponder<T> : ResponderBase<T>
 {
     public override ActionResult<T> Respond(T result)
     {
