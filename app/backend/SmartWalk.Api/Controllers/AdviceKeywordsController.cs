@@ -6,23 +6,24 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartWalk.Application.Entities;
-using SmartWalk.Application.Handlers;
+using SmartWalk.Application.Interfaces;
 using SmartWalk.Application.Validators;
 using SmartWalk.Core.Entities;
-using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Api.Controllers;
 
 [ApiController]
-[Route("api/advice")]
-public sealed class AdviceController : ControllerBase
+public sealed class AdviceKeywordsController : ControllerBase
 {
-    private readonly IKeywordAdvicer advicer;
-    private readonly ILogger<AdviceController> logger;
+    private readonly IErrors errors;
 
-    public AdviceController(ILogger<AdviceController> logger, IKeywordAdvicer advicer)
+    private readonly ILogger<AdviceKeywordsController> logger;
+
+    private readonly IGetAdviceKeywordsQueryHandler handler;
+
+    public AdviceKeywordsController(ILogger<AdviceKeywordsController> logger, IGetAdviceKeywordsQueryHandler handler)
     {
-        this.logger = logger; this.advicer = advicer;
+        this.errors = new ModelStateWrapper(ModelState); this.logger = logger; this.handler = handler;
     }
 
     /// <param name="request">Valid request object.</param>
@@ -30,23 +31,22 @@ public sealed class AdviceController : ControllerBase
     /// <response code="200">Valid response with autocomplete items.</response>
     /// <response code="500">Some of the backend services malfunction.</response>
     [HttpGet]
-    [Route("keywords", Name = "AdviseKeywords")]
+    [Route("api/advice/keywords", Name = "GetAdviceKeywords")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<List<KeywordAdviceItem>>> AdviseKeywords([FromQuery] AdviseKeywordsRequest request)
+    public async Task<ActionResult<List<KeywordAdviceItem>>> Get([FromQuery] GetAdviceKeywordsRequest request)
     {
-        var responder = new AdviseKeywordsResponder();
+        var responder = new GetAdviceKeywordsResponder();
 
-        if (!new AdviseKeywordsValidator(new ModelStateWrapper(ModelState)).Validate(new()))
+        if (!new GetAdviceKeywordsValidator().Validate(errors, new()))
         {
             return responder.Invalid(this);
         }
 
         try
         {
-            var result = await new AdviseKeywordsHandler(advicer)
-                .Handle(new() { prefix = request.prefix, count = request.count.Value });
+            var result = await handler.Handle(new() { prefix = request.prefix, count = request.count.Value });
 
             return responder.Respond(result);
         }

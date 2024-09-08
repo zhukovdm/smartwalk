@@ -4,23 +4,24 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SmartWalk.Application.Handlers;
+using SmartWalk.Application.Interfaces;
 using SmartWalk.Application.Validators;
 using SmartWalk.Core.Entities;
-using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Api.Controllers;
 
 [ApiController]
-[Route("api/entity")]
-public sealed class EntityController : ControllerBase
+public sealed class EntityPlacesController : ControllerBase
 {
-    private readonly IEntityStore store;
-    private readonly ILogger<EntityController> logger;
+    private readonly IErrors errors;
 
-    public EntityController(ILogger<EntityController> logger, IEntityStore store)
+    private readonly ILogger<EntityPlacesController> logger;
+
+    private readonly IGetEntityPlaceQueryHandler handler;
+
+    public EntityPlacesController(ILogger<EntityPlacesController> logger, IGetEntityPlaceQueryHandler handler)
     {
-        this.logger = logger; this.store = store;
+        this.errors = new ModelStateWrapper(ModelState); this.logger = logger; this.handler = handler;
     }
 
     /// <param name="smartId" example="64c91f8359914b93b23b01d9"></param>
@@ -30,24 +31,24 @@ public sealed class EntityController : ControllerBase
     /// <response code="404">An entity with identifier does not exist.</response>
     /// <response code="500">Some of the backend services malfunction.</response>
     [HttpGet]
-    [Route("places/{smartId}", Name = "GetPlace")]
+    [Route("api/entity/places/{smartId}", Name = "GetEntityPlace")]
     [Produces(MediaTypeNames.Application.Json)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<ExtendedPlace>> GetPlace(string smartId)
+    public async Task<ActionResult<ExtendedPlace>> Get(string smartId)
     {
-        var responder = new GetPlaceResponder();
+        var responder = new GetEntityPlaceResponder();
 
-        if (!new GetPlaceValidator(new ModelStateWrapper(ModelState)).Validate(smartId))
+        if (!new GetEntityPlaceValidator().Validate(errors, smartId))
         {
             return responder.Invalid(this);
         }
 
         try
         {
-            var result = await new GetPlaceHandler(store).Handle(new() { smartId = smartId });
+            var result = await handler.Handle(new() { smartId = smartId });
 
             return responder.Respond(result);
         }

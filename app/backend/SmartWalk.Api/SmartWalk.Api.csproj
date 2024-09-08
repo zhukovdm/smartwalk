@@ -18,8 +18,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SmartWalk.Core\SmartWalk.Core.csproj" />
-    <ProjectReference Include="..\SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj" />
     <ProjectReference Include="..\SmartWalk.Application\SmartWalk.Application.csproj" />
+    <ProjectReference Include="..\SmartWalk.Infrastructure\SmartWalk.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,13 +7,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using SmartWalk.Application.Handlers;
+using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Interfaces;
-using SmartWalk.Infrastructure.Advicer;
-using SmartWalk.Infrastructure.EntityIndex;
-using SmartWalk.Infrastructure.EntityStore;
-using SmartWalk.Infrastructure.RoutingEngine;
+using SmartWalk.Infrastructure.Mongo;
+using SmartWalk.Infrastructure.Osrm;
 
-namespace SmartWalk.Api;
+namespace SmartWalk.Api.Helpers;
 
 public static class AppConfigurator
 {
@@ -73,8 +73,26 @@ public static class AppConfigurator
         Log.Information("{Phase}: IEntityIndex Singleton", phase);
         builder.Services.AddSingleton<IEntityIndex>(MongoEntityIndex.GetInstance());
 
-        Log.Information("{Phase}: IRoutingEngine Singleton", phase);
-        builder.Services.AddSingleton<IRoutingEngine>(OsrmRoutingEngine.GetInstance());
+        Log.Information("{Phase}: IShortestPathFinder Http Client", phase);
+        builder.Services.AddHttpClient<IShortestPathFinder, OsrmShortestPathFinder>();
+
+        // Log.Information("{Phase}: IDistanceFuncFinder Http Client", phase);
+        // builder.Services.AddHttpClient<IDistanceFuncFinder, OsrmDistanceFuncFinder>();
+
+        Log.Information("{Phase}: IGetAdviceKeywordsQueryHandler Transient", phase);
+        builder.Services.AddTransient<IGetAdviceKeywordsQueryHandler, GetAdviceKeywordsQueryHandler>();
+
+        Log.Information("{Phase}: IGetEntityPlaceQueryHandler Transient", phase);
+        builder.Services.AddTransient<IGetEntityPlaceQueryHandler, GetEntityPlaceQueryHandler>();
+
+        Log.Information("{Phase}: ISearchDirecsQueryHandler Transient", phase);
+        builder.Services.AddTransient<ISearchDirecsQueryHandler, SearchDirecsQueryHandler>();
+
+        Log.Information("{Phase}: ISearchPlacesQueryHandler Transient", phase);
+        builder.Services.AddTransient<ISearchPlacesQueryHandler, SearchPlacesQueryHandler>();
+
+        Log.Information("{Phase}: ISearchRoutesQueryHandler Transient", phase);
+        builder.Services.AddTransient<ISearchRoutesQueryHandler, SearchRoutesQueryHandler>();
 
         return builder;
     }
