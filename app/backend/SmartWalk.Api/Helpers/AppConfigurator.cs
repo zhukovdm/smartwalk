@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Polly;
 using Serilog;
 using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
@@ -58,7 +59,7 @@ public static class AppConfigurator
             {
                 Title = "SmartWalk.Api",
                 Version = "1.0.0",
-                Description = "Web application for keyword-aware walking route search"
+                Description = "Web application for keyword-aware route search"
             });
 
             Directory
@@ -96,6 +97,16 @@ public static class AppConfigurator
         Log.Information("{Phase}: ISearchRoutesQueryHandler Transient", phase);
         builder.Services.AddTransient<ISearchRoutesQueryHandler, SearchRoutesQueryHandler>();
 
+        Log.Information("{Phase}: Default Resilience Pipeline", phase);
+        builder.Services.AddResiliencePipeline("DefaultResiliencePipeline", b => b
+            .AddRetry(new Polly.Retry.RetryStrategyOptions
+            {
+                BackoffType = DelayBackoffType.Exponential,
+                UseJitter = true,
+                Delay = TimeSpan.FromSeconds(1),
+                MaxRetryAttempts = 2
+            }));
+
         return builder;
     }
 
@@ -116,11 +127,11 @@ public static class AppConfigurator
         Log.Information("{Phase}: Use CORS Policy", phase);
         app.UseCors(corsPolicy);
 
+        Log.Information("{Phase}: Use Authentication", phase);
+        app.UseAuthentication();
+
         Log.Information("{Phase}: Use Authorization", phase);
         app.UseAuthorization();
-
-        Log.Information("{Phase}: Use Authentization", phase);
-        app.UseAuthentication();
 
         Log.Information("{Phase}: Map Controllers", phase);
         app.MapControllers();
