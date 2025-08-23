@@ -52,7 +52,7 @@ public sealed class AdviceKeywordsController : ControllerBase
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Message);
+            logger.LogError("{Error}", ex.Message);
             return responder.Failure();
         }
     }
