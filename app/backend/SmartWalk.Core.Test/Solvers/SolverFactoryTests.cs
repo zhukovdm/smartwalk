@@ -14,7 +14,7 @@ public class SolverFactoryTests
         var distFn = TestPrimitives.GenerateRandomDistanceMatrix(10);
         var arrows = new List<Arrow>();
 
-        var solver = new SolverFactory(distFn, arrows, new(0, 0), new(1, 1)).GetSolver();
+        var solver = new SolverFactory(distFn, arrows, new (0, 0), new (1, 1)).GetSolver();
 
         Assert.IsNotNull(solver as SolverFactory.FloatSolver);
     }
@@ -25,10 +25,10 @@ public class SolverFactoryTests
         var distFn = TestPrimitives.GenerateRandomDistanceMatrix(10);
         var arrows = new List<Arrow>
         {
-            new(0, 1)
+            new (0, 1)
         };
 
-        var solver = new SolverFactory(distFn, arrows, new(0, 0), new(1, 1)).GetSolver();
+        var solver = new SolverFactory(distFn, arrows, new (0, 0), new (1, 1)).GetSolver();
 
         Assert.IsNotNull(solver as SolverFactory.ArrowSolver);
     }

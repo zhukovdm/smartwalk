@@ -15,7 +15,7 @@ public static class TestPrimitives
 
         for (int row = 0; row < order; ++row)
         {
-            result.Add(new());
+            result.Add(new ());
 
             for (int col = 0; col < order; ++col)
             {
@@ -59,7 +59,7 @@ public static class TestPrimitives
             {
                 if (random.NextDouble() < probability)
                 {
-                    arrows.Add(new(row, col));
+                    arrows.Add(new (row, col));
                 }
             }
         }
@@ -101,7 +101,7 @@ public static class TestPrimitives
         {
             for (int cat = 0; cat < count - idx; ++cat)
             {
-                places.Add(new(idx, cat));
+                places.Add(new (idx, cat));
             }
         }
         return places;

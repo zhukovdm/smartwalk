@@ -18,7 +18,11 @@ public class TwoOptHeuristicTests
 
         public double Y { get; }
 
-        public Point(double x, double y) { X = x; Y = y; }
+        public Point(double x, double y)
+        {
+            X = x;
+            Y = y;
+        }
     }
 
     private sealed class CartesianDistanceFunc : IDistanceFunc
@@ -45,21 +49,24 @@ public class TwoOptHeuristicTests
     {
         // there is only one correct answer
 
-        var distFn = new CartesianDistanceFunc(new()
-        {
-            new(0.0, 0.0),
-            new(0.0, 1.0),
-            new(1.0, 1.0),
-            new(1.0, 0.0),
-        });
+        var distFn = new CartesianDistanceFunc(
+            new ()
+            {
+                new (0.0, 0.0),
+                new (0.0, 1.0),
+                new (1.0, 1.0),
+                new (1.0, 0.0),
+            });
 
-        var seq = TwoOptHeuristic.Advise(new List<SolverPlace>
-        {
-            new(0, 0),
-            new(2, 2),
-            new(1, 1),
-            new(3, 3),
-        }, distFn);
+        var seq = TwoOptHeuristic.Advise(
+            new List<SolverPlace>
+            {
+                new (0, 0),
+                new (2, 2),
+                new (1, 1),
+                new (3, 3),
+            },
+            distFn);
 
         var ans = new List<int> { 0, 1, 2, 3 };
 
