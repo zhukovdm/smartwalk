@@ -13,24 +13,24 @@ namespace SmartWalk.Core.Algorithms;
 /// </summary>
 public static class Spherical
 {
-    private static readonly double deg2rad = Math.PI / 180.0;
+    private const double Deg2rad = Math.PI / 180.0;
 
-    private static readonly double rad2deg = 180.0 / Math.PI;
+    private const double Rad2deg = 180.0 / Math.PI;
 
     /// <summary>
     /// Sphere radius used by the Web Mercator projection (semi-major axis).
     /// </summary>
-    private static readonly double earthRadius = 6_378_137.0;
+    private const double EarthRadius = 6_378_137.0;
 
     /// <summary>
     /// Convert degrees to radians.
     /// </summary>
-    internal static double DegToRad(double deg) => deg * deg2rad;
+    internal static double DegToRad(double deg) => deg * Deg2rad;
 
     /// <summary>
     /// Convert radians to degrees.
     /// </summary>
-    internal static double RadToDeg(double rad) => rad * rad2deg;
+    internal static double RadToDeg(double rad) => rad * Rad2deg;
 
     /// <summary>
     /// The ratio r / R, where R is the Earth radius and r is the radius of
@@ -45,7 +45,7 @@ public static class Spherical
     /// </summary>
     /// <param name="lat">Latitude in radians.</param>
     /// <returns>Length in meters.</returns>
-    private static double LonRadLeng(double lat) => earthRadius * LonRadCost(lat);
+    private static double LonRadLeng(double lat) => EarthRadius * LonRadCost(lat);
 
     /// <summary>
     /// Weight of one latitudinal radian at a certain latitude.
@@ -58,14 +58,14 @@ public static class Spherical
     /// </summary>
     /// <param name="lat">Latitude in radians.</param>
     /// <returns>Length in meters.</returns>
-    private static double LatRadLeng(double lat) => earthRadius * LatRadCost(lat);
+    private static double LatRadLeng(double lat) => EarthRadius * LatRadCost(lat);
 
     /// <summary>
     /// Approximate the midpoint between two points on a sphere (use <b>ONLY</b> for small distances).
     /// </summary>
     private static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
     {
-        return new((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
+        return new ((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public static class Spherical
     /// <summary>
     /// Calculate the central angle between two given points on a sphere in
     /// radians and multiply by the Earth radius.<br/>
-    /// 
+    ///
     /// hav(x) = sin^2 (x^2 / 2.0), arcsin(x) = arctan(x / sqrt(1.0 - x^2)).
     /// <list>
     /// <item>https://en.wikipedia.org/wiki/Haversine_formula#Formulation</item>
@@ -106,11 +106,11 @@ public static class Spherical
         var deltaPhi = DegToRad(p2.lat - p1.lat);
 
         var hav = Math.Pow(Math.Sin(deltaPhi / 2.0), 2.0)
-                + Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow(Math.Sin(deltaLam / 2.0), 2.0);
+                + (Math.Cos(DegToRad(p1.lat)) * Math.Cos(DegToRad(p2.lat)) * Math.Pow(Math.Sin(deltaLam / 2.0), 2.0));
 
         var ang = 2.0 * Math.Atan2(Math.Sqrt(hav), Math.Sqrt(1.0 - hav));
 
-        return earthRadius * ang;
+        return EarthRadius * ang;
     }
 
     /// <summary>
@@ -128,12 +128,12 @@ public static class Spherical
         /* Construct a bounding ellipse with the center at the origin (0, 0).
          * Note that coordinates of the result are in meters! */
 
-        var a = ((distance > (2.0 * c)) ? distance : (2.0 * c + 200.0)) / 2.0;
-        var b = Math.Sqrt(a * a - c * c);
+        var a = ((distance > (2.0 * c)) ? distance : ((2.0 * c) + 200.0)) / 2.0;
+        var b = Math.Sqrt((a * a) - (c * c));
 
         var factory = new GeometricShapeFactory
         {
-            Envelope = new(-a, +a, -b, +b)
+            Envelope = new (-a, +a, -b, +b)
         };
         var e1 = factory.CreateEllipse();
 

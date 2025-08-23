@@ -17,7 +17,11 @@ public sealed class Arrow
     [Required]
     public int to { get; }
 
-    public Arrow(int fr, int to) { this.fr = fr; this.to = to; }
+    public Arrow(int fr, int to)
+    {
+        this.fr = fr;
+        this.to = to;
+    }
 }
 
 public sealed class Waypoint
@@ -30,7 +34,11 @@ public sealed class Waypoint
     [Required]
     public int category { get; }
 
-    public Waypoint(string smartId, int category) { this.smartId = smartId; this.category = category; }
+    public Waypoint(string smartId, int category)
+    {
+        this.smartId = smartId;
+        this.category = category;
+    }
 }
 
 public sealed class Route

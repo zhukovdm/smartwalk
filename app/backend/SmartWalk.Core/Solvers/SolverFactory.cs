@@ -6,11 +6,11 @@ namespace SmartWalk.Core.Solvers;
 
 public partial class SolverFactory
 {
-    readonly IDistanceFunc distFn;
-    readonly IReadOnlyList<Arrow> arrows;
-    readonly SolverPlace source, target;
+    private readonly IDistanceFunc distFn;
+    private readonly IReadOnlyList<Arrow> arrows;
+    private readonly SolverPlace source;
+    private readonly SolverPlace target;
 
-    /// <summary></summary>
     /// <param name="distFn">Distance function defined for all pairs of places.</param>
     /// <param name="arrows">A valid list of arrows.</param>
     /// <param name="source">Starting point.</param>

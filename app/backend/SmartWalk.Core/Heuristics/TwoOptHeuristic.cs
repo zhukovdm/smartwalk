@@ -18,11 +18,11 @@ internal static class TwoOptHeuristic
     /// <summary>
     /// Used as a refinement step for routes without precedence constraints.
     /// The first and last items in the sequence are never swapped.
-    /// 
+    ///
     /// The main idea is to find an improvement and reverse the segment between
     /// i and j+1, that is [i+1, _, ..., _, j]. Unfortunately, the standard array
     /// reverse is based on the segment length, and not indices.
-    /// 
+    ///
     /// <code>
     /// ... _ i i+1 _ _ _ _ _ j j+1 _ ...
     /// </code>
@@ -33,6 +33,7 @@ internal static class TwoOptHeuristic
     public static List<SolverPlace> Advise(List<SolverPlace> seq, IDistanceFunc distFn)
     {
         bool change;
+
         do
         {
             change = false;
@@ -57,7 +58,8 @@ internal static class TwoOptHeuristic
                     }
                 }
             }
-        } while (change);
+        }
+        while (change);
 
         return seq;
     }

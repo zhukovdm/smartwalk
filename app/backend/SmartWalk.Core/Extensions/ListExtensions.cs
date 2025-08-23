@@ -26,6 +26,7 @@ public static class ListExtensions
         {
             list.Swap(i, rnd.Next(i, list.Count));
         }
+
         return list;
     }
 
@@ -44,8 +45,12 @@ public static class ListExtensions
             {
                 p.categories.UnionWith(place.categories);
             }
-            else { result.Add(place.smartId, place); }
+            else
+            {
+                result.Add(place.smartId, place);
+            }
         }
+
         return result.Values.ToList();
     }
 }

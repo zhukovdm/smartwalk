@@ -12,5 +12,9 @@ public sealed class SolverPlace
     /// </summary>
     public int cat { get; }
 
-    public SolverPlace(int idx, int cat) { this.idx = idx; this.cat = cat; }
+    public SolverPlace(int idx, int cat)
+    {
+        this.idx = idx;
+        this.cat = cat;
+    }
 }

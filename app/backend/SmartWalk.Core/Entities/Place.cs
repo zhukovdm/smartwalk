@@ -31,5 +31,5 @@ public class Place
 
     /// <example>[0, 1, 2]</example>
     [Required]
-    public SortedSet<int> categories { get; init; } = new();
+    public SortedSet<int> categories { get; init; } = new ();
 }

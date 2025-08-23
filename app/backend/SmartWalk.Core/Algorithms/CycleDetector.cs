@@ -14,8 +14,9 @@ public sealed class CycleDetector
 
     private sealed class Vertex
     {
-        public Color Color;
-        public int Predecessor;
+        public Color Color { get; set; }
+
+        public int Predecessor { get; set; }
 
         public Vertex()
         {
@@ -25,19 +26,23 @@ public sealed class CycleDetector
     }
 
     private int? cycleRef = null;
-    private readonly List<Vertex> Vs;
-    private readonly List<SortedSet<int>> Es;
+    private readonly List<Vertex> vs;
+    private readonly List<SortedSet<int>> es;
 
     public CycleDetector(int order)
     {
-        Vs = Enumerable.Range(0, order).Select(_ => new Vertex()).ToList();
-        Es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
+        vs = Enumerable.Range(0, order).Select(_ => new Vertex()).ToList();
+        es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
     }
 
     /// <summary>
     /// Add directed edge (fr -> to). Repeated edges and loops are allowed.
     /// </summary>
-    public CycleDetector AddEdge(int fr, int to) { _ = Es[fr].Add(to); return this; }
+    public CycleDetector AddEdge(int fr, int to)
+    {
+        _ = es[fr].Add(to);
+        return this;
+    }
 
     /// <summary>
     /// Detect a cycle in a directed graph using standard 3-color non-recursive
@@ -49,23 +54,23 @@ public sealed class CycleDetector
 
         var stk = new Stack<int>();
 
-        for (int u = 0; u < Vs.Count; ++u)
+        for (int u = 0; u < vs.Count; ++u)
         {
-            if (Vs[u].Color == Color.Unseen && cycleRef is null)
+            if (vs[u].Color == Color.Unseen && cycleRef is null)
             {
                 stk.Push(u);
                 while (stk.Count != 0 && cycleRef is null)
                 {
                     var v = stk.Peek();
-                    switch (Vs[v].Color)
+                    switch (vs[v].Color)
                     {
                         case Color.Unseen:
-                            Vs[v].Color = Color.Opened;
+                            vs[v].Color = Color.Opened;
 
-                            foreach (var w in Es[v])
+                            foreach (var w in es[v])
                             {
-                                Vs[w].Predecessor = v;
-                                switch (Vs[w].Color)
+                                vs[w].Predecessor = v;
+                                switch (vs[w].Color)
                                 {
                                     case Color.Unseen:
                                         stk.Push(w);
@@ -82,7 +87,7 @@ public sealed class CycleDetector
                             break;
 
                         case Color.Opened:
-                            Vs[v].Color = Color.Closed;
+                            vs[v].Color = Color.Closed;
                             stk.Pop();
                             break;
 
@@ -101,11 +106,14 @@ public sealed class CycleDetector
         if (cycleRef is not null)
         {
             var cur = cycleRef.Value;
+
             do
             {
                 res.Add(cur);
-                cur = Vs[cur].Predecessor;
-            } while (cur != cycleRef);
+                cur = vs[cur].Predecessor;
+            }
+            while (cur != cycleRef);
+
             res.Add(cur);
         }
         res.Reverse();

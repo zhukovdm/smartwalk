@@ -11,6 +11,5 @@ public interface IKeywordAdvicer
     /// </summary>
     /// <param name="prefix">All retrieved items shall share the same prefix.</param>
     /// <param name="count">Upper bound on the number of retrieved items.</param>
-    /// <returns></returns>
     Task<List<KeywordAdviceItem>> GetTopK(string prefix, int count);
 }

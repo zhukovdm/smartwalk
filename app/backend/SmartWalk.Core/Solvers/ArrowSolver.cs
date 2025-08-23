@@ -8,9 +8,11 @@ public partial class SolverFactory
 {
     internal sealed class ArrowSolver : SolverBase
     {
-        /// <summary></summary>
         /// <param name="f">Factory with bounded class members.</param>
-        public ArrowSolver(SolverFactory f) : base(f) { }
+        public ArrowSolver(SolverFactory f)
+            : base(f)
+        {
+        }
 
         public override List<SolverPlace> Solve(IEnumerable<SolverPlace> places)
         {

@@ -26,7 +26,8 @@ public sealed class HaversineDistanceFunc : IDistanceFunc
 
     public HaversineDistanceFunc(IReadOnlyList<Place> places, double scaleFactor = 1.0)
     {
-        this.places = places; this.scaleFactor = scaleFactor;
+        this.places = places;
+        this.scaleFactor = scaleFactor;
     }
 
     public double GetDistance(int fr, int to)
