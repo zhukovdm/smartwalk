@@ -9,3 +9,29 @@ insert_final_newline = true
 
 [*.cs]
 csharp_new_line_before_else = true
+
+# StyleCop analyzers
+
+dotnet_diagnostic.SA1010.severity = none
+dotnet_diagnostic.SA1101.severity = none
+dotnet_diagnostic.SA1200.severity = none
+dotnet_diagnostic.SA1201.severity = none
+dotnet_diagnostic.SA1202.severity = none
+dotnet_diagnostic.SA1214.severity = none
+dotnet_diagnostic.SA1300.severity = none
+dotnet_diagnostic.SA1311.severity = none
+dotnet_diagnostic.SA1314.severity = none
+dotnet_diagnostic.SA1413.severity = none
+dotnet_diagnostic.SA1502.severity = none
+dotnet_diagnostic.SA1512.severity = none
+dotnet_diagnostic.SA1513.severity = none
+dotnet_diagnostic.SA1600.severity = none
+dotnet_diagnostic.SA1601.severity = none
+dotnet_diagnostic.SA1604.severity = none
+dotnet_diagnostic.SA1606.severity = none
+dotnet_diagnostic.SA1611.severity = none
+dotnet_diagnostic.SA1615.severity = none
+dotnet_diagnostic.SA1618.severity = none
+dotnet_diagnostic.SA1623.severity = none
+dotnet_diagnostic.SA1629.severity = none
+dotnet_diagnostic.SA1633.severity = none
