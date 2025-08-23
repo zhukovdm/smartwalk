@@ -206,7 +206,7 @@ public class OgHeuristicTests
 
         // terminals
 
-        Assert.AreEqual(result[ 0].cat, N);
+        Assert.AreEqual(result[0].cat, N);
         Assert.AreEqual(result[^1].cat, N + 1);
 
         // arrows

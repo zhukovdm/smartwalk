@@ -69,9 +69,10 @@ public static class TestPrimitives
 
     public static IReadOnlyList<IReadOnlyList<bool>> GetTransitiveClosure(int order, IReadOnlyList<Arrow> arrows)
     {
-        var matrix = Enumerable.Range(0, order).Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
+        var matrix = Enumerable.Range(0, order)
+            .Select((_) => Enumerable.Repeat(false, order).ToList()).ToList();
 
-        foreach(var arrow in arrows)
+        foreach (var arrow in arrows)
         {
             matrix[arrow.fr][arrow.to] = true;
         }

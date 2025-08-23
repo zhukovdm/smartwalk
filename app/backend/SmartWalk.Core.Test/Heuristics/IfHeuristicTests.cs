@@ -40,7 +40,7 @@ public class IfCategoryFormerTests
         {
             Assert.IsTrue(l.Count < r.Count);
         }
-        Assert.AreEqual(cats[ 0][0].cat, N - 1);
+        Assert.AreEqual(cats[0][0].cat, N - 1);
         Assert.AreEqual(cats[^1][0].cat, 0);
     }
 }
@@ -136,7 +136,7 @@ public class IfHeuristicTests
 
         // terminals
 
-        Assert.AreEqual(result[ 0].cat, N);
+        Assert.AreEqual(result[0].cat, N);
         Assert.AreEqual(result[^1].cat, N + 1);
     }
 }

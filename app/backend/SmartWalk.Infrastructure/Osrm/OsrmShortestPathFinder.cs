@@ -27,7 +27,8 @@ public sealed class OsrmShortestPathFinder : IShortestPathFinder
         var response = await client.GetRouteResponse(waypoints);
 
         return (response?.code == "Ok")
-            ? response.routes.Select(r => new ShortestPath()
+            ? response.routes.Select(r =>
+                new ShortestPath()
                 {
                     distance = r.distance.Value,
                     duration = r.duration.Value,

@@ -75,6 +75,6 @@ public class HaversineDistanceFuncTests
     [ExpectedException(typeof(ArgumentOutOfRangeException))]
     public void ShouldThrowUponOutOfRangeQuery()
     {
-        new HaversineDistanceFunc(GetPlaces(new () { "A", "B", "C" })).GetDistance(3, 3);
+        new HaversineDistanceFunc(GetPlaces(new() { "A", "B", "C" })).GetDistance(3, 3);
     }
 }
