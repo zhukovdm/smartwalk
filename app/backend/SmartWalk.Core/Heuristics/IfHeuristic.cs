@@ -12,7 +12,7 @@ internal static class IfCategoryFormer
     {
         private CategoryComparer() { }
 
-        private static readonly Lazy<CategoryComparer> instance = new(() => new());
+        private static readonly Lazy<CategoryComparer> instance = new (() => new ());
 
         public static CategoryComparer Instance { get { return instance.Value; } }
 
@@ -29,7 +29,6 @@ internal static class IfCategoryFormer
     /// Separate points by category.
     /// </summary>
     /// <param name="places">Input places</param>
-    /// <returns></returns>
     private static List<List<SolverPlace>> Group(IEnumerable<SolverPlace> places)
     {
         var groups = places
@@ -144,7 +143,10 @@ internal sealed class IfHeuristic
              * and at least one place is always selected.
              */
 
-            if (best is null) { break; } // no candidates left!
+            if (best is null)
+            {
+                break; // no candidates left!
+            }
 
             currDist = nextDist;
             seq.Insert(seqIdx, best);

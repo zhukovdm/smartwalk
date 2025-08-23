@@ -8,9 +8,11 @@ public partial class SolverFactory
 {
     internal sealed class FloatSolver : SolverBase
     {
-        /// <summary></summary>
         /// <param name="f">Factory with bounded class members.</param>
-        public FloatSolver(SolverFactory f) : base(f) { }
+        public FloatSolver(SolverFactory f)
+            : base(f)
+        {
+        }
 
         public override List<SolverPlace> Solve(IEnumerable<SolverPlace> places)
         {

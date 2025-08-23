@@ -17,5 +17,9 @@ public sealed class WgsPoint
     [Range(-85.06, 85.06)]
     public double lat { get; }
 
-    public WgsPoint(double lon, double lat) { this.lon = lon; this.lat = lat; }
+    public WgsPoint(double lon, double lat)
+    {
+        this.lon = lon;
+        this.lat = lat;
+    }
 }

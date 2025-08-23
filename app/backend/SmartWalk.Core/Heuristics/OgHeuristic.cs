@@ -31,7 +31,6 @@ internal static class OgCategoryFormer
     /// </summary>
     /// <param name="places">Places to be categorized.</param>
     /// <param name="arrows">Category constraints.</param>
-    /// <returns></returns>
     public static SortedDictionary<int, OgCategory> Form(
         IEnumerable<SolverPlace> places, IEnumerable<Arrow> arrows)
     {
@@ -39,7 +38,10 @@ internal static class OgCategoryFormer
 
         static void ensureCat(SortedDictionary<int, OgCategory> dict, int cat)
         {
-            if (!dict.ContainsKey(cat)) { dict.Add(cat, new()); }
+            if (!dict.ContainsKey(cat))
+            {
+                dict.Add(cat, new ());
+            }
         }
 
         // group places by category
@@ -60,7 +62,10 @@ internal static class OgCategoryFormer
             ensureCat(result, fr);
             ensureCat(result, to);
 
-            if (result[fr].succ.Add(to)) { ++result[to].pred; }
+            if (result[fr].succ.Add(to))
+            {
+                ++result[to].pred;
+            }
         }
         return result;
     }
@@ -76,7 +81,6 @@ internal static class OgCandidateSelector
     /// <param name="seq">Current sequence.</param>
     /// <param name="freeCats">Unconstrained categories.</param>
     /// <param name="distFn">Distance function.</param>
-    /// <returns></returns>
     public static SolverPlace SelectBest(
         List<SolverPlace> seq, IEnumerable<OgCategory> freeCats, IDistanceFunc distFn)
     {
@@ -101,6 +105,7 @@ internal static class OgCandidateSelector
                 }
             }
         }
+
         return best;
     }
 }
@@ -110,22 +115,23 @@ internal static class OgCandidateSelector
 /// </summary>
 internal static class OgHeuristic
 {
-    /// <summary></summary>
     /// <param name="cats">Category collection.</param>
     /// <param name="catId">Identifier of the category to be removed.</param>
     private static void RemoveCategory(SortedDictionary<int, OgCategory> cats, int catId)
     {
-        foreach (var succ in cats[catId].succ) { --cats[succ].pred; }
+        foreach (var succ in cats[catId].succ)
+        {
+            --cats[succ].pred;
+        }
+
         cats.Remove(catId);
     }
 
-    /// <summary></summary>
     /// <param name="places">All available places (without source and target).</param>
     /// <param name="distFn">Distance function.</param>
     /// <param name="arrows">Arrows forming valid directed acyclic graph.</param>
     /// <param name="source">Starting point.</param>
     /// <param name="target">Destination.</param>
-    /// <returns></returns>
     public static List<SolverPlace> Advise(
         IEnumerable<SolverPlace> places, IDistanceFunc distFn, IEnumerable<Arrow> arrows, SolverPlace source, SolverPlace target)
     {
@@ -142,7 +148,10 @@ internal static class OgHeuristic
              * to the arrow configuration, see OgCategoryFormer for details.
              */
 
-            if (best is null) { break; }
+            if (best is null)
+            {
+                break;
+            }
 
             seq.Insert(seq.Count - 1, best);
             RemoveCategory(cats, best.cat);
