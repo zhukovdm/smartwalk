@@ -20,6 +20,7 @@ public class CycleDetectorTests
         var c = new CycleDetector(1)
             .AddEdge(0, 0)
             .Cycle();
+
         Assert.IsTrue(c.SequenceEqual(new List<int> { 0, 0 }));
     }
 
@@ -30,6 +31,7 @@ public class CycleDetectorTests
             .AddEdge(0, 1)
             .AddEdge(1, 0)
             .Cycle();
+
         Assert.IsTrue(c.SequenceEqual(new List<int> { 0, 1, 0 }));
     }
 
@@ -47,6 +49,7 @@ public class CycleDetectorTests
             .AddEdge(1, 2)
             .AddEdge(2, 0)
             .Cycle();
+
         Assert.IsTrue(c.SequenceEqual(new List<int>() { 0, 1, 2, 0 }));
     }
 
@@ -62,23 +65,25 @@ public class CycleDetectorTests
             .AddEdge(5, 6)
             .AddEdge(6, 0)
             .Cycle();
+
         Assert.IsTrue(c.SequenceEqual(new List<int>() { 0, 2, 5, 6, 0 }));
     }
 
     [TestMethod]
     public void LargeDirectedAcyclicGraph()
     {
-        var N = 100;
+        var n = 100;
 
-        var g = new CycleDetector(N);
+        var g = new CycleDetector(n);
 
-        for (int fr = N - 1; fr > 0; --fr)
+        for (int fr = n - 1; fr > 0; --fr)
         {
             for (int to = fr - 1; to >= 0; --to)
             {
                 g.AddEdge(fr, to);
             }
         }
+
         Assert.IsNull(g.Cycle());
     }
 }

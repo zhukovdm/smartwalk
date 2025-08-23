@@ -11,20 +11,20 @@ namespace SmartWalk.Core.Test;
 [TestClass]
 public class OgCategoryFormerTests
 {
-    private static readonly int N = 5;
+    private static readonly int n = 5;
 
     [TestMethod]
     public void ShouldGroupPlacesByCategory()
     {
         // [(0 -> 2), (1 -> 2), (2 -> 3)]
 
-        var places = TestPrimitives.GetWaypoints(N);
+        var places = TestPrimitives.GetWaypoints(n);
 
         var arrows = new List<Arrow>()
         {
-            new(0, 2),
-            new(1, 2),
-            new(2, 3),
+            new (0, 2),
+            new (1, 2),
+            new (2, 3),
         };
 
         var cats = OgCategoryFormer.Form(places, arrows);
@@ -34,7 +34,7 @@ public class OgCategoryFormerTests
         foreach (var cat in cats)
         {
             var obj = cat.Value;
-            Assert.AreEqual(obj.places.Count, N - cat.Key);
+            Assert.AreEqual(obj.places.Count, n - cat.Key);
         }
 
         // predecessors
@@ -65,30 +65,30 @@ public class OgCandidateSelectorTests
 
         var seq = new List<SolverPlace>
         {
-            new(4, 4), // s
-            new(0, 0),
-            new(5, 5), // t
+            new (4, 4), // s
+            new (0, 0),
+            new (5, 5), // t
         };
 
         var p1 = new OgCategory();
-        p1.places.Add(new(1, 1));
+        p1.places.Add(new (1, 1));
 
         var p2 = new OgCategory();
-        p2.places.Add(new(2, 2));
+        p2.places.Add(new (2, 2));
 
         var p3 = new OgCategory();
-        p3.places.Add(new(3, 3));
+        p3.places.Add(new (3, 3));
 
         var cats = new List<OgCategory> { p1, p2, p3 };
 
-        var distFn = new MatrixDistanceFunc(new()
+        var distFn = new MatrixDistanceFunc(new ()
         {
-            new() { 0.0, 2.0, 1.0, 3.0, 0.0, 0.0 },
-            new() { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
-            new() { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
-            new() { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
-            new() { 0.0, 1.0, 1.0, 1.0, 0.0, 0.0 },
-            new() { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
+            new () { 0.0, 2.0, 1.0, 3.0, 0.0, 0.0 },
+            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
+            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
+            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
+            new () { 0.0, 1.0, 1.0, 1.0, 0.0, 0.0 },
+            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
         });
         var best = OgCandidateSelector.SelectBest(seq, cats, distFn);
 
@@ -109,11 +109,11 @@ public class OgHeuristicTests
 
         var places = new List<SolverPlace>
         {
-            new(2, 2),
-            new(1, 1),
-            new(0, 0),
-            new(4, 4),
-            new(3, 3),
+            new (2, 2),
+            new (1, 1),
+            new (0, 0),
+            new (4, 4),
+            new (3, 3),
         };
 
         var distFn = new MatrixDistanceFunc(
@@ -121,10 +121,10 @@ public class OgHeuristicTests
 
         var arrows = new List<Arrow>
         {
-            new(0, 1),
-            new(1, 2),
-            new(2, 3),
-            new(3, 4),
+            new (0, 1),
+            new (1, 2),
+            new (2, 3),
+            new (3, 4),
         };
 
         var seq = OgHeuristic.Advise(places, distFn, arrows, source, target);
@@ -144,9 +144,9 @@ public class OgHeuristicTests
     {
         var places = new List<SolverPlace>
         {
-        //  new(0, 0),
-            new(1, 1),
-            new(2, 2),
+            // new (0, 0),
+            new (1, 1),
+            new (2, 2),
         };
 
         var source = new SolverPlace(3, 3);
@@ -156,8 +156,8 @@ public class OgHeuristicTests
 
         var arrows = new List<Arrow>
         {
-            new(0, 2), // this arrow creates an empty free cat
-            new(1, 2),
+            new (0, 2), // this arrow creates an empty free cat
+            new (1, 2),
         };
 
         var seq = OgHeuristic.Advise(places, distFn, arrows, source, target);
@@ -181,15 +181,15 @@ public class OgHeuristicTests
     [DataRow(1.0)]
     public void ShouldAdviceValidSequenceForRandomGraph(double probability)
     {
-        var N = 100;
+        var n = 100;
 
-        var source = new SolverPlace(N, N);
-        var target = new SolverPlace(N + 1, N + 1);
+        var source = new SolverPlace(n, n);
+        var target = new SolverPlace(n + 1, n + 1);
 
-        var order = N + 2;
+        var order = n + 2;
 
         var places = Enumerable
-            .Range(0, N)
+            .Range(0, n)
             .ToList()
             .DurstenfeldShuffle()
             .Select((idx) => new SolverPlace(idx, idx))
@@ -206,8 +206,8 @@ public class OgHeuristicTests
 
         // terminals
 
-        Assert.AreEqual(result[0].cat, N);
-        Assert.AreEqual(result[^1].cat, N + 1);
+        Assert.AreEqual(result[0].cat, n);
+        Assert.AreEqual(result[^1].cat, n + 1);
 
         // arrows
 

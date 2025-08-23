@@ -11,12 +11,12 @@ namespace SmartWalk.Core.Test;
 [TestClass]
 public class IfCategoryFormerTests
 {
-    private static readonly int N = 5;
+    private static readonly int n = 5;
 
     [TestMethod]
     public void ShouldGroupPlacesByCategory()
     {
-        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N));
+        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(n));
 
         Assert.AreEqual(cats.Count, 5);
 
@@ -34,13 +34,13 @@ public class IfCategoryFormerTests
     [TestMethod]
     public void ShouldPrioritizeCategoriesWithLessItems()
     {
-        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(N));
+        var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(n));
 
         foreach (var (l, r) in cats.Zip(cats.Skip(1)))
         {
             Assert.IsTrue(l.Count < r.Count);
         }
-        Assert.AreEqual(cats[0][0].cat, N - 1);
+        Assert.AreEqual(cats[0][0].cat, n - 1);
         Assert.AreEqual(cats[^1][0].cat, 0);
     }
 }
@@ -53,16 +53,16 @@ public class IfCandidateSelectorTests
     {
         var seq = new List<SolverPlace>()
         {
-            new(4, 3), // s
-            new(0, 0),
-            new(3, 2), // <- insert here as d(2 -> 3) = 0.9
-            new(5, 4), // t
+            new (4, 3), // s
+            new (0, 0),
+            new (3, 2), // <- insert here as d(2 -> 3) = 0.9
+            new (5, 4), // t
         };
 
         var cat = new List<SolverPlace>()
         {
-            new(1, 1),
-            new(2, 1),
+            new (1, 1),
+            new (2, 1),
         };
 
         var matrix = TestPrimitives.GenerateUnitDistanceMatrix(6);
@@ -84,12 +84,13 @@ public class IfHeuristicTests
     {
         var places = new List<SolverPlace>()
         {
-            new(0, 0),
-            new(1, 1),
-        //  new(2, 2),
-        //  new(3, 3),
-            new(4, 4),
-            new(5, 5),
+            new (0, 0),
+            new (1, 1),
+
+            // new (2, 2),
+            // new (3, 3),
+            new (4, 4),
+            new (5, 5),
         };
 
         var source = new SolverPlace(6, 6);
@@ -112,15 +113,15 @@ public class IfHeuristicTests
     [DataRow(1.0)]
     public void ShouldAdviceValidSequenceForRandomGraph(double probability)
     {
-        var N = 100;
+        var n = 100;
 
-        var source = new SolverPlace(N, N);
-        var target = new SolverPlace(N + 1, N + 1);
+        var source = new SolverPlace(n, n);
+        var target = new SolverPlace(n + 1, n + 1);
 
-        var order = N + 2;
+        var order = n + 2;
 
         var places = Enumerable
-            .Range(0, N)
+            .Range(0, n)
             .ToList()
             .DurstenfeldShuffle()
             .Select((idx) => new SolverPlace(idx, idx))
@@ -136,7 +137,7 @@ public class IfHeuristicTests
 
         // terminals
 
-        Assert.AreEqual(result[0].cat, N);
-        Assert.AreEqual(result[^1].cat, N + 1);
+        Assert.AreEqual(result[0].cat, n);
+        Assert.AreEqual(result[^1].cat, n + 1);
     }
 }
