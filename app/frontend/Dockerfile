@@ -1,4 +1,4 @@
-FROM node:18.17-bookworm AS build
+FROM node:22.18-bookworm AS build
 WORKDIR /opt/frontend/
 
 ARG REACT_APP_SMARTWALK_API_ORIGIN
