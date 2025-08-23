@@ -34,7 +34,11 @@ public class SearchRoutesHandlerTests
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
         {
-            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
+            source = new(0.0, 0.0),
+            target = new(1.0, 1.0),
+            maxDistance = 1e9,
+            categories = categories,
+            arrows = arrows
         });
 
         Assert.AreEqual(N, routes.Count);
@@ -50,7 +54,11 @@ public class SearchRoutesHandlerTests
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
         {
-            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
+            source = new(0.0, 0.0),
+            target = new(1.0, 1.0),
+            maxDistance = 1e9,
+            categories = categories,
+            arrows = arrows
         });
 
         foreach (var route in routes)
@@ -74,7 +82,11 @@ public class SearchRoutesHandlerTests
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
         {
-            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 0.0, categories = categories, arrows = arrows
+            source = new(0.0, 0.0),
+            target = new(1.0, 1.0),
+            maxDistance = 0.0,
+            categories = categories,
+            arrows = arrows
         });
 
         Assert.AreEqual(0, routes.Count);
@@ -90,7 +102,11 @@ public class SearchRoutesHandlerTests
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, routingEngine).Handle(new()
         {
-            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
+            source = new(0.0, 0.0),
+            target = new(1.0, 1.0),
+            maxDistance = 1e9,
+            categories = categories,
+            arrows = arrows
         });
 
         Assert.AreEqual(1, routes.Count);
@@ -112,7 +128,11 @@ public class SearchRoutesHandlerTests
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, routingEngine).Handle(new()
         {
-            source = new(0.0, 0.0), target = new(1.0, 1.0), maxDistance = 1e9, categories = categories, arrows = arrows
+            source = new(0.0, 0.0),
+            target = new(1.0, 1.0),
+            maxDistance = 1e9,
+            categories = categories,
+            arrows = arrows
         });
 
         Assert.AreEqual(1, routes.Count);

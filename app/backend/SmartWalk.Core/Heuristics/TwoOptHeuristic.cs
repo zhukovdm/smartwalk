@@ -41,11 +41,14 @@ internal static class TwoOptHeuristic
             {
                 for (int j = i + 1; j < seq.Count - 1; ++j)
                 {
+                    var (i0, i1) = (seq[i], seq[i + 1]);
+                    var (j0, j1) = (seq[j], seq[j + 1]);
+
                     double diff = 0.0
-                        - distFn.GetDistance(seq[i    ].idx, seq[i + 1].idx)
-                        - distFn.GetDistance(seq[j    ].idx, seq[j + 1].idx)
-                        + distFn.GetDistance(seq[i    ].idx, seq[j    ].idx)
-                        + distFn.GetDistance(seq[i + 1].idx, seq[j + 1].idx);
+                        - distFn.GetDistance(i0.idx, i1.idx)
+                        - distFn.GetDistance(j0.idx, j1.idx)
+                        + distFn.GetDistance(i0.idx, j0.idx)
+                        + distFn.GetDistance(i1.idx, j1.idx);
 
                     if (diff < -epsilon)
                     {

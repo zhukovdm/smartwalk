@@ -13,7 +13,7 @@ public class GeometryTests
         {
             for (int lat = -1; lat < 2; ++lat)
             {
-                var rads = Spherical.RotAngle(new(0.0, 0.0), new((double) lon, (double) lat));
+                var rads = Spherical.RotAngle(new(0.0, 0.0), new((double)lon, (double)lat));
                 var degs = Spherical.RadToDeg(rads);
                 Assert.IsTrue(degs <= +180.0);
                 Assert.IsTrue(degs >= -180.0);

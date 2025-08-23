@@ -69,7 +69,8 @@ internal static class MongoFilterBuilder
 
         filter = filter & builder.AnyEq(o => o.keywords, category.keyword);
 
-        if (fs.es is not null) {
+        if (fs.es is not null)
+        {
             filter = filter
                 .existen(builder, fs.es.image, p => p.attributes.image)
                 .existen(builder, fs.es.description, p => p.attributes.description)
@@ -82,7 +83,8 @@ internal static class MongoFilterBuilder
                 .existen(builder, fs.es.openingHours, p => p.attributes.openingHours);
         }
 
-        if (fs.bs is not null) {
+        if (fs.bs is not null)
+        {
             filter = filter
                 .boolean(builder, fs.bs.fee, p => p.attributes.fee)
                 .boolean(builder, fs.bs.delivery, p => p.attributes.delivery)
@@ -95,7 +97,8 @@ internal static class MongoFilterBuilder
                 .boolean(builder, fs.bs.wheelchair, p => p.attributes.wheelchair);
         }
 
-        if (fs.ns is not null) {
+        if (fs.ns is not null)
+        {
             filter = filter
                 .numeric(builder, fs.ns.capacity, p => p.attributes.capacity)
                 .numeric(builder, fs.ns.elevation, p => p.attributes.elevation)
@@ -104,12 +107,14 @@ internal static class MongoFilterBuilder
                 .numeric(builder, fs.ns.year, p => p.attributes.year);
         }
 
-        if (fs.ts is not null) {
+        if (fs.ts is not null)
+        {
             filter = filter
                 .textual(builder, fs.ts.name, p => p.name);
         }
 
-        if (fs.cs is not null) {
+        if (fs.cs is not null)
+        {
             filter = filter
                 .collect(builder, fs.cs.clothes, p => p.attributes.clothes, p => p.attributes.clothes)
                 .collect(builder, fs.cs.cuisine, p => p.attributes.cuisine, p => p.attributes.cuisine)

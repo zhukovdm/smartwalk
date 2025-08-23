@@ -76,10 +76,12 @@ internal static class IfCandidateSelector
     private static double NextDistance(
         IReadOnlyList<SolverPlace> seq, SolverPlace place, IDistanceFunc distFn, double currDist, int seqIdx)
     {
+        var (l, r, p) = (seq[seqIdx - 1], seq[seqIdx], place);
+
         return currDist
-            - distFn.GetDistance(seq[seqIdx - 1].idx, seq[seqIdx].idx)
-            + distFn.GetDistance(seq[seqIdx - 1].idx, place.idx)
-            + distFn.GetDistance(place.idx,           seq[seqIdx].idx);
+            - distFn.GetDistance(l.idx, r.idx)
+            + distFn.GetDistance(l.idx, p.idx)
+            + distFn.GetDistance(p.idx, r.idx);
     }
 
     /// <summary>

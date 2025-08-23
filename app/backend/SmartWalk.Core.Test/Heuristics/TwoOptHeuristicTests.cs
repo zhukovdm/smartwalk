@@ -106,7 +106,7 @@ public class TwoOptHeuristicTests
             return result;
         };
 
-        var source0 = seq[ 0];
+        var source0 = seq[0];
         var target0 = seq[^1];
         var distance0 = calculateDistance(seq);
 
@@ -114,7 +114,7 @@ public class TwoOptHeuristicTests
 
         var distanceAfter = calculateDistance(seq);
 
-        var source1 = seq[ 0];
+        var source1 = seq[0];
         var target1 = seq[^1];
         var distance1 = calculateDistance(seq);
 

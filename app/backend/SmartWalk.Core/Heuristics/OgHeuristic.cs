@@ -87,10 +87,12 @@ internal static class OgCandidateSelector
         {
             foreach (var place in cat.places)
             {
+                var (l, m, r, p) = (seq[0], seq[^2], seq[^1], place);
+
                 var candDist = 0.0
-                    + distFn.GetDistance(seq[ 0].idx, place.idx)
-                    + distFn.GetDistance(seq[^2].idx, place.idx)
-                    + distFn.GetDistance(place.idx, seq[^1].idx);
+                    + distFn.GetDistance(l.idx, p.idx)
+                    + distFn.GetDistance(m.idx, p.idx)
+                    + distFn.GetDistance(p.idx, r.idx);
 
                 if (candDist < lastDist)
                 {

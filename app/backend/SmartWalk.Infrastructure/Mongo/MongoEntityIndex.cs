@@ -41,7 +41,8 @@ public sealed class MongoEntityIndex : IEntityIndex
                 .Exclude(p => p.attributes))
             .ToListAsync();
 
-        var places = Deserialize<Place>(docs).Select((place) => {
+        var places = Deserialize<Place>(docs).Select((place) =>
+        {
             if (categoryId is not null) { _ = place.categories.Add(categoryId.Value); }
             return place;
         }).ToList();
@@ -79,7 +80,7 @@ public sealed class MongoEntityIndex : IEntityIndex
         // $geoWithin does not sort objects.
 
         var wf = Builders<ExtendedPlace>.Filter
-            .GeoWithin(p => p.location, GeoJson.Polygon(polygon.Select(point => 
+            .GeoWithin(p => p.location, GeoJson.Polygon(polygon.Select(point =>
                 new GeoJson2DGeographicCoordinates(point.lon, point.lat)).ToArray()));
 
         return FetchCategories(wf, categories);
