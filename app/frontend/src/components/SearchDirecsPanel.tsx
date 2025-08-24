@@ -5,7 +5,8 @@ import Typography from "@mui/material/Typography";
 import {
   RESULT_DIRECS_ADDR
 } from "../utils/routing";
-import { fetchSearchDirecs } from "../utils/smartwalk";
+// import { fetchSearchDirecs } from "../utils/smartwalk";
+import { fetchSearchDirecs } from "../utils/osrmProject";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultDirecs,

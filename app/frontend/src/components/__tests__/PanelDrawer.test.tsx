@@ -17,6 +17,7 @@ import {
   renderWithProviders
 } from "../../utils/testUtils";
 import * as smartwalkApi from "../../utils/smartwalk";
+import * as osrmProjectApi from "../../utils/osrmProject";
 import InmemStorage from "../../utils/inmemStorage";
 import { LeafletMap } from "../../utils/leaflet";
 import { context } from "../../features/context";
@@ -431,7 +432,7 @@ describe("<PanelDrawer />", () => {
           name: `Place ${handle}`
         }));
 
-        jest.spyOn(smartwalkApi, "fetchSearchDirecs").mockResolvedValueOnce(Array(3).fill(undefined).map(() => ({
+        jest.spyOn(osrmProjectApi, "fetchSearchDirecs").mockResolvedValueOnce(Array(3).fill(undefined).map(() => ({
           waypoints: direcsRequestObject,
           name: "",
           path: getPath()
@@ -474,7 +475,7 @@ describe("<PanelDrawer />", () => {
         }));
 
         const alertSpy = jest.spyOn(window, "alert");
-        jest.spyOn(smartwalkApi, "fetchSearchDirecs").mockRejectedValueOnce(new Error());
+        jest.spyOn(osrmProjectApi, "fetchSearchDirecs").mockRejectedValueOnce(new Error());
 
         const { getByRole, getByText } = render(getProps(), {
           preloadedState: {

@@ -11,9 +11,6 @@ import {
   UiRoute,
   WgsPoint
 } from "../domain/types";
-// import {
-//   fetchSearchDirecs as osrmFetchSearchDirecs
-// } from "./osrmProject";
 
 const SMARTWALK_API_BASE_URL = `${process.env.REACT_APP_SMARTWALK_API_ORIGIN}/api`;
 
@@ -89,7 +86,6 @@ export async function fetchSearchDirecs(waypoints: UiPlace[]): Promise<UiDirec[]
     },
     waypoints: waypoints
   }));
-  // return osrmFetchSearchDirecs(waypoints);
 }
 
 /**
