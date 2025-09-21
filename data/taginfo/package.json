@@ -12,7 +12,7 @@
   "author": "Dmitry Zhukov",
   "dependencies": {
     "@types/node": "^20.6.0",
-    "axios": "^1.7.4",
+    "axios": "^1.12.2",
     "commander": "^11.0.0",
     "mongodb": "^6.0.0",
     "typescript": "^5.2.2",
