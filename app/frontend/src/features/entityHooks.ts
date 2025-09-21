@@ -12,9 +12,9 @@ import { useAppSelector } from "./storeHooks";
 /**
  * Fetch extended place from the server by `smartId`.
  */
-export function useSmartPlace(smartId: string) {
+export function useEntityPlace(smartId: string) {
 
-  const { entityPlaces } = useContext(AppContext).smart;
+  const { entityPlaces } = useContext(AppContext).cache;
 
   const [loaded, setLoaded] = useState(false);
   const [place, setPlace] = useState(entityPlaces.get(smartId));

@@ -11,8 +11,10 @@ async function osrmFetch(url: string): Promise<any> {
     method: "GET"
   });
   switch (res.status) {
-    case 200: return res.data;
-    default: throw new Error(`${res.statusText} (status code ${res.status}, osrm code ${res.data?.code}).`)
+    case 200:
+      return res.data;
+    default:
+      throw new Error(`${res.statusText} (status code ${res.status}, osrm code ${res.data?.code}).`);
   }
 }
 

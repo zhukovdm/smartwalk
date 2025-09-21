@@ -1,19 +1,19 @@
 import { useParams } from "react-router-dom";
 import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
-import { useSmartPlace } from "../features/entityHooks";
+import { useEntityPlace } from "../features/entityHooks";
 import { useAppSelector } from "../features/storeHooks";
 import BackCloseBar from "./_shared/BackCloseBar";
 import LoadingStub from "./_shared/LoadingStub";
 import EntityPlaceContent from "./entity/EntityPlaceContent";
 
 /**
- * Panel presenting a place, with menu, and content.
+ * Panel presenting a place, with menu, and rich content.
  */
 export default function EntityPlacePanel(): JSX.Element {
 
   const smartId = useParams().smartId!; // always defined!
-  const { place, placeLoaded } = useSmartPlace(smartId);
+  const { place, placeLoaded } = useEntityPlace(smartId);
 
   const {
     loaded: favoritesLoaded

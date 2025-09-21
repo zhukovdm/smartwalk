@@ -24,6 +24,7 @@ import {
   useAppDispatch,
   useAppSelector
 } from "../../features/storeHooks";
+import { useSearchedPoints } from "../../features/searchHooks";
 import AddLocationButton, {
   type AddLocationButtonKind
 } from "./AddLocationButton";
@@ -53,31 +54,64 @@ export default function SelectPointDialog(
   const dispatch = useAppDispatch();
   const { map } = useContext(AppContext);
 
-  // custom place
+  // point selected on the map
 
-  const callback = (point: WgsPoint) => {
+  const selectedCallback = (point: WgsPoint) => {
     onSelect(point2place(point));
     dispatch(showPanel());
   };
 
-  const handleLocation = () => {
+  const handleSelected = () => {
     onHide();
     dispatch(hidePanel());
-    map?.captureLocation(callback);
+    map?.captureLocation(selectedCallback);
   };
 
-  // stored place
+  // point searched using free-form input
 
-  const [place, setPlace] = useState<StoredPlace | null>(null);
-  const { loaded, places } = useAppSelector((state) => state.favorites);
+  const [searchedInput, setSearchedInput] = useState<string>("");
+  const [searchedPoint, setSearchedPoint] = useState<UiPlace | null>(null);
 
-  const handleFavorites = () => {
-    if (!!place) {
-      setPlace(null);
-      onSelect(place);
+  const {
+    loading: searchedLoading,
+    options: searchedOptions
+  } = useSearchedPoints(searchedInput, searchedPoint);
+
+  const resetSearched = () => {
+    setSearchedInput("");
+    setSearchedPoint(null);
+  };
+
+  const handleSearched = () => {
+    if (!!searchedPoint) {
+      resetSearched();
+      onSelect(searchedPoint);
       onHide();
     }
   };
+
+  // place stored in favorites
+
+  const [favoritePlace, setFavoritePlace] = useState<StoredPlace | null>(null);
+
+  const {
+    loaded: favoriteLoaded,
+    places: favoritePlaces
+  } = useAppSelector((state) => state.favorites);
+
+  const resetFavorite = () => {
+    setFavoritePlace(null);
+  };
+
+  const handleFavorite = () => {
+    if (!!favoritePlace) {
+      resetFavorite();
+      onSelect(favoritePlace);
+      onHide();
+    }
+  };
+
+  // render
 
   return (
     <Dialog
@@ -99,19 +133,64 @@ export default function SelectPointDialog(
       </DialogTitle>
       <DialogContent>
         <Typography>
-          Click <AddLocationButton kind={kind} onClick={handleLocation} /> to select a point on the map.
+          Click <AddLocationButton kind={kind} onClick={handleSelected} /> to select a point on the map.
         </Typography>
         <Divider>
           <Typography>OR</Typography>
         </Divider>
-        <Stack direction="column" gap={2} sx={{ mt: 2 }}>
+        <Stack direction={"column"} gap={2} sx={{ mb: 2, mt: 2 }}>
+          <Typography>
+            Find a place by address using free-form input.
+          </Typography>
+          <Autocomplete
+            value={searchedPoint}
+            loading={searchedLoading}
+            onInputChange={(_, v) => {
+              setSearchedInput(v.trimStart());
+            }}
+            onChange={(_, v) => { setSearchedPoint(v); }}
+            filterOptions={(x) => (x)}
+            options={searchedOptions}
+            noOptionsText={"No points found"}
+            size={"small"}
+            getOptionLabel={(option) => option.name}
+            isOptionEqualToValue={(o, v) => (
+              o.location.lat === v.location.lat && o.location.lon === v.location.lon
+            )}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label={"Place"}
+                InputProps={{
+                  ...params.InputProps,
+                  endAdornment: (
+                    <Fragment>
+                      {searchedLoading
+                        ? <CircularProgress color={"inherit"} size={20} />
+                        : null
+                      }
+                      {params.InputProps.endAdornment}
+                    </Fragment>
+                  )
+                }}
+              />
+            )}
+            renderOption={(props, option) => (
+              <li {...props} key={option.placeId}>{option.name}</li>
+            )}
+          />
+        </Stack>
+        <Divider>
+          <Typography>OR</Typography>
+        </Divider>
+        <Stack direction={"column"} gap={2} sx={{ mb: 2, mt: 2 }}>
           <Typography>
             Select a place from <b>Favorites</b> and confirm.
           </Typography>
           <Autocomplete
-            loading={!loaded}
-            onChange={(_, v) => { setPlace(v); }}
-            options={places}
+            loading={!favoriteLoaded}
+            onChange={(_, v) => { setFavoritePlace(v); }}
+            options={favoritePlaces}
             size={"small"}
             getOptionLabel={(option) => option.name ?? ""}
             isOptionEqualToValue={(option, value) => option.placeId === value.placeId}
@@ -123,20 +202,30 @@ export default function SelectPointDialog(
                   ...params.InputProps,
                   endAdornment: (
                     <Fragment>
-                      {!loaded ? <CircularProgress color={"inherit"} size={20} /> : null}
+                      {!favoriteLoaded
+                        ? <CircularProgress color={"inherit"} size={20} />
+                        : null
+                      }
                       {params.InputProps.endAdornment}
                     </Fragment>
                   )
                 }}
               />
             )}
-            renderOption={(props, option) => (<li {...props} key={option.placeId}>{option.name}</li>)}
+            renderOption={(props, option) => (
+              <li {...props} key={option.placeId}>{option.name}</li>
+            )}
           />
           <Box sx={{ mt: 1, display: "flex", justifyContent: "right" }}>
             <Button
               color={"primary"}
-              disabled={!place}
-              onClick={() => { handleFavorites(); }}
+              disabled={
+                (!favoritePlace && !searchedPoint) || (!!favoritePlace && !!searchedPoint)
+              }
+              onClick={() => {
+                if (!!favoritePlace) { handleFavorite(); }
+                if (!!searchedPoint) { handleSearched(); }
+              }}
             >
               <span>Confirm</span>
             </Button>

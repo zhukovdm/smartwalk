@@ -63,7 +63,8 @@ function mergePlace(place: UiPlace | undefined, storedPlaces: Map<string, UiPlac
  * source, target, and center).
  * @param place place with possibly outdated data items
  * @param storedPlaces collection of places with key set to `placeId`
- * @param storedSmarts collection of places with key set to `smartId` (places without Id are omitted)
+ * @param storedSmarts collection of places with key set to `smartId` (places
+ *    without Id are omitted)
  * @returns true place representation (with proper `name` and `categories`)
  */
 export function usePlace(place: UiPlace | undefined, storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): UiPlace | undefined {
@@ -74,8 +75,10 @@ export function usePlace(place: UiPlace | undefined, storedPlaces: Map<string, U
  * Synchronize a list of places with the current state.
  * @param places places with possibly outdated data items
  * @param storedPlaces collection of places with key set to `placeId`
- * @param storedSmarts collection of places with key set to `smartId` (places without `smartId` are omitted)
- * @returns a tuple with true place representations (with proper `name` and `categories`) and a flag whether the place appears in the current storage.
+ * @param storedSmarts collection of places with key set to `smartId` (places
+ *    without `smartId` are omitted)
+ * @returns a tuple with true place representations (with proper `name` and
+ *    `categories`) and a flag whether the place appears in the current storage.
  */
 export function usePlaces(places: UiPlace[], storedPlaces: Map<string, UiPlace>, storedSmarts: Map<string, UiPlace>): [UiPlace, boolean][] {
   return useMemo(() => (

@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react";
+import { debounce } from "@mui/material";
 import { Map as IMap } from "../domain/interfaces";
 import { KeywordAdviceItem, UiPlace } from "../domain/types";
 import { point2place } from "../utils/functions";
 import { fetchAdviceKeywords } from "../utils/smartwalk";
+import { fetchSearchPoints } from "../utils/nominatim";
 import { AppContext } from "../App";
 import { updateSearchDirecsPlace } from "./searchDirecsSlice";
 import { setSearchPlacesCenter } from "./searchPlacesSlice";
@@ -12,32 +14,45 @@ import {
 } from "./searchRoutesSlice";
 import { useAppDispatch } from "./storeHooks";
 
+const DEBOUNCE_DELAY: number = 500.0;
+
 /**
- * Obtain keyword advice from a SmartWalk endpoint.
+ * Obtain keyword advice.
  */
 export function useKeywordAdvice(
   input: string, value: KeywordAdviceItem | null): { loading: boolean; options: KeywordAdviceItem[] } {
 
-  const { adviceKeywords } = useContext(AppContext).smart;
+  const { adviceKeywords } = useContext(AppContext).cache;
 
   const [loading, setLoading] = useState(false);
   const [options, setOptions] = useState<KeywordAdviceItem[]>([]);
 
-  useEffect(() => {
-    const prefix = input.toLocaleLowerCase();
-    if (prefix.length === 0) { setOptions(value ? [value] : []); return; }
+  const updateState = (loading: boolean, options: KeywordAdviceItem[]): void => {
+    setLoading(loading);
+    setOptions(options);
+  };
 
-    const cached = adviceKeywords.get(prefix);
-    if (cached) { setOptions(cached); return; }
+  useEffect(() => {
+    const normalizedInput = input.toLocaleLowerCase();
+    if (normalizedInput.length === 0) {
+      updateState(false, !!value ? [value] : []);
+      return;
+    }
+
+    const cached = adviceKeywords.get(normalizedInput);
+    if (!!cached) {
+      updateState(false, cached);
+      return;
+    }
 
     let ignore = false;
 
-    const loadFromSmartwalkApi = async () => {
+    const loadFromApi = async () => {
 
       if (!ignore) { setLoading(true); }
 
       try {
-        const items = await fetchAdviceKeywords(prefix);
+        const items = await fetchAdviceKeywords(normalizedInput);
 
         if (!ignore) {
           items.forEach((item) => {
@@ -47,30 +62,30 @@ export function useKeywordAdvice(
               rating,
               year
             } = item.numericBounds;
-  
+
             if (!!capacity) {
               capacity.min = Math.max(capacity.min, 0);
               capacity.max = Math.min(capacity.max, 300);
             }
-  
+
             if (!!minimumAge) {
               minimumAge.min = Math.max(minimumAge.min, 0);
               minimumAge.max = Math.min(minimumAge.max, 150);
             }
-  
+
             if (!!rating) {
               rating.min = Math.max(rating.min, 0);
               rating.max = Math.min(rating.max, 5);
             }
-  
+
             if (!!year) {
               year.max = Math.min(year.max, new Date().getFullYear());
             }
           });
-  
+
           if (items.length > 0) {
             setOptions(items);
-            adviceKeywords.set(prefix, items);
+            adviceKeywords.set(normalizedInput, items);
           }
         }
       }
@@ -80,9 +95,74 @@ export function useKeywordAdvice(
       }
     };
 
-    loadFromSmartwalkApi();
-    return () => { ignore = true; };
+    const debounced = debounce(loadFromApi, DEBOUNCE_DELAY);
+    debounced();
+
+    return () => { ignore = true; debounced.clear(); };
   }, [input, value, adviceKeywords]);
+
+  return { loading, options };
+}
+
+/**
+ * Obtain points by free-form input text.
+ */
+export function useSearchedPoints(input: string, value: UiPlace | null) {
+
+  const { searchedPlaces } = useContext(AppContext).cache;
+
+  const [loading, setLoading] = useState(false);
+  const [options, setOptions] = useState<UiPlace[]>([]);
+
+  const updateState = (loading: boolean, options: UiPlace[]): void => {
+    setLoading(loading);
+    setOptions(options);
+  }
+
+  useEffect(() => {
+    const normalizedInput = input.toLocaleLowerCase();
+    if (normalizedInput.length === 0) {
+      updateState(false, !!value ? [value] : []);
+      return;
+    }
+
+    const cached = searchedPlaces.get(normalizedInput);
+    if (!!cached) {
+      updateState(false, cached);
+      return;
+    }
+
+    if (!!value && normalizedInput === value.name.toLocaleLowerCase()) {
+      updateState(false, [value]);
+      searchedPlaces.set(normalizedInput, [value]);
+      return;
+    }
+
+    let ignore = false;
+
+    const loadFromApi = async () => {
+
+      if (!ignore) { setLoading(true); }
+
+      try {
+        const items = await fetchSearchPoints(normalizedInput);
+
+        if (items.length > 0) {
+          setOptions(items);
+          searchedPlaces.set(normalizedInput, items);
+        }
+      }
+      catch (ex) { alert(ex); }
+      finally {
+        if (!ignore) { setLoading(false); }
+      }
+    }
+
+    const debounced = debounce(loadFromApi, DEBOUNCE_DELAY);
+    debounced();
+
+    return () => { ignore = true; debounced.clear(); };
+  }, [input, value, searchedPlaces]);
 
   return { loading, options };
 }
