@@ -1132,12 +1132,13 @@ describe("<PanelDrawer />", () => {
         },
         context: {
           ...context,
-          smart: {
+          cache: {
             entityPlaces: new Map([["D", {
               ...getExtendedPlace(),
               smartId: "D"
             }]]),
-            adviceKeywords: new Map()
+            adviceKeywords: new Map(),
+            searchedPlaces: new Map(),
           }
         }
       });

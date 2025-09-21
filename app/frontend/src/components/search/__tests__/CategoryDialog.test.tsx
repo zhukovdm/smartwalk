@@ -145,7 +145,7 @@ describe("<CategoryDialog />", () => {
     }, {
       context: {
         ...context,
-        smart: { ...context.smart, adviceKeywords }
+        cache: { ...context.cache, adviceKeywords }
       }
     });
 

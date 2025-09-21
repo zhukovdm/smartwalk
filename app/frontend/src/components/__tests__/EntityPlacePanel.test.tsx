@@ -28,9 +28,10 @@ const getOptions = (entityPlaces?: Map<string, ExtendedPlace>): AppRenderOptions
   },
   context: {
     ...context,
-    smart: {
+    cache: {
       entityPlaces: entityPlaces ?? new Map(),
-      adviceKeywords: new Map()
+      adviceKeywords: new Map(),
+      searchedPlaces: new Map(),
     }
   }
 });

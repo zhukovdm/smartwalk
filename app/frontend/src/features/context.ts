@@ -2,7 +2,8 @@ import { Map as LeafletRawMap } from "leaflet"
 import { LeafletMap } from "../utils/leaflet";
 import type {
   ExtendedPlace,
-  KeywordAdviceItem
+  KeywordAdviceItem,
+  UiPlace
 } from "../domain/types";
 import {
   Map as IMap,
@@ -13,9 +14,10 @@ import DeviceStorage from "../utils/deviceStorage";
 export type AppContextValue = {
   map?: IMap;
   storage: IStorage;
-  smart: {
+  cache: {
     entityPlaces: Map<string, ExtendedPlace>;
     adviceKeywords: Map<string, KeywordAdviceItem[]>;
+    searchedPlaces: Map<string, UiPlace[]>;
   }
 };
 
@@ -35,8 +37,9 @@ export class MapFactory {
  */
 export const context: AppContextValue = {
   storage: new DeviceStorage(),
-  smart: {
+  cache: {
     entityPlaces: new Map(),
-    adviceKeywords: new Map()
+    adviceKeywords: new Map(),
+    searchedPlaces: new Map(),
   }
 };
