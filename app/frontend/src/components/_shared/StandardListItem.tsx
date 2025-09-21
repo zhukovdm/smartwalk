@@ -31,7 +31,7 @@ export default function StandardListItem(
       direction={"row"}
       alignItems={"stretch"}
       gap={0.5}
-      sx={{ width: "100%" }}
+      sx={{ width: "100%", minWidth: 0 }}
     >
       {l}
       <Box
