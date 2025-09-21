@@ -5,8 +5,8 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
-    "@inrupt/solid-client": "^1.27.0",
-    "@inrupt/solid-client-authn-browser": "^1.15.0",
+    "@inrupt/solid-client": "^2.1.2",
+    "@inrupt/solid-client-authn-browser": "^3.1.0",
     "@inrupt/vocab-common-rdf": "^1.0.5",
     "@mui/icons-material": "^5.11.0",
     "@mui/lab": "^5.0.0-alpha.125",
@@ -25,7 +25,7 @@
     "@types/react-beautiful-dnd": "^13.1.4",
     "@types/react-dom": "^18.0.10",
     "@types/vis": "^4.21.24",
-    "axios": "^1.7.4",
+    "axios": "^1.12.2",
     "leaflet": "^1.9.3",
     "leaflet.locatecontrol": "^0.79.0",
     "leaflet.markercluster": "^1.5.3",
@@ -55,6 +55,7 @@
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.5.1",
     "@types/jest": "^29.5.5",
+    "@types/uuid": "^10.0.0",
     "babel-jest": "^29.6.4",
     "eslint-plugin-react": "^7.33.2",
     "gh-pages": "^5.0.0",
@@ -92,6 +93,6 @@
     ]
   },
   "engines": {
-    "node": ">=22.0.0 <23.0.0"
+    "node": ">=20.0.0 <21.0.0"
   }
 }
