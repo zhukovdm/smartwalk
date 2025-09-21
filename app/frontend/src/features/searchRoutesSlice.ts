@@ -11,7 +11,7 @@ export type SearchRoutesState = {
 };
 
 export const initialSearchRoutesState = (): SearchRoutesState => ({
-  maxDistance: 5.0,
+  maxDistance: 3.0,
   categories: [],
   arrows: []
 });

@@ -104,8 +104,8 @@ export default function SearchRoutesPanel(): JSX.Element {
           With walking distance of at most (in&nbsp;<KilometersLink />):
         </Typography>
         <DistanceSlider
-          max={30}
-          seq={[ 5, 10, 15, 20, 25 ]}
+          max={15.0}
+          seq={[ 3.0, 6.0, 9.0, 12.0 ]}
           step={0.2}
           distance={maxDistance}
           dispatch={(value) => { dispatch(setSearchRoutesMaxDistance(value)); }}
