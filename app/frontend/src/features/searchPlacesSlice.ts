@@ -9,7 +9,7 @@ export type SearchPlacesState = {
 };
 
 export const initialSearchPlacesState = (): SearchPlacesState => ({
-  radius: 3.0,
+  radius: 1.0,
   categories: []
 });
 

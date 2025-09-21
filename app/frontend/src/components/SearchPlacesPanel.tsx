@@ -96,8 +96,8 @@ export default function SearchPlacesPanel(): JSX.Element {
         </Box>
         <Box>
           <DistanceSlider
-            max={15}
-            seq={[ 3, 6, 9, 12 ]}
+            max={5.0}
+            seq={[ 1.0, 2.0, 3.0, 4.0 ]}
             step={0.1}
             distance={radius}
             dispatch={(value) => { dispatch(setSearchPlacesRadius(value)); }}
