@@ -14,7 +14,7 @@ import {
 } from "./searchRoutesSlice";
 import { useAppDispatch } from "./storeHooks";
 
-const DEBOUNCE_DELAY: number = 500.0;
+const DEBOUNCE_DELAY: number = 1000.0;
 
 /**
  * Obtain keyword advice.
