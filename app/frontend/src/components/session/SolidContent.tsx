@@ -7,7 +7,6 @@ import Link from "@mui/material/Link";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { AppContext } from "../../App";
 import { FAVORITES_ADDR } from "../../utils/routing";
@@ -155,7 +154,7 @@ export default function SolidContent(): JSX.Element {
         </Typography>
       </Stack>
       <Stack direction={"row"} justifyContent={"center"}>
-        <LoadingButton
+        <Button
           disabled={dialogBlock}
           loading={block}
           loadingPosition={"start"}
@@ -164,7 +163,7 @@ export default function SolidContent(): JSX.Element {
           onClick={logoutAction}
         >
           <span>Log out</span>
-        </LoadingButton>
+        </Button>
       </Stack>
     </Stack>
   );

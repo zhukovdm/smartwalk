@@ -40,7 +40,7 @@ services:
     container_name: smartwalk-backend
     environment:
       - SMARTWALK_MONGO_CONN_STR=${SMARTWALK_MONGO_CONN_STR}
-      - SMARTWALK_OSRM_BASE_URL=${SMARTWALK_OSRM_BASE_URL}
+      - SMARTWALK_POSRM_BASE_URL=${SMARTWALK_POSRM_BASE_URL}
 #   ports:
 #     - '5017:8080'
     volumes:
@@ -65,7 +65,7 @@ services:
     build:
       context: ../app/frontend/
       args:
-        - REACT_APP_SMARTWALK_API_ORIGIN=${REACT_APP_SMARTWALK_API_ORIGIN}
+        - VITE_SMARTWALK_API_ORIGIN=${VITE_SMARTWALK_API_ORIGIN}
     container_name: smartwalk-proxy
     ports:
       - '3000:80'

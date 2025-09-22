@@ -10,7 +10,6 @@ import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
 import SaveIcon from "@mui/icons-material/Save";
-import LoadingButton from "@mui/lab/LoadingButton";
 import { AppContext } from "../../App";
 import { UiPlace, WgsPoint } from "../../domain/types";
 import { point2place } from "../../utils/functions";
@@ -171,7 +170,7 @@ export default function MyPlacesCreateDialog(): JSX.Element {
             >
               <span>Clear</span>
             </Button>
-            <LoadingButton
+            <Button
               disabled={block || !place || !(name.trim().length > 0)}
               loading={loading}
               loadingPosition={"start"}
@@ -179,7 +178,7 @@ export default function MyPlacesCreateDialog(): JSX.Element {
               onClick={createPlace}
             >
               <span>Create</span>
-            </LoadingButton>
+            </Button>
           </Box>
         </Stack>
       </details>

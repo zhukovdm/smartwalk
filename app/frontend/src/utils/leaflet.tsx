@@ -13,7 +13,7 @@ import { WgsPoint, UiPlace, PlaceCategory } from "../domain/types";
 import { Map as IMap, Pin as IPin } from "../domain/interfaces";
 import { point2place } from "./functions";
 
-const dir = process.env.PUBLIC_URL + "/assets/markers";
+const MARKERS_DIR = import.meta.env.BASE_URL + "assets/markers/";
 
 enum Color {
   Stored = "violet",
@@ -50,10 +50,10 @@ class LeafletFace implements BaseIconOptions {
 
     this.iconAnchor = [12, 41];
     this.iconSize = [25, 41];
-    this.iconUrl = dir + `/colors/marker-icon-${color}.png`;
+    this.iconUrl = MARKERS_DIR + `colors/marker-icon-${color}.png`;
     this.popupAnchor = [1, -34];
     this.shadowSize = [41, 41];
-    this.shadowUrl = dir + "/shadow/marker-shadow.png";
+    this.shadowUrl = MARKERS_DIR + "shadow/marker-shadow.png";
 
     // prevent garbage collection
     this.markerImage = LeafletFace.preload(this.iconUrl);
