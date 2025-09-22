@@ -8,7 +8,6 @@ import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import TextField from "@mui/material/TextField";
 import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
 import PersonIcon from "@mui/icons-material/Person";
 import { setDialogBlock } from "../../features/panelSlice";
 import {
@@ -94,7 +93,7 @@ export default function SolidLoginDialog(
         >
           <span>Discard</span>
         </Button>
-        <LoadingButton
+        <Button
           disabled={!isLink(provider)}
           loading={dialogBlock}
           loadingPosition={"start"}
@@ -102,7 +101,7 @@ export default function SolidLoginDialog(
           startIcon={<PersonIcon />}
         >
           <span>Log in</span>
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

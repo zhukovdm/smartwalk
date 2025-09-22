@@ -32,8 +32,8 @@ import {
 } from "../utils/solidProvider";
 import SolidLoginDialog from "./session/SolidLoginDialog";
 
-const ASSETS_FOLDER = process.env.PUBLIC_URL + "/assets";
-const SESSION_SOLID_ICON = ASSETS_FOLDER + "/solid/logo.svg";
+const ASSETS_FOLDER = import.meta.env.BASE_URL + "assets/";
+const SESSION_SOLID_ICON = ASSETS_FOLDER + "solid/logo.svg";
 
 const SessionButton = styled(Button)<ButtonProps>(() => ({
   backgroundColor: "#FFFFFF",

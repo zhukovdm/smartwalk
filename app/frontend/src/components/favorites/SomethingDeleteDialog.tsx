@@ -5,7 +5,6 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
-import LoadingButton from "@mui/lab/LoadingButton";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { SomethingKind } from "../../domain/types";
 import { setDialogBlock } from "../../features/panelSlice";
@@ -71,7 +70,7 @@ export default function SomethingDeleteDialog(
         >
           <span>Cancel</span>
         </Button>
-        <LoadingButton
+        <Button
           color={"error"}
           startIcon={<DeleteIcon />}
           loading={dialogBlock}
@@ -79,7 +78,7 @@ export default function SomethingDeleteDialog(
           onClick={() => { deleteAction(); }}
         >
           <span>Delete</span>
-        </LoadingButton>
+        </Button>
       </DialogActions>
     </Dialog>
   );

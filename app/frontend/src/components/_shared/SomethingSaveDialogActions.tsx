@@ -1,6 +1,5 @@
 import Button from "@mui/material/Button";
 import DialogActions from "@mui/material/DialogActions";
-import LoadingButton from "@mui/lab/LoadingButton";
 import SaveIcon from "@mui/icons-material/Save";
 
 export type SomethingSaveDialogActionsProps = {
@@ -35,7 +34,7 @@ export default function SomethingSaveDialogActions(
       >
         <span>Discard</span>
       </Button>
-      <LoadingButton
+      <Button
         disabled={disableSave}
         loading={loadingSave}
         loadingPosition={"start"}
@@ -43,7 +42,7 @@ export default function SomethingSaveDialogActions(
         onClick={saveAction}
       >
         <span>Save</span>
-      </LoadingButton>
+      </Button>
     </DialogActions>
   );
 }

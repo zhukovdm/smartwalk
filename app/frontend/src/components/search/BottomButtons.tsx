@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import LoadingButton from "@mui/lab/LoadingButton";
 import SearchIcon from "@mui/icons-material/Search";
 import { useAppSelector } from "../../features/storeHooks";
 
@@ -33,7 +32,7 @@ export default function BottomButtons(
       >
         <span>Clear</span>
       </Button>
-      <LoadingButton
+      <Button
         loading={block}
         loadingPosition={"start"}
         size={"large"}
@@ -43,7 +42,7 @@ export default function BottomButtons(
         disabled={block || disabled}
       >
         <span>Search</span>
-      </LoadingButton>
+      </Button>
     </Box>
   );
 }

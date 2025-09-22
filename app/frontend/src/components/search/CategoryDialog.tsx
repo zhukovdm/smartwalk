@@ -97,7 +97,12 @@ export default function CategoryDialog(
     >
       <DialogTitle>{!!category ? "Modify" : "Add"} category</DialogTitle>
       <DialogContent
-        sx={{ display: "flex", flexDirection: "column", gap: 2, maxWidth: "470px" }}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 2,
+          maxWidth: "472px"
+        }}
       >
         <Typography>
           Enter a <Link href={"https://raw.githubusercontent.com/zhukovdm/smartwalk/main/data/assets/advice/keywords.txt"} title={"See examples of keywords at the link."}>keyword</Link> that places should associate with:
