@@ -20,7 +20,7 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
     /// <summary>
     /// Time span (in ms) dedicated to route calculation.
     /// </summary>
-    private static readonly int ROUTE_CALCULATION_TIME_LIMIT_MS = 1_000;
+    private static readonly int ROUTE_CALCULATION_TIME_LIMIT_MS = 64;
 
     private readonly IEntityIndex entityIndex;
 
@@ -78,8 +78,8 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
         } while (watch.ElapsedMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
 
-        result.Sort(RouteComparer.Instance);
-        return result;
+        // stable sort
+        return result.OrderBy((r) => r, RouteComparer.Instance).ToList();
     }
 
     /// <summary>
