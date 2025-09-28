@@ -71,7 +71,7 @@ export async function fetchAdviceKeywords(prefix: string): Promise<KeywordAdvice
  * Fetch place with links and attributes by smartId.
  */
 export async function fetchEntityPlaces(smartId: string): Promise<ExtendedPlace | undefined> {
-  return smartwalkFetch(`${SMARTWALK_ENTITY_PLACES_URL}/${smartId}`);
+  return smartwalkFetch(`${SMARTWALK_ENTITY_PLACES_URL}${smartId}`);
 }
 
 /**
@@ -134,7 +134,9 @@ export async function fetchSearchRoutes(request: RoutesRequest): Promise<UiRoute
   const jsn = await smartwalkFetch(SMARTWALK_SEARCH_ROUTES_URL + encodeURIComponent(JSON.stringify(qry)));
 
   return jsn.map((route: any) => {
-    route.path.distance /= 1000.0;
+    if (!!route.path) {
+      route.path.distance /= 1000.0;
+    }
     return { name: "", ...request, ...route };
   });
 }

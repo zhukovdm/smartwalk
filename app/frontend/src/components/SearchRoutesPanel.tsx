@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import type { Arrow } from "../domain/types";
 import { RESULT_ROUTES_ADDR } from "../utils/routing";
 import { fetchSearchRoutes } from "../utils/smartwalk";
+import { ensureRouteHasShortestPath } from "../utils/osrmProject";
 import { setBlock } from "../features/panelSlice";
 import {
   resetResultRoutes,
@@ -65,13 +66,21 @@ export default function SearchRoutesPanel(): JSX.Element {
   const searchAction = async () => {
     dispatch(setBlock(true));
     try {
+      const s = source!;
+      const t = target!;
+
       const routes = await fetchSearchRoutes({
-        source: source!,
-        target: target!,
+        source: s,
+        target: t,
         maxDistance: maxDistance,
         categories: categories.map((cat) => ({ keyword: cat.keyword, filters: cat.filters })),
         arrows
       });
+
+      if (routes.length > 0) {
+        routes[0] = await ensureRouteHasShortestPath(routes[0]);
+      }
+
       dispatch(resetResultRoutes());
       dispatch(setResultRoutes(routes));
       navigate(RESULT_ROUTES_ADDR);
@@ -94,14 +103,14 @@ export default function SearchRoutesPanel(): JSX.Element {
         gap={3}
         sx={{ mx: 2, my: 4 }}
       >
-        <Typography>Find routes between two points:</Typography>
+        <Typography>Find routes between two given points:</Typography>
         <SourceTargetBox
           map={map}
           source={source}
           target={target}
         />
         <Typography>
-          With walking distance of at most (in&nbsp;<KilometersLink />):
+          With walking distance of approximately (in&nbsp;<KilometersLink />):
         </Typography>
         <DistanceSlider
           max={15.0}

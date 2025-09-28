@@ -9,6 +9,8 @@ import { AppContext } from "../../App";
 import type { UiPlace } from "../../domain/types";
 import IdGenerator from "../../utils/idGenerator";
 import { SEARCH_DIRECS_ADDR } from "../../utils/routing";
+import { ensureRouteHasShortestPath } from "../../utils/osrmProject";
+import { setBlock } from "../../features/panelSlice";
 import {
   toggleResultRoutesFilter,
   setResultRoutesIndex,
@@ -40,8 +42,13 @@ export default function ResultRoutesContent(): JSX.Element {
 
   const { storage } = useContext(AppContext);
 
+  const {
+    block
+  } = useAppSelector((state) => state.panel);
+
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
   const {
     index,
     result,
@@ -101,8 +108,27 @@ export default function ResultRoutesContent(): JSX.Element {
     navigate(SEARCH_DIRECS_ADDR);
   };
 
-  const onPagination = (_: React.ChangeEvent<unknown>, value: number) => {
-    dispatch(setResultRoutesIndex(value - 1));
+  const onPagination = async (_: React.ChangeEvent<unknown>, value: number) => {
+    const i = value - 1;
+    const r = result[i];
+
+    if (!r.path) {
+      dispatch(setBlock(true));
+      try {
+        dispatch(updateResultRoute({
+          index: i,
+          route: await ensureRouteHasShortestPath(r)
+        }));
+        dispatch(setResultRoutesIndex(i));
+      }
+      catch (ex) { alert(ex); }
+      finally {
+        dispatch(setBlock(false));
+      }
+    }
+    else {
+      dispatch(setResultRoutesIndex(i));
+    }
   };
 
   return (
@@ -128,6 +154,7 @@ export default function ResultRoutesContent(): JSX.Element {
         </Stack>
       <Box display={"flex"} justifyContent={"center"}>
         <Pagination
+          disabled={block}
           page={index + 1}
           count={result.length}
           onChange={onPagination}
@@ -170,7 +197,10 @@ export default function ResultRoutesContent(): JSX.Element {
         onHide={() => { setShowM(false); }}
         onModify={onModify}
       />
-      <TraversalDistance distance={path.distance} />
+      <TraversalDistance
+        distance={path.distance}
+        exceedsMaxDistance={path.distance > maxDistance}
+      />
       <RouteContentList
         map={map}
         source={source}
