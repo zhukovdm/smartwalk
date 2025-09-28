@@ -65,7 +65,7 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
 
         var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
 
-        do
+        while (result.Count <= RouteMaximumCount)
         {
             var fullSeq = factory.GetSolver().Solve(solverPlaces);
 
@@ -83,7 +83,7 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
             result.Add(GetRoute(minDistance, path, places, trimmedSeq /* without st! */));
 
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
-        } while (result.Count <= RouteMaximumCount);
+        }
 
         result.Sort(RouteComparer.Instance);
         return result;
