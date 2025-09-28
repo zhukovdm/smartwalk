@@ -30,11 +30,6 @@ internal sealed class OsrmHttpClient
         return MakeHttpRequest<OsrmRouteResponse>(GetRouteUrl(waypoints));
     }
 
-    public Task<OsrmTableResponse> GetTableResponse(IEnumerable<WgsPoint> waypoints)
-    {
-        return MakeHttpRequest<OsrmTableResponse>(GetTableUrl(waypoints));
-    }
-
     /// <summary>
     /// <list type="bullet">
     /// <item>http://project-osrm.org/docs/v5.24.0/api/#route-service</item>
@@ -43,16 +38,6 @@ internal sealed class OsrmHttpClient
     private static string GetRouteUrl(IEnumerable<WgsPoint> waypoints)
     {
         return baseUrl + "/route/v1/foot/" + Chain(waypoints) + "?alternatives=true&geometries=geojson&skip_waypoints=true";
-    }
-
-    /// <summary>
-    /// <list type="bullet">
-    /// <item>http://project-osrm.org/docs/v5.24.0/api/#table-service</item>
-    /// </list>
-    /// </summary>
-    private static string GetTableUrl(IEnumerable<WgsPoint> waypoints)
-    {
-        return baseUrl + "/table/v1/foot/" + Chain(waypoints) + "?annotations=distance&skip_waypoints=true";
     }
 
     /// <summary>

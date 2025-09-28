@@ -79,9 +79,6 @@ public static class AppConfigurator
         Log.Information("{Phase}: IShortestPathFinder Transient", phase);
         builder.Services.AddTransient<IShortestPathFinder, DummyShortestPathFinder>();
 
-        // Log.Information("{Phase}: IDistanceFuncFinder Transient", phase);
-        // builder.Services.AddTransient<IDistanceFuncFinder, OsrmDistanceFuncFinder>();
-
         Log.Information("{Phase}: IGetAdviceKeywordsQueryHandler Transient", phase);
         builder.Services.AddTransient<IGetAdviceKeywordsQueryHandler, GetAdviceKeywordsQueryHandler>();
 
