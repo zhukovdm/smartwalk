@@ -49,15 +49,15 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
         var sourceCat = categories.Count + 0;
         var targetCat = categories.Count + 1;
 
-        var source = new Place() { location = query.source, categories = new() { sourceCat } };
-        var target = new Place() { location = query.target, categories = new() { targetCat } };
+        var source = new Place() { location = query.source, categories = [sourceCat] };
+        var target = new Place() { location = query.target, categories = [targetCat] };
 
         var ellipse = Spherical.BoundingEllipse(source.location, target.location, query.maxDistance);
 
         var places = new List<Place>()
             .Concat(await entityIndex.GetWithin(ellipse, categories))
-            .Concat(new[] { source })
-            .Concat(new[] { target })
+            .Concat([source])
+            .Concat([target])
             .ToList();
 
         var distFn = new HaversineDistanceFunc(places);
@@ -168,7 +168,7 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
                 name = place.name,
                 location = place.location,
                 keywords = place.keywords,
-                categories = new() { sp.cat } // add category!
+                categories = [sp.cat] // add category!
             });
             return acc;
         })

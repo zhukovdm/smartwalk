@@ -6,7 +6,7 @@ namespace SmartWalk.Application.Helpers;
 
 internal sealed class SolverPlaceComparer : IComparer<SolverPlace>
 {
-    public static SolverPlaceComparer Instance { get { return instance.Value; } }
+    public static SolverPlaceComparer Instance => instance.Value;
 
     public int Compare(SolverPlace l, SolverPlace r)
     {

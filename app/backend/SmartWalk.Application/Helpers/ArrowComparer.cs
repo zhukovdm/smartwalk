@@ -6,7 +6,7 @@ namespace SmartWalk.Application.Helpers;
 
 internal sealed class ArrowComparer : IComparer<Arrow>
 {
-    public static ArrowComparer Instance { get { return instance.Value; } }
+    public static ArrowComparer Instance => instance.Value;
 
     public int Compare(Arrow l, Arrow r)
     {

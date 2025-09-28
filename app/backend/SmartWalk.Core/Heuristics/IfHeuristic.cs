@@ -14,7 +14,7 @@ internal static class IfCategoryFormer
 
         private static readonly Lazy<CategoryComparer> instance = new (() => new ());
 
-        public static CategoryComparer Instance { get { return instance.Value; } }
+        public static CategoryComparer Instance => instance.Value;
 
         /// <summary>
         /// Categories with less items are more relevant (smaller).
@@ -42,7 +42,7 @@ internal static class IfCategoryFormer
                 return acc;
             });
 
-        return groups.Values.ToList();
+        return [.. groups.Values];
     }
 
     /// <summary>
