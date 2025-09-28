@@ -45,7 +45,7 @@ public class HaversineDistanceFuncTests
             smartId = handle,
             name = "Place",
             location = new (lon, lat),
-            keywords = new ()
+            keywords = []
         };
     }
 

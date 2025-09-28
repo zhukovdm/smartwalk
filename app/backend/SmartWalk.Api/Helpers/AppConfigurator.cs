@@ -11,7 +11,7 @@ using Serilog;
 using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Infrastructure.Mongo;
-using SmartWalk.Infrastructure.Osrm;
+using SmartWalk.Infrastructure.Dummy;
 
 namespace SmartWalk.Api.Helpers;
 
@@ -77,10 +77,7 @@ public static class AppConfigurator
         builder.Services.AddSingleton(MongoEntityIndex.GetInstance());
 
         Log.Information("{Phase}: IShortestPathFinder Transient", phase);
-        builder.Services.AddTransient<IShortestPathFinder, OsrmShortestPathFinder>();
-
-        // Log.Information("{Phase}: IDistanceFuncFinder Transient", phase);
-        // builder.Services.AddTransient<IDistanceFuncFinder, OsrmDistanceFuncFinder>();
+        builder.Services.AddTransient<IShortestPathFinder, DummyShortestPathFinder>();
 
         Log.Information("{Phase}: IGetAdviceKeywordsQueryHandler Transient", phase);
         builder.Services.AddTransient<IGetAdviceKeywordsQueryHandler, GetAdviceKeywordsQueryHandler>();

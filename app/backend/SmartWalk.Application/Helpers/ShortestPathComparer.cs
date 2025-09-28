@@ -6,7 +6,7 @@ namespace SmartWalk.Application.Helpers;
 
 internal sealed class ShortestPathComparer : IComparer<ShortestPath>
 {
-    public static ShortestPathComparer Instance { get { return instance.Value; } }
+    public static ShortestPathComparer Instance => instance.Value;
 
     public int Compare(ShortestPath l, ShortestPath r)
     {

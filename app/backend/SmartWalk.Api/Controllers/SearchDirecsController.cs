@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartWalk.Api.Helpers;
 using SmartWalk.Application.Entities;
+using SmartWalk.Application.Interfaces;
 using SmartWalk.Application.Parsers;
 using SmartWalk.Core.Entities;
 

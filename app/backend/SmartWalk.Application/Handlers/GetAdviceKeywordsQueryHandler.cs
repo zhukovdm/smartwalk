@@ -14,7 +14,10 @@ public sealed class GetAdviceKeywordsQueryHandler : IGetAdviceKeywordsQueryHandl
 {
     private readonly IKeywordAdvicer advicer;
 
-    public GetAdviceKeywordsQueryHandler(IKeywordAdvicer advicer) { this.advicer = advicer; }
+    public GetAdviceKeywordsQueryHandler(IKeywordAdvicer advicer)
+    {
+        this.advicer = advicer;
+    }
 
     /// <summary>
     /// Get a list of autocomplete items.

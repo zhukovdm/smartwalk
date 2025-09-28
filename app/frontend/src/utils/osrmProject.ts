@@ -1,5 +1,12 @@
 import axios from "axios";
-import { Path, UiDirec, UiPlace, WgsPoint } from "../domain/types";
+import {
+  Path,
+  Place,
+  UiDirec,
+  UiPlace,
+  UiRoute,
+  WgsPoint
+} from "../domain/types";
 
 function getQuery(waypoints: WgsPoint[]) {
   const chain = waypoints.map((w) => `${w.lon},${w.lat}`).join(";");
@@ -36,4 +43,25 @@ export async function fetchSearchDirecs(waypoints: UiPlace[]): Promise<UiDirec[]
       waypoints: waypoints
     }))
     .sort((l: UiDirec, r: UiDirec) => Math.sign(l.path.distance - r.path.distance));
+}
+
+export async function ensureRouteHasShortestPath(route: UiRoute): Promise<UiRoute> {
+  const {
+    source: s,
+    target: t,
+    waypoints
+  } = route;
+
+  let path = route.path;
+
+  if (!path) {
+    const ps = route.places
+      .reduce((acc, place) => acc.set(place.smartId, place), new Map<string, Place>());
+
+    path = (await fetchSearchDirecs([s, ...waypoints.map(w => ps.get(w.smartId)!), t]))
+      .sort((l, r) => Math.sign(l.path.distance - r.path.distance))[0]
+      .path;
+  }
+
+  return { ...route, path: path };
 }

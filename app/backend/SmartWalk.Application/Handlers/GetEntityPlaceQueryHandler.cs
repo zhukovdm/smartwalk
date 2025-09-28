@@ -13,7 +13,10 @@ public sealed class GetEntityPlaceQueryHandler : IGetEntityPlaceQueryHandler
 {
     private readonly IEntityStore store;
 
-    public GetEntityPlaceQueryHandler(IEntityStore store) { this.store = store; }
+    public GetEntityPlaceQueryHandler(IEntityStore store)
+    {
+        this.store = store;
+    }
 
     public Task<ExtendedPlace> Handle(GetEntityPlaceQuery query)
     {

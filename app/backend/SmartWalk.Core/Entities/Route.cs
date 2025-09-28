@@ -3,46 +3,16 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Core.Entities;
 
-public sealed class Arrow
-{
-    /// <summary>
-    /// Source category.
-    /// </summary>
-    [Required]
-    public int fr { get; }
-
-    /// <summary>
-    /// Target category.
-    /// </summary>
-    [Required]
-    public int to { get; }
-
-    public Arrow(int fr, int to)
-    {
-        this.fr = fr;
-        this.to = to;
-    }
-}
-
-public sealed class Waypoint
-{
-    /// <example>64c91f8359914b93b23b01d9</example>
-    [Required]
-    public string smartId { get; }
-
-    /// <example>0</example>
-    [Required]
-    public int category { get; }
-
-    public Waypoint(string smartId, int category)
-    {
-        this.smartId = smartId;
-        this.category = category;
-    }
-}
-
 public sealed class Route
 {
+    /// <summary>
+    /// Total crow-fly distance of visiting waypoints in the given order
+    /// in <b>meters</b> multiplied by average detour index.
+    /// </summary>
+    [Required]
+    [Range(0.0, double.MaxValue)]
+    public double avgDistance { get; init; }
+
     /// <summary>
     /// Ordered sequence of points representing connected linestring.
     /// </summary>
@@ -57,7 +27,7 @@ public sealed class Route
 
     /// <summary>
     /// Ordered sequence of visited waypoints, each represented by the
-    /// corresponding smartId.
+    /// corresponding smartId. Note that source and target are omitted.
     /// </summary>
     [Required]
     public List<Waypoint> waypoints { get; init; }

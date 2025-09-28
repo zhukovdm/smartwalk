@@ -36,6 +36,6 @@ public sealed class OsrmShortestPathFinder : IShortestPathFinder
                         .Select(p => new WgsPoint(p.Longitude, p.Latitude))
                         .ToList()
                 }).ToList()
-            : new();
+            : [];
     }
 }

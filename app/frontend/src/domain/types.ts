@@ -529,10 +529,13 @@ export type RoutesRequest = {
 
 type RouteAttributes = RoutesRequest & {
 
-  /** User-defined name */
+  /** User-defined name. */
   name: string;
 
-  /** Exact traversal */
+  /** Crow-fly distance times average detour index. */
+  avgDistance: number;
+
+  /** Exact traversal. */
   path: Path;
 
   /** Places lying on the path. */

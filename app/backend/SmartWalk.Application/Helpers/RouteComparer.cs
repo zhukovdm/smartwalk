@@ -6,11 +6,14 @@ namespace SmartWalk.Application.Helpers;
 
 internal sealed class RouteComparer : IComparer<Route>
 {
-    public static RouteComparer Instance { get { return instance.Value; } }
+    public static RouteComparer Instance => instance.Value;
 
     public int Compare(Route l, Route r)
     {
-        return ShortestPathComparer.Instance.Compare(l.path, r.path);
+        var ldist = l.path?.distance ?? l.avgDistance;
+        var rdist = r.path?.distance ?? r.avgDistance;
+
+        return ldist.CompareTo(rdist);
     }
 
     private RouteComparer() { }

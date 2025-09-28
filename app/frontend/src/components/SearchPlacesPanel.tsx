@@ -114,7 +114,7 @@ export default function SearchPlacesPanel(): JSX.Element {
           onUpdate={(category, i) => dispatch(updateSearchPlacesCategory({ category, i }))}
         />
         <BottomButtons
-          disabled={!center}
+          disabled={!center || !(categories.length > 0)}
           onClear={() => { dispatch(resetSearchPlaces()); }}
           onSearch={() => { searchAction(); }}
         />

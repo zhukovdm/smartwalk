@@ -16,8 +16,8 @@ public class ListExtensionsTests
             smartId = handle,
             name = "Place",
             location = new (0.0, 0.0),
-            keywords = new () { "a" },
-            categories = new () { i }
+            keywords = ["a"],
+            categories = [i]
         };
     }
 
@@ -63,7 +63,7 @@ public class ListExtensionsTests
             "A",
             "A"
         }
-        .Select((handle, i) => GetPlace(handle, i))
+        .Select(GetPlace)
         .ToList()
         .WithMergedCategories();
 
@@ -80,7 +80,7 @@ public class ListExtensionsTests
             "B",
             "C"
         }
-        .Select((handle, i) => GetPlace(handle, i))
+        .Select(GetPlace)
         .ToList()
         .WithMergedCategories();
 
