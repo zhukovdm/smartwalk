@@ -80,7 +80,12 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
 
             var path = await GetShortestPath(fullSeq /* with st! */, places);
 
-            result.Add(GetRoute(minDistance, path, places, trimmedSeq /* without st! */));
+            var route = GetRoute(minDistance, path, places, trimmedSeq /* without st! */);
+
+            if ((route.path?.distance ?? route.avgDistance) <= query.maxDistance)
+            {
+                result.Add(route);
+            }
 
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
         }
