@@ -6,7 +6,8 @@ import TraversalDistance, {
 } from "../TraversalDistance";
 
 const getDefault = (): TraversalDistanceProps => ({
-  distance: 1.234
+  distance: 1.234,
+  exceedsMaxDistance: false
 });
 
 function render(props = getDefault()) {
