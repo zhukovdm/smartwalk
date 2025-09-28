@@ -5,8 +5,10 @@ export default defineConfig(() => {
   return {
     base: "/",
     build: {
-      outDir: "build",
+      chunkSizeWarningLimit: 2500.0
     },
-    plugins: [react()],
+    plugins: [
+      react(),
+    ],
   };
 });
