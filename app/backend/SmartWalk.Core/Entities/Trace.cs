@@ -3,13 +3,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace SmartWalk.Core.Entities;
 
-public sealed class Route
+public sealed class Trace
 {
     /// <summary>
-    /// Ordered sequence of points representing connected linestring.
+    /// Crow-fly distance of the trace in <b>meters</b>.
     /// </summary>
     [Required]
-    public ShortestPath path { get; init; }
+    [Range(0.0, double.MaxValue)]
+    public double distance { get; init; }
 
     /// <summary>
     /// Unordered list of visited places.
