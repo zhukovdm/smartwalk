@@ -26,6 +26,7 @@ public sealed class ConstrainedSearchPlacesQuery
     /// Categories relevant for the user.
     /// </summary>
     [Required]
+    [MinLength(1)]
     public List<Category> categories { get; init; }
 }
 
