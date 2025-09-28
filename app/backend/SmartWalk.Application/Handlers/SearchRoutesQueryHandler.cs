@@ -18,9 +18,17 @@ namespace SmartWalk.Application.Handlers;
 public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
 {
     /// <summary>
-    /// Time span (in ms) dedicated to route calculation.
+    /// Maximum number of routes in a result to reduce performance footprint.
     /// </summary>
-    private static readonly int ROUTE_CALCULATION_TIME_LIMIT_MS = 64;
+    private const int RouteMaximumCount = 32;
+
+    /// <summary>
+    /// Network distance is approximately 1.4x larger than crow-fly distance.
+    /// <list type="bullet">
+    /// <item>https://doi.org/10.1080/00330124.2011.583586</item>
+    /// </list>
+    /// </summary>
+    private const double DetourIndex = 1.4;
 
     private readonly IEntityIndex entityIndex;
 
@@ -57,7 +65,6 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
 
         var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
 
-        var watch = Stopwatch.StartNew();
         do
         {
             var fullSeq = factory.GetSolver().Solve(solverPlaces);
@@ -68,18 +75,18 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
             // no candidates left
             if (trimmedSeq.Count < categories.Count) { break; }
 
-            var path = await GetShortestPath(fullSeq /* with st! */, places, query.maxDistance);
+            var minDistance = fullSeq.Zip(fullSeq.Skip(1))
+                .Aggregate(0.0, (acc, tup) => acc + distFn.GetDistance(tup.First.idx, tup.Second.idx));
 
-            if (path is not null)
-            {
-                result.Add(GetRoute(trimmedSeq /* without st! */, places, path));
-            }
+            var path = await GetShortestPath(fullSeq /* with st! */, places);
+
+            result.Add(GetRoute(minDistance, path, places, trimmedSeq /* without st! */));
 
             trimmedSeq.ForEach((p) => { _ = solverPlaces.Remove(p); });
-        } while (watch.ElapsedMilliseconds < ROUTE_CALCULATION_TIME_LIMIT_MS);
+        } while (result.Count <= RouteMaximumCount);
 
-        // stable sort
-        return result.OrderBy((r) => r, RouteComparer.Instance).ToList();
+        result.Sort(RouteComparer.Instance);
+        return result;
     }
 
     /// <summary>
@@ -128,12 +135,10 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
     /// </summary>
     /// <param name="fullSeq">Sequence of places with terminal points.</param>
     /// <param name="places">Places from the index.</param>
-    /// <param name="maxDistance">Maximum allowed distance of a route.</param>
     /// <returns>The shortest path or nothing.</returns>
-    private async Task<ShortestPath> GetShortestPath(IEnumerable<SolverPlace> fullSeq, List<Place> places, double maxDistance)
+    private async Task<ShortestPath> GetShortestPath(IEnumerable<SolverPlace> fullSeq, List<Place> places)
     {
         return (await shortestPathFinder.Search(fullSeq.Select((sp) => places[sp.idx].location).ToList()))
-            .Where((p) => p.distance <= maxDistance)
             .OrderBy(s => s, ShortestPathComparer.Instance)
             .FirstOrDefault();
     }
@@ -141,11 +146,12 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
     /// <summary>
     /// Construct a route out of a path and a sequence of places excluding source and target.
     /// </summary>
-    /// <param name="trimmedSeq">Route sequence excluding source and target locations.</param>
-    /// <param name="places">All places.</param>
+    /// <param name="minDistance">Minimum crow-fly distance.</param>
     /// <param name="path">Exact route traversal.</param>
+    /// <param name="places">All places.</param>
+    /// <param name="trimmedSeq">Route sequence excluding source and target locations.</param>
     /// <returns></returns>
-    private static Route GetRoute(List<SolverPlace> trimmedSeq, List<Place> places, ShortestPath path)
+    private static Route GetRoute(double minDistance, ShortestPath path, List<Place> places, List<SolverPlace> trimmedSeq)
     {
         var routePlaces = trimmedSeq.Aggregate(new List<Place>(), (acc, sp) =>
         {
@@ -169,6 +175,8 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
             return acc;
         });
 
-        return new() { path = path, places = routePlaces, waypoints = routeWaypoints };
+        return new() {
+            avgDistance = minDistance * DetourIndex, path = path, places = routePlaces, waypoints = routeWaypoints
+        };
     }
 }

@@ -19,7 +19,7 @@ public sealed class ConstrainedSearchPlacesQuery
     /// Radius around the center (in meters).
     /// </summary>
     [Required]
-    [Range(0, 15_000)]
+    [Range(0, 5_000)]
     public double? radius { get; init; }
 
     /// <summary>

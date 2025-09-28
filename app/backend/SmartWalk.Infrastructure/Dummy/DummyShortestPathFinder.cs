@@ -2,8 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SmartWalk.Core.Entities;
 using SmartWalk.Application.Interfaces;
-using System.Linq;
-using SmartWalk.Core.Algorithms;
+using System;
 
 namespace SmartWalk.Infrastructure.Dummy;
 
@@ -14,16 +13,12 @@ public sealed class DummyShortestPathFinder : IShortestPathFinder
     /// <summary>
     /// Find dummy shortest paths.
     /// </summary>
-    /// <param name="waypoints">List of WGS84 points</param>
-    /// <returns>A list with exactly one item</returns>
+    /// <param name="waypoints">List of WGS84 points.</param>
+    /// <returns>An empty list of shortest paths.</returns>
     public async Task<List<ShortestPath>> Search(IReadOnlyList<WgsPoint> waypoints)
     {
-        var distance = waypoints.Zip(waypoints.Skip(1))
-            .Aggregate(0.0, (acc, tup) => acc + Spherical.HaversineDistance(tup.First, tup.Second));
-
-        return await Task.FromResult<List<ShortestPath>>(new()
-        {
-            new() { distance = distance, duration = default, polyline = default }
-        });
+        return await Task.FromResult(instance.Value);
     }
+
+    private static readonly Lazy<List<ShortestPath>> instance = new(() => new());
 }

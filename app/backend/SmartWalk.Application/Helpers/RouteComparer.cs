@@ -10,7 +10,10 @@ internal sealed class RouteComparer : IComparer<Route>
 
     public int Compare(Route l, Route r)
     {
-        return ShortestPathComparer.Instance.Compare(l.path, r.path);
+        var ldist = l.path?.distance ?? l.avgDistance;
+        var rdist = r.path?.distance ?? r.avgDistance;
+
+        return ldist.CompareTo(rdist);
     }
 
     private RouteComparer() { }

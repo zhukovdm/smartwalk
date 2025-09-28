@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using SmartWalk.Application.Entities;
+using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
 

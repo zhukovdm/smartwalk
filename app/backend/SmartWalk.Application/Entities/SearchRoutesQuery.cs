@@ -24,7 +24,7 @@ public sealed class ConstrainedSearchRoutesQuery
     /// Maximum walking distance in <b>meters</b>.
     /// </summary>
     [Required]
-    [Range(0, 30_000)]
+    [Range(0, 15_000)]
     public double? maxDistance { get; init; }
 
     /// <summary>
