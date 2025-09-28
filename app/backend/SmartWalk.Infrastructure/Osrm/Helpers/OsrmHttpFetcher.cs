@@ -17,7 +17,7 @@ internal sealed class OsrmHttpClient
 
     static OsrmHttpClient()
     {
-        baseUrl = Environment.GetEnvironmentVariable("SMARTWALK_POSRM_BASE_URL");
+        baseUrl = Environment.GetEnvironmentVariable("SMARTWALK_OSRM_BASE_URL");
     }
 
     public OsrmHttpClient(IHttpClientFactory httpClientFactory)

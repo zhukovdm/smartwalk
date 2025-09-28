@@ -40,7 +40,7 @@ services:
     container_name: smartwalk-backend
     environment:
       - SMARTWALK_MONGO_CONN_STR=${SMARTWALK_MONGO_CONN_STR}
-      - SMARTWALK_POSRM_BASE_URL=${SMARTWALK_POSRM_BASE_URL}
+      - SMARTWALK_OSRM_BASE_URL=${SMARTWALK_OSRM_BASE_URL}
 #   ports:
 #     - '5017:8080'
     volumes:

@@ -218,6 +218,7 @@ export class LeafletMap implements IMap {
     this.mrkLayer = L.layerGroup();
 
     if (!!map) {
+      map.attributionControl.setPrefix("");
       this.shpLayer = this.shpLayer.addTo(map);
       this.mrkLayer = this.mrkLayer.addTo(map);
     }
