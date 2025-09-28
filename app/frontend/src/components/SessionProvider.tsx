@@ -142,6 +142,7 @@ export default function SessionProvider(): JSX.Element {
               onClose={closeMenuAction}
             >
               <MenuItem
+                disabled
                 onClick={() => { setSolidLoginDialog(true); closeMenuAction(); }}
               >
                 <ListItemIcon>
@@ -152,7 +153,7 @@ export default function SessionProvider(): JSX.Element {
                     />
                   </Icon>
                 </ListItemIcon>
-                <Typography>Solid</Typography>
+                <Typography>Solid (obsolete)</Typography>
               </MenuItem>
             </Menu>
           </Box>
