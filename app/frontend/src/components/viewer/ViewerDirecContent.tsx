@@ -41,6 +41,7 @@ export default function ViewerDirecContent(
       <TraversalHeader name={name} />
       <TraversalDistance
         distance={path.distance}
+        exceedsMaxDistance={false}
       />
       <TraversalWaypointList
         map={map}

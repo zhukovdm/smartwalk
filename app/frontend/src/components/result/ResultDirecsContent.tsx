@@ -104,7 +104,10 @@ export default function ResultDirecsContent(): JSX.Element {
         onHide={() => { setShowS(false); }}
         onSave={onSave}
       />
-      <TraversalDistance distance={path.distance} />
+      <TraversalDistance
+        distance={path.distance}
+        exceedsMaxDistance={false}
+      />
       <TraversalWaypointList
         map={map}
         waypoints={waypoints}
