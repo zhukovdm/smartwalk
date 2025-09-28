@@ -65,7 +65,7 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
 
         var factory = new SolverFactory(distFn, query.arrows, solverSource, solverTarget);
 
-        while (result.Count <= RouteMaximumCount)
+        while (result.Count < RouteMaximumCount)
         {
             var fullSeq = factory.GetSolver().Solve(solverPlaces);
 
