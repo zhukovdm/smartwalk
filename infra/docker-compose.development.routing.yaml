@@ -1,7 +1,7 @@
 name: smartwalk-routing
 services:
   routing:
-    image: smartwalk/routing:v1.0.0
+    image: smartwalk/routing:v1.2.0
     build:
       context: ./
       dockerfile: Dockerfile.routing
