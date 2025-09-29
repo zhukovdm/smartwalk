@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";
-const COLLECTION_NAME = "place";
+const COLLECTION_NAME = "places";
 
 export default class Target {
 

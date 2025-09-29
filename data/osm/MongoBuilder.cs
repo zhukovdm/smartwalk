@@ -6,7 +6,7 @@ internal static class MongoBuilder
 {
     private static readonly string databaseName = "smartwalk";
 
-    private static readonly string collectionName = "place";
+    private static readonly string collectionName = "places";
 
     internal static IMongoDatabase GetDatabase(string conn)
     {

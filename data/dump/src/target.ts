@@ -3,7 +3,7 @@ import Logger from "./logger.js";
 
 const ASSETS_DIR = "../assets";
 
-type FileName = "place" | "keyword";
+type FileName = "places" | "keywords";
 
 export default class Target {
 
@@ -28,12 +28,12 @@ export default class Target {
 
   constructor(logger: Logger) {
     this.logger = logger;
-    this.deleteFile("place");
-    this.deleteFile("keyword");
+    this.deleteFile("places");
+    this.deleteFile("keywords");
   }
 
   writePlace(obj: any) {
-    this.appendToFile("place", obj);
+    this.appendToFile("places", obj);
 
     if (++this.appendedPlacesCur >= 10000) {
 
@@ -48,7 +48,7 @@ export default class Target {
   }
 
   writeKeyword(obj: any) {
-    this.appendToFile("keyword", obj);
+    this.appendToFile("keywords", obj);
     ++this.appendedKeywordsTot;
   }
 

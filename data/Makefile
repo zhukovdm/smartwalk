@@ -180,7 +180,7 @@ dump:
 		--conn $(M_URL)
 
 check-restore-files:
-	@for file in keyword place ; do \
+	@for file in keywords places ; do \
 		[ -f $(A_DIR)/dump/$$file.txt ] || { echo "File $$file.txt has not been found..."; exit 1; } \
 	done
 
