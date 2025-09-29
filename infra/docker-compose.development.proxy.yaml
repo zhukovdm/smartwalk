@@ -1,0 +1,33 @@
+name: smartwalk
+services:
+  # to imitate backend availability
+  dummy:
+    image: alpine:3.22.1
+    container_name: smartwalk-backend
+    command: ["sh", "-c", "while true; do sleep 3600; done"]
+    networks:
+      - proxy-net
+  proxy:
+    image: smartwalk/proxy:1.2.0
+    build:
+      context: ../app/frontend/
+      args:
+        - VITE_SMARTWALK_API_ORIGIN=${VITE_SMARTWALK_API_ORIGIN}
+        - VITE_NOMINATIM_API_ORIGIN=${VITE_NOMINATIM_API_ORIGIN}
+        - VITE_PROJ_OSRM_API_ORIGIN=${VITE_PROJ_OSRM_API_ORIGIN}
+    pull_policy: never
+    container_name: smartwalk-proxy
+    ports:
+      - '3000:80'
+    networks:
+      - proxy-net
+    healthcheck:
+      test: curl --head --silent --fail http://localhost:80/ || exit 1
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 3m
+    depends_on:
+      - dummy
+networks:
+  proxy-net:

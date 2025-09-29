@@ -16,7 +16,7 @@ services:
       retries: 10
       start_period: 1m
   routing:
-    image: smartwalk/routing:v1.0.0
+    image: smartwalk/routing:v1.2.0
     build:
       context: ./
       dockerfile: Dockerfile.routing
@@ -35,7 +35,7 @@ services:
       retries: 10
       start_period: 2m
   backend:
-    image: smartwalk/backend:v1.0.0
+    image: smartwalk/backend:v1.2.0
     build: ../app/backend/
     container_name: smartwalk-backend
     environment:
@@ -61,7 +61,7 @@ services:
       retries: 10
       start_period: 2m
   proxy:
-    image: smartwalk/proxy:v1.0.0
+    image: smartwalk/proxy:v1.2.0
     build:
       context: ../app/frontend/
       args:
