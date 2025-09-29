@@ -16,6 +16,8 @@
     "typescript": "^5.2.2",
     "winston": "^3.10.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "@types/node": "^24.6.0"
+  },
   "keywords": []
 }
