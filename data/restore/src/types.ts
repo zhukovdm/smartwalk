@@ -1,1 +1,1 @@
-type ObjectKind = "place" | "keyword";
+type ObjectKind = "places" | "keywords";

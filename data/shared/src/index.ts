@@ -249,7 +249,7 @@ export abstract class EnrichTarget<T> {
 
   constructor(conn: string) {
     this.client = new MongoClient(conn);
-    this.collection = this.client.db("smartwalk").collection("place");
+    this.collection = this.client.db("smartwalk").collection("places");
   }
 
   abstract load(items: T[]): Promise<void>;

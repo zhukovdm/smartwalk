@@ -7,7 +7,7 @@ import {
 } from "mongodb";
 
 const DATABASE_NAME = "smartwalk";
-const PLACE_COLLECTION = "place";
+const PLACES_COLLECTION = "places";
 
 class SourceIterator implements AsyncIterator<Place> {
 
@@ -35,7 +35,7 @@ export default class Source {
 
   constructor(conn: string) {
     this.client = new MongoClient(conn);
-    this.placeColl = this.client.db(DATABASE_NAME).collection(PLACE_COLLECTION);
+    this.placeColl = this.client.db(DATABASE_NAME).collection(PLACES_COLLECTION);
   }
 
   [Symbol.asyncIterator](): AsyncIterator<Place> {

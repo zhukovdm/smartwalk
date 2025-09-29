@@ -34,7 +34,7 @@ export default class Target {
 
   async createPlace(object: any): Promise<void> {
     if (this.objects.push(object) >= 1000) {
-      await this.write("place");
+      await this.write("places");
     }
 
     if (++this.placesCur >= 10000) {
@@ -46,21 +46,21 @@ export default class Target {
 
   async flushRemainingPlaces(): Promise<void> {
     if (this.objects.length > 0) {
-      await this.write("place");
+      await this.write("places");
     }
     this.logger.logPlacesTot(this.placesTot + this.placesCur);
   }
 
   async createKeyword(object: any): Promise<void> {
     if (this.objects.push(object) >= 1000) {
-      await this.write("keyword");
+      await this.write("keywords");
     }
     ++this.keywordsTot;
   }
 
   async flushRemainingKeywords(): Promise<void> {
     if (this.objects.length > 0) {
-      await this.write("keyword");
+      await this.write("keywords");
     }
     this.logger.logKeywordsTot(this.keywordsTot);
   }

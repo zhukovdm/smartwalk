@@ -6,7 +6,7 @@ import {
 import Logger from "./logger.js";
 
 const DATABASE_NAME = "smartwalk";
-const KEYWD_COLLECTION = "keyword";
+const KEYWORDS_COLLECTION = "keywords";
 
 const set2arr = (set: Set<string> | undefined) => (set ? Array.from(set).sort() : undefined);
 
@@ -23,7 +23,7 @@ export default class Target {
     this.logger = logger;
     this.client = new MongoClient(conn);
     this.database = this.client.db(DATABASE_NAME);
-    this.keywdColl = this.database.collection(KEYWD_COLLECTION);
+    this.keywdColl = this.database.collection(KEYWORDS_COLLECTION);
   }
 
   /**
@@ -31,8 +31,8 @@ export default class Target {
    */
   async init(): Promise<void> {
     try {
-      await this.database.dropCollection(KEYWD_COLLECTION);
-      this.logger.logCollectionDropped(KEYWD_COLLECTION);
+      await this.database.dropCollection(KEYWORDS_COLLECTION);
+      this.logger.logCollectionDropped(KEYWORDS_COLLECTION);
     } catch (ex) { this.logger.logError(ex); }
   }
 

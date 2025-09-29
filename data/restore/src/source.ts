@@ -14,6 +14,6 @@ function getLines(objectKind: ObjectKind) {
   });
 }
 
-export const getKeywordLines = () => (getLines("keyword"));
+export const getKeywordLines = () => (getLines("keywords"));
 
-export const getPlaceLines = () => (getLines("place"));
+export const getPlaceLines = () => (getLines("places"));

@@ -8,8 +8,8 @@ import {
 
 const DATABASE_NAME = "smartwalk";
 
-const PLACE_COLLECTION = "place";
-const KEYWORD_COLLECTION = "keyword";
+const PLACES_COLLECTION = "places";
+const KEYWORDS_COLLECTION = "keywords";
 
 class SourceIterator implements AsyncIterator<any> {
 
@@ -37,7 +37,7 @@ export class PlaceSource implements AsyncIterable<any> {
 
   constructor(conn: string) {
     this.client = new MongoClient(conn);
-    this.placeColl = this.client.db(DATABASE_NAME).collection(PLACE_COLLECTION);
+    this.placeColl = this.client.db(DATABASE_NAME).collection(PLACES_COLLECTION);
   }
 
   [Symbol.asyncIterator](): AsyncIterator<any> {
@@ -54,7 +54,7 @@ export class KeywordSource implements AsyncIterable<any> {
 
   constructor(conn: string) {
     this.client = new MongoClient(conn);
-    this.keywordColl = this.client.db(DATABASE_NAME).collection(KEYWORD_COLLECTION);
+    this.keywordColl = this.client.db(DATABASE_NAME).collection(KEYWORDS_COLLECTION);
   }
 
   [Symbol.asyncIterator](): AsyncIterator<any> {

@@ -18,11 +18,11 @@ internal static class MongoCollectionFactory
 
     public static IMongoCollection<Item> GetKeywordCollection()
     {
-        return db.GetCollection<Item>("keyword");
+        return db.GetCollection<Item>("keywords");
     }
 
     public static IMongoCollection<ExtendedPlace> GetPlaceCollection()
     {
-        return db.GetCollection<ExtendedPlace>("place");
+        return db.GetCollection<ExtendedPlace>("places");
     }
 }
