@@ -2,13 +2,15 @@ import axios from "axios";
 import { UiPlace } from "../domain/types";
 import IdGenerator from "./idGenerator";
 
+const NOMINATIM_API_BASE_URL = import.meta.env.VITE_NOMINATIM_API_ORIGIN;
+
 /**
  * Maximum number of entities fetched from the service.
  */
 const NOMINATIM_LIMIT: number = 5;
 
 function getQuery(input: string): string {
-  return `https://nominatim.openstreetmap.org/search?q=${input}&polygon_geojson=1&format=jsonv2&limit=${NOMINATIM_LIMIT}`;
+  return `${NOMINATIM_API_BASE_URL}/search?q=${input}&polygon_geojson=1&format=jsonv2&limit=${NOMINATIM_LIMIT}`;
 }
 
 async function nominatimFetch(url: string): Promise<any> {

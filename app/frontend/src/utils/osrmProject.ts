@@ -8,9 +8,11 @@ import {
   WgsPoint
 } from "../domain/types";
 
+const PROJ_OSRM_API_BASE_URL = import.meta.env.VITE_PROJ_OSRM_API_ORIGIN;
+
 function getQuery(waypoints: WgsPoint[]) {
   const chain = waypoints.map((w) => `${w.lon},${w.lat}`).join(";");
-  return `https://routing.openstreetmap.de/routed-foot/route/v1/foot/${chain}?alternatives=true&geometries=geojson&skip_waypoints=true`;
+  return `${PROJ_OSRM_API_BASE_URL}/routed-foot/route/v1/foot/${chain}?alternatives=true&geometries=geojson&skip_waypoints=true`;
 }
 
 async function osrmFetch(url: string): Promise<any> {

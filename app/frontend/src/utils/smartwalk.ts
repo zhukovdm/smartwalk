@@ -12,24 +12,24 @@ import {
   WgsPoint
 } from "../domain/types";
 
-const SMARTWALK_API_BASE_URL = import.meta.env.VITE_SMARTWALK_API_ORIGIN + "api/";
+const SMARTWALK_API_BASE_URL = import.meta.env.VITE_SMARTWALK_API_ORIGIN + "/api";
 
 // advice service
 
-const SMARTWALK_ADVICE_URL = SMARTWALK_API_BASE_URL + "advice/";
-const SMARTWALK_ADVICE_KEYWORDS_URL = SMARTWALK_ADVICE_URL + "keywords?";
+const SMARTWALK_ADVICE_URL = SMARTWALK_API_BASE_URL + "/advice";
+const SMARTWALK_ADVICE_KEYWORDS_URL = SMARTWALK_ADVICE_URL + "/keywords?";
 
 // entity service
 
-const SMARTWALK_ENTITY_URL = SMARTWALK_API_BASE_URL + "entity/";
-const SMARTWALK_ENTITY_PLACES_URL = SMARTWALK_ENTITY_URL + "places/";
+const SMARTWALK_ENTITY_URL = SMARTWALK_API_BASE_URL + "/entity";
+const SMARTWALK_ENTITY_PLACES_URL = SMARTWALK_ENTITY_URL + "/places";
 
 // search service
 
-const SMARTWALK_SEARCH_URL = SMARTWALK_API_BASE_URL + "search/";
-const SMARTWALK_SEARCH_DIRECS_URL = SMARTWALK_SEARCH_URL + "direcs?query=";
-const SMARTWALK_SEARCH_PLACES_URL = SMARTWALK_SEARCH_URL + "places?query=";
-const SMARTWALK_SEARCH_ROUTES_URL = SMARTWALK_SEARCH_URL + "routes?query=";
+const SMARTWALK_SEARCH_URL = SMARTWALK_API_BASE_URL + "/search";
+const SMARTWALK_SEARCH_DIRECS_URL = SMARTWALK_SEARCH_URL + "/direcs?query=";
+const SMARTWALK_SEARCH_PLACES_URL = SMARTWALK_SEARCH_URL + "/places?query=";
+const SMARTWALK_SEARCH_ROUTES_URL = SMARTWALK_SEARCH_URL + "/routes?query=";
 
 /**
  * Standard `GET` from an application server. Note that only JSON content
@@ -71,7 +71,7 @@ export async function fetchAdviceKeywords(prefix: string): Promise<KeywordAdvice
  * Fetch place with links and attributes by smartId.
  */
 export async function fetchEntityPlaces(smartId: string): Promise<ExtendedPlace | undefined> {
-  return smartwalkFetch(`${SMARTWALK_ENTITY_PLACES_URL}${smartId}`);
+  return smartwalkFetch(`${SMARTWALK_ENTITY_PLACES_URL}/${smartId}`);
 }
 
 /**
