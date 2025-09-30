@@ -37,6 +37,7 @@ jobs:
         with:
           name: webapp
           path: ./app/backend/SmartWalk.Api/publish
+          if-no-files-found: error
 
   deploy:
     runs-on: ubuntu-latest
