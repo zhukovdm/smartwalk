@@ -347,7 +347,7 @@ public class PlacesQueryValidationTests
             ""radius"": 3000,
             ""categories"": []
         }";
-        Assert.IsTrue(SerializationValidator<ConstrainedSearchPlacesQuery>.Validate(serialization, out var _));
+        Assert.IsFalse(SerializationValidator<ConstrainedSearchPlacesQuery>.Validate(serialization, out var _));
     }
 
     [TestMethod]
