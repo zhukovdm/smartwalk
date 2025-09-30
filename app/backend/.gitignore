@@ -1,4 +1,5 @@
 bin/
 docs/
 obj/
+publish/
 TestResults/
