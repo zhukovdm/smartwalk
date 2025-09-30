@@ -19,16 +19,16 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.x
-    
+
       - name: Clean
         run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
-    
+
       - name: Install dependencies
         run: dotnet restore
-    
+
       - name: Build
         run: dotnet build --configuration Release --no-restore -warnaserror
-    
+
       - name: Publish
         run: dotnet publish ./SmartWalk.Api/ --configuration Release --no-restore --no-build --property:PublishDir=../publish
 

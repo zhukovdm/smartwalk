@@ -4,7 +4,7 @@ on:
     branches:
       - main
 jobs:
-  artifacts:
+  tests:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -19,21 +19,21 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.x
-    
+
       - name: Clean
         run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
-    
+
       - name: Install dependencies
         run: dotnet restore
-    
+
       - name: Build
         run: dotnet build --configuration Release --no-restore -warnaserror
-    
+
       - name: Run tests
         run: dotnet test --configuration Release --no-restore --no-build || true
 
       - name: Publish
-        run: dotnet publish ./SmartWalk.Api/ --configuration Release --no-restore --no-build --property:PublishDir=./publish
+        run: dotnet publish ./SmartWalk.Api/ --configuration Release --no-restore --no-build --property:PublishDir=../publish
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
