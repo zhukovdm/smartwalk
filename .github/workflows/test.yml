@@ -31,12 +31,3 @@ jobs:
 
       - name: Run tests
         run: dotnet test --configuration Release --no-restore --no-build || true
-
-      - name: Publish
-        run: dotnet publish ./SmartWalk.Api/ --configuration Release --no-restore --no-build --property:PublishDir=../publish
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: webapp
-          path: ./app/backend/publish
