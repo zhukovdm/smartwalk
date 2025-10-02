@@ -12,7 +12,7 @@ internal static class MongoCollectionFactory
 
     static MongoCollectionFactory()
     {
-        var url = new MongoUrl(Environment.GetEnvironmentVariable("SMARTWALK_MONGO_CONN_STR"));
+        var url = new MongoUrl(Environment.GetEnvironmentVariable("SMARTWALK_MONGO_CON_STR"));
         db = new MongoClient(url).GetDatabase("smartwalk");
     }
 

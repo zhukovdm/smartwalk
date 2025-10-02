@@ -39,7 +39,7 @@ services:
     build: ../app/backend/
     container_name: smartwalk-backend
     environment:
-      - SMARTWALK_MONGO_CONN_STR=${SMARTWALK_MONGO_CONN_STR}
+      - SMARTWALK_MONGO_CON_STR=${SMARTWALK_MONGO_CON_STR}
       - SMARTWALK_OSRM_BASE_URL=${SMARTWALK_OSRM_BASE_URL}
 #   ports:
 #     - '5017:8080'
