@@ -23,8 +23,8 @@ internal class FakeEntityIndex : IEntityIndex
                 smartId = ObjectId.GenerateNewId().ToString(),
                 name = $"Place {i}",
                 location = new(rnd.NextDouble(), rnd.NextDouble()),
-                keywords = new(categories),
-                categories = new(Enumerable.Range(0, categories.Count).ToList())
+                keywords = [.. categories],
+                categories = [.. Enumerable.Range(0, categories.Count)]
             });
         }
     }

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SmartWalk.Application.Interfaces;
+using SmartWalk.Core.Interfaces;
 
 namespace SmartWalk.Api.Helpers;
 

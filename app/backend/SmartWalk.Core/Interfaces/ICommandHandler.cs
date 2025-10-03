@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace SmartWalk.Application.Interfaces;
+namespace SmartWalk.Core.Interfaces;
 
 /// <summary>
 /// Command handler with side effects.

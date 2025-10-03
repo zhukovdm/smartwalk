@@ -20,5 +20,5 @@ public sealed class DummyShortestPathFinder : IShortestPathFinder
         return await Task.FromResult(instance.Value);
     }
 
-    private static readonly Lazy<List<ShortestPath>> instance = new(() => new());
+    private static readonly Lazy<List<ShortestPath>> instance = new(() => []);
 }
