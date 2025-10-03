@@ -153,7 +153,7 @@ export default function SessionProvider(): JSX.Element {
                     />
                   </Icon>
                 </ListItemIcon>
-                <Typography>Solid (obsolete)</Typography>
+                <Typography>Solid</Typography>
               </MenuItem>
             </Menu>
           </Box>
