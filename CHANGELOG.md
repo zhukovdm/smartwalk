@@ -1,7 +1,5 @@
 # Changelog
 
-**A.B.C** schema, where **A** stands for major version, **B** for minor version and **C** for patch version.
+The description and content of each app version can be found in the [**Releases**](https://github.com/zhukovdm/smartwalk/releases) section.
 
-## Version 1.0.0
-
-- Alpha version.
+We use **vA.B.C** version schema, where **A** stands for major version, **B** for minor version and **C** for patch version.
