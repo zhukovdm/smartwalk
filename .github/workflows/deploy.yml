@@ -1,58 +1,58 @@
-name: deploy
-on:
-  push:
-    branches:
-      - main
+# name: deploy
+# on:
+#   push:
+#     branches:
+#       - main
 
-jobs:
-  artifacts:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./app/backend
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          submodules: recursive
+# jobs:
+#   artifacts:
+#     runs-on: ubuntu-latest
+#     defaults:
+#       run:
+#         working-directory: ./app/backend
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v4
+#         with:
+#           submodules: recursive
 
-      - name: Setting up .NET 8
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: 8.x
+#       - name: Setting up .NET 8
+#         uses: actions/setup-dotnet@v4
+#         with:
+#           dotnet-version: 8.x
 
-      - name: Clean
-        run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
+#       - name: Clean
+#         run: dotnet clean ./backend.sln && dotnet nuget locals all --clear
 
-      - name: Install dependencies
-        run: dotnet restore
+#       - name: Install dependencies
+#         run: dotnet restore
 
-      - name: Build
-        run: dotnet build --configuration Release --no-restore -warnaserror
+#       - name: Build
+#         run: dotnet build --configuration Release --no-restore -warnaserror
 
-      - name: Publish
-        run: dotnet publish ./SmartWalk.Api/ --configuration Release --no-restore --no-build --property:PublishDir=./publish
+#       - name: Publish
+#         run: dotnet publish ./SmartWalk.Api/ --configuration Release --no-restore --no-build --property:PublishDir=./publish
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: webapp
-          path: ./app/backend/SmartWalk.Api/publish
-          if-no-files-found: error
+#       - name: Upload artifacts
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: webapp
+#           path: ./app/backend/SmartWalk.Api/publish
+#           if-no-files-found: error
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: [artifacts]
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: webapp
-          path: ./
+#   deploy:
+#     runs-on: ubuntu-latest
+#     needs: [artifacts]
+#     steps:
+#       - name: Download artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: webapp
+#           path: ./
 
-      - name: Deploy to Azure
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: smartwalk
-          publish-profile: ${{ secrets.AZURE_SMARTWALK_PUBLISH_PROFILE }}
-          package: ./
+#       - name: Deploy to Azure
+#         uses: azure/webapps-deploy@v2
+#         with:
+#           app-name: smartwalk
+#           publish-profile: ${{ secrets.AZURE_SMARTWALK_PUBLISH_PROFILE }}
+#           package: ./
