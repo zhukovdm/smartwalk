@@ -1,8 +1,6 @@
 # SmartWalk
 
-This repository contains the source code for [**SmartWalk**](https://www.github.com/zhukovdm/smartwalk), a web application for keyword-aware route search.
-
-Try it out yourself [**HERE**](https://smartwalk.vercel.app/). Since the app is deployed on a free tier, the data extract includes only Prague in the Czech Republic. You can find the details about user experience, developer guide, and instructions on how to deploy your own instance in the [**Documentation**](https://zhukovdm.github.io/smartwalk-docs/).
+This repository contains the source code for [**SmartWalk**](https://www.github.com/zhukovdm/smartwalk), a web application for keyword-aware route search. You can find the details about user experience, developer guide, and instructions on how to deploy your own instance in the [**Documentation**](https://zhukovdm.github.io/smartwalk-docs/).
 
 ## Motivation
 
