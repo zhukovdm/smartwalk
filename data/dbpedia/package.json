@@ -12,11 +12,12 @@
   "author": "Dmitry Zhukov",
   "dependencies": {
     "@types/jsonld": "^1.5.9",
-    "axios": "^1.12.2",
+    "axios": "^1.17.0",
     "commander": "^11.0.0",
-    "jsonld": "^8.3.1",
+    "jsonld": "^9.0.0",
     "mongodb": "^6.0.0",
     "typescript": "^5.2.2",
+    "undici": "^6.24.0",
     "winston": "^3.10.0"
   },
   "keywords": []

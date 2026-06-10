@@ -48,7 +48,8 @@
     "uuid": "^9.0.0",
     "vis-network": "^9.1.6",
     "vite": "^7.3.2",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yaml": "^2.9.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.11",
