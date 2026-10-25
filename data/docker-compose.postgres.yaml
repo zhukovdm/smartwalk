@@ -1,0 +1,36 @@
+name: smartwalk-database
+services:
+  database:
+    image: postgres:18.6-trixie
+    container_name: smartwalk-database
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: smartwalk
+    volumes:
+      - ./assets/database:/var/lib/postgresql
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - psql --host=localhost --username="$${POSTGRES_USER}" --dbname="$${POSTGRES_DB}" --tuples-only --no-align --command='SELECT 1'
+      interval: 15s
+      timeout: 15s
+      retries: 10
+      start_period: 1m
+
+  migration:
+    image: flyway/flyway:13.11.1
+    depends_on:
+      database:
+        condition: service_healthy
+    environment:
+      FLYWAY_URL: jdbc:postgresql://database:5432/smartwalk
+      FLYWAY_USER: user
+      FLYWAY_PASSWORD: password
+      FLYWAY_DEFAULT_SCHEMA: public
+    volumes:
+      - ./migrations/postgres:/flyway/sql:ro
+    command: migrate
+    restart: "no"
