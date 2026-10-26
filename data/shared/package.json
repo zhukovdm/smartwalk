@@ -7,10 +7,10 @@
   "license": "MIT",
   "author": "Dmitry Zhukov",
   "dependencies": {
-    "commander": "^11.0.0",
-    "mongodb": "^6.0.0",
-    "typescript": "^5.2.2",
-    "winston": "^3.10.0"
+    "commander": "15.0.0",
+    "mongodb": "7.7.0",
+    "typescript": "7.0.2",
+    "winston": "3.19.0"
   },
   "devDependencies": {},
   "keywords": []

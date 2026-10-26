@@ -1,4 +1,4 @@
-import { ValueItem } from "./types";
+import { ValueItem } from "./types.js";
 
 /** Extracted value should occur at least `COUNT_LIMIT` times. */
 const COUNT_LIMIT = 50;
