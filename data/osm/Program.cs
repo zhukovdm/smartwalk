@@ -35,17 +35,20 @@ internal class Program
 
         var opt = new Parser().ParseArguments<Options>(args).Value;
 
-        log.LogInformation("File {0} is being processed...", opt.File);
+        if (log.IsEnabled(LogLevel.Information))
+        {
+            log.LogInformation("File {FileName} is being processed...", opt.File);
+        }
 
         try
         {
             var locator = await OverpassElementLocatorFactory
-                .GetInstance(log, opt.Bbox.ToList(), opt.Rows, opt.Cols);
+                .GetInstance(log, [..opt.Bbox], opt.Rows, opt.Cols);
 
             var transformer = new Transformer(locator);
 
             var source = SourceFactory
-                .GetInstance(log, opt.File, opt.Bbox.ToList());
+                .GetInstance(log, opt.File, [..opt.Bbox]);
 
             var target = TargetFactory.GetInstance(log, opt.Conn);
 
@@ -59,6 +62,6 @@ internal class Program
             }
             target.Complete();
         }
-        catch (Exception ex) { log.LogError(ex.Message); }
+        catch (Exception ex) { log.LogError("{Message}", ex.Message); }
     }
 }

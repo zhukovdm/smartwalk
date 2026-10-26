@@ -20,6 +20,7 @@ internal class NameExtractor
 
         if (place.name is null)
         {
+            // if missing, define name as a random keyword
             var keyword = place.keywords.ToList()[new Random().Next(place.keywords.Count)];
             place.name = string.Concat(char.ToUpper(keyword[0]).ToString(), keyword.AsSpan(1));
         }

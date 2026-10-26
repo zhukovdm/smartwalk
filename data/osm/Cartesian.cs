@@ -5,14 +5,13 @@ namespace osm;
 internal static class Cartesian
 {
     /// <summary>
-    /// Calcuate signed area of a closed polygon in the Euclidean space.
-    /// Positive area means that points are ordered counter-clockwise,
-    /// negative otherwise.
+    /// Calculate signed area of a closed polygon in the Euclidean space.
+    /// Positive area means that points are ordered counter-clockwise, and negative otherwise.
     /// <list>
     /// <item>http://paulbourke.net/geometry/polygonmesh/</item>
     /// </list>
     /// </summary>
-    /// <param name="polygon">Closed polygon (the first and last points must be identical).</param>
+    /// <param name="polygon">Closed polygon (first and last points must be identical!).</param>
     private static double SignedArea(List<Point> polygon)
     {
         double ar = 0.0;
@@ -39,7 +38,7 @@ internal static class Cartesian
     /// <item>http://paulbourke.net/geometry/polygonmesh/</item>
     /// </list>
     /// </summary>
-    /// <param name="polygon">Closed polygon (first and last points are identical!).</param>
+    /// <param name="polygon">Closed polygon (first and last points must be identical!).</param>
     public static Point Centroid(List<Point> polygon)
     {
         double ar = 0.0, cx = 0.0, cy = 0.0;

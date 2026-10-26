@@ -16,12 +16,11 @@ internal static class KeywordExtractor
 
     private static readonly SortedSet<string> wi;
     private static readonly SortedSet<string> wo;
-    private static readonly Dictionary<string, SortedSet<string>> ts = new();
+    private static readonly Dictionary<string, SortedSet<string>> ts = [];
 
     static KeywordExtractor()
     {
-        wi = new()
-        {
+        wi = [
             "aerialway",
             "aeroway",
             "attraction",
@@ -31,10 +30,9 @@ internal static class KeywordExtractor
             "healthcare",
             "historic",
             "tourism"
-        };
+        ];
 
-        wo = new()
-        {
+        wo = [
             "amenity",
             "artwork_type",
             "building",
@@ -50,14 +48,14 @@ internal static class KeywordExtractor
             "shop",
             "sport",
             "theatre:genre"
-        };
+        ];
 
         var union = wi.Union(wo);
 
         foreach (var key in union)
         {
             var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(key));
-            ts.Add(key, new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)));
+            ts.Add(key, [..JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)]);
         }
     }
 
@@ -73,7 +71,7 @@ internal static class KeywordExtractor
 
             var vs = val.Split(';', StringSplitOptions.RemoveEmptyEntries)
                 .Select(v => v.Trim())
-                .Select(v => Converter.SnakeToKeyword(v));
+                .Select(Converter.SnakeToKeyword);
 
             foreach (var v in vs)
             {

@@ -4,7 +4,7 @@ using OsmSharp;
 
 namespace osm;
 
-internal class Transformer
+internal class Transformer(ElementLocator locator)
 {
     /// <summary>
     /// Round coordinate to the allowed number of fractional digits.
@@ -14,13 +14,8 @@ internal class Transformer
         return Math.Round(coordinate, 7);
     }
 
-    private readonly Dictionary<long, Point> nodes = new();
-    private readonly ElementLocator locator;
-
-    public Transformer(ElementLocator locator)
-    {
-        this.locator = locator;
-    }
+    private readonly Dictionary<long, Point> nodes = [];
+    private readonly ElementLocator locator = locator;
 
     private Place Transform(Node node)
     {
@@ -69,7 +64,7 @@ internal class Transformer
 
     private bool TryGetSequence(Way way, out List<Point> sequence)
     {
-        sequence = new();
+        sequence = [];
 
         foreach (var id in way.Nodes)
         {

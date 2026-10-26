@@ -32,7 +32,10 @@ internal class Source : IEnumerable<OsmGeo>
 
             if (step % 10_000_000 == 0)
             {
-                logger.LogInformation("Still working... {0} objects already processed.", step);
+                if (logger.IsEnabled(LogLevel.Information))
+                {
+                    logger.LogInformation("Still working... {step} objects already processed.", step);
+                }
             }
 
             yield return element;

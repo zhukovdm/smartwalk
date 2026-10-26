@@ -6,9 +6,10 @@ namespace osm;
 
 internal static class Reporter
 {
+    private static readonly JsonSerializerOptions opts = new() { WriteIndented = true };
+
     private static string Serialize<T>(T entity)
     {
-        var opts = new JsonSerializerOptions() { WriteIndented = true };
         return JsonSerializer.Serialize<T>(entity, opts);
     }
 

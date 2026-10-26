@@ -17,12 +17,20 @@ internal class ElementLocator
     public ElementLocator(ILogger logger, Dictionary<long, Point> locs)
     {
         this.locs = locs;
-        logger.LogInformation("Created element locator with {0} OSM elements.", locs.Count);
+
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Created element locator with {Count} OSM elements.", locs.Count);
+        }
     }
 
     public bool TryGetLocation(long id, out Point location) => locs.TryGetValue(id, out location);
 }
 
+/// <summary>
+/// Class specific for `relation` object location that are otherwise hard to
+/// deduce directly from the dataset due to memory overconsumption.
+/// </summary>
 internal static class OverpassElementLocatorFactory
 {
     private class Item
@@ -48,7 +56,11 @@ internal static class OverpassElementLocatorFactory
         var (w, n, e, s) = bbox;
         var url = $"https://overpass-api.de/api/interpreter?data=[out:json];relation({s},{w},{n},{e})[type=multipolygon];out%20center;";
 
-        logger.LogInformation("Contacting Overpass API endpoint for square w={0}, n={1}, e={2} s={3}.", w, n, e, s);
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Contacting Overpass API endpoint for square w={w}, n={n}, e={e} s={s}.", w, n, e, s);
+        }
+
         do
         {
             ++attempt;
@@ -58,13 +70,17 @@ internal static class OverpassElementLocatorFactory
                 result = JsonSerializer.Deserialize<Response>(txt).elements;
             }
             catch (Exception) {
-                logger.LogWarning("Failed to fetch, {0} attempt.", attempt);
+                logger.LogWarning("Failed to fetch, {attempt} attempt.", attempt);
                 Thread.Sleep(10_000);
             }
         } while (result == null && attempt < 3);
 
-        result ??= new();
-        logger.LogInformation("Fetched {0} entities.", result.Count);
+        result ??= [];
+
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Fetched {Count} entities.", result.Count);
+        }
 
         return result;
     }
@@ -171,7 +187,11 @@ SELECT ?oid ?loc WHERE {{
         var txt = await res.Content.ReadAsStringAsync();
 
         var jsn = JsonSerializer.Deserialize<Response>(txt);
-        logger.LogInformation("Fetched {0} entities from Sophox.", jsn.results.bindings.Count);
+
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Fetched {Count} entities from Sophox.", jsn.results.bindings.Count);
+        }
 
         return jsn;
     }
@@ -199,7 +219,12 @@ SELECT ?oid ?loc WHERE {{
 
             dic[id] = pt;
         }
-        logger.LogInformation("Extracted {0} valid locations.", dic.Count);
+
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Extracted {Count} valid locations.", dic.Count);
+        }
+
         return dic;
     }
 
