@@ -10,37 +10,50 @@ using System.Text.RegularExpressions;
 
 namespace osm;
 
-internal static class AttributeExtractor
+/// <summary>
+/// Extract relevant Key=Value pairs from the item.
+///
+/// Please, refer to OSM wiki to learn about the meaning of individual keys.
+/// Example: https://wiki.openstreetmap.org/wiki/Key:website:booking
+/// </summary>
+internal static partial class AttributeExtractor
 {
+    [GeneratedRegex(@"^https?://")]
+    private static partial Regex UrlPrefixRegex();
+
+    [GeneratedRegex(@"^[a-z]{2}:[A-Za-z0-9].*$")]
+    private static partial Regex WikipediaRegex();
+
+    [GeneratedRegex(@"^\+?\d{4,20}$")]
+    private static partial Regex TelephoneRegex();
+
     private sealed class Item
     {
         public string value { get; set; }
     }
 
-    private static readonly SortedSet<string>
-        clothes, cuisine, denomination, rental;
+    private static readonly SortedSet<string> clothes, cuisine, rental;
 
     private static SortedSet<string> GetCollection(string file)
     {
         var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(file));
-        return new(JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value));
+        return [..JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)];
     }
 
     static AttributeExtractor()
     {
         clothes = GetCollection("clothes");
         cuisine = GetCollection("cuisine");
-        denomination = GetCollection("denomination");
         rental = GetCollection("rental");
     }
 
     // supporting functions
 
     private static string Http(string str)
-        => Regex.IsMatch(str, @"^https?://") ? str : "https://" + str;
+        => UrlPrefixRegex().IsMatch(str) ? str : "https://" + str;
 
     private static List<string> Divide(string s)
-        => s.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim()).ToList();
+        => [..s.Split(';', StringSplitOptions.RemoveEmptyEntries).Select(s => s.Trim())];
 
     private static bool IsNonTrivialStringSequence(List<string> seq)
     {
@@ -63,19 +76,16 @@ internal static class AttributeExtractor
     {
         uri = null;
 
-        if (Regex.IsMatch(str, @"^[a-z]{2}:[A-Za-z0-9].*$"))
+        if (WikipediaRegex().IsMatch(str))
         {
-            var lst = str.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            var lst = str.Split([' '], StringSplitOptions.RemoveEmptyEntries);
 
             var pfx = lst[0].AsSpan(0, 2).ToString();
             var sfx = lst[0].AsSpan(3).ToString();
 
             lst[0] = sfx;
 
-            uri = "https://"
-                + pfx
-                + ".wikipedia.org/wiki/"
-                + string.Join('_', lst);
+            uri = string.Concat("https://", pfx, ".wikipedia.org/wiki/", string.Join('_', lst));
 
             return IsStandardUri(uri);
         }
@@ -89,7 +99,7 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(item, out var v) && Verifier.IsNonTrivialString(v))
             {
-                attributes.address = attributes.address ?? new();
+                attributes.address ??= new();
                 act.Invoke(v);
                 return;
             }
@@ -102,7 +112,7 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(item, out var v) && IsStandardUri(v))
             {
-                attributes.socialNetworks = attributes.socialNetworks ?? new();
+                attributes.socialNetworks ??= new();
                 act.Invoke(v);
                 return;
             }
@@ -119,7 +129,7 @@ internal static class AttributeExtractor
         {
             return str is not null
                 && str.Length >= 5 && str.Length <= 50
-                && str.All(l => _comp.Contains(l));
+                && str.All(_comp.Contains);
         }
 
         string filter(string str)
@@ -134,8 +144,7 @@ internal static class AttributeExtractor
             return buf.ToString();
         }
 
-        return predicate(s)
-            && Regex.IsMatch(filter(s), @"^\+?\d{4,20}$");
+        return predicate(s) && TelephoneRegex().IsMatch(filter(s));
     }
 
     private static bool TryExtractPositiveInteger(string s, out int num)
@@ -162,7 +171,7 @@ internal static class AttributeExtractor
         return num > 0;
     }
 
-    // extractors for a specific feature
+    // extractors for specific features/ keys
 
     private static void Image(TagsCollectionBase tags, Attributes attributes)
     {
@@ -176,7 +185,7 @@ internal static class AttributeExtractor
     {
         string[] ks;
 
-        ks = new[] { "contact:website", "website", "url" };
+        ks = ["contact:website", "website", "url"];
 
         foreach (var k in ks)
         {
@@ -204,12 +213,12 @@ internal static class AttributeExtractor
         var _ho = new[] { "addr:housenumber", "addr:conscriptionnumber" };
         var _po = new[] { "addr:postcode", "addr:postbox" };
 
-        Accommodate(tags, attributes, _co, (string co) => { attributes.address.country = co; });
-        Accommodate(tags, attributes, _se, (string se) => { attributes.address.settlement = se; });
-        Accommodate(tags, attributes, _di, (string di) => { attributes.address.district = di; });
-        Accommodate(tags, attributes, _pl, (string pl) => { attributes.address.place = pl; });
-        Accommodate(tags, attributes, _ho, (string ho) => { attributes.address.house = ho; });
-        Accommodate(tags, attributes, _po, (string po) => { attributes.address.postalCode = po; });
+        Accommodate(tags, attributes, _co, co => attributes.address.country = co);
+        Accommodate(tags, attributes, _se, se => attributes.address.settlement = se);
+        Accommodate(tags, attributes, _di, di => attributes.address.district = di);
+        Accommodate(tags, attributes, _pl, pl => attributes.address.place = pl);
+        Accommodate(tags, attributes, _ho, ho => attributes.address.house = ho);
+        Accommodate(tags, attributes, _po, po => attributes.address.postalCode = po);
     }
 
     private static void SocialNetworks(TagsCollectionBase tags, Attributes attributes)
@@ -222,13 +231,13 @@ internal static class AttributeExtractor
         var _tw = new[] { "contact:twitter", "twitter", "brand:twitter" };
         var _yo = new[] { "contact:youtube", "brand:youtube", "youtube" };
 
-        Socialize(tags, attributes, _fa, (string fa) => { attributes.socialNetworks.facebook = fa; });
-        Socialize(tags, attributes, _it, (string it) => { attributes.socialNetworks.instagram = it; });
-        Socialize(tags, attributes, _li, (string li) => { attributes.socialNetworks.linkedin = li; });
-        Socialize(tags, attributes, _pi, (string pi) => { attributes.socialNetworks.pinterest = pi; });
-        Socialize(tags, attributes, _te, (string te) => { attributes.socialNetworks.telegram = te; });
-        Socialize(tags, attributes, _tw, (string tw) => { attributes.socialNetworks.twitter = tw; });
-        Socialize(tags, attributes, _yo, (string yo) => { attributes.socialNetworks.youtube = yo; });
+        Socialize(tags, attributes, _fa, fa => attributes.socialNetworks.facebook = fa);
+        Socialize(tags, attributes, _it, it => attributes.socialNetworks.instagram = it);
+        Socialize(tags, attributes, _li, li => attributes.socialNetworks.linkedin = li);
+        Socialize(tags, attributes, _pi, pi => attributes.socialNetworks.pinterest = pi);
+        Socialize(tags, attributes, _te, te => attributes.socialNetworks.telegram = te);
+        Socialize(tags, attributes, _tw, tw => attributes.socialNetworks.twitter = tw);
+        Socialize(tags, attributes, _yo, yo => attributes.socialNetworks.youtube = yo);
     }
 
     private static void Email(TagsCollectionBase tags, Attributes attributes)
@@ -268,7 +277,7 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(k, out var v))
             {
-                attributes.fee = vs.Contains(v) ? false : true;
+                attributes.fee = !vs.Contains(v); // anything but no confirms fees!
                 return;
             }
         }
@@ -280,7 +289,7 @@ internal static class AttributeExtractor
 
         if (tags.TryGetValue("delivery", out var v))
         {
-            attributes.delivery = vs.Contains(v) ? true : false;
+            attributes.delivery = vs.Contains(v);
         }
     }
 
@@ -294,7 +303,7 @@ internal static class AttributeExtractor
             if (tags.TryGetValue(k, out var v))
             {
                 if (vs.Contains(v)) { place.keywords.Add("drinking water"); }
-                place.attributes.drinkingWater = vs.Contains(v) ? true : false;
+                place.attributes.drinkingWater = vs.Contains(v);
                 return;
             }
         }
@@ -308,7 +317,7 @@ internal static class AttributeExtractor
         if (tags.TryGetValue(k, out var v))
         {
             if (vs.Contains(v)) { place.keywords.Add("internet access"); }
-            place.attributes.internetAccess = vs.Contains(v) ? true : false;
+            place.attributes.internetAccess = vs.Contains(v);
         }
     }
 
@@ -318,7 +327,7 @@ internal static class AttributeExtractor
 
         if (tags.TryGetValue("shower", out var v))
         {
-            attributes.shower = vs.Contains(v) ? true : false;
+            attributes.shower = vs.Contains(v);
         }
     }
 
@@ -331,7 +340,7 @@ internal static class AttributeExtractor
         {
             if (tags.TryGetValue(k, out var v))
             {
-                attributes.smoking = vs.Contains(v) ? true : false;
+                attributes.smoking = vs.Contains(v);
                 return;
             }
         }
@@ -343,7 +352,7 @@ internal static class AttributeExtractor
 
         if (tags.TryGetValue("takeaway", out var v))
         {
-            attributes.takeaway = vs.Contains(v) ? true : false;
+            attributes.takeaway = vs.Contains(v);
         }
     }
 
@@ -353,7 +362,7 @@ internal static class AttributeExtractor
 
         if (tags.TryGetValue("toilets", out var v))
         {
-            attributes.toilets = vs.Contains(v) ? true : false;
+            attributes.toilets = vs.Contains(v);
         }
     }
 
@@ -363,7 +372,7 @@ internal static class AttributeExtractor
 
         if (tags.TryGetValue("wheelchair", out var v))
         {
-            attributes.wheelchair = vs.Contains(v) ? true : false;
+            attributes.wheelchair = vs.Contains(v);
         }
     }
 
@@ -480,7 +489,7 @@ internal static class AttributeExtractor
     {
         if (tags.TryGetValue("clothes", out var v))
         {
-            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => clothes.Contains(item)));
+            SortedSet<string> res = [..Divide(v).Select(Converter.SnakeToKeyword).Where(clothes.Contains)];
             attributes.clothes = (res.Count > 0) ? res : null;
         }
     }
@@ -489,13 +498,12 @@ internal static class AttributeExtractor
     {
         var res = new SortedSet<string>();
 
-        string v;
         var vs = new SortedSet<string>() { "yes", "only", "limited" };
 
-        if (tags.TryGetValue("cuisine", out v))
+        if (tags.TryGetValue("cuisine", out string v))
         {
-            var items = Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => cuisine.Contains(item));
-            foreach (var item in items) { res.Add(item); }
+            var items = Divide(v).Select(Converter.SnakeToKeyword).Where(cuisine.Contains);
+            res.UnionWith(items);
         }
 
         if (tags.TryGetValue("diet:vegan", out v) && vs.Contains(v)) { res.Add("vegan"); }
@@ -505,83 +513,86 @@ internal static class AttributeExtractor
         if (res.Count > 0) { attributes.cuisine = res; }
     }
 
-    private static void Denomination(TagsCollectionBase tags, Attributes attributes)
-    {
-        if (tags.TryGetValue("denomination", out var v))
-        {
-            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => denomination.Contains(item)));
-            attributes.denomination = (res.Count > 0) ? res : null;
-        }
-    }
-
     private static void Rental(TagsCollectionBase tags, Attributes attributes)
     {
         if (tags.TryGetValue("rental", out var v))
         {
-            SortedSet<string> res = new(Divide(v).Select(v => Converter.SnakeToKeyword(v)).Where(item => rental.Contains(item)));
+            SortedSet<string> res = [..Divide(v).Select(Converter.SnakeToKeyword).Where(rental.Contains)];
             attributes.rental = (res.Count > 0) ? res : null;
         }
     }
 
     /// <summary>
-    /// Payment extraction based on taginfo statistics.
-    /// 
+    /// Accepted payment options based on taginfo statistics (`ts` are the most popular).
+    ///
     /// <list>
     /// <item>https://taginfo.openstreetmap.org/search?q=payment#keys</item>
     /// </list>
     /// </summary>
     private static void Payment(TagsCollectionBase tags, Attributes attributes)
     {
+        var prefix = "payment:";
         var res = new SortedSet<string>();
 
-        var ks = tags.Select(i => i.Key).Where(k => k.StartsWith("payment:"));
+        var ks = tags.Select(i => i.Key).Where(k => k.StartsWith(prefix));
         var vs = new SortedSet<string>() { "yes", "only" };
 
         var ts = new SortedSet<string>()
         {
-            "cash",
-            "credit cards",
-            "visa",
-            "debit cards",
-            "mastercard",
-            "coins",
-            "notes",
-            "maestro",
-            "contactless",
+            "alipay",
             "american express",
+            "amex",
+            "apple pay",
+            "bitcoin",
+            "bitcoincash",
             "cards",
-            "visa electron",
+            "cash",
+            "cheque",
+            "coins",
+            "contactless",
+            "credit card",
+            "credit cards",
+            "cryptocurrencies",
+            "debit card",
+            "debit cards",
+            "diners club",
+            "discover card",
+            "edenred card",
             "electronic purses",
             "ep easycard",
-            "ep ipass",
-            "telephone cards",
-            "jcb",
-            "discover card",
-            "diners club",
-            "girocard",
-            "visa debit",
-            "unionpay",
-            "cryptocurrencies",
-            "cheque",
-            "alipay",
-            "wechat",
-            "apple pay",
-            "lightning",
-            "onchain",
             "ep geldkarte",
-            "membership card",
-            "v pay",
+            "ep ipass",
+            "girocard",
             "google pay",
+            "jcb",
+            "lightning",
+            "lightning contactless",
+            "maestro",
+            "mastercard",
+            "mastercard contactless",
+            "membership card",
+            "mir",
+            "nfc",
+            "notes",
+            "onchain",
             "paypal",
-            "bitcoin",
-            "sodexo"
+            "qr code",
+            "sodexo",
+            "telephone cards",
+            "unionpay",
+            "v pay",
+            "visa",
+            "visa contactless",
+            "visa debit",
+            "visa electron",
+            "wechat",
         };
 
         foreach (var k in ks)
         {
             if (tags.TryGetValue(k, out var v) && vs.Contains(v))
             {
-                var cand = Converter.SnakeToKeyword(k.Substring(8));
+                var cand = Converter.SnakeToKeyword(k[prefix.Length..]);
                 if (ts.Contains(cand)) { res.Add(cand); }
             }
         }
