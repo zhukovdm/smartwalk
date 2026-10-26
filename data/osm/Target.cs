@@ -14,10 +14,10 @@ internal static class UpdateDefinitionExtensions
     }
 }
 
-internal abstract class Target
+internal abstract class Target(ILogger logger)
 {
     protected long step = 0;
-    private readonly ILogger logger;
+    private readonly ILogger logger = logger;
 
     protected void Increment()
     {
@@ -25,23 +25,31 @@ internal abstract class Target
 
         if (step % 1000 == 0)
         {
-            logger.LogInformation("Still working... {0} places already processed.", step);
+            if (logger.IsEnabled(LogLevel.Information))
+            {
+                logger.LogInformation("Still working... {step} places already processed.", step);
+            }
         }
     }
 
-    protected void Total() { logger.LogInformation("Finished, processed a total of {0} places.", step); }
-
-    public Target(ILogger logger) { this.logger = logger; }
+    protected void Total()
+    {
+        if (logger.IsEnabled(LogLevel.Information))
+        {
+            logger.LogInformation("Finished, processed a total of {step} places.", step);
+        }
+    }
 
     public abstract void Load(Place place);
 
     public abstract void Complete();
 }
 
-internal class MongoTarget : Target
+internal class MongoTarget(ILogger logger, IMongoDatabase database)
+    : Target(logger)
 {
-    private readonly IMongoDatabase database;
-    private readonly List<Place> places = new();
+    private readonly IMongoDatabase database = database;
+    private readonly List<Place> places = [];
 
     private void Write()
     {
@@ -104,11 +112,6 @@ internal class MongoTarget : Target
         _ = coll.BulkWrite(bulk);
 
         places.Clear();
-    }
-
-    public MongoTarget(ILogger logger, IMongoDatabase database) : base(logger)
-    {
-        this.database = database;
     }
 
     public override void Load(Place place)

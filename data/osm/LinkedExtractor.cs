@@ -4,11 +4,14 @@ using OsmSharp.Tags;
 
 namespace osm;
 
-internal class LinkedExtractor
+internal partial class LinkedExtractor
 {
+    [GeneratedRegex(@"^Q[1-9][0-9]*$")]
+    private static partial Regex WikidataIdRegex();
+
     private static void Wikidata(TagsCollectionBase tags, Linked link)
     {
-        if (tags.TryGetValue("wikidata", out var v) && Regex.IsMatch(v, @"^Q[1-9][0-9]*$"))
+        if (tags.TryGetValue("wikidata", out var v) && WikidataIdRegex().IsMatch(v))
         {
             link.wikidata = v;
         }
