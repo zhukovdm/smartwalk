@@ -1,15 +1,59 @@
 name: smartwalk-database
 services:
   database:
-    image: mongo:4.4.23
+    image: mongodb/mongodb-community-server:9.0-ubi9-slim
     container_name: smartwalk-database
+
     ports:
-      - 27017:27017
+      - "27017:27017"
     volumes:
-      - ./assets/database:/data/db
+      - mongo_data:/data/db
+      - mongo_conf:/data/configdb
+
     healthcheck:
-      test: mongo --eval 'db.runCommand({ping:1}).ok' localhost:27017/smartwalk --quiet
+      test:
+        - CMD
+        - env
+        - HOME=/tmp
+        - mongosh
+        - --quiet
+        - --norc
+        - --eval
+        - "quit(db.adminCommand({ ping: 1 }).ok === 1 ? 0 : 1)"
+        - mongodb://127.0.0.1:27017/admin
       interval: 15s
-      timeout: 15s
-      retries: 10
-      start_period: 1m
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+      start_interval: 3s
+
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "10"
+        compress: "true"
+
+    # hardening
+    # read_only: true
+    # tmpfs:
+    #   - /tmp
+    # cap_drop:
+    #   - ALL
+    # security_opt:
+    #   - no-new-privileges:true
+    # ulimits:
+    #   nofile:
+    #     soft: 64000
+    #     hard: 64000
+
+    # give mongod time for a clean shutdown (checkpoint) before SIGKILL
+    stop_grace_period: 30s
+
+volumes:
+  mongo_data:
+    name: smartwalk-mongo-data
+    external: true
+  mongo_conf:
+    name: smartwalk-mongo-conf
+    external: true
