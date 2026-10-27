@@ -166,7 +166,7 @@ internal sealed class Place
 
     public Point location { get; set; }
 
-    public SortedSet<string> keywords { get; set; } = new();
+    public SortedSet<string> keywords { get; set; } = [];
 
     public Linked linked { get; set; } = new();
 

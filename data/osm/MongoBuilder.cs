@@ -13,7 +13,7 @@ internal static class MongoBuilder
         return new MongoClient(new MongoUrl(conn)).GetDatabase(databaseName);
     }
 
-    internal static IMongoCollection<Place> GetCollection(IMongoDatabase database)
+    internal static IMongoCollection<Place> GetPlaceCollection(IMongoDatabase database)
     {
         return database.GetCollection<Place>(collectionName);
     }
