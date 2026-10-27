@@ -14,37 +14,84 @@ internal class Transformer(ElementLocator locator)
         return Math.Round(coordinate, 7);
     }
 
-    private readonly Dictionary<long, Point> nodes = [];
+    private readonly struct N(double lat, double lon)
+    {
+        public readonly double lat = lat;
+        public readonly double lon = lon;
+    }
+
+    private readonly struct W
+    {
+        public readonly double MaxLat = double.MinValue;
+        public readonly double MinLat = double.MaxValue;
+        public readonly double MaxLon = double.MinValue;
+        public readonly double MinLon = double.MaxValue;
+
+        public W(IEnumerable<Point> seq)
+        {
+            foreach (var p in seq)
+            {
+                MaxLat = Math.Max(MaxLat, p.lat);
+                MinLat = Math.Min(MinLat, p.lat);
+                MaxLon = Math.Max(MaxLon, p.lon);
+                MinLon = Math.Min(MinLon, p.lon);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Cache with Nodes to complete way and relation definitions.
+    /// </summary>
+    private readonly Dictionary<long, N> ns = [];
+
+    /// <summary>
+    /// Cache with Ways to complete relation definitions.
+    /// </summary>
+    private readonly Dictionary<long, W> ws = [];
+
     private readonly ElementLocator locator = locator;
 
+    /// <summary>
+    /// Places are processed as follows:
+    ///
+    /// <list type="bullet">
+    ///     <item>Check a place definition, not properly defined places terminate processing.</item>
+    ///     <item>Check a place definition is within what the map can show. Failure terminates processing.</item>
+    /// </list>
+    /// </summary>
     private Place Transform(Node node)
     {
         if (node is not null)
         {
-            /* Nodes are used for way and relation definitions. Not defined
-             * nodes mean the file is broken, no reason to continue further. */
+            /* Nodes are used for way and relation definitions. Missing
+            ** essential parts means the entire file is broken, and there
+            ** is no reason to continue further.
+            **
+            ** TODO: consider to relax this rule. */
 
             var d = node.Id is not null && node.Longitude is not null && node.Latitude is not null;
 
-            if (!d) { Reporter.ReportUndefined(node, "node"); }
+            if (!d) { Reporter.ThrowOnUndefined(node, "node"); }
 
-            // extract and verify position
+            /* extract and verify position */
 
             var lon = Round(node.Longitude.Value);
             var lat = Round(node.Latitude.Value);
             var loc = new Point() { lon = lon, lat = lat };
 
-            if (!CrsEpsg3857.IsWithin(lon, lat)) { Reporter.ReportOutbound(node); }
+            // node is outside of what map defines/ can depict
+            if (!CrsEpsg3857.IsWithin(lon, lat)) { Reporter.ThrowOnOutbound(node); }
 
-            // keep node for later usage
-
-            nodes.Add(node.Id.Value, loc);
+            // keep node for way and relation definitions
+            ns.Add(node.Id.Value, new(loc.lat, loc.lon));
 
             if (node.Tags is null || node.Tags.Count == 0) { return null; }
 
             // extract keywords and tags
 
             var place = new Place();
+
+            // places are associated with search keywords used in core search
             KeywordExtractor.Extract(node.Tags, place.keywords);
 
             if (place.keywords.Count > 0)
@@ -68,7 +115,7 @@ internal class Transformer(ElementLocator locator)
 
         foreach (var id in way.Nodes)
         {
-            if (!nodes.TryGetValue(id, out var node)) { return false; }
+            if (!ns.TryGetValue(id, out var node)) { return false; }
             sequence.Add(new() { lon = node.lon, lat = node.lat });
         }
 
@@ -79,9 +126,8 @@ internal class Transformer(ElementLocator locator)
     {
         if (way is not null)
         {
-            // check if the way is properly defined
-
-            if (way.Id is null || way.Nodes is null) { Reporter.ReportUndefined(way, "way"); }
+            // check if the way is properly defined, and throw if not
+            if (way.Id is null || way.Nodes is null) { Reporter.ThrowOnUndefined(way, "way"); }
 
             // small or open ways are skipped, closed polygons pass
 
@@ -100,10 +146,10 @@ internal class Transformer(ElementLocator locator)
                 LinkedExtractor.Extract(way, place.linked);
 
                 /* Note that both IsCounterClockwise and Centroid
-                 * use closedness of the shape verified above. */
+                ** use closedness of the shape verified above. */
 
                 /* GeoJSON assumes counterclockwise external rings,
-                 * see https://www.rfc-editor.org/rfc/rfc7946#appendix-B.1! */
+                ** see https://www.rfc-editor.org/rfc/rfc7946#appendix-B.1! */
 
                 if (!Cartesian.IsCounterClockwise(seq)) { seq.Reverse(); }
                 var cen = Cartesian.Centroid(seq);
@@ -122,7 +168,7 @@ internal class Transformer(ElementLocator locator)
     {
         if (relation is not null)
         {
-            if (relation.Id is null) { Reporter.ReportUndefined(relation, "relation"); }
+            if (relation.Id is null) { Reporter.ThrowOnUndefined(relation, "relation"); }
 
             if (relation.Tags is null || relation.Tags.Count == 0) { return null; }
 
@@ -149,6 +195,8 @@ internal class Transformer(ElementLocator locator)
 
     public Place Transform(OsmGeo element)
     {
-        return Transform(element as Node) ?? Transform(element as Way) ?? Transform(element as Relation);
+        return Transform(element as Node)
+            ?? Transform(element as Way)
+            ?? Transform(element as Relation);
     }
 }
