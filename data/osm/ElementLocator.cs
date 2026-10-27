@@ -54,6 +54,8 @@ internal static class OverpassElementLocatorFactory
 
         var attempt = 0;
         var (w, n, e, s) = bbox;
+
+        // url specialized for the osm `relation` type.
         var url = $"https://overpass-api.de/api/interpreter?data=[out:json];relation({s},{w},{n},{e})[type=multipolygon];out%20center;";
 
         if (logger.IsEnabled(LogLevel.Information))

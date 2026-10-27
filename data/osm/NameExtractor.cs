@@ -4,6 +4,9 @@ using OsmSharp.Tags;
 
 namespace osm;
 
+/// <summary>
+/// Places must have a name. Define it based on prioritized k:v or a keyword.
+/// </summary>
 internal class NameExtractor
 {
     public static void Extract(TagsCollectionBase tags, Place place)

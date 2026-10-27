@@ -11,7 +11,8 @@ using System.Text.RegularExpressions;
 namespace osm;
 
 /// <summary>
-/// Extract relevant Key=Value pairs from the item.
+/// Places could have more interesting non-keyword attributes (email, phone, etc.).
+/// This class traverses K:V (so called tags) pairs and extracts relevant information.
 ///
 /// Please, refer to OSM wiki to learn about the meaning of individual keys.
 /// Example: https://wiki.openstreetmap.org/wiki/Key:website:booking
@@ -171,7 +172,7 @@ internal static partial class AttributeExtractor
         return num > 0;
     }
 
-    // extractors for specific features/ keys
+    // extractors for specific attributes often derived from (k)eys
 
     private static void Image(TagsCollectionBase tags, Attributes attributes)
     {
