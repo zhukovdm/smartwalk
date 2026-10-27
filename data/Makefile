@@ -1,3 +1,12 @@
+postgres-up:
+	docker compose -f docker-compose.postgres.yaml up -d
+
+postgres-down:
+	docker compose -f docker-compose.postgres.yaml down
+
+postgres-connect:
+	psql --host localhost --port 5432 --user user --dbname smartwalk
+
 ################################################################################
 
 # Do not forget to set up these variables based on your preferences!
@@ -89,10 +98,10 @@ NODE_DIRS=shared advice dbpedia dump init restore taginfo wikidata-create wikida
 DATA_DIRS=database routing taginfo
 
 # routing engine
-R_CMD=docker run --rm -t -v $(A_DIR)/routing:/data osrm/osrm-backend:v5.24.0
+R_CMD=docker run --rm -t -v $(A_DIR)/routing:/data ghcr.io/project-osrm/osrm-backend:26.10.0-debian
 
 # entity store and index
-M_URL=mongodb://localhost:27017
+MONGO_CONNECTION_STRING=mongodb://localhost:27017
 
 ################################################################################
 
@@ -138,19 +147,22 @@ taginfo:
 		healthcare \
 		historic \
 		leisure \
+		military \
 		natural \
 		office \
+		playground \
 		public_transport \
 		rental \
 		shop \
+		social_facility \
 		sport \
 		theatre:genre \
-		tourism
-# man_made
+		tourism \
+		vending
 
 init-database:
 	@cd ./init && npm run build && npm run start -- \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 database-osm:
 	@cd ./osm && dotnet run \
@@ -158,26 +170,26 @@ database-osm:
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
 		--rows 2 \
 		--cols 2 \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 database-wikidata-create:
-	@./wikidata-create.sh $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) $(M_URL)
+	@./wikidata-create.sh $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) $(MONGO_CONNECTION_STRING)
 
 database-wikidata-enrich:
 	@cd ./wikidata-enrich && npm run build && npm run start -- \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 database-dbpedia:
 	@cd ./dbpedia && npm run build && npm run start -- \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 advice:
 	@cd ./advice && npm run build && npm run start -- \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 dump:
 	@cd ./dump && npm run build && npm run start -- \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 check-restore-files:
 	@for file in keywords places ; do \
@@ -188,7 +200,7 @@ init-restore: init-data-dirs init-node-dirs check-restore-files
 
 restore:
 	@cd ./restore && npm run build && npm run start -- \
-		--conn $(M_URL)
+		--conn $(MONGO_CONNECTION_STRING)
 
 check-clean:
 	@echo -n "Are you sure? [y/N] " && read ans && [ $${ans:-N} = y ]
