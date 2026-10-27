@@ -7,6 +7,9 @@ using System.Text.Json;
 
 namespace osm;
 
+/// <summary>
+/// Each place must have at least one associated keyword. The extractor
+/// </summary>
 internal static class KeywordExtractor
 {
     private sealed class Item
@@ -14,8 +17,19 @@ internal static class KeywordExtractor
         public string value { get; set; }
     }
 
+    /// <summary>
+    /// Keys that have potential to become a keyword if any value is found.
+    /// </summary>
     private static readonly SortedSet<string> wi;
+
+    /// <summary>
+    /// Keys that are never considered as a keyword.
+    /// </summary>
     private static readonly SortedSet<string> wo;
+
+    /// <summary>
+    /// Taginfo with k:v pairs, and occurrences for individual values.
+    /// </summary>
     private static readonly Dictionary<string, SortedSet<string>> ts = [];
 
     static KeywordExtractor()
@@ -29,7 +43,10 @@ internal static class KeywordExtractor
             "hazard",
             "healthcare",
             "historic",
-            "tourism"
+            "military",
+            "playground",
+            "tourism",
+            "vending",
         ];
 
         wo = [
@@ -41,14 +58,22 @@ internal static class KeywordExtractor
             "business",
             "emergency",
             "leisure",
-//          "man_made",
             "natural",
             "office",
             "public_transport",
             "shop",
+            "social_facility",
             "sport",
-            "theatre:genre"
+            "theatre:genre",
         ];
+
+        #region Omitted keys
+            // clothes
+            // cuisine
+            // denomination
+            // man_made
+            // rental
+        #endregion
 
         var union = wi.Union(wo);
 
@@ -61,13 +86,13 @@ internal static class KeywordExtractor
 
     /// <summary>
     /// Split a value of a given tag into tokens. Valid token should appear
-    /// within values extracted from https://taginfo.openstreetmap.org/.
+    /// within popular values extracted from https://taginfo.openstreetmap.org/.
     /// </summary>
-    private static void ExtractImpl(string tag, TagsCollectionBase otags, SortedSet<string> keywords, bool wk)
+    private static void ExtractImpl(string key, TagsCollectionBase otags, SortedSet<string> keywords, bool wk)
     {
-        if (otags.TryGetValue(tag, out var val))
+        if (otags.TryGetValue(key, out var val))
         {
-            var allow = ts[tag];
+            var allow = ts[key];
 
             var vs = val.Split(';', StringSplitOptions.RemoveEmptyEntries)
                 .Select(v => v.Trim())
@@ -78,7 +103,12 @@ internal static class KeywordExtractor
                 if (allow.Contains(v))
                 {
                     keywords.Add(v);
-                    if (wk) { keywords.Add(tag); }
+
+                    // add also the key into possible keywords
+                    if (wk)
+                    {
+                        keywords.Add(Converter.SnakeToKeyword(key));
+                    }
                 }
             }
         }

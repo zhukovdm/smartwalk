@@ -16,14 +16,18 @@ internal static class UpdateDefinitionExtensions
 
 internal abstract class Target(ILogger logger)
 {
+    // the constant was chosen arbitrarily
+    protected const long BULK_SIZE = 1000;
+
     protected long step = 0;
+
     private readonly ILogger logger = logger;
 
     protected void Increment()
     {
         ++step;
 
-        if (step % 1000 == 0)
+        if (step % BULK_SIZE == 0)
         {
             if (logger.IsEnabled(LogLevel.Information))
             {
@@ -54,8 +58,10 @@ internal class MongoTarget(ILogger logger, IMongoDatabase database)
     private void Write()
     {
         var bulk = new List<WriteModel<Place>>();
-        var coll = MongoBuilder.GetCollection(database);
+        var coll = MongoBuilder.GetPlaceCollection(database);
 
+        // Changes are added into bulk list. Existing places (equality on
+        // obj.linked.osm value) are updated, and new places are created.
         foreach (var place in places)
         {
             var filter = Builders<Place>.Filter.Eq(p => p.linked.osm, place.linked.osm);
@@ -109,6 +115,8 @@ internal class MongoTarget(ILogger logger, IMongoDatabase database)
                 bulk.Add(new InsertOneModel<Place>(place));
             }
         }
+
+        // bulk is propagated all at once to avoid communitation overhead
         _ = coll.BulkWrite(bulk);
 
         places.Clear();
@@ -117,7 +125,7 @@ internal class MongoTarget(ILogger logger, IMongoDatabase database)
     public override void Load(Place place)
     {
         places.Add(place);
-        if (places.Count >= 1000) { Write(); }
+        if (places.Count >= BULK_SIZE) { Write(); }
         Increment();
     }
 
