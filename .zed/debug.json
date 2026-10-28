@@ -1,0 +1,11 @@
+[
+  {
+    "label": "Launch .NET App",
+    "adapter": "netcoredbg",
+    "request": "launch",
+    "program": "${ZED_WORKTREE_ROOT}/data/osm/bin/Debug/net10.0/osm.dll",
+    "args": [],
+    "stopOnEntry": false,
+    "cwd": "${ZED_WORKTREE_ROOT}/data/osm"
+  }
+]
