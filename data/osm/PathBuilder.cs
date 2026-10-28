@@ -5,19 +5,14 @@ namespace osm;
 internal static class PathBuilder
 {
     private static readonly string ASSETS_BASE_ADDR = Path.Combine([
-        "..",
-        "assets"
+        "..", "assets"
     ]);
 
     internal static string GetOsmFilePath(string fileName) => Path.Combine([
-        ASSETS_BASE_ADDR,
-        "osm-maps",
-        fileName
+        ASSETS_BASE_ADDR, "maps", "osm", fileName
     ]);
 
     internal static string GetTaginfoFilePath(string fileName) => Path.Combine([
-        ASSETS_BASE_ADDR,
-        "taginfo",
-        fileName + ".json"
+        ASSETS_BASE_ADDR, "taginfo", fileName + ".json"
     ]);
 }
