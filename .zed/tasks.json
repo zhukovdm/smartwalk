@@ -1,0 +1,11 @@
+[
+  {
+    "label": "build",
+    "command": "dotnet",
+    "show_command": true,
+    "args": [
+      "build",
+      "${ZED_WORKTREE_ROOT}/data/osm/osm.csproj"
+    ]
+  }
+]

@@ -1,0 +1,8 @@
+{
+  "dap": {
+    "netcoredbg": {
+      "binary": "/snap/bin/netcoredbg",
+      "args": ["--interpreter=vscode"]
+    }
+  }
+}
