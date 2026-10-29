@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch osm (C# Dev Tools)",
+            "type": "devtools",
+            "request": "launch",
+            "projectPath": "${workspaceFolder}/data/osm/osm.csproj",
+            "projectType": "console",
+            "withDebug": true,
+            "configuration": "Debug",
+            "cwd": "${workspaceFolder}/data/osm",
+            "console": "integratedTerminal",
+            "args": [
+                "--file=czech-republic-latest.osm.pbf",
+                "--conn=mongodb://localhost:27017",
+                "--bbox",
+                "14.0",
+                "50.5",
+                "15.0",
+                "49.5",
+                "--rows=100",
+                "--cols=100"
+            ]
+        }
+    ]
+}
