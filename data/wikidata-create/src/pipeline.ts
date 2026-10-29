@@ -1,6 +1,10 @@
 import Source from "./source.js";
 import Target from "./target.js";
 import Transformer from "./transformer.js";
+import {
+  Bbox,
+  Item
+} from "./types.js";
 
 export default class Pipeline {
 

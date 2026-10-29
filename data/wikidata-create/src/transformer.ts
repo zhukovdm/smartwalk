@@ -1,7 +1,8 @@
 import {
   getFirst,
   roundCoordinate
-} from "../../shared/dist/src/index.js";
+} from "../../shared/dist/index.js";
+import { Item, WgsPoint } from "./types.js";
 
 /**
  * Extract longitude and latitude from WKT literal.

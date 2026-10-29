@@ -2,8 +2,8 @@
   "compilerOptions": {
     "allowJs": true,
     "esModuleInterop": true,
-    "module": "ES6",
-    "moduleResolution": "Node",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noFallthroughCasesInSwitch": true,
     "noUncheckedIndexedAccess": true,
     "outDir": "./dist",

@@ -3,8 +3,9 @@ import jsonld from "jsonld";
 import {
   SafeFetcher,
   roundCoordinate
-} from "../../shared/dist/src/index.js";
+} from "../../shared/dist/index.js";
 import Logger from "./logger.js";
+import { Bbox } from "./types.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 
@@ -35,7 +36,7 @@ const WIKIDATA_JSONLD_CONTEXT = {
  * - https://www.wikidata.org/wiki/Property:P11693
  * - https://www.wikidata.org/wiki/Property:P10689
  * - https://www.wikidata.org/wiki/Property:P402
- * 
+ *
  * @param bbox Bounding box
  * @returns query as a string
  */
@@ -114,13 +115,13 @@ export default class Source {
     } = bbox;
     const rowStep = (xN - xS) / rows;
     const colStep = (xE - xW) / cols;
-    
+
     for (let row = 0; row < rows; ++row) {
       for (let col = 0; col < cols; ++col) {
-  
+
         const s = roundCoordinate(xS + rowStep * row);
         const n = roundCoordinate(s + rowStep);
-  
+
         const w = roundCoordinate(xW + colStep * col);
         const e = roundCoordinate(w + colStep);
 
