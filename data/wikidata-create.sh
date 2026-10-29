@@ -7,8 +7,8 @@ npm run start -- \
   --n $2    \
   --e $3    \
   --s $4    \
-  --rows 2  \
-  --cols 2  \
+  --rows 10 \
+  --cols 10 \
   --conn $5
   # --cats \
   #   Q3914       ${IFS# school } \
