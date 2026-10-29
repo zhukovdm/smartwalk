@@ -15,12 +15,22 @@ postgres-connect:
 REGION_FILE=czech-republic-latest
 #REGION_FILE=luxembourg-latest
 
+# to find out bounding box of your region run
+# osmium fileinfo -g header.boxes $(REGION_FILE).osm.pbf | tr -d '() ' | tr ',' ' ' | xargs echo "min_lon min_lat max_lon max_lat"
+
 # Earth
 
-REGION_W := +180
-REGION_N := +90
-REGION_E := -180
-REGION_S := -90
+# REGION_W := +180
+# REGION_N := +90
+# REGION_E := -180
+# REGION_S := -90
+
+# Czech Republic
+
+REGION_W := 11.25
+REGION_N := 51.31
+REGION_E := 19.07
+REGION_S := 48.17
 
 # Prague (prod)
 
@@ -130,17 +140,17 @@ init-data: init-node-dirs check-region-file
 # @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 osrm-extract:
-	docker run --rm -t \
+	@docker run --rm -t \
 		-v $(A_DIR)/maps/osm/$(REGION_FILE).osm.pbf:/data/$(REGION_FILE).osm.pbf:ro \
 		-v $(A_DIR)/routing/osrm:/data \
 		$(OSRM_IMAGE) \
 		osrm-extract -p /opt/foot.lua /data/$(REGION_FILE).osm.pbf
 
 osrm-partition:
-	$(R_CMD) osrm-partition /data/$(REGION_FILE).osrm
+	@$(R_CMD) osrm-partition /data/$(REGION_FILE).osrm
 
 osrm-customize:
-	$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm
+	@$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm
 
 # running order matters!
 routing: osrm-extract osrm-partition osrm-customize
@@ -199,7 +209,7 @@ PBF_NCNT = $(shell osmium fileinfo -e -g data.count.nodes $(A_DIR)/maps/osm/$(RE
 PBF_WCNT = $(shell osmium fileinfo -e -g data.count.ways  $(A_DIR)/maps/osm/$(REGION_FILE).osm.pbf)
 
 database-osm:
-	cd ./osm/ && dotnet run -- \
+	@cd ./osm/ && dotnet run -- \
 		--file $(REGION_FILE).osm.pbf \
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
 		--ncnt $(PBF_NCNT) \
