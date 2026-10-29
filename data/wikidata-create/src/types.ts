@@ -1,16 +1,16 @@
-type Bbox = {
+export type Bbox = {
   w: number;
   n: number;
   e: number;
   s: number;
 }
 
-type WgsPoint = {
+export type WgsPoint = {
   lon: number;
   lat: number;
 };
 
-type Item = {
+export type Item = {
   wikidata: string;
   osm?: string;
   location: WgsPoint;
