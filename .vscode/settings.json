@@ -1,0 +1,6 @@
+{
+    "csharp-dev-tools.solutionViewer.selectedWorkspaceSolutions": [
+        "data/osm/osm.sln"
+    ],
+    "csharp-dev-tools.debug.programArguments": "--file czech-republic-latest.osm.pbf --conn=mongodb://localhost:27017 --bbox 180 90 -180 -90 --rows=1 --cols=1"
+}
