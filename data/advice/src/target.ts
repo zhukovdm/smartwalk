@@ -4,6 +4,7 @@ import {
   MongoClient
 } from "mongodb";
 import Logger from "./logger.js";
+import { Item, CollectBoundLabel } from "./types.js";
 
 const DATABASE_NAME = "smartwalk";
 const KEYWORDS_COLLECTION = "keywords";
