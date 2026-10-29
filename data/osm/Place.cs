@@ -13,76 +13,76 @@ internal sealed class Point
 internal sealed class Address
 {
     [BsonIgnoreIfNull]
-    public string country { get; set; }
+    public string? country { get; set; }
 
     [BsonIgnoreIfNull]
-    public string settlement { get; set; }
+    public string? settlement { get; set; }
 
     [BsonIgnoreIfNull]
-    public string district { get; set; }
+    public string? district { get; set; }
 
     [BsonIgnoreIfNull]
-    public string place { get; set; }
+    public string? place { get; set; }
 
     [BsonIgnoreIfNull]
-    public string house { get; set; }
+    public string? house { get; set; }
 
     [BsonIgnoreIfNull]
-    public string postalCode { get; set; }
+    public string? postalCode { get; set; }
 }
 
 internal sealed class SocialNetworks
 {
     [BsonIgnoreIfNull]
-    public string facebook { get; set; }
+    public string? facebook { get; set; }
 
     [BsonIgnoreIfNull]
-    public string instagram { get; set; }
+    public string? instagram { get; set; }
 
     [BsonIgnoreIfNull]
-    public string linkedin { get; set; }
+    public string? linkedin { get; set; }
 
     [BsonIgnoreIfNull]
-    public string pinterest { get; set; }
+    public string? pinterest { get; set; }
 
     [BsonIgnoreIfNull]
-    public string telegram { get; set; }
+    public string? telegram { get; set; }
 
     [BsonIgnoreIfNull]
-    public string twitter { get; set; }
+    public string? twitter { get; set; }
 
     [BsonIgnoreIfNull]
-    public string youtube { get; set; }
+    public string? youtube { get; set; }
 }
 
 internal sealed class Attributes
 {
     [BsonIgnoreIfNull]
-    public List<Point> polygon { get; set; }
+    public List<Point>? polygon { get; set; }
 
     [BsonIgnoreIfNull]
-    public string image { get; set; }
+    public string? image { get; set; }
 
     [BsonIgnoreIfNull]
-    public string website { get; set; }
+    public string? website { get; set; }
 
     [BsonIgnoreIfNull]
-    public Address address { get; set; }
+    public Address? address { get; set; }
 
     [BsonIgnoreIfNull]
-    public string email { get; set; }
+    public string? email { get; set; }
 
     [BsonIgnoreIfNull]
-    public string phone { get; set; }
+    public string? phone { get; set; }
 
     [BsonIgnoreIfNull]
-    public SocialNetworks socialNetworks { get; set; }
+    public SocialNetworks? socialNetworks { get; set; }
 
     [BsonIgnoreIfNull]
-    public List<string> charge { get; set; }
+    public List<string>? charge { get; set; }
 
     [BsonIgnoreIfNull]
-    public List<string> openingHours { get; set; }
+    public List<string>? openingHours { get; set; }
 
     [BsonIgnoreIfNull]
     public bool? fee { get; set; }
@@ -127,44 +127,44 @@ internal sealed class Attributes
     public double? year { get; set; }
 
     [BsonIgnoreIfNull]
-    public SortedSet<string> clothes { get; set; }
+    public SortedSet<string>? clothes { get; set; }
 
     [BsonIgnoreIfNull]
-    public SortedSet<string> cuisine { get; set; }
+    public SortedSet<string>? cuisine { get; set; }
 
     [BsonIgnoreIfNull]
-    public SortedSet<string> denomination { get; set; }
+    public SortedSet<string>? denomination { get; set; }
 
     [BsonIgnoreIfNull]
-    public SortedSet<string> payment { get; set; }
+    public SortedSet<string>? payment { get; set; }
 
     [BsonIgnoreIfNull]
-    public SortedSet<string> rental { get; set; }
+    public SortedSet<string>? rental { get; set; }
 }
 
 internal sealed class Linked
 {
     [BsonIgnoreIfNull]
-    public string osm { get; set; }
+    public string? osm { get; set; }
 
     [BsonIgnoreIfNull]
-    public string wikidata { get; set; }
+    public string? wikidata { get; set; }
 }
 
 internal sealed class Metadata
 {
     [BsonIgnoreIfNull]
-    public string created { get; set; }
+    public string? created { get; set; }
 
     [BsonIgnoreIfNull]
-    public string updated { get; set; }
+    public string? updated { get; set; }
 }
 
 internal sealed class Place
 {
-    public string name { get; set; }
+    public string? name { get; set; }
 
-    public Point location { get; set; }
+    public Point? location { get; set; }
 
     public SortedSet<string> keywords { get; set; } = [];
 

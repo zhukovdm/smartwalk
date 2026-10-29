@@ -4,167 +4,165 @@ using OsmSharp;
 
 namespace osm;
 
-internal class Transformer(ElementLocator locator)
+internal class Transformer(ElementLocator1 locator)
 {
+    private readonly ElementLocator1 locator = locator;
+
     /// <summary>
-    /// Round coordinate to the allowed number of fractional digits.
+    /// Round coordinate to the preferred number of fractional digits.
     /// </summary>
-    private static double Round(double coordinate)
-    {
-        return Math.Round(coordinate, 7);
-    }
+    private static double Round(double coordinate) => Math.Round(coordinate, 7);
 
-    private readonly struct N(double lat, double lon)
-    {
-        public readonly double lat = lat;
-        public readonly double lon = lon;
-    }
 
-    private readonly struct W
+    /// <summary>
+    /// https://wiki.openstreetmap.org/wiki/Node
+    /// </summary>
+    private Place? Transform(Node? node)
     {
-        public readonly double MaxLat = double.MinValue;
-        public readonly double MinLat = double.MaxValue;
-        public readonly double MaxLon = double.MinValue;
-        public readonly double MinLon = double.MaxValue;
+        if (node is null) { return null; }
 
-        public W(IEnumerable<Point> seq)
+        // node must have a valid identifier and location
+        if (!locator.TryGetPointLocation(node?.Id ?? -1, out var n))
         {
-            foreach (var p in seq)
-            {
-                MaxLat = Math.Max(MaxLat, p.lat);
-                MinLat = Math.Min(MinLat, p.lat);
-                MaxLon = Math.Max(MaxLon, p.lon);
-                MinLon = Math.Min(MinLon, p.lon);
-            }
+            return null;
         }
-    }
 
-    /// <summary>
-    /// Cache with Nodes to complete way and relation definitions.
-    /// </summary>
-    private readonly Dictionary<long, N> ns = [];
-
-    /// <summary>
-    /// Cache with Ways to complete relation definitions.
-    /// </summary>
-    private readonly Dictionary<long, W> ws = [];
-
-    private readonly ElementLocator locator = locator;
-
-    /// <summary>
-    /// Places are processed as follows:
-    ///
-    /// <list type="bullet">
-    ///     <item>Check a place definition, not properly defined places terminate processing.</item>
-    ///     <item>Check a place definition is within what the map can show. Failure terminates processing.</item>
-    /// </list>
-    /// </summary>
-    private Place Transform(Node node)
-    {
-        if (node is not null)
+        // empty nodes are skipped
+        if (node!.Tags is null || node.Tags.Count == 0)
         {
-            /* Nodes are used for way and relation definitions. Missing
-            ** essential parts means the entire file is broken, and there
-            ** is no reason to continue further.
-            **
-            ** TODO: consider to relax this rule. */
+            return null;
+        }
 
-            var d = node.Id is not null && node.Longitude is not null && node.Latitude is not null;
+        SortedSet<string> keywords = [];
+        KeywordExtractor.Extract(node.Tags, keywords);
 
-            if (!d) { Reporter.ThrowOnUndefined(node, "node"); }
-
-            /* extract and verify position */
-
-            var lon = Round(node.Longitude.Value);
-            var lat = Round(node.Latitude.Value);
-            var loc = new Point() { lon = lon, lat = lat };
-
-            // node is outside of what map defines/ can depict
-            if (!CrsEpsg3857.IsWithin(lon, lat)) { Reporter.ThrowOnOutbound(node); }
-
-            // keep node for way and relation definitions
-            ns.Add(node.Id.Value, new(loc.lat, loc.lon));
-
-            if (node.Tags is null || node.Tags.Count == 0) { return null; }
-
-            // extract keywords and tags
-
-            var place = new Place();
-
-            // places are associated with search keywords used in core search
-            KeywordExtractor.Extract(node.Tags, place.keywords);
-
-            if (place.keywords.Count > 0)
+        // each place must be associated with at least one keyword
+        if (keywords.Count > 0)
+        {
+            var place = new Place()
             {
-                AttributeExtractor.Extract(node.Tags, place);
-                NameExtractor.Extract(node.Tags, place);
-                LinkedExtractor.Extract(node, place.linked);
+                keywords = keywords,
+            };
 
-                place.location = loc;
+            AttributeExtractor.Extract(node.Tags, place);
+            NameExtractor.Extract(node.Tags, place);
+            LinkedExtractor.Extract(node, place.linked);
 
-                return place;
-            }
+            place.location = new() { lon = Round(n.Loc.Lon), lat = Round(n.Loc.Lat) };
+            return place;
         }
 
         return null;
     }
 
-    private bool TryGetSequence(Way way, out List<Point> sequence)
+    /// <summary>
+    /// https://wiki.openstreetmap.org/wiki/Way
+    /// </summary>
+    private Place? Transform(Way? way)
     {
-        sequence = [];
+        if (way is null) { return null; }
 
-        foreach (var id in way.Nodes)
+        if (!locator.TryGetWayBoundingBox(way?.Id ?? -1, out var _))
         {
-            if (!ns.TryGetValue(id, out var node)) { return false; }
-            sequence.Add(new() { lon = node.lon, lat = node.lat });
+            return null;
         }
 
-        return true;
-    }
+        locator.TryGetPointSequence(way!.Nodes, out var seq);
 
-    private Place Transform(Way way)
-    {
-        if (way is not null)
+        // empty ways are skipped
+        if (way.Tags is null || way.Tags.Count == 0) { return null; }
+
+        SortedSet<string> keywords = [];
+        KeywordExtractor.Extract(way.Tags, keywords);
+
+        if (keywords.Count > 0)
         {
-            // check if the way is properly defined, and throw if not
-            if (way.Id is null || way.Nodes is null) { Reporter.ThrowOnUndefined(way, "way"); }
-
-            // small or open ways are skipped, closed polygons pass
-
-            if (way.Nodes.Length < 4 || way.Nodes[0] != way.Nodes[^1] || way.Tags is null || way.Tags.Count == 0) { return null; }
-
-            var place = new Place();
-
-            if (!TryGetSequence(way, out var seq)) { return null; }
-
-            KeywordExtractor.Extract(way.Tags, place.keywords);
-
-            if (place.keywords.Count > 0)
+            var place = new Place()
             {
-                AttributeExtractor.Extract(way.Tags, place);
-                NameExtractor.Extract(way.Tags, place);
-                LinkedExtractor.Extract(way, place.linked);
+                keywords = keywords,
+            };
 
-                /* Note that both IsCounterClockwise and Centroid
-                ** use closedness of the shape verified above. */
+            AttributeExtractor.Extract(way.Tags, place);
+            NameExtractor.Extract(way.Tags, place);
+            LinkedExtractor.Extract(way, place.linked);
 
-                /* GeoJSON assumes counterclockwise external rings,
-                ** see https://www.rfc-editor.org/rfc/rfc7946#appendix-B.1! */
+            // Note that both IsCounterClockwise and Centroid
+            // use closedness of the shape verified above.
 
-                if (!Cartesian.IsCounterClockwise(seq)) { seq.Reverse(); }
-                var cen = Cartesian.Centroid(seq);
+            /* GeoJSON assumes counterclockwise external rings,
+            ** see https://www.rfc-editor.org/rfc/rfc7946#appendix-B.1! */
 
-                place.attributes.polygon = seq;
-                place.location = new() { lon = Round(cen.lon), lat = Round(cen.lat) };
+            if (!Cartesian.IsCounterClockwise(seq)) { seq.Reverse(); }
+            var cen = Cartesian.Centroid(seq);
 
-                return place;
-            }
+            place.attributes.polygon = seq;
+            place.location = new() { lon = Round(cen.lon), lat = Round(cen.lat), };
+
+            return place;
         }
 
         return null;
     }
 
-    private Place Transform(Relation relation)
+    private bool TryGetRelLocation(Relation rel, out Point? loc)
+    {
+        var ans = false; loc = null;
+        var minLon = double.MaxValue;
+        var maxLon = double.MinValue;
+        var minLat = double.MaxValue;
+        var maxLat = double.MinValue;
+
+        if (rel.Tags?.Contains("type", "multipolygon") is not true)
+        {
+            return ans;
+        }
+
+        foreach (var m in rel.Members)
+        {
+            if (m.Type == OsmGeoType.Node)
+            {
+                if (!locator.TryGetPointLocation(m.Id, out var n)) { return false; }
+
+                minLon = Math.Min(minLon, n.Loc.Lon);
+                maxLon = Math.Max(maxLon, n.Loc.Lon);
+                minLat = Math.Min(minLat, n.Loc.Lat);
+                maxLat = Math.Max(maxLat, n.Loc.Lat);
+                ans = true;
+            }
+
+            if (m.Type == OsmGeoType.Way)
+            {
+                if (!locator.TryGetWayBoundingBox(m.Id, out var b)) { return false; }
+
+                minLon = Math.Min(minLon, b.Loc.MinLon);
+                maxLon = Math.Max(maxLon, b.Loc.MaxLon);
+                minLat = Math.Min(minLat, b.Loc.MinLat);
+                maxLat = Math.Max(maxLat, b.Loc.MaxLat);
+                ans = true;
+            }
+
+            if (m.Type == OsmGeoType.Relation)
+            {
+                // do nothing
+            }
+        }
+
+        if (ans)
+        {
+            loc = new()
+            {
+                lon = minLon + ((maxLon - minLon) / 2),
+                lat = minLat + ((maxLat - minLat) / 2),
+            };
+        }
+
+        return ans;
+    }
+
+    /// <summary>
+    /// https://wiki.openstreetmap.org/wiki/Relation
+    /// </summary>
+    private Place? Transform(Relation? relation)
     {
         if (relation is not null)
         {
@@ -172,7 +170,7 @@ internal class Transformer(ElementLocator locator)
 
             if (relation.Tags is null || relation.Tags.Count == 0) { return null; }
 
-            if (locator.TryGetLocation(relation.Id.Value, out var loc))
+            if (TryGetRelLocation(relation, out var loc))
             {
                 var place = new Place();
                 KeywordExtractor.Extract(relation.Tags, place.keywords);
@@ -183,7 +181,7 @@ internal class Transformer(ElementLocator locator)
                     NameExtractor.Extract(relation.Tags, place);
                     LinkedExtractor.Extract(relation, place.linked);
 
-                    place.location = new() { lon = Round(loc.lon), lat = Round(loc.lat) };
+                    place.location = new() { lon = Round(loc!.lon), lat = Round(loc.lat) };
 
                     return place;
                 }
@@ -193,10 +191,8 @@ internal class Transformer(ElementLocator locator)
         return null;
     }
 
-    public Place Transform(OsmGeo element)
+    public Place? Transform(OsmGeo element)
     {
-        return Transform(element as Node)
-            ?? Transform(element as Way)
-            ?? Transform(element as Relation);
+        return Transform(element as Node) ?? Transform(element as Way) ?? Transform(element as Relation);
     }
 }

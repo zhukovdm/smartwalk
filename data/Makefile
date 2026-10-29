@@ -9,16 +9,25 @@ postgres-connect:
 
 ################################################################################
 
-# Do not forget to set up these variables based on your preferences!
+# UPDATE REGION FILE WITH YOURS!
 
+#REGION_FILE=andorra-latest
 REGION_FILE=czech-republic-latest
+#REGION_FILE=luxembourg-latest
+
+# Earth
+
+REGION_W := +180
+REGION_N := +90
+REGION_E := -180
+REGION_S := -90
 
 # Prague (prod)
 
-REGION_W=14.18
-REGION_N=50.20
-REGION_E=14.80
-REGION_S=49.90
+# REGION_W=14.18
+# REGION_N=50.20
+# REGION_E=14.80
+# REGION_S=49.90
 
 # Prague (perf)
 
@@ -92,39 +101,53 @@ REGION_S=49.90
 
 ################################################################################
 
+.PHONY: advice check-clean dump init-data restore routing taginfo
+
 A_DIR=${PWD}/assets
 
-NODE_DIRS=shared advice dbpedia dump init restore taginfo wikidata-create wikidata-enrich
-DATA_DIRS=database routing taginfo
+NODE_DIRS := shared advice dbpedia dump init restore taginfo wikidata-create wikidata-enrich
 
-# routing engine
-R_CMD=docker run --rm -t -v $(A_DIR)/routing:/data ghcr.io/project-osrm/osrm-backend:26.10.0-debian
+OSRM_IMAGE := ghcr.io/project-osrm/osrm-backend:26.10.0-debian
+R_CMD := docker run --rm -t -v $(A_DIR)/routing/osrm:/data $(OSRM_IMAGE)
 
-# entity store and index
 MONGO_CONNECTION_STRING=mongodb://localhost:27017
 
-################################################################################
-
-.PHONY: advice check-clean dump restore routing taginfo
-
-init-data-dirs:
-	@for dir in $(DATA_DIRS); do mkdir -p $(A_DIR)/$$dir; done
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# init-data
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 init-node-dirs:
 	@for dir in $(NODE_DIRS); do (cd ./$$dir && npm ci); done
 
 check-region-file:
-	@[ -f $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf ] \
-		|| { echo "File $(REGION_FILE).osm.pbf has not been found..."; exit 1; }
+	@[ -f $(A_DIR)/maps/osm/$(REGION_FILE).osm.pbf ] \
+		|| { echo "File $(REGION_FILE).osm.pbf has not been found!"; exit 1; }
 
-init-data: init-data-dirs init-node-dirs check-region-file
+init-data: init-node-dirs check-region-file
 
-routing:
-	@cp $(A_DIR)/osm-maps/$(REGION_FILE).osm.pbf $(A_DIR)/routing && \
-	$(R_CMD) osrm-extract -p /opt/foot.lua /data/$(REGION_FILE).osm.pbf && \
-	$(R_CMD) osrm-partition /data/$(REGION_FILE).osrm && \
-	$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm && \
-	rm $(A_DIR)/routing/$(REGION_FILE).osm.pbf
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# routing
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+osrm-extract:
+	docker run --rm -t \
+		-v $(A_DIR)/maps/osm/$(REGION_FILE).osm.pbf:/data/$(REGION_FILE).osm.pbf:ro \
+		-v $(A_DIR)/routing/osrm:/data \
+		$(OSRM_IMAGE) \
+		osrm-extract -p /opt/foot.lua /data/$(REGION_FILE).osm.pbf
+
+osrm-partition:
+	$(R_CMD) osrm-partition /data/$(REGION_FILE).osrm
+
+osrm-customize:
+	$(R_CMD) osrm-customize /data/$(REGION_FILE).osrm
+
+# running order matters!
+routing: osrm-extract osrm-partition osrm-customize
+
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# taginfo
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 taginfo:
 	@cd ./taginfo && npm run build && npm run start -- \
@@ -160,20 +183,41 @@ taginfo:
 		tourism \
 		vending
 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# init-database
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 init-database:
 	@cd ./init && npm run build && npm run start -- \
 		--conn $(MONGO_CONNECTION_STRING)
 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# database-osm
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
+PBF_NCNT = $(shell osmium fileinfo -e -g data.count.nodes $(A_DIR)/maps/osm/$(REGION_FILE).osm.pbf)
+PBF_WCNT = $(shell osmium fileinfo -e -g data.count.ways  $(A_DIR)/maps/osm/$(REGION_FILE).osm.pbf)
+
 database-osm:
-	@cd ./osm && dotnet run \
+	cd ./osm/ && dotnet run -- \
 		--file $(REGION_FILE).osm.pbf \
 		--bbox $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) \
+		--ncnt $(PBF_NCNT) \
+		--wcnt $(PBF_WCNT) \
 		--rows 2 \
 		--cols 2 \
 		--conn $(MONGO_CONNECTION_STRING)
 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# database-wikidata-create
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 database-wikidata-create:
 	@./wikidata-create.sh $(REGION_W) $(REGION_N) $(REGION_E) $(REGION_S) $(MONGO_CONNECTION_STRING)
+
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# database-wikidata-enrich
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 database-wikidata-enrich:
 	@cd ./wikidata-enrich && npm run build && npm run start -- \

@@ -30,7 +30,7 @@ internal static partial class AttributeExtractor
 
     private sealed class Item
     {
-        public string value { get; set; }
+        public string? value { get; set; }
     }
 
     private static readonly SortedSet<string> clothes, cuisine, rental;
@@ -38,7 +38,7 @@ internal static partial class AttributeExtractor
     private static SortedSet<string> GetCollection(string file)
     {
         var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(file));
-        return [..JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)];
+        return [.. JsonSerializer.Deserialize<List<Item>>(json)!.Select(i => i.value!)];
     }
 
     static AttributeExtractor()
@@ -73,7 +73,7 @@ internal static partial class AttributeExtractor
             && (uri.Scheme == Uri.UriSchemeHttp || uri.Scheme == Uri.UriSchemeHttps);
     }
 
-    private static bool TryConstructWikipedia(string str, out string uri)
+    private static bool TryConstructWikipedia(string str, out string? uri)
     {
         uri = null;
 
@@ -214,12 +214,12 @@ internal static partial class AttributeExtractor
         var _ho = new[] { "addr:housenumber", "addr:conscriptionnumber" };
         var _po = new[] { "addr:postcode", "addr:postbox" };
 
-        Accommodate(tags, attributes, _co, co => attributes.address.country = co);
-        Accommodate(tags, attributes, _se, se => attributes.address.settlement = se);
-        Accommodate(tags, attributes, _di, di => attributes.address.district = di);
-        Accommodate(tags, attributes, _pl, pl => attributes.address.place = pl);
-        Accommodate(tags, attributes, _ho, ho => attributes.address.house = ho);
-        Accommodate(tags, attributes, _po, po => attributes.address.postalCode = po);
+        Accommodate(tags, attributes, _co, co => attributes.address!.country = co);
+        Accommodate(tags, attributes, _se, se => attributes.address!.settlement = se);
+        Accommodate(tags, attributes, _di, di => attributes.address!.district = di);
+        Accommodate(tags, attributes, _pl, pl => attributes.address!.place = pl);
+        Accommodate(tags, attributes, _ho, ho => attributes.address!.house = ho);
+        Accommodate(tags, attributes, _po, po => attributes.address!.postalCode = po);
     }
 
     private static void SocialNetworks(TagsCollectionBase tags, Attributes attributes)
@@ -232,13 +232,13 @@ internal static partial class AttributeExtractor
         var _tw = new[] { "contact:twitter", "twitter", "brand:twitter" };
         var _yo = new[] { "contact:youtube", "brand:youtube", "youtube" };
 
-        Socialize(tags, attributes, _fa, fa => attributes.socialNetworks.facebook = fa);
-        Socialize(tags, attributes, _it, it => attributes.socialNetworks.instagram = it);
-        Socialize(tags, attributes, _li, li => attributes.socialNetworks.linkedin = li);
-        Socialize(tags, attributes, _pi, pi => attributes.socialNetworks.pinterest = pi);
-        Socialize(tags, attributes, _te, te => attributes.socialNetworks.telegram = te);
-        Socialize(tags, attributes, _tw, tw => attributes.socialNetworks.twitter = tw);
-        Socialize(tags, attributes, _yo, yo => attributes.socialNetworks.youtube = yo);
+        Socialize(tags, attributes, _fa, fa => attributes.socialNetworks!.facebook = fa);
+        Socialize(tags, attributes, _it, it => attributes.socialNetworks!.instagram = it);
+        Socialize(tags, attributes, _li, li => attributes.socialNetworks!.linkedin = li);
+        Socialize(tags, attributes, _pi, pi => attributes.socialNetworks!.pinterest = pi);
+        Socialize(tags, attributes, _te, te => attributes.socialNetworks!.telegram = te);
+        Socialize(tags, attributes, _tw, tw => attributes.socialNetworks!.twitter = tw);
+        Socialize(tags, attributes, _yo, yo => attributes.socialNetworks!.youtube = yo);
     }
 
     private static void Email(TagsCollectionBase tags, Attributes attributes)

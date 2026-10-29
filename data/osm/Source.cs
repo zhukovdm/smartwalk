@@ -9,7 +9,7 @@ using OsmSharp.Streams;
 
 namespace osm;
 
-internal class Source : IEnumerable<OsmGeo>
+internal class Source : IDisposable, IEnumerable<OsmGeo>
 {
     private readonly ILogger logger;
     private readonly OsmStreamSource stream;
@@ -34,7 +34,7 @@ internal class Source : IEnumerable<OsmGeo>
             {
                 if (logger.IsEnabled(LogLevel.Information))
                 {
-                    logger.LogInformation("Still working... {step} objects already processed.", step);
+                    logger.LogInformation("Still working... {step} objects already sourced.", step);
                 }
             }
 
@@ -43,6 +43,11 @@ internal class Source : IEnumerable<OsmGeo>
     }
 
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    public void Dispose()
+    {
+        stream?.Dispose();
+    }
 }
 
 internal static class SourceFactory
@@ -58,7 +63,7 @@ internal static class SourceFactory
         }
         catch (Exception) { throw new Exception($"Cannot create file stream at ${fileName}."); }
 
-        Func<OsmStreamSource> func = null;
+        Func<OsmStreamSource>? func = null;
 
         if (fileName.EndsWith(".pbf"))
         {
