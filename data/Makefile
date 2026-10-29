@@ -233,13 +233,25 @@ database-wikidata-enrich:
 	@cd ./wikidata-enrich && npm run build && npm run start -- \
 		--conn $(MONGO_CONNECTION_STRING)
 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# database-dbpedia
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 database-dbpedia:
 	@cd ./dbpedia && npm run build && npm run start -- \
 		--conn $(MONGO_CONNECTION_STRING)
 
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+# advice
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+
 advice:
 	@cd ./advice && npm run build && npm run start -- \
 		--conn $(MONGO_CONNECTION_STRING)
+
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+#
+# @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
 dump:
 	@cd ./dump && npm run build && npm run start -- \

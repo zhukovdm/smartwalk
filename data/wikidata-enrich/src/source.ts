@@ -3,7 +3,7 @@ import jsonld, { type ContextDefinition } from "jsonld";
 import {
   EnrichLogger,
   EnrichSource
-} from "../../shared/dist/src/index.js";
+} from "../../shared/dist/index.js";
 
 const WIKIDATA_ACCEPT_CONTENT = "application/n-quads";
 
@@ -178,7 +178,7 @@ CONSTRUCT {
 }
 WHERE {
 VALUES ?wikidataId { ${payload.join(" ")} }
-OPTIONAL { 
+OPTIONAL {
   ?wikidataId rdfs:label | dct:title | foaf:name | skos:prefLabel | skos:altLabel ?name.
   FILTER(LANG(?name) = "en" && STRLEN(STR(?name)) > 0)
 }
@@ -292,6 +292,7 @@ async function fetchFromWikidata(query: string): Promise<any[]> {
   // POST verb for long queries
   const res = await axios.post(WIKIDATA_SPARQL_ENDPOINT, "query=" + encodeURIComponent(query), {
     headers: {
+      // no cache due to POST method
       "Accept": `${WIKIDATA_ACCEPT_CONTENT}; charset=utf-8`,
       "Content-Type": "application/x-www-form-urlencoded",
       "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"

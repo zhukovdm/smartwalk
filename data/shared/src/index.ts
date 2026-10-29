@@ -1,13 +1,10 @@
 import { Command } from "commander";
-import {
-  Collection,
-  MongoClient
-} from "mongodb";
+import { Collection, MongoClient } from "mongodb";
 import {
   createLogger,
   format,
   transports,
-  type Logger as WinstonLogger
+  type Logger as WinstonLogger,
 } from "winston";
 
 /** Extracted value should have lehgth at least `MIN` chars. */
@@ -27,9 +24,11 @@ const KEYWORD_PATTERN = /^[a-z]+(?:[ ][a-z]+)*$/;
  * @returns True if the input string is a valid keyword.
  */
 export function isValidKeyword(keyword: string): boolean {
-  return KEYWORD_PATTERN.test(keyword)
-    && keyword.length >= KEYWORD_LENGTH_LIMIT_MIN
-    && keyword.length <= KEYWORD_LENGTH_LIMIT_MAX;
+  return (
+    KEYWORD_PATTERN.test(keyword) &&
+    keyword.length >= KEYWORD_LENGTH_LIMIT_MIN &&
+    keyword.length <= KEYWORD_LENGTH_LIMIT_MAX
+  );
 }
 
 /**
@@ -50,17 +49,17 @@ export function roundCoordinate(num: number): number {
  * @returns First element of the array.
  */
 export function getFirst(obj: unknown) {
-  return (Array.isArray(obj)) ? obj[0] : obj;
+  return Array.isArray(obj) ? obj[0] : obj;
 }
 
 /**
  * @returns Array or wraps a value into an array.
  */
 export function ensureArray<T>(t: T | T[]): T[] {
-  return (Array.isArray(t) ? t : [t]);
+  return Array.isArray(t) ? t : [t];
 }
 
-const paddedWithZeros = (num: number) => (String(num).padStart(2, "0"));
+const paddedWithZeros = (num: number) => String(num).padStart(2, "0");
 
 /**
  * @returns Current time in HH:MM:SS.
@@ -68,14 +67,14 @@ const paddedWithZeros = (num: number) => (String(num).padStart(2, "0"));
 export function getTime(): string {
   const date = new Date();
   return `${paddedWithZeros(date.getHours())}:${paddedWithZeros(date.getMinutes())}:${paddedWithZeros(date.getSeconds())}`;
-};
+}
 
 /**
  * @returns Current date and time in YYYY-MM-DD HH:MM:SS.
  */
-export function getDateTime(): string {
-  const date = new Date();
-  return `${date.getFullYear()}-${paddedWithZeros(date.getMonth() + 1)}-${paddedWithZeros(date.getDate())} ${paddedWithZeros(date.getHours())}:${paddedWithZeros(date.getMinutes())}:${paddedWithZeros(date.getSeconds())}`
+export function getDateTime(date: Date | null = null): string {
+  date = date ?? new Date();
+  return `${date.getFullYear()}-${paddedWithZeros(date.getMonth() + 1)}-${paddedWithZeros(date.getDate())} ${paddedWithZeros(date.getHours())}:${paddedWithZeros(date.getMinutes())}:${paddedWithZeros(date.getSeconds())}`;
 }
 
 /**
@@ -83,7 +82,11 @@ export function getDateTime(): string {
  * @param window Number of item in one batch.
  * @returns Generator.
  */
-export function getPayloadIter<T>(payload: T[], window: number, logger: EnrichLogger): {
+export function getPayloadIter<T>(
+  payload: T[],
+  window: number,
+  logger: EnrichLogger,
+): {
   [Symbol.iterator](): Generator<T[], void, unknown>;
 } {
   let length = payload.length;
@@ -94,8 +97,8 @@ export function getPayloadIter<T>(payload: T[], window: number, logger: EnrichLo
         payload = payload.slice(window);
         logger.logPayloadRemain(1 - (length - payload.length) / length);
       }
-    }
-  }
+    },
+  };
 }
 
 export class SafeFetcher<T> {
@@ -131,7 +134,7 @@ export class SafeFetcher<T> {
   async fetchWithRetry(
     unsafeFetch: () => Promise<T>,
     reportFail: (attempt: number, err: unknown) => void,
-    defaultValue: T
+    defaultValue: T,
   ): Promise<T> {
     let result: T | undefined = undefined;
 
@@ -142,8 +145,7 @@ export class SafeFetcher<T> {
       ++attempt;
       try {
         result = await unsafeFetch();
-      }
-      catch (err) {
+      } catch (err) {
         reportFail(attempt, err);
         await SafeFetcher.wait(this.failwait);
       }
@@ -154,28 +156,26 @@ export class SafeFetcher<T> {
 }
 
 export class SimpleParser {
-
   /**
    * Read connection string.
    */
   parseArgs(): { conn: string } {
-    const args = new Command()
-      .option("--conn <string>", "Database connection string");
+    const args = new Command().option(
+      "--conn <string>",
+      "Database connection string",
+    );
     return args.parse().opts();
   }
 }
 
 export class EnrichLogger {
-
   private readonly logger: WinstonLogger;
 
   constructor() {
     this.logger = createLogger({
       level: "info",
       format: format.combine(format.colorize(), format.simple()),
-      transports: [
-        new transports.Console()
-      ]
+      transports: [new transports.Console()],
     });
   }
 
@@ -184,11 +184,15 @@ export class EnrichLogger {
   }
 
   logPayloadLength(payloadLength: number) {
-    this.logger.info(`[${getTime()}] > Constructed payload with ${payloadLength} unique identifiers.`);
+    this.logger.info(
+      `[${getTime()}] > Constructed payload with ${payloadLength} unique identifiers.`,
+    );
   }
 
   logPayloadRemain(payloadRatio: number) {
-    this.logger.info(`[${getTime()}] > ${(payloadRatio * 100.0).toFixed(0)}% of the initial payload are left...`);
+    this.logger.info(
+      `[${getTime()}] > ${(payloadRatio * 100.0).toFixed(0)}% of the initial payload are left...`,
+    );
   }
 
   logFailedFetchAttempt(attempt: number, err: unknown) {
@@ -197,23 +201,31 @@ export class EnrichLogger {
   }
 
   logFetchedEntities(fetched: number, given: number) {
-    this.logger.info(`[${getTime()}] > Fetched ${fetched} entities for given ${given} identifiers.`);
+    this.logger.info(
+      `[${getTime()}] > Fetched ${fetched} entities for given ${given} identifiers.`,
+    );
   }
 
   logFailedEnrich(wikidataId: string, err: unknown) {
-    this.logger.warn(`[${getTime()}] >  Failed to enrich an item with ${wikidataId} identifier.`);
+    this.logger.warn(
+      `[${getTime()}] >  Failed to enrich an item with ${wikidataId} identifier.`,
+    );
     this.logger.info(err);
   }
 
   logItemsEnriched(batchEnriched: number, totalEnriched: number) {
-    this.logger.info(`[${getTime()}] > Enriched ${batchEnriched} from this batch, enriched total ${totalEnriched} entities.`);
+    this.logger.info(
+      `[${getTime()}] > Enriched ${batchEnriched} from this batch, enriched total ${totalEnriched} entities.`,
+    );
   }
 
   logFinished() {
     this.logger.info(`[${getTime()}] Finished processing entities.`);
   }
 
-  logError(err: unknown) { this.logger.error(err); }
+  logError(err: unknown) {
+    this.logger.error(err);
+  }
 }
 
 export abstract class EnrichSource<S> {
@@ -228,22 +240,19 @@ export abstract class EnrichSource<S> {
   abstract fetchFrom(query: string): Promise<S[]>;
 
   async load(items: string[]): Promise<S[]> {
-
-    const result = await new SafeFetcher<S[]>(3, 3, 10)
-      .fetchWithRetry(
-        () => this.fetchFrom(this.getQuery(items)),
-        (attempt: number, err: unknown) => {
-          this.logger.logFailedFetchAttempt(attempt, err);
-        },
-        []
-      );
+    const result = await new SafeFetcher<S[]>(3, 10, 10).fetchWithRetry(
+      () => this.fetchFrom(this.getQuery(items)),
+      (attempt: number, err: unknown) => {
+        this.logger.logFailedFetchAttempt(attempt, err);
+      },
+      [],
+    );
     this.logger.logFetchedEntities(result.length, items.length);
     return result;
   }
 }
 
 export abstract class EnrichTarget<T> {
-
   protected readonly client: MongoClient;
   protected readonly collection: Collection;
 
@@ -262,18 +271,22 @@ export abstract class EnrichTarget<T> {
   protected async getPayload(): Promise<string[]> {
     const target = "linked.wikidata";
 
+    // const cutoff = new Date();
+    // cutoff.setHours(cutoff.getHours() - 1);
+
     let promise = this.collection
-      .find({ [target]: { $exists: true } })
+      .find({
+        [target]: { $exists: true },
+        // "metadata.updated": { $lt: getDateTime(cutoff) },
+      })
       .project({ [target]: 1 })
       .toArray();
 
-    return (await promise)
-      .map((doc) => `wd:${doc.linked.wikidata}`);
+    return (await promise).map((doc) => `wd:${doc.linked.wikidata}`);
   }
 }
 
 export abstract class EnrichTransformer<S, T> {
-
   abstract constructFromEntity(entity: S): T;
 
   /**
@@ -288,12 +301,15 @@ export abstract class EnrichTransformer<S, T> {
 }
 
 export abstract class EnrichPipeline<S, T> {
-
   private readonly source: EnrichSource<S>;
   private readonly target: EnrichTarget<T>;
   private readonly transformer: EnrichTransformer<S, T>;
 
-  constructor(source: EnrichSource<S>, target: EnrichTarget<T>, transformer: EnrichTransformer<S, T>) {
+  constructor(
+    source: EnrichSource<S>,
+    target: EnrichTarget<T>,
+    transformer: EnrichTransformer<S, T>,
+  ) {
     this.source = source;
     this.target = target;
     this.transformer = transformer;

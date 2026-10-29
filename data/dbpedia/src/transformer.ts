@@ -1,7 +1,4 @@
-import {
-  EnrichTransformer,
-  getFirst
-} from "../../shared/dist/src/index.js";
+import { EnrichTransformer, getFirst } from "../../shared/dist/index.js";
 
 function handleDate(value: string) {
   const d = new Date(value).getFullYear();
@@ -23,8 +20,8 @@ function constructFromEntity(entity: any): any {
   object.year = handleDate(getFirst(entity.date));
 
   // linked
-  object.dbpedia = (getFirst(entity.dbpedia))?.substring(3);
-  object.yago = (getFirst(entity.yago))?.substring(3);
+  object.dbpedia = getFirst(entity.dbpedia)?.substring(3);
+  object.yago = getFirst(entity.yago)?.substring(3);
 
   // existing
   object.wikidata = entity.wikidata.substring(3);
@@ -33,7 +30,6 @@ function constructFromEntity(entity: any): any {
 }
 
 export default class Transformer extends EnrichTransformer<any, any> {
-
   constructFromEntity(entity: any) {
     return constructFromEntity(entity);
   }

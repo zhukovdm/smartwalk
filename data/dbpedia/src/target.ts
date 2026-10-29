@@ -2,11 +2,10 @@ import {
   EnrichLogger,
   EnrichTarget,
   getDateTime,
-  getPayloadIter
-} from "../../shared/dist/src/index.js";
+  getPayloadIter,
+} from "../../shared/dist/index.js";
 
 export default class Target extends EnrichTarget<any> {
-
   private totalEnriched = 0;
   private readonly logger: EnrichLogger;
 
@@ -36,31 +35,30 @@ export default class Target extends EnrichTarget<any> {
       try {
         const filter = {
           "linked.wikidata": {
-            $eq: item.wikidata
-          }
+            $eq: item.wikidata,
+          },
         };
 
         const update: Record<string, any> = {
           $set: {
-            "name": item.name,
+            name: item.name,
             "attributes.description": item.description,
             "attributes.image": item.image,
             "attributes.website": item.website,
             "attributes.year": item.year,
             "linked.dbpedia": item.dbpedia,
             "linked.yago": item.yago,
-            "metadata.updated": getDateTime()
-          }
+            "metadata.updated": getDateTime(),
+          },
         };
 
         const options = {
-          ignoreUndefined: true
-        }
+          ignoreUndefined: true,
+        };
 
         await this.collection.updateMany(filter, update, options);
         ++batchEnriched;
-      }
-      catch (ex) {
+      } catch (ex) {
         this.logger.logFailedEnrich(item.wikidata, ex);
       }
     }
@@ -69,5 +67,7 @@ export default class Target extends EnrichTarget<any> {
     this.logger.logItemsEnriched(batchEnriched, this.totalEnriched);
   }
 
-  async dispose(): Promise<void> { this.client.close(); }
+  async dispose(): Promise<void> {
+    this.client.close();
+  }
 }

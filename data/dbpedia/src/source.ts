@@ -1,9 +1,6 @@
 import axios from "axios";
 import jsonld, { type ContextDefinition } from "jsonld";
-import {
-  EnrichSource,
-  EnrichLogger
-} from "../../shared/dist/src/index.js";
+import { EnrichSource, EnrichLogger } from "../../shared/dist/index.js";
 
 const DBPEDIA_ACCEPT_CONTENT = "application/n-triples";
 const DBPEDIA_RDF_FORMAT = "application/n-quads";
@@ -11,40 +8,40 @@ const DBPEDIA_RDF_FORMAT = "application/n-quads";
 const DBPEDIA_SPARQL_ENDPOINT = "https://dbpedia.org/sparql?query=";
 
 const DBPEDIA_JSONLD_CONTEXT = {
-  "my": "http://example.com/",
-  "db": "http://dbpedia.org/resource/",
-  "wd": "http://www.wikidata.org/entity/",
-  "ya": "http://yago-knowledge.org/resource/",
-  "xsd": "http://www.w3.org/2001/XMLSchema#",
-  "name": {
+  my: "http://example.com/",
+  db: "http://dbpedia.org/resource/",
+  wd: "http://www.wikidata.org/entity/",
+  ya: "http://yago-knowledge.org/resource/",
+  xsd: "http://www.w3.org/2001/XMLSchema#",
+  name: {
     "@id": "my:name",
-    "@container": "@language"
+    "@container": "@language",
   },
-  "description": {
+  description: {
     "@id": "my:description",
-    "@container": "@language"
+    "@container": "@language",
   },
-  "image": {
+  image: {
     "@id": "my:image",
-    "@type": "@id"
+    "@type": "@id",
   },
-  "website": {
+  website: {
     "@id": "my:website",
-    "@type": "@id"
+    "@type": "@id",
   },
-  "date": {
+  date: {
     "@id": "my:date",
-    "@type": "xsd:date"
+    "@type": "xsd:date",
   },
-  "dbpedia": {
+  dbpedia: {
     "@id": "my:dbPedia",
-    "@type": "@id"
+    "@type": "@id",
   },
-  "yago": {
+  yago: {
     "@id": "my:yago",
-    "@type": "@id"
+    "@type": "@id",
   },
-  "wikidata": "@id"
+  wikidata: "@id",
 } as ContextDefinition;
 
 /**
@@ -95,16 +92,19 @@ OPTIONAL {
 }
 OPTIONAL {
   ?dbPediaId dbo:foundingDate | dbp:established | dbo:openingDate | dbp:opening | dbp:completionDate ?date.
-}}`};
+}}`;
+}
 
 async function fetchFromDbPedia(query: string): Promise<any[]> {
-
-  const res = await axios.get(DBPEDIA_SPARQL_ENDPOINT + encodeURIComponent(query), {
-    headers: {
-      "Accept": `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
-      "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)"
-    }
-  });
+  const res = await axios.get(
+    DBPEDIA_SPARQL_ENDPOINT + encodeURIComponent(query),
+    {
+      headers: {
+        Accept: `${DBPEDIA_ACCEPT_CONTENT}; charset=utf-8`,
+        "User-Agent": "SmartWalk (https://github.com/zhukovdm/smartwalk)",
+      },
+    },
+  );
 
   // empty graph
   if ((res.data as string).startsWith("# Empty NT")) {
@@ -112,7 +112,7 @@ async function fetchFromDbPedia(query: string): Promise<any[]> {
   }
 
   const arr = await jsonld.fromRDF(res.data, {
-    format: DBPEDIA_RDF_FORMAT // look at n-triples as if it were n-quads!
+    format: DBPEDIA_RDF_FORMAT, // look at n-triples as if it were n-quads!
   });
 
   const jsn = await jsonld.compact(arr, DBPEDIA_JSONLD_CONTEXT);
@@ -120,7 +120,6 @@ async function fetchFromDbPedia(query: string): Promise<any[]> {
 }
 
 export default class Source extends EnrichSource<any> {
-
   constructor(logger: EnrichLogger) {
     super(logger);
   }
