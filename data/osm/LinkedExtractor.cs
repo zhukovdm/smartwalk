@@ -23,19 +23,19 @@ internal partial class LinkedExtractor
 
     public static void Extract(Node node, Linked link)
     {
-        link.osm = "node/" + node.Id.Value.ToString();
+        link.osm = "node/" + node.Id!.Value.ToString();
         LinkWikidata(node.Tags, link);
     }
 
     public static void Extract(Way way, Linked link)
     {
-        link.osm = "way/" + way.Id.Value.ToString();
+        link.osm = "way/" + way.Id!.Value.ToString();
         LinkWikidata(way.Tags, link);
     }
 
     public static void Extract(Relation relation, Linked link)
     {
-        link.osm = "relation/" + relation.Id.Value.ToString();
+        link.osm = "relation/" + relation.Id!.Value.ToString();
         LinkWikidata(relation.Tags, link);
     }
 }

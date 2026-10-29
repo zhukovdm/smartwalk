@@ -14,7 +14,7 @@ internal static class KeywordExtractor
 {
     private sealed class Item
     {
-        public string value { get; set; }
+        public string? value { get; set; }
     }
 
     /// <summary>
@@ -80,7 +80,7 @@ internal static class KeywordExtractor
         foreach (var key in union)
         {
             var json = File.ReadAllText(PathBuilder.GetTaginfoFilePath(key));
-            ts.Add(key, [..JsonSerializer.Deserialize<List<Item>>(json).Select(i => i.value)]);
+            ts.Add(key, [.. JsonSerializer.Deserialize<List<Item>>(json)!.Select(i => i.value!)]);
         }
     }
 
