@@ -1,7 +1,7 @@
 import {
   EnrichLogger as Logger,
-  SimpleParser as Parser
-} from "../../shared/dist/src/index.js";
+  SimpleParser as Parser,
+} from "../../shared/dist/index.js";
 import Pipeline from "./pipeline.js";
 import Source from "./source.js";
 import Target from "./target.js";
@@ -9,7 +9,6 @@ import Target from "./target.js";
 const PAYLOAD_WINDOW = 100;
 
 async function dbpediaEnrich() {
-
   const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();
@@ -29,9 +28,9 @@ async function dbpediaEnrich() {
     }
 
     logger.logFinished();
-  }
-  catch (ex) { logger.logError(ex); }
-  finally {
+  } catch (ex) {
+    logger.logError(ex);
+  } finally {
     await target.dispose();
   }
 }

@@ -3,7 +3,7 @@ import {
   ensureArray,
   getFirst,
   isValidKeyword
-} from "../../shared/dist/src/index.js";
+} from "../../shared/dist/index.js";
 
 function handleKeywordArray(arr: { en: string | string[] } = { en: [] }) {
   return ensureArray(arr.en)
