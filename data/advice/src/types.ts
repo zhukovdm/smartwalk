@@ -2,14 +2,14 @@ type PlaceAttributes = {
   [key: string]: any;
 };
 
-type Place = {
+export type Place = {
   keywords: string[];
   attributes: PlaceAttributes;
 };
 
-type NumericBoundLabel = "capacity" | "elevation" | "minimumAge" | "rating" | "year";
+export type NumericBoundLabel = "capacity" | "elevation" | "minimumAge" | "rating" | "year";
 
-type CollectBoundLabel = "clothes" | "cuisine" | "denomination" | "payment" | "rental";
+export type CollectBoundLabel = "clothes" | "cuisine" | "denomination" | "payment" | "rental";
 
 type NumericBound = {
   min: number;
@@ -24,7 +24,7 @@ type NumericBounds = {
   [key in NumericBoundLabel]?: NumericBound;
 };
 
-type Item = {
+export type Item = {
   keyword: string;
   count: number;
   attributeList: Set<string>;

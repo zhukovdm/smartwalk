@@ -1,14 +1,15 @@
 import {
   SimpleParser as Parser
-} from "../../shared/dist/src/index.js";
+} from "../../shared/dist/index.js";
 import Logger from "./logger.js";
 import Source from "./source.js";
 import Target from "./target.js";
 import Transformer from "./transformer.js";
 import writeToFile from "./writer.js";
+import { Item } from "./types.js";
 
 async function advice() {
-  
+
   const { conn } = new Parser().parseArgs();
 
   const logger = new Logger();

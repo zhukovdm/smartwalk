@@ -5,6 +5,7 @@ import {
   MongoClient,
   type WithId
 } from "mongodb";
+import { Place } from "./types.js";
 
 const DATABASE_NAME = "smartwalk";
 const PLACES_COLLECTION = "places";
