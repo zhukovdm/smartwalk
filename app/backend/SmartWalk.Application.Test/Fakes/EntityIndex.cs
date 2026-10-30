@@ -6,7 +6,7 @@ using MongoDB.Bson;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Application.Test;
+namespace SmartWalk.Application.Test.Fakes;
 
 internal class FakeEntityIndex : IEntityIndex
 {

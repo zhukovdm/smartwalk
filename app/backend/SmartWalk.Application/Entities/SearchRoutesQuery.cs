@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SmartWalk.Application.Entities;
 using SmartWalk.Core.Entities;
+
+namespace SmartWalk.Application.Entities;
 
 /// <summary>
 /// Type used for model validation.

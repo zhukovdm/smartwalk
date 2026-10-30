@@ -22,8 +22,7 @@ public sealed class SearchDirecsQueryHandler : ISearchDirecsQueryHandler
 
     public async Task<List<ShortestPath>> Handle(SearchDirecsQuery query)
     {
-        return (await shortestPathFinder.Search(query.waypoints))
-            .OrderBy(s => s, ShortestPathComparer.Instance)
-            .ToList();
+        return [.. (await shortestPathFinder.Search(query.waypoints))
+            .OrderBy(s => s, ShortestPathComparer.Instance)];
     }
 }

@@ -2,34 +2,35 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SmartWalk.Application.Test.Fakes;
 using SmartWalk.Application.Handlers;
 using SmartWalk.Core.Entities;
 
-namespace SmartWalk.Application.Test;
+namespace SmartWalk.Application.Test.Handlers;
 
 [TestClass]
 public class SearchRoutesHandlerTests
 {
-    private static readonly List<Category> categories = new()
-    {
+    private static readonly List<Category> categories =
+    [
         new() { keyword = "a", filters = new() },
         new() { keyword = "b", filters = new() },
         new() { keyword = "c", filters = new() },
         new() { keyword = "d", filters = new() },
-    };
+    ];
 
-    private static readonly List<Arrow> arrows = new()
-    {
+    private static readonly List<Arrow> arrows =
+    [
         new(0, 1), // (a -> b)
         new(2, 3), // (c -> d)
-    };
+    ];
 
     [TestMethod]
     public async Task ShouldFindNRoutes()
     {
         var N = 10;
 
-        var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
+        var entityIndex = new FakeEntityIndex(N, [.. categories.Select((cat) => cat.keyword)]);
         var shortestPathFinder = new FakeFastShortestPathFinder();
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
@@ -49,7 +50,7 @@ public class SearchRoutesHandlerTests
     {
         var N = 10;
 
-        var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
+        var entityIndex = new FakeEntityIndex(N, [.. categories.Select((cat) => cat.keyword)]);
         var shortestPathFinder = new FakeFastShortestPathFinder();
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, shortestPathFinder).Handle(new()
@@ -77,7 +78,7 @@ public class SearchRoutesHandlerTests
     {
         var N = 1;
 
-        var entityIndex = new FakeEntityIndex(N, categories.Select((cat) => cat.keyword).ToList());
+        var entityIndex = new FakeEntityIndex(N, [.. categories.Select((cat) => cat.keyword)]);
         var routingEngine = new FakeFastShortestPathFinder();
 
         var routes = await new SearchRoutesQueryHandler(entityIndex, routingEngine).Handle(new()

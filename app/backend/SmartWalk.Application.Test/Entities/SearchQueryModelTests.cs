@@ -3,7 +3,7 @@ using SmartWalk.Application.Entities;
 using SmartWalk.Application.Validators;
 using SmartWalk.Core.Entities;
 
-namespace SmartWalk.Application.Test;
+namespace SmartWalk.Application.Test.Entities;
 
 [TestClass]
 public class WebPointValidationTests

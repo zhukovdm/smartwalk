@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Application.Parsers;
 using SmartWalk.Core.Entities;
 
-namespace SmartWalk.Application.Test;
+namespace SmartWalk.Application.Test.Parsers;
 
 [TestClass]
 public class ArrowValidationTests

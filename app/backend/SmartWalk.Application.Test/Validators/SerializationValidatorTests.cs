@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Application.Validators;
 
-namespace SmartWalk.Application.Test;
+namespace SmartWalk.Application.Test.Validators;
 
 /// <summary>
 /// All queries are ultimately JSON objects. NJsonSchema internally uses

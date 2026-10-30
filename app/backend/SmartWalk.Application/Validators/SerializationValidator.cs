@@ -16,8 +16,8 @@ public static class SerializationValidator<V>
     {
         try
         {
-            errors = schema.Validate(serialization)
-                .Select((error) => $"{error.Kind} at {error.Path}, line {error.LineNumber}, position {error.LinePosition}.").ToArray();
+            errors = [.. schema.Validate(serialization)
+                .Select((error) => $"{error.Kind} at {error.Path}, line {error.LineNumber}, position {error.LinePosition}.")];
         }
         catch (Exception) { errors = ["Invalid serialization."]; }
 
