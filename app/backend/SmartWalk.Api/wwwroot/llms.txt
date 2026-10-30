@@ -1,0 +1,20 @@
+# SmartWalk
+
+> SmartWalk is a keyword-aware route search API. It plans walking routes over points of interest: autocomplete keywords, look up a place by ID, search places around a point, compute multi-place walking routes through user-selected categories, and compute shortest walking paths between ordered waypoints.
+
+## API documentation
+
+- [OpenAPI 3 specification](/swagger/v1/swagger.json): Machine-readable contract of all endpoints, request schemas, and response schemas.
+- [Swagger UI](/swagger/index.html): Interactive API explorer (served in Development only).
+
+## Endpoints
+
+- [Health check](/healthcheck): Liveness probe. Returns 200 OK.
+- [Advice keywords](/api/advice/keywords?prefix=m&count=5): Autocomplete suggestions for place keywords, with attribute metadata. Query parameters: `prefix` (string), `count` (positive integer).
+- [Get entity place](/api/entity/places/64c91f8359914b93b23b01d9): Full details for one place, addressed by its 24-character `smartId`.
+- [Search places](/api/search/places): Places near a center point within a radius, filtered by categories. The `query` parameter is URL-encoded JSON:
+  {"center":{"lon":14.4035264,"lat":50.0884344},"radius":500,"categories":[{"keyword":"museum","filters":{}}]}
+- [Search routes](/api/search/routes): Walking routes from source to target that visit one place per selected category, with optional category ordering. The `query` parameter is URL-encoded JSON:
+  {"source":{"lon":14.4035264,"lat":50.0884344},"target":{"lon":14.4039444,"lat":50.0894092},"maxDistance":3000,"categories":[{"keyword":"castle","filters":{}},{"keyword":"restaurant","filters":{}}],"arrows":[{"fr":0,"to":1}]}
+- [Search directions](/api/search/direcs): Shortest walking paths through an ordered list of waypoints. The `query` parameter is URL-encoded JSON:
+  {"waypoints":[{"lon":14.4035264,"lat":50.0884344},{"lon":14.4057219,"lat":50.0919964}]}

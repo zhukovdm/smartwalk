@@ -1,0 +1,29 @@
+{
+  "name": "SmartWalk",
+  "description": "Keyword-aware route search API for walking routes over points of interest. Provides keyword autocomplete, place lookup by ID, radius/category place search, multi-category walking route planning, and shortest-path directions.",
+  "url": "/",
+  "version": "1.0.0",
+  "documentation": "/llms.txt",
+  "capabilities": {
+    "openapi": {
+      "url": "/swagger/v1/swagger.json"
+    },
+    "http": {
+      "auth": "none"
+    },
+    "mcp": {
+      "enabled": false
+    }
+  },
+  "authentication": {
+    "type": "none"
+  },
+  "endpoints": {
+    "health": "/healthcheck",
+    "adviceKeywords": "/api/advice/keywords",
+    "entityPlace": "/api/entity/places/{smartId}",
+    "searchPlaces": "/api/search/places",
+    "searchRoutes": "/api/search/routes",
+    "searchDirections": "/api/search/direcs"
+  }
+}
