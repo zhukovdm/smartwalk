@@ -67,7 +67,8 @@ public static class AppConfigurator
         Log.Information("{Phase}: MCP Server (throw-away spike)", phase);
         builder.Services.AddMcpServer()
             .WithHttpTransport()
-            .WithTools<EchoMcpTool>();
+            .WithTools<EchoMcpTool>()
+            .WithTools<AdviceKeywordsMcpTool>();
 
         Log.Information("{Phase}: Generate Swagger UI", phase);
         builder.Services.AddSwaggerGen((g) =>

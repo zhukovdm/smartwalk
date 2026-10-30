@@ -39,9 +39,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .tools
         .iter()
         .map(|tool| tool.name.as_ref())
-        .find(|name| name.eq_ignore_ascii_case("Ping"))
+        .find(|name| name.eq_ignore_ascii_case("ping"))
         .or_else(|| tools.tools.first().map(|tool| tool.name.as_ref()))
-        .unwrap_or("Ping");
+        .unwrap_or("ping");
 
     let message = "hello".to_string();
 
@@ -66,6 +66,43 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     }
 
     if let Some(structured) = &result.structured_content {
+        println!("structured: {structured}");
+    }
+
+    let advice_tool_name = tools
+        .tools
+        .iter()
+        .map(|tool| tool.name.as_ref())
+        .find(|name| name.eq_ignore_ascii_case("get_advice_keywords"))
+        .map(|name| name.to_string())
+        .unwrap_or_else(|| "get_advice_keywords".to_string());
+
+    let prefix = "a".to_string();
+    let count = 3;
+
+    println!("Calling tool '{advice_tool_name}'...");
+    println!("prefix: {prefix}");
+    println!("count: {count}");
+
+    let mut advice_args = serde_json::Map::new();
+    advice_args.insert("prefix".to_string(), serde_json::Value::String(prefix));
+    advice_args.insert("count".to_string(), serde_json::Value::from(count));
+
+    let advice_result = client
+        .call_tool(CallToolRequestParams::new(advice_tool_name).with_arguments(advice_args))
+        .await?;
+
+    println!("is_error: {:?}", advice_result.is_error);
+
+    for content in &advice_result.content {
+        if let Some(text) = content.as_text() {
+            println!("content: {}", text.text);
+        } else {
+            println!("content: {content:?}");
+        }
+    }
+
+    if let Some(structured) = &advice_result.structured_content {
         println!("structured: {structured}");
     }
 
