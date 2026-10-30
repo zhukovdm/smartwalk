@@ -40,7 +40,7 @@ internal static class OgCategoryFormer
         {
             if (!dict.ContainsKey(cat))
             {
-                dict.Add(cat, new ());
+                dict.Add(cat, new());
             }
         }
 
