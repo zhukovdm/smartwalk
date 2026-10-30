@@ -25,6 +25,29 @@
                 "--rows=100",
                 "--cols=100"
             ]
+        },
+        {
+            "name": "Debug Rust: mcpclient",
+            "type": "lldb",
+            "request": "launch",
+            "sourceLanguages": [
+                "rust"
+            ],
+            "cargo": {
+                "args": [
+                    "build",
+                    "--manifest-path=${workspaceFolder}/misc/mcp/Cargo.toml"
+                ],
+                "filter": {
+                    "name": "mcpclient",
+                    "kind": "bin"
+                }
+            },
+            "cwd": "${workspaceFolder}/misc/mcp",
+            "env": {
+                "MCP_URL": "http://localhost:5017/mcp"
+            },
+            "args": []
         }
     ]
 }
