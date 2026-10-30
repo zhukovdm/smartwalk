@@ -68,7 +68,8 @@ public static class AppConfigurator
         builder.Services.AddMcpServer()
             .WithHttpTransport()
             .WithTools<EchoMcpTool>()
-            .WithTools<AdviceKeywordsMcpTool>();
+            .WithTools<AdviceKeywordsMcpTool>()
+            .WithTools<EntityPlacesMcpTool>();
 
         Log.Information("{Phase}: Generate Swagger UI", phase);
         builder.Services.AddSwaggerGen((g) =>

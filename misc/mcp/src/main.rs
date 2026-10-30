@@ -59,7 +59,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let message = "hello".to_string();
 
     println!("Calling tool '{tool_name}'...");
-    println!("ping: {}", message);
+    println!("ping: {message}");
 
     let mut args = serde_json::Map::new();
     args.insert("message".to_string(), serde_json::Value::String(message));
@@ -77,8 +77,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let (prefix, count) = ("a".to_string(), 3);
 
     println!("Calling tool '{tool_name}'...");
-    println!("prefix: {prefix}");
-    println!("count: {count}");
+    println!("prefix: {prefix}, count: {count}");
 
     let mut args = serde_json::Map::new();
     args.insert("prefix".to_string(), serde_json::Value::String(prefix));
@@ -89,6 +88,26 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .await?;
 
     print_result(&result);
+    println!();
+
+    // get_entity_place
+
+    let tool_name = "get_entity_place";
+    let smart_id = "6ae34bd6ef8fdc7be1718d36".to_string();
+
+    println!("Calling tool '{tool_name}'...");
+    println!("smartId: {smart_id}");
+
+    let mut args = serde_json::Map::new();
+    args.insert("smartId".to_string(), serde_json::Value::String(smart_id));
+
+    let result = client
+        .call_tool(CallToolRequestParams::new(tool_name).with_arguments(args))
+        .await?;
+
+    print_result(&result);
+
+    // shutdown the client
 
     client.cancel().await?;
     Ok(())
