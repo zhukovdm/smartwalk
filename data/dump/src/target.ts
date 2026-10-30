@@ -13,7 +13,8 @@ export default class Target {
   private readonly logger: Logger;
 
   private getFilePath(fileName: string) {
-    return `${ASSETS_DIR}/dump/${fileName}.txt`;
+    // jsonl := https://jsonlines.org/
+    return `${ASSETS_DIR}/dump/jsonl/${fileName}.jsonl`;
   }
 
   private deleteFile(fileName: FileName) {
