@@ -68,7 +68,7 @@ public static class AppConfigurator
         {
             g.SwaggerDoc("v1", new OpenApiInfo
             {
-                Title = "SmartWalk.Api",
+                Title = "SmartWalk.Api V1",
                 Version = "1.0.0",
                 Description = "Web application for keyword-aware route search"
             });
@@ -131,6 +131,9 @@ public static class AppConfigurator
                 u.SwaggerEndpoint("v1/swagger.yaml", "SmartWalk.Api");
             });
         }
+
+        Log.Information("{Phase}: Static Files", phase);
+        app.UseStaticFiles();
 
         Log.Information("{Phase}: Use CORS Policy", phase);
         app.UseCors(corsPolicy);
