@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using SmartWalk.Core.Entities;
@@ -32,16 +31,16 @@ internal sealed class FakeWorkingEntityIndex : IEntityIndex
                 smartId = smartId,
                 name = $"Place {i}",
                 location = new(lon, lat),
-                keywords = new()
-                {
+                keywords =
+                [
                     "a",
                     "b",
                     "c"
-                },
-                categories = new() { 0, 1, 2 }
+                ],
+                categories = [0, 1, 2]
             });
         }
-        places = buffer.Values.ToList();
+        places = [.. buffer.Values];
     }
 
     public Task<List<Place>> GetAround(WgsPoint center, double radius, IReadOnlyList<Category> categories)
