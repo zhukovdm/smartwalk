@@ -15,7 +15,7 @@ using Trie = PruningRadixTrie.PruningRadixTrie;
 internal sealed class TrieKeywordAdvicer : IKeywordAdvicer
 {
     private readonly Trie trie = new();
-    private readonly Dictionary<string, KeywordAdviceItem> items = new();
+    private readonly Dictionary<string, KeywordAdviceItem> items = [];
 
     private TrieKeywordAdvicer() { }
 

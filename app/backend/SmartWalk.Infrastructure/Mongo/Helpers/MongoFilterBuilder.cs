@@ -67,7 +67,7 @@ internal static class MongoFilterBuilder
 
         var filter = builder.Empty;
 
-        filter = filter & builder.AnyEq(o => o.keywords, category.keyword);
+        filter &= builder.AnyEq(o => o.keywords, category.keyword);
 
         if (fs.es is not null)
         {
