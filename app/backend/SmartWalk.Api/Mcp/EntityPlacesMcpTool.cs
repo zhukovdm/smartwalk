@@ -1,8 +1,10 @@
 using System;
 using System.ComponentModel;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ModelContextProtocol;
+using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Entities;
@@ -30,16 +32,22 @@ public sealed partial class EntityPlacesMcpTool
     /// </summary>
     /// <param name="smartId">Unique identifier of the place to retrieve.</param>
     /// <returns>Place object.</returns>
-    [McpServerTool]
+    [McpServerTool(UseStructuredContent = true)]
     [Description("Returns the unique place that has the supplied identifier.")]
-    public partial async Task<ExtendedPlace> GetEntityPlace(
+    public partial async Task<CallToolResult> GetEntityPlace(
         [Description("Unique identifier of the place to retrieve.")] string smartId
     )
     {
         try
         {
-            return (await handler.Handle(new() { smartId = smartId }))
+            var place = (await handler.Handle(new() { smartId = smartId }))
                 ?? throw new McpException($"Place with smartId {smartId} was not found.");
+
+            return new CallToolResult()
+            {
+                Content = [new TextContentBlock { Text = place.AsMcpStructuredContent() }],
+                StructuredContent = JsonSerializer.SerializeToElement(place)
+            };
         }
         catch (McpException)
         {
@@ -48,7 +56,7 @@ public sealed partial class EntityPlacesMcpTool
         catch (Exception ex)
         {
             logger.LogError("{Error}", ex.Message);
-            return ResponderBase<ExtendedPlace>.FailureMcp(ex);
+            return ResponderBase<CallToolResult>.FailureMcp(ex);
         }
     }
 }
