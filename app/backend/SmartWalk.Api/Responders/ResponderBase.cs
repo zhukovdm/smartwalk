@@ -1,5 +1,7 @@
+using System;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ModelContextProtocol;
 
 /// <summary>
 /// Responder to determine the final response representation.
@@ -24,6 +26,14 @@ internal abstract class ResponderBase<T>
     public ActionResult<T> Invalid(ControllerBase controller)
     {
         return controller.ValidationProblem();
+    }
+
+    /// <summary>
+    /// Standard MCP endpoint failure.
+    /// </summary>
+    public static T FailureMcp(Exception ex)
+    {
+        throw new McpException("Internal Server Error", ex);
     }
 
     /// <summary>

@@ -18,3 +18,6 @@ tokio = {
         "macros", "rt-multi-thread"
     ]
 }
+
+[profile.dev.package."*"]
+debug = false
