@@ -14,7 +14,14 @@ csharp_new_line_before_else = true
 
 # StyleCop analyzers
 
+# primary constructors
+dotnet_diagnostic.IDE0290.severity = none
+
+# properties must start with a capital letter
+dotnet_diagnostic.IDE1006.severity = none
+
 dotnet_diagnostic.SA0001.severity = none
+dotnet_diagnostic.SA1000.severity = none
 dotnet_diagnostic.SA1010.severity = none
 dotnet_diagnostic.SA1101.severity = none
 dotnet_diagnostic.SA1200.severity = none
