@@ -12,6 +12,8 @@ using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Infrastructure.Mongo;
 using SmartWalk.Infrastructure.Dummy;
+using Microsoft.AspNetCore.DataProtection;
+using System.Security.Cryptography.X509Certificates;
 
 namespace SmartWalk.Api.Helpers;
 
@@ -21,13 +23,22 @@ public static class AppConfigurator
 
     public static void CreateLogger()
     {
-        Log.Logger ??= new LoggerConfiguration().WriteTo.Console().CreateLogger();
+        Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
     }
 
     public static WebApplicationBuilder Configure(WebApplicationBuilder builder)
     {
         var phase = "Application Builder";
         Log.Information(phase);
+
+        Log.Information("{Phase}: IKeyManager Data Protection.", phase);
+        builder.Services
+            .AddDataProtection()
+            // .PersistKeysToFileSystem() // see ~/.aspnet/DataProtection-Keys/[crt.pem, key.pem, *xml]
+            .ProtectKeysWithCertificate(
+                X509CertificateLoader.LoadPkcs12FromFile(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "crt.pfx"),
+                builder.Configuration["DataProtection:CertPass"])
+            );
 
         Log.Information("{Phase}: CORS Policy Definition", phase);
         builder.Services.AddCors(cors => cors.AddPolicy(corsPolicy, builder =>
