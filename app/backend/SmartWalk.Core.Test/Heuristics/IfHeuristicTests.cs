@@ -6,7 +6,7 @@ using SmartWalk.Core.Entities;
 using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Heuristics;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Heuristics;
 
 [TestClass]
 public class IfCategoryFormerTests
@@ -18,7 +18,7 @@ public class IfCategoryFormerTests
     {
         var cats = IfCategoryFormer.Form(TestPrimitives.GetWaypoints(n));
 
-        Assert.AreEqual(cats.Count, 5);
+        Assert.HasCount(5, cats);
 
         foreach (var cat in cats)
         {
@@ -38,10 +38,10 @@ public class IfCategoryFormerTests
 
         foreach (var (l, r) in cats.Zip(cats.Skip(1)))
         {
-            Assert.IsTrue(l.Count < r.Count);
+            Assert.IsLessThan(r.Count, l.Count);
         }
         Assert.AreEqual(cats[0][0].cat, n - 1);
-        Assert.AreEqual(cats[^1][0].cat, 0);
+        Assert.AreEqual(0, cats[^1][0].cat);
     }
 }
 
@@ -101,7 +101,7 @@ public class IfHeuristicTests
         var distFn = TestPrimitives.GenerateRandomDistanceMatrix(order);
         var result = IfHeuristic.Advise(places, distFn, source, target);
 
-        Assert.AreEqual(places.Count + 2, result.Count);
+        Assert.HasCount(places.Count + 2, result);
     }
 
     [TestMethod]
@@ -133,7 +133,7 @@ public class IfHeuristicTests
 
         // length
 
-        Assert.AreEqual(order, result.Count);
+        Assert.HasCount(order, result);
 
         // terminals
 

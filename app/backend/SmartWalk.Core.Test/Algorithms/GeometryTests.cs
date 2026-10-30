@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Algorithms;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Algorithms;
 
 [TestClass]
 public class GeometryTests
@@ -15,8 +15,8 @@ public class GeometryTests
             {
                 var rads = Spherical.RotAngle(new (0.0, 0.0), new ((double)lon, (double)lat));
                 var degs = Spherical.RadToDeg(rads);
-                Assert.IsTrue(degs <= +180.0);
-                Assert.IsTrue(degs >= -180.0);
+                Assert.IsLessThanOrEqualTo(+180.0, degs);
+                Assert.IsGreaterThanOrEqualTo(-180.0, degs);
             }
         }
     }

@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Extensions;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Extensions;
 
 [TestClass]
 public class ListExtensionsTests
@@ -41,7 +41,7 @@ public class ListExtensionsTests
         lst = lst.DurstenfeldShuffle();
         foreach (var item in new[] { 0, 1, 2, 3, 4, 5 })
         {
-            Assert.IsTrue(lst.Contains(item));
+            Assert.Contains(item, lst);
         }
     }
 
@@ -51,7 +51,7 @@ public class ListExtensionsTests
     public void ShouldHandleEmptyListGracefully()
     {
         var places = new List<Place>().WithMergedCategories();
-        Assert.AreEqual(places.Count, 0);
+        Assert.IsEmpty(places);
     }
 
     [TestMethod]
@@ -67,8 +67,8 @@ public class ListExtensionsTests
         .ToList()
         .WithMergedCategories();
 
-        Assert.AreEqual(places.Count, 1);
-        Assert.AreEqual(places.FirstOrDefault()?.categories.Count, 3);
+        Assert.HasCount(1, places);
+        Assert.AreEqual(3, places.FirstOrDefault()?.categories.Count);
     }
 
     [TestMethod]
@@ -84,6 +84,6 @@ public class ListExtensionsTests
         .ToList()
         .WithMergedCategories();
 
-        Assert.AreEqual(places.Count, 3);
+        Assert.HasCount(3, places);
     }
 }

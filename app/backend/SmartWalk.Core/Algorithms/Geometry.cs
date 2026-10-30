@@ -65,7 +65,7 @@ public static class Spherical
     /// </summary>
     private static WgsPoint Midpoint(WgsPoint p1, WgsPoint p2)
     {
-        return new ((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
+        return new((p1.lon + p2.lon) / 2.0, (p1.lat + p2.lat) / 2.0);
     }
 
     /// <summary>
@@ -133,7 +133,7 @@ public static class Spherical
 
         var factory = new GeometricShapeFactory
         {
-            Envelope = new (-a, +a, -b, +b)
+            Envelope = new(-a, +a, -b, +b)
         };
         var e1 = factory.CreateEllipse();
 
@@ -163,6 +163,6 @@ public static class Spherical
             .Translate(m.lon, m.lat)
             .Transform(new Polygon(new LinearRing(cs)));
 
-        return e3.Coordinates.Select(c => new WgsPoint(Round(c.X), Round(c.Y))).ToList();
+        return [.. e3.Coordinates.Select(c => new WgsPoint(Round(c.X), Round(c.Y)))];
     }
 }

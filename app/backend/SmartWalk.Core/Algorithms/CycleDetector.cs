@@ -31,8 +31,8 @@ public sealed class CycleDetector
 
     public CycleDetector(int order)
     {
-        vs = Enumerable.Range(0, order).Select(_ => new Vertex()).ToList();
-        es = Enumerable.Range(0, order).Select(_ => new SortedSet<int>()).ToList();
+        vs = [.. Enumerable.Range(0, order).Select(_ => new Vertex())];
+        es = [.. Enumerable.Range(0, order).Select(_ => new SortedSet<int>())];
     }
 
     /// <summary>

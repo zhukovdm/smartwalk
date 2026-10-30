@@ -6,7 +6,7 @@ using SmartWalk.Core.Entities;
 using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Heuristics;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Heuristics;
 
 [TestClass]
 public class OgCategoryFormerTests
@@ -47,11 +47,11 @@ public class OgCategoryFormerTests
 
         // successors
 
-        Assert.AreEqual(1, cats[0].succ.Count);
-        Assert.AreEqual(1, cats[1].succ.Count);
-        Assert.AreEqual(1, cats[2].succ.Count);
-        Assert.AreEqual(0, cats[3].succ.Count);
-        Assert.AreEqual(0, cats[4].succ.Count);
+        Assert.HasCount(1, cats[0].succ);
+        Assert.HasCount(1, cats[1].succ);
+        Assert.HasCount(1, cats[2].succ);
+        Assert.IsEmpty(cats[3].succ);
+        Assert.IsEmpty(cats[4].succ);
     }
 }
 
@@ -71,25 +71,25 @@ public class OgCandidateSelectorTests
         };
 
         var p1 = new OgCategory();
-        p1.places.Add(new (1, 1));
+        p1.places.Add(new(1, 1));
 
         var p2 = new OgCategory();
-        p2.places.Add(new (2, 2));
+        p2.places.Add(new(2, 2));
 
         var p3 = new OgCategory();
-        p3.places.Add(new (3, 3));
+        p3.places.Add(new(3, 3));
 
         var cats = new List<OgCategory> { p1, p2, p3 };
 
-        var distFn = new MatrixDistanceFunc(new ()
-        {
-            new () { 0.0, 2.0, 1.0, 3.0, 0.0, 0.0 },
-            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
-            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
-            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 1.0 },
-            new () { 0.0, 1.0, 1.0, 1.0, 0.0, 0.0 },
-            new () { 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 },
-        });
+        var distFn = new MatrixDistanceFunc(
+        [
+            [0.0, 2.0, 1.0, 3.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+            [0.0, 1.0, 1.0, 1.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+        ]);
         var best = OgCandidateSelector.SelectBest(seq, cats, distFn);
 
         Assert.AreEqual(2, best.idx);
@@ -131,7 +131,7 @@ public class OgHeuristicTests
 
         var ans = new List<int> { 5, 0, 1, 2, 3, 4, 6 };
 
-        Assert.AreEqual(ans.Count, seq.Count);
+        Assert.HasCount(ans.Count, seq);
 
         for (int i = 0; i < ans.Count; ++i)
         {
@@ -164,7 +164,7 @@ public class OgHeuristicTests
 
         var ans = new List<int> { 3, 1, 4 };
 
-        Assert.AreEqual(ans.Count, seq.Count);
+        Assert.HasCount(ans.Count, seq);
 
         for (int i = 0; i < ans.Count; ++i)
         {
@@ -202,7 +202,7 @@ public class OgHeuristicTests
 
         // length
 
-        Assert.AreEqual(order, result.Count);
+        Assert.HasCount(order, result);
 
         // terminals
 
