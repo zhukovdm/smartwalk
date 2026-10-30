@@ -128,7 +128,7 @@ public static class AppConfigurator
         {
             app.UseSwagger().UseSwaggerUI(u =>
             {
-                u.SwaggerEndpoint("v1/swagger.yaml", "SmartWalk.Api");
+                u.SwaggerEndpoint("/swagger/v1/swagger.json", "SmartWalk.Api");
             });
         }
 
