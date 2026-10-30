@@ -253,3 +253,11 @@ public sealed class ExtendedPlace : Place
     [Required]
     public PlaceAttributes attributes { get; init; }
 }
+
+public static class ExtendedPlaceExtensions
+{
+    public static string AsMcpStructuredContent(this ExtendedPlace place)
+    {
+        return $"{place.name} located at lon: {place.location.lon}, lat: {place.location.lat} and associated with {string.Join(", ", place.keywords)}.";
+    }
+}
