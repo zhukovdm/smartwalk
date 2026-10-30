@@ -99,7 +99,7 @@ public class TwoOptHeuristicTests
             .ToList()
             .DurstenfeldShuffle();
 
-        var calculateDistance = (List<SolverPlace> sequence) =>
+        double calculateDistance(List<SolverPlace> sequence)
         {
             var result = 0.0;
 
@@ -108,7 +108,7 @@ public class TwoOptHeuristicTests
                 result += distFn.GetDistance(l.idx, r.idx);
             }
             return result;
-        };
+        }
 
         var source0 = seq[0];
         var target0 = seq[^1];
@@ -124,6 +124,6 @@ public class TwoOptHeuristicTests
 
         Assert.AreEqual(source0.idx, source1.idx);
         Assert.AreEqual(target0.idx, target1.idx);
-        Assert.IsTrue(distance1 <= distance0);
+        Assert.IsLessThanOrEqualTo(distance0, distance1);
     }
 }
