@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using ModelContextProtocol.Server;
 
 namespace SmartWalk.Api.Mcp;
@@ -14,7 +15,8 @@ public sealed partial class EchoMcpTool
     /// <param name="message">Text to echo back.</param>
     /// <returns>Echoed text.</returns>
     [McpServerTool]
-    public partial string Ping(string message)
+    [Description("Returns the supplied message back to the caller.")]
+    public partial string Ping([Description("Text to echo back.")] string message)
     {
         return message;
     }
