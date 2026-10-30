@@ -12,7 +12,7 @@ namespace SmartWalk.Api.Test;
 [TestClass]
 public class AdviceKeywordsControllerTests
 {
-    private GetAdviceKeywordsRequest GetValidAdviceKeywordsRequest()
+    private static GetAdviceKeywordsRequest GetValidAdviceKeywordsRequest()
     {
         return new() { prefix = "m", count = 5 };
     }
