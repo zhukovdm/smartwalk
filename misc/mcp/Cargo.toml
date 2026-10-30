@@ -1,0 +1,9 @@
+[package]
+name = "mcpclient"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+rmcp = { version = "3.8.0", default-features = false, features = ["client", "transport-streamable-http-client-reqwest", "reqwest"] }
+serde_json = "1"
+tokio = { version = "1", features = ["macros", "rt-multi-thread"] }

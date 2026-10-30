@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
 using Polly;
 using Serilog;
+using SmartWalk.Api.Mcp;
 using SmartWalk.Application.Handlers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Infrastructure.Mongo;
@@ -62,6 +63,11 @@ public static class AppConfigurator
 
         Log.Information("{Phase}: Health Checks", phase);
         builder.Services.AddHealthChecks();
+
+        Log.Information("{Phase}: MCP Server (throw-away spike)", phase);
+        builder.Services.AddMcpServer()
+            .WithHttpTransport()
+            .WithTools<EchoMcpTool>();
 
         Log.Information("{Phase}: Generate Swagger UI", phase);
         builder.Services.AddSwaggerGen((g) =>
@@ -146,6 +152,9 @@ public static class AppConfigurator
 
         Log.Information("{Phase}: Map Controllers", phase);
         app.MapControllers();
+
+        Log.Information("{Phase}: Map MCP Endpoint", phase);
+        app.MapMcp("/mcp");
 
         Log.Information("{Phase}: Map Health Checks", phase);
         app.MapHealthChecks("/healthcheck");
