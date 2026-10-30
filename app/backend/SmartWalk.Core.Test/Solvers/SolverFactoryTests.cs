@@ -3,7 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Entities;
 using SmartWalk.Core.Solvers;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Solvers;
 
 [TestClass]
 public class SolverFactoryTests

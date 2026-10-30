@@ -34,11 +34,11 @@ internal static class IfCategoryFormer
         var groups = places
             .Aggregate(new SortedDictionary<int, List<SolverPlace>>(), (acc, place) =>
             {
-                if (!acc.ContainsKey(place.cat))
+                if (!acc.TryGetValue(place.cat, out var lst))
                 {
-                    acc.Add(place.cat, []);
+                    acc[place.cat] = lst = [];
                 }
-                acc[place.cat].Add(place);
+                lst.Add(place);
                 return acc;
             });
 

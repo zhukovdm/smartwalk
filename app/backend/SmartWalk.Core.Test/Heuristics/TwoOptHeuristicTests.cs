@@ -7,7 +7,7 @@ using SmartWalk.Core.Extensions;
 using SmartWalk.Core.Heuristics;
 using SmartWalk.Core.Interfaces;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Heuristics;
 
 [TestClass]
 public class TwoOptHeuristicTests
@@ -49,28 +49,25 @@ public class TwoOptHeuristicTests
     {
         // there is only one correct answer
 
-        var distFn = new CartesianDistanceFunc(
-            new ()
-            {
-                new (0.0, 0.0),
-                new (0.0, 1.0),
-                new (1.0, 1.0),
-                new (1.0, 0.0),
-            });
+        var distFn = new CartesianDistanceFunc([
+            new (0.0, 0.0),
+            new (0.0, 1.0),
+            new (1.0, 1.0),
+            new (1.0, 0.0),
+        ]);
 
         var seq = TwoOptHeuristic.Advise(
-            new List<SolverPlace>
-            {
+            [
                 new (0, 0),
                 new (2, 2),
                 new (1, 1),
                 new (3, 3),
-            },
+            ],
             distFn);
 
         var ans = new List<int> { 0, 1, 2, 3 };
 
-        Assert.AreEqual(ans.Count, seq.Count);
+        Assert.HasCount(ans.Count, seq);
 
         for (int i = 0; i < ans.Count; ++i)
         {

@@ -15,7 +15,7 @@ public static class TestPrimitives
 
         for (int row = 0; row < order; ++row)
         {
-            result.Add(new ());
+            result.Add([]);
 
             for (int col = 0; col < order; ++col)
             {

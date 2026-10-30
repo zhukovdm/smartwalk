@@ -1,9 +1,8 @@
-using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SmartWalk.Core.Algorithms;
 
-namespace SmartWalk.Core.Test;
+namespace SmartWalk.Core.Test.Algorithms;
 
 [TestClass]
 public class CycleDetectorTests
@@ -21,7 +20,7 @@ public class CycleDetectorTests
             .AddEdge(0, 0)
             .Cycle();
 
-        Assert.IsTrue(c.SequenceEqual(new List<int> { 0, 0 }));
+        Assert.IsTrue(c.SequenceEqual([0, 0]));
     }
 
     [TestMethod]
@@ -32,7 +31,7 @@ public class CycleDetectorTests
             .AddEdge(1, 0)
             .Cycle();
 
-        Assert.IsTrue(c.SequenceEqual(new List<int> { 0, 1, 0 }));
+        Assert.IsTrue(c.SequenceEqual([0, 1, 0]));
     }
 
     [TestMethod]
@@ -50,7 +49,7 @@ public class CycleDetectorTests
             .AddEdge(2, 0)
             .Cycle();
 
-        Assert.IsTrue(c.SequenceEqual(new List<int>() { 0, 1, 2, 0 }));
+        Assert.IsTrue(c.SequenceEqual([0, 1, 2, 0]));
     }
 
     [TestMethod]
@@ -66,7 +65,7 @@ public class CycleDetectorTests
             .AddEdge(6, 0)
             .Cycle();
 
-        Assert.IsTrue(c.SequenceEqual(new List<int>() { 0, 2, 5, 6, 0 }));
+        Assert.IsTrue(c.SequenceEqual([0, 2, 5, 6, 0]));
     }
 
     [TestMethod]

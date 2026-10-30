@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using SmartWalk.Core.Entities;
 
 namespace SmartWalk.Core.Extensions;
@@ -51,6 +50,6 @@ public static class ListExtensions
             }
         }
 
-        return result.Values.ToList();
+        return [.. result.Values];
     }
 }
