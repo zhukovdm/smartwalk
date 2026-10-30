@@ -180,8 +180,12 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
             return acc;
         });
 
-        return new() {
-            avgDistance = minDistance * DetourIndex, path = path, places = routePlaces, waypoints = routeWaypoints
+        return new()
+        {
+            avgDistance = minDistance * DetourIndex,
+            path = path,
+            places = routePlaces,
+            waypoints = routeWaypoints
         };
     }
 }

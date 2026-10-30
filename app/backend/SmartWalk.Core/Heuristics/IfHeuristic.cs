@@ -12,7 +12,7 @@ internal static class IfCategoryFormer
     {
         private CategoryComparer() { }
 
-        private static readonly Lazy<CategoryComparer> instance = new (() => new ());
+        private static readonly Lazy<CategoryComparer> instance = new(() => new());
 
         public static CategoryComparer Instance => instance.Value;
 

@@ -11,11 +11,11 @@ public class ListExtensionsTests
 {
     private static Place GetPlace(string handle, int i)
     {
-        return new ()
+        return new()
         {
             smartId = handle,
             name = "Place",
-            location = new (0.0, 0.0),
+            location = new(0.0, 0.0),
             keywords = ["a"],
             categories = [i]
         };
