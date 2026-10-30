@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Entities;
 
-namespace SmartWalk.Application.Test;
+namespace SmartWalk.Application.Test.Fakes;
 
 internal abstract class FakeShortestPathFinderBase : IShortestPathFinder
 {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using SmartWalk.Application.Entities;
 using SmartWalk.Application.Helpers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Algorithms;

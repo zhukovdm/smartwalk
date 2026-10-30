@@ -1,7 +1,7 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using SmartWalk.Application.Entities;
 using SmartWalk.Application.Helpers;
 using SmartWalk.Application.Interfaces;
 using SmartWalk.Core.Algorithms;
@@ -143,7 +143,7 @@ public sealed class SearchRoutesQueryHandler : ISearchRoutesQueryHandler
     /// <returns>The shortest path or nothing.</returns>
     private async Task<ShortestPath> GetShortestPath(IEnumerable<SolverPlace> fullSeq, List<Place> places)
     {
-        return (await shortestPathFinder.Search(fullSeq.Select((sp) => places[sp.idx].location).ToList()))
+        return (await shortestPathFinder.Search([.. fullSeq.Select((sp) => places[sp.idx].location)]))
             .OrderBy(s => s, ShortestPathComparer.Instance)
             .FirstOrDefault();
     }
