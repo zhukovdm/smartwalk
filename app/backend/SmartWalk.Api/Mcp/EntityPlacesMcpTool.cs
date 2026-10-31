@@ -32,7 +32,7 @@ public sealed partial class EntityPlacesMcpTool
     /// </summary>
     /// <param name="smartId">Unique identifier of the place to retrieve.</param>
     /// <returns>Place object.</returns>
-    [McpServerTool(UseStructuredContent = true)]
+    [McpServerTool(UseStructuredContent = true, OutputSchemaType = typeof(ExtendedPlace))]
     [Description("Returns the unique place that has the supplied identifier.")]
     public partial async Task<CallToolResult> GetEntityPlace(
         [Description("Unique identifier of the place to retrieve.")] string smartId
